@@ -7,8 +7,8 @@ const createSomeService = require('./sevices/someService');
 const someService = createSomeService();
 
 const app = createApp({
-    logger,
-    someService
+  logger,
+  someService,
 });
 
 module.exports = app;
