@@ -1,5 +1,5 @@
 describe('Simple test to ensure test suite works', () => {
-  it('run a test', () => {
+  it('runs a test', () => {
     expect(true).to.equal(true);
   });
 });
