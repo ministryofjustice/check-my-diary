@@ -132,18 +132,13 @@ module.exports = function createApp({ logger, someService }) { // eslint-disable
   // Routing
   app.use('/', createIndexRouter({ logger, someService }));
 
-  app.use(handleKnownErrors);
   app.use(renderErrors);
 
   return app;
 };
 
-function handleKnownErrors(error) {
-  logger.error(error);
-  // code to handle errors
-}
 
-function renderErrors(error, req, res) {
+function renderErrors(error, req, res, next) { // eslint-disable-line no-unused-vars
   logger.error(error);
 
   // code to handle unknown errors
