@@ -2,7 +2,7 @@
   "name": "gov-starter",
   "version": "0.0.0",
   "scripts": {
-    "start": "node server.js",
+    "start": "npm run css-build && node server.js",
     "start:dev": "yarn build && DEBUG=gov-starter-server* nodemon server.js | bunyan -o short",
     "build": "yarn run css-build",
     "css-build": "./bin/build-css",
