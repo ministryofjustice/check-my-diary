@@ -135,3 +135,21 @@ ul.calendar .last-cell
 ul.calendar .last-row
 	border-bottom: 1px solid $border-colour;
 
+
+
+@media (min-width: 320px) and (max-width: 1023px)
+	ul.calendar .calendar-item
+		clear: left;
+		width: 100%;
+		margin-bottom: 15px;
+		border-right: 1px solid $border-colour;
+		border-bottom: 1px solid $border-colour;
+
+	ul.calendar .rest-day,
+	ul.calendar .holiday,
+	ul.calendar .no-day,
+	ul.calendar .calendar-item a 
+		height: inherit;
+		
+	ul.calendar .no-day
+		display: none;

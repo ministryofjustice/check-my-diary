@@ -17,6 +17,13 @@ module.exports = function Index({ logger, someService }) {
 
     res.render('pages/calendar');
   });
+	
+  router.get('/calendar/details/:date', (req, res) => {
+    logger.info('GET calendar details');
+
+
+    res.render('pages/calendar-details');
+  });
 
   return router;
 };
