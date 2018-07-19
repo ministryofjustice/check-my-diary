@@ -11,3 +11,127 @@ $path: "/public/images/"
 
 #global-header #logo .logo-img
   margin-right: 10px
+
+
+/* Z */
+
+.c-align
+	text-align: center;
+
+/* tabs */
+
+ul.tabs
+	margin-top: 30px;
+	height: 50px;
+	border-bottom: 2px solid $govuk-blue;
+	margin-bottom: 30px;
+	padding-left: 10px;
+
+
+ul.tabs li
+	float: left;
+	margin-bottom: 20px;
+	background-color: $grey-4;
+	list-style: none;
+
+ul.tabs li a
+	padding: 12px 18px;
+	display: block;
+	text-decoration: none;
+
+
+
+ul.tabs li a.active
+	border: 1px solid $govuk-blue;
+	background-color: $govuk-blue;
+	color: white;
+	text-decoration: none;
+
+
+ul.tabs li.active
+	text-decoration: none;
+
+
+/* badge */
+
+.badge
+	color: white;
+	padding: 2px 5px;
+
+.badge-important
+	background-color: $mellow-red;
+
+
+/* calendar */
+
+.btn-change-month
+	padding: 0 10px;
+
+.btn-change-month-with-border
+	border-left: 1px solid $border-colour;
+
+ul.calendar
+	margin-top: 30px;
+
+span.calendar-title
+	display: block;
+
+ul.calendar .calendar-item span 
+	display: block;
+	padding-left: 5px;
+	
+ul.calendar span.day
+	padding-top: 5px;
+	margin-bottom: 3px;
+
+ul.calendar span.detail
+	background-color: $green;
+	padding: 2px 0 0 3px;
+	color: white;
+	margin: 0 2px;
+	border-radius: 2px;
+	margin-top: 2px;
+
+ul.calendar span.detail-finish
+	background-color: $red;
+
+ul.calendar span.detail-holiday
+	background-color: $orange;
+
+ul.calendar span.detail-duration
+	margin-top: 3px;
+
+ul.calendar .calendar-item
+	float: left;
+	width: 14.1%;
+	list-style: none;
+	border-left: 1px solid $border-colour;
+	border-top: 1px solid $border-colour;
+
+ul.calendar .calendar-item a:hover,
+ul.calendar .no-day
+	background-color: $grey-4;
+
+ul.calendar .rest-day,
+ul.calendar .holiday,
+ul.calendar .no-day,
+ul.calendar .calendar-item a 
+	display: block;
+	height: 150px;
+	text-decoration: none;
+	color: $text-colour;
+	
+ul.calendar .rest-day
+	color: white;
+	background-color: $light-blue;
+
+ul.calendar .holiday
+	color: white;
+	background-color: $orange;
+
+ul.calendar .last-cell
+	border-right: 1px solid $border-colour;
+
+ul.calendar .last-row
+	border-bottom: 1px solid $border-colour;
+
