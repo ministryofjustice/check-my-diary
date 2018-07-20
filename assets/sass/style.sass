@@ -137,63 +137,94 @@ ul.calendar .last-row
 
 /* Shift / calendar details */
 
-#shiftDetail
-	margin-bottom: 20px;
+#shiftDetail ul
+    margin-bottom: 20px;
+    float: left;
+    width: 100%;
 
 #shiftDetail li
 	list-style: none;
 	margin-bottom: 30px;
-	clear: left;
 
 #shiftDetail span
 	display: block;
 	
 #shiftDetail span.time
-	border: 1px solid $border-colour;
-	width: 220px;
-	border-radius: 3px;
-	margin-right: 15px;
-	padding: 25px 0 20px 0;
-	float: left;
+    border: 1px solid $border-colour;
+    width: 220px;
+    border-radius: 3px;
+    margin-right: 15px;
+    padding: 25px 0 20px 0;
+    float: left;
+    text-align: center;
 
-#shiftDetail span.time-start
+#shiftDetail .detail-start span.time,
+#shiftDetail .detail-finish span.time,
+#shiftDetail .detail-holiday span.time
 	background-color: $green;
-	border-color: $green;
+	border: none;;
 	color: white;
 
-#shiftDetail span.time-finish
+#shiftDetail .detail-finish span.time
 	background-color: $red;
-	border-color: $red;
-	color: white;
+
+#shiftDetail .detail-holiday span.time
+	background-color: $orange;
 
 #shiftDetail span.description
 	padding-top: 25px;
 
-
+#btnNextShiftDetail
+    clear: both;
 
 @media (min-width: 320px) and (max-width: 1023px)
-	ul.calendar .calendar-item
-		clear: left;
-		width: 100%;
-		margin-bottom: 15px;
-		border-right: 1px solid $border-colour;
-		border-bottom: 1px solid $border-colour;
+    ul.calendar .calendar-item
+        clear: left;
+        width: 100%;
+        margin-bottom: 15px;
+        border-right: 1px solid $border-colour;
+        border-bottom: 1px solid $border-colour;
 
-	ul.calendar .rest-day,
-	ul.calendar .holiday,
-	ul.calendar .no-day,
-	ul.calendar .calendar-item a 
-		height: inherit;
-		
-	ul.calendar .no-day
-		display: none;
+    ul.calendar .rest-day,
+    ul.calendar .holiday,
+    ul.calendar .no-day,
+    ul.calendar .calendar-item a 
+        height: inherit;
 
-	#shiftDetail span.description
-		padding: 5px 0 4px 0;
+    ul.calendar .no-day
+        display: none;
+        
+    #shiftDetail li
+        border-top: 1px solid $border-colour;
+        padding: 15px 0 10px 0;
+        margin-bottom: 10px;
 
-	#shiftDetail span.notes
-		padding: 0;
+    #shiftDetail span.time
+        float: none;
+        width: 100%;
+        border: none;
+        text-align: left;
+        padding: 0;
+        font-weight: bold;
 
-	#shiftDetail span.time
-		float: none;
-		width: 100%;
+    #shiftDetail .detail-start,
+    #shiftDetail .detail-finish,
+    #shiftDetail .detail-holiday
+        background-color: $green;
+        margin-bottom: 0px;
+        color: white;
+        padding: 10px 5px 10px 8px;
+        border-radius: 3px;
+        border: none;
+        
+    #shiftDetail .detail-finish
+        background-color: $red;
+        
+    #shiftDetail .detail-holiday
+        background-color: $orange;
+        
+    #shiftDetail span.description
+        padding: 0;
+        
+    #shiftDetail span.notes
+        padding: 0;

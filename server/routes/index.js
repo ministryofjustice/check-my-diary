@@ -15,7 +15,7 @@ module.exports = function Index({ logger, someService }) {
     logger.info('GET calendar view');
 
 
-    res.render('pages/calendar');
+    res.render('pages/calendar',{"tab":"Calendar"});
   });
 	
   router.get('/calendar/details/:date', (req, res) => {
@@ -23,6 +23,13 @@ module.exports = function Index({ logger, someService }) {
 
 
     res.render('pages/calendar-details');
+  });
+    
+  router.get('/notifications', (req, res) => {
+    logger.info('GET notifications view');
+
+
+    res.render('pages/notifications', {"tab":"Notifications"});
   });
 
   return router;
