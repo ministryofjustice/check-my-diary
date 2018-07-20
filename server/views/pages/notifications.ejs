@@ -9,11 +9,31 @@
 
   <main id="content" class="app-container" role="main">
     <% include ../partials/tabs %>
-    <div class="grid-row">
-      <div class="column-two-thirds">
-          Notifications
-      </div>
-    </div>
+
+      
+    <div id="notifications" class="grid-row">
+        <div class="column-two-thirds">
+            <ul >
+                <li>
+                    <span class="alert-date bold-xsmall">2 hours ago (new)</span>
+                    Detail change: your location on 3/7/2018 at 12:30 has changed to Res 2
+                </li>
+                <li>
+                    <span class="alert-date bold-xsmall">Yesterday (new)</span>
+                    Shift change: you've been assigned a new shift on Tuesday 3/7/2018 which starts at 12:30 - check calendar for details
+                </li>
+            </ul>
+
+            <a href="#">Load older notifications</a>
+        </div>
+        <div class="column-one-third">
+            <div class="well">
+                <p>Forward notifications to your email or phone</p>
+                <a href="/notifications/settings">Notification settings</a>
+            </div>
+        </div>
+    </div>      
+      
   </main>
 
   <% include ../partials/footer %>

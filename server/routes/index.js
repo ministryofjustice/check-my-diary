@@ -31,6 +31,13 @@ module.exports = function Index({ logger, someService }) {
 
     res.render('pages/notifications', {"tab":"Notifications"});
   });
+    
+  router.get('/notifications/settings', (req, res) => {
+    logger.info('GET notifications view');
+
+
+    res.render('pages/notification-settings');
+  });
 
   return router;
 };

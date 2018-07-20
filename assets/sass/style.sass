@@ -176,12 +176,24 @@ ul.calendar .last-row
 
 #btnNextShiftDetail
     clear: both;
+    
+#notifications li
+    list-style: none;
+    margin-bottom: 20px;
+    
+#notifications span
+    display: block;
+
+.well
+    background-color: $grey-4;
+    padding: 10px 20px 20px 20px;
+    border: 1px solid $border-colour;
 
 @media (min-width: 320px) and (max-width: 1023px)
     ul.calendar .calendar-item
         clear: left;
         width: 100%;
-        margin-bottom: 15px;
+        margin-bottom: 20px;
         border-right: 1px solid $border-colour;
         border-bottom: 1px solid $border-colour;
 
@@ -228,3 +240,6 @@ ul.calendar .last-row
         
     #shiftDetail span.notes
         padding: 0;
+        
+    #notifications .well
+        margin-top: 30px;
