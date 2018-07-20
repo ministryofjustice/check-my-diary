@@ -8,11 +8,30 @@
   <% include ../partials/header %>
 
   <main id="content" class="app-container" role="main">
-    <div class="grid-row">
-      <div class="column-two-thirds">
-          <h1 class="heading-xlarge"><%= data.text %></h1>
+      <div class="grid-row">
+        <div class="column-two-thirds">
+
+            <h1 class="heading-xlarge">Enter your staff ID and password</h1>
+
+            <form method="post" action="/">
+            <div class="form-group">
+                <label for="staffId"><span class="form-label">Staff ID</span></label>
+                <input type="text" name="staffId" id="staffId" class="form-control" />
+              </div>  
+
+            <div class="form-group">
+                <label for="password"><span class="form-label">Password</span></label>
+                <input type="password" id="password" class="form-control" />
+              </div> 
+
+              <div class="from-group">
+                <input type="submit" class="button" value="Continue">
+              </div>
+            </form>
+
+        </div>
+
       </div>
-    </div>
   </main>
 
   <% include ../partials/footer %>

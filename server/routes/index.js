@@ -10,6 +10,10 @@ module.exports = function Index({ logger, someService }) {
 
     res.render('pages/index', { data });
   });
+    
+  router.post('/', (req, res) => {
+      res.redirect('/calendar');
+  });
 	
   router.get('/calendar', (req, res) => {
     logger.info('GET calendar view');

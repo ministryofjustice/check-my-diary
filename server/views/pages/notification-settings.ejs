@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head %>
+</head>
+<body>
+
+  <% include ../partials/header %>
+
+  <main id="content" class="app-container" role="main">
+	<a href="/notifications" class="link-back">Back</a>
+      
+    <h1 class="heading-xlarge">Notification settings</h1>
+      
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <form method="post">
+                <div class="form-group">
+                  <fieldset>
+                    <legend>
+                      <p>Stay on top of notifications by forwarding to your phone or the email address of your choice, or both</p>
+                    </legend>
+
+                    <div class="multiple-choice" data-target="email">
+                      <input id="optionEmail" type="checkbox" name="optionEmail" value="Email">
+                      <label for="optionEmail">Email</label>
+                    </div>
+                    <div class="panel panel-border-narrow js-hidden" id="email">
+                      <label class="form-label" for="inputEmail">Email address</label>
+                      <input class="form-control" name="inputEmail" type="text" id="inputEmail">
+                    </div>
+
+                    <div class="multiple-choice" data-target="mobile">
+                      <input id="optionMobile" type="checkbox" name="optionMobile" value="No">
+                      <label for="optionMobile">Text message</label>
+                    </div>
+                    <div class="panel panel-border-narrow js-hidden" id="mobile">
+                      <label class="form-label" for="inputMobile">Mobile phone number</label>
+                      <input class="form-control" name="inputMobile" type="text" id="inputMobile">
+                    </div>
+                  </fieldset>
+                </div>
+                
+                <div class="form-group">
+                    <input class="button" type="submit" value="Update" />
+                </div>
+            </form>
+        </div>
+    </div>
+  </main>
+
+  <% include ../partials/footer %>
+</body>
+</html>
