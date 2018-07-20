@@ -42,6 +42,13 @@ module.exports = function Index({ logger, someService }) {
 
     res.render('pages/notification-settings');
   });
+    
+  router.get('/maintenance', (req, res) => {
+    logger.info('GET maintenance view');
+
+
+    res.render('pages/maintenance');
+  });
 
   return router;
 };
