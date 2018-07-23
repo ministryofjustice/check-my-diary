@@ -1,6 +1,6 @@
 const express = require('express');
 
-module.exports = function Index({logger, someService: calendarService}) {
+module.exports = function Index({logger, calendarService}) {
   const router = express.Router();
 
   router.get('/', (req, res) => {

@@ -1,14 +1,14 @@
 const createApp = require('./app');
 const logger = require('../log');
 
-const calendarService = require('./services/calendarService');
+const calendar = require('./services/calendarService');
 
 // pass in dependencies of service
-const someService = calendarService();
+const calendarService = calendar();
 
 const app = createApp({
   logger,
-  someService,
+  calendarService
 });
 
 module.exports = app;
