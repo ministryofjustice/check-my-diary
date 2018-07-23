@@ -21,7 +21,7 @@ module.exports = function Index({logger, calendarService}) {
   router.get('/calendar/details/:date', (req, res) => {
     logger.info('GET calendar details');
     const data = calendarService.getCalendarDetails(req.params.date);
-    res.render('pages/calendar-details', data: data, {csrfToken: req.csrfToken()});
+    res.render('pages/calendar-details', {data: data, csrfToken: req.csrfToken()});
   });
 
   router.get('/notifications', (req, res) => {
