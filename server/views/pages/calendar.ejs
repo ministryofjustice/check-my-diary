@@ -25,7 +25,7 @@
         <li class="calendar-item <% if (day.type === 'rest-day') { %>rest-day<% } %><% if (day.type === 'holiday') { %>holiday<% } %><% if (day.type === 'no-day') { %>no-day<% } %>">
 
           <% if (day.type === 'work') { %>
-            <a href="#">
+            <a href="/calendar/details/<%= day.date %>">
               <span class="day bold-xsmall"><%= day.day.substr(0, 3) %>, <%= parseInt(day.date.substr(day.date.length - 2), 10) %></span>
 
               <% day.events.forEach(function(item){ %>
