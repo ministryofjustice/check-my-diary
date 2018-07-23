@@ -6,6 +6,7 @@ const compression = require('compression');
 const passport = require('passport');
 const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
+const cookieParser = require('cookie-parser');
 const createIndexRouter = require('./routes/index');
 const sassMiddleware = require('node-sass-middleware');
 const moment = require('moment');
@@ -41,6 +42,9 @@ module.exports = function createApp({ logger, someService }) { // eslint-disable
   app.use(helmet());
 
   app.use(addRequestId);
+
+  // csrfProtection uses cookie
+  app.use(cookieParser());
 
   app.use(cookieSession({
     name: 'session',
@@ -126,7 +130,7 @@ module.exports = function createApp({ logger, someService }) { // eslint-disable
 
   // CSRF protection
   if (!testMode) {
-    app.use(csurf());
+    app.use(csurf({ cookie: true }));
   }
 
   // Routing
