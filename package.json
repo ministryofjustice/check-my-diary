@@ -11,8 +11,8 @@
     "test": "NODE_ENV=test mocha test/*.spec.js test/**/*.spec.js"
   },
   "engines": {
-    "node": ">= 8.4.0",
-    "npm": ">=5.3.0"
+    "node": ">= 8.11.3",
+    "npm": ">=5.6.0"
   },
   "nodemonConfig": {
     "ignore": [

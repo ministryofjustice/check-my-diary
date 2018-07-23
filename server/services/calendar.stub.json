@@ -1,0 +1,731 @@
+{
+  "calendar": [
+
+    {
+      "date": "2018-06-01",
+      "day": "Sunday",
+      "type": "work",
+      "events": [
+        {
+          "type": "work",
+          "startTime": "07:00",
+          "endTime": "17:30",
+          "duration": "10:30",
+          "detail": [
+            {
+              "startTime": "07:00",
+              "endTime": "12:30",
+              "description": "Resident 2 B Wing",
+              "notes": "Bring your coat, you're going to get wet."
+            },
+            {
+              "startTime": "12:30",
+              "endTime": "13:30",
+              "description": "Break"
+            },
+            {
+              "startTime": "13:30",
+              "endTime": "17:30",
+              "description": "Resident 2 B Wing",
+              "notes": "Bring your wellies, it'll be wetter than before."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2018-06-02",
+      "day": "Monday",
+      "type": "rest-day"
+    },
+    {
+      "date": "2018-06-03",
+      "day": "Tuesday",
+      "type": "work",
+      "events": [
+        {
+          "type": "work",
+          "startTime": "07:00",
+          "endTime": "19:30",
+          "duration": "12:00",
+          "detail": [
+            {
+              "startTime": "07:00",
+              "endTime": "12:30",
+              "description": "Resident 2 B Wing",
+              "notes": "No sandwiches allowed on B Wing today."
+            },
+            {
+              "startTime": "12:30",
+              "endTime": "13:30",
+              "description": "Break"
+            },
+            {
+              "startTime": "13:30",
+              "endTime": "15:30",
+              "description": "Resident 2 B Wing",
+              "notes": "Confiscate all plastic spoons."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2018-06-04",
+      "day": "Wednesday",
+      "type": "rest-day"
+    },
+    {
+      "date": "2018-06-05",
+      "day": "Thursday",
+      "type": "work",
+      "events": [
+        {
+          "type": "work",
+          "startTime": "07:00",
+          "endTime": "17:30",
+          "duration": "10:00",
+          "detail": [
+            {
+              "startTime": "07:00",
+              "endTime": "12:30",
+              "description": "Resident 2 B Wing",
+              "notes": "No sandwiches allowed on B Wing today."
+            },
+            {
+              "startTime": "12:30",
+              "endTime": "13:30",
+              "description": "Break"
+            },
+            {
+              "startTime": "13:30",
+              "endTime": "15:30",
+              "description": "Resident 2 B Wing",
+              "notes": "Confiscate all plastic spoons."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2018-06-06",
+      "day": "Friday",
+      "type": "work",
+      "events": [
+        {
+          "type": "work",
+          "startTime": "07:00",
+          "endTime": "19:30",
+          "duration": "12:00",
+          "detail": [
+            {
+              "startTime": "07:00",
+              "endTime": "12:30",
+              "description": "Resident 2 B Wing",
+              "notes": "No sandwiches allowed on B Wing today."
+            },
+            {
+              "startTime": "12:30",
+              "endTime": "13:30",
+              "description": "Break"
+            },
+            {
+              "startTime": "13:30",
+              "endTime": "15:30",
+              "description": "Resident 2 B Wing",
+              "notes": "Confiscate all plastic spoons."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2018-06-07",
+      "day": "Saturday",
+      "type": "work",
+      "events": [
+        {
+          "type": "work",
+          "startTime": "07:00",
+          "endTime": "17:30",
+          "duration": "10:00",
+          "detail": [
+            {
+              "startTime": "07:00",
+              "endTime": "12:30",
+              "description": "Resident 2 B Wing",
+              "notes": "No sandwiches allowed on B Wing today."
+            },
+            {
+              "startTime": "12:30",
+              "endTime": "13:30",
+              "description": "Break"
+            },
+            {
+              "startTime": "13:30",
+              "endTime": "15:30",
+              "description": "Resident 2 B Wing",
+              "notes": "Confiscate all plastic spoons."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2018-06-08",
+      "day": "Sunday",
+      "type": "work",
+      "events": [
+        {
+          "type": "work",
+          "startTime": "12:30",
+          "endTime": "21:00",
+          "duration": "08:30",
+          "detail": [
+            {
+              "startTime": "07:00",
+              "endTime": "12:30",
+              "description": "Resident 2 B Wing",
+              "notes": "No sandwiches allowed on B Wing today."
+            },
+            {
+              "startTime": "12:30",
+              "endTime": "13:30",
+              "description": "Break"
+            },
+            {
+              "startTime": "13:30",
+              "endTime": "15:30",
+              "description": "Resident 2 B Wing",
+              "notes": "Confiscate all plastic spoons."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2018-06-09",
+      "day": "Monday",
+      "type": "work",
+      "events": [
+        {
+          "type": "work",
+          "startTime": "12:30",
+          "endTime": "21:00",
+          "duration": "08:30",
+          "detail": [
+            {
+              "startTime": "07:00",
+              "endTime": "12:30",
+              "description": "Resident 2 B Wing",
+              "notes": "No sandwiches allowed on B Wing today."
+            },
+            {
+              "startTime": "12:30",
+              "endTime": "13:30",
+              "description": "Break"
+            },
+            {
+              "startTime": "13:30",
+              "endTime": "15:30",
+              "description": "Resident 2 B Wing",
+              "notes": "Confiscate all plastic spoons."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2018-06-10",
+      "day": "Tuesday",
+      "type": "rest-day"
+    },
+    {
+      "date": "2018-06-11",
+      "day": "Wednesday",
+      "type": "rest-day"
+    },
+    {
+      "date": "2018-06-12",
+      "day": "Thursday",
+      "type": "work",
+      "events": [
+        {
+          "type": "work",
+          "startTime": "12:30",
+          "endTime": "21:00",
+          "duration": "08:30",
+          "detail": [
+            {
+              "startTime": "07:00",
+              "endTime": "12:30",
+              "description": "Resident 2 B Wing",
+              "notes": "No sandwiches allowed on B Wing today."
+            },
+            {
+              "startTime": "12:30",
+              "endTime": "13:30",
+              "description": "Break"
+            },
+            {
+              "startTime": "13:30",
+              "endTime": "15:30",
+              "description": "Resident 2 B Wing",
+              "notes": "Confiscate all plastic spoons."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2018-06-13",
+      "day": "Friday",
+      "type": "work",
+      "events": [
+        {
+          "type": "work",
+          "startTime": "07:30",
+          "endTime": "17:30",
+          "duration": "10:00",
+          "detail": [
+            {
+              "startTime": "07:00",
+              "endTime": "12:30",
+              "description": "Resident 2 B Wing",
+              "notes": "No sandwiches allowed on B Wing today."
+            },
+            {
+              "startTime": "12:30",
+              "endTime": "13:30",
+              "description": "Break"
+            },
+            {
+              "startTime": "13:30",
+              "endTime": "15:30",
+              "description": "Resident 2 B Wing",
+              "notes": "Confiscate all plastic spoons."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2018-06-14",
+      "day": "Saturday",
+      "type": "work",
+      "events": [
+        {
+          "type": "work",
+          "startTime": "07:30",
+          "endTime": "17:30",
+          "duration": "10:00",
+          "detail": [
+            {
+              "startTime": "07:00",
+              "endTime": "12:30",
+              "description": "Resident 2 B Wing",
+              "notes": "No sandwiches allowed on B Wing today."
+            },
+            {
+              "startTime": "12:30",
+              "endTime": "13:30",
+              "description": "Break"
+            },
+            {
+              "startTime": "13:30",
+              "endTime": "15:30",
+              "description": "Resident 2 B Wing",
+              "notes": "Confiscate all plastic spoons."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2018-06-15",
+      "day": "Sunday",
+      "type": "work",
+      "events": [
+        {
+          "type": "holiday"
+        },
+        {
+          "type": "work",
+          "startTime": "12:30",
+          "endTime": "21:00",
+          "duration": "08:30",
+          "detail": [
+            {
+              "startTime": "07:00",
+              "endTime": "12:30",
+              "description": "Resident 2 B Wing",
+              "notes": "No sandwiches allowed on B Wing today."
+            },
+            {
+              "startTime": "12:30",
+              "endTime": "13:30",
+              "description": "Break"
+            },
+            {
+              "startTime": "13:30",
+              "endTime": "15:30",
+              "description": "Resident 2 B Wing",
+              "notes": "Confiscate all plastic spoons."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2018-06-16",
+      "day": "Monday",
+      "type": "work",
+      "events": [
+        {
+          "type": "work",
+          "startTime": "17:30",
+          "endTime": "20:00",
+          "duration": "02:30",
+          "detail": [
+            {
+              "startTime": "07:00",
+              "endTime": "12:30",
+              "description": "Resident 2 B Wing",
+              "notes": "No sandwiches allowed on B Wing today."
+            },
+            {
+              "startTime": "12:30",
+              "endTime": "13:30",
+              "description": "Break"
+            },
+            {
+              "startTime": "13:30",
+              "endTime": "15:30",
+              "description": "Resident 2 B Wing",
+              "notes": "Confiscate all plastic spoons."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2018-06-17",
+      "day": "Tuesday",
+      "type": "work",
+      "events": [
+        {
+          "type": "work",
+          "startTime": "07:30",
+          "endTime": "21:00",
+          "duration": "13:30",
+          "detail": [
+            {
+              "startTime": "07:00",
+              "endTime": "12:30",
+              "description": "Resident 2 B Wing",
+              "notes": "No sandwiches allowed on B Wing today."
+            },
+            {
+              "startTime": "12:30",
+              "endTime": "13:30",
+              "description": "Break"
+            },
+            {
+              "startTime": "13:30",
+              "endTime": "15:30",
+              "description": "Resident 2 B Wing",
+              "notes": "Confiscate all plastic spoons."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2018-06-18",
+      "day": "Wednesday",
+      "type": "rest-day"
+    },
+    {
+      "date": "2018-06-19",
+      "day": "Thursday",
+      "type": "rest-day"
+    },
+    {
+      "date": "2018-06-20",
+      "day": "Friday",
+      "type": "work",
+      "events": [
+        {
+          "type": "work",
+          "startTime": "07:30",
+          "endTime": "17:30",
+          "duration": "10:00",
+          "detail": [
+            {
+              "startTime": "07:00",
+              "endTime": "12:30",
+              "description": "Resident 2 B Wing",
+              "notes": "No sandwiches allowed on B Wing today."
+            },
+            {
+              "startTime": "12:30",
+              "endTime": "13:30",
+              "description": "Break"
+            },
+            {
+              "startTime": "13:30",
+              "endTime": "15:30",
+              "description": "Resident 2 B Wing",
+              "notes": "Confiscate all plastic spoons."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2018-06-21",
+      "day": "Saturday",
+      "type": "work",
+      "events": [
+        {
+          "type": "work",
+          "startTime": "07:30",
+          "endTime": "17:30",
+          "duration": "10:00",
+          "detail": [
+            {
+              "startTime": "07:00",
+              "endTime": "12:30",
+              "description": "Resident 2 B Wing",
+              "notes": "No sandwiches allowed on B Wing today."
+            },
+            {
+              "startTime": "12:30",
+              "endTime": "13:30",
+              "description": "Break"
+            },
+            {
+              "startTime": "13:30",
+              "endTime": "15:30",
+              "description": "Resident 2 B Wing",
+              "notes": "Confiscate all plastic spoons."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2018-06-22",
+      "day": "Sunday",
+      "type": "work",
+      "events": [
+        {
+          "type": "work",
+          "startTime": "17:30",
+          "endTime": "20:00",
+          "duration": "02:30",
+          "detail": [
+            {
+              "startTime": "07:00",
+              "endTime": "12:30",
+              "description": "Resident 2 B Wing",
+              "notes": "No sandwiches allowed on B Wing today."
+            },
+            {
+              "startTime": "12:30",
+              "endTime": "13:30",
+              "description": "Break"
+            },
+            {
+              "startTime": "13:30",
+              "endTime": "15:30",
+              "description": "Resident 2 B Wing",
+              "notes": "Confiscate all plastic spoons."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2018-06-23",
+      "day": "Monday",
+      "type": "work",
+      "events": [
+        {
+          "type": "work",
+          "startTime": "07:30",
+          "endTime": "21:00",
+          "duration": "13:30",
+          "detail": [
+            {
+              "startTime": "07:00",
+              "endTime": "12:30",
+              "description": "Resident 2 B Wing",
+              "notes": "No sandwiches allowed on B Wing today."
+            },
+            {
+              "startTime": "12:30",
+              "endTime": "13:30",
+              "description": "Break"
+            },
+            {
+              "startTime": "13:30",
+              "endTime": "15:30",
+              "description": "Resident 2 B Wing",
+              "notes": "Confiscate all plastic spoons."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2018-06-24",
+      "day": "Tuesday",
+      "type": "work",
+      "events": [
+        {
+          "type": "work",
+          "startTime": "17:30",
+          "endTime": "20:00",
+          "duration": "02:30",
+          "detail": [
+            {
+              "startTime": "07:00",
+              "endTime": "12:30",
+              "description": "Resident 2 B Wing",
+              "notes": "No sandwiches allowed on B Wing today."
+            },
+            {
+              "startTime": "12:30",
+              "endTime": "13:30",
+              "description": "Break"
+            },
+            {
+              "startTime": "13:30",
+              "endTime": "15:30",
+              "description": "Resident 2 B Wing",
+              "notes": "Confiscate all plastic spoons."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2018-06-25",
+      "day": "Wednesday",
+      "type": "rest-day"
+    },
+    {
+      "date": "2018-06-26",
+      "day": "Thursday",
+      "type": "holiday"
+    },
+    {
+      "date": "2018-06-27",
+      "day": "Friday",
+      "type": "holiday"
+    },
+    {
+      "date": "2018-06-28",
+      "day": "Saturday",
+      "type": "holiday"
+    },
+    {
+      "date": "2018-06-29",
+      "day": "Sunday",
+      "type": "work",
+      "events": [
+        {
+          "type": "work",
+          "startTime": "17:30",
+          "endTime": "20:00",
+          "duration": "02:30",
+          "detail": [
+            {
+              "startTime": "07:00",
+              "endTime": "12:30",
+              "description": "Resident 2 B Wing",
+              "notes": "No sandwiches allowed on B Wing today."
+            },
+            {
+              "startTime": "12:30",
+              "endTime": "13:30",
+              "description": "Break"
+            },
+            {
+              "startTime": "13:30",
+              "endTime": "15:30",
+              "description": "Resident 2 B Wing",
+              "notes": "Confiscate all plastic spoons."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2018-06-30",
+      "day": "Monday",
+      "type": "work",
+      "events": [
+        {
+          "type": "work",
+          "startTime": "17:30",
+          "endTime": "20:00",
+          "duration": "02:30",
+          "detail": [
+            {
+              "startTime": "07:00",
+              "endTime": "12:30",
+              "description": "Resident 2 B Wing",
+              "notes": "No sandwiches allowed on B Wing today."
+            },
+            {
+              "startTime": "12:30",
+              "endTime": "13:30",
+              "description": "Break"
+            },
+            {
+              "startTime": "13:30",
+              "endTime": "15:30",
+              "description": "Resident 2 B Wing",
+              "notes": "Confiscate all plastic spoons."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2018-06-31",
+      "day": "Tuesday",
+      "type": "work",
+      "events": [
+        {
+          "type": "work",
+          "startTime": "17:30",
+          "endTime": "20:00",
+          "duration": "02:30",
+          "detail": [
+            {
+              "startTime": "07:00",
+              "endTime": "12:30",
+              "description": "Resident 2 B Wing",
+              "notes": "No sandwiches allowed on B Wing today."
+            },
+            {
+              "startTime": "12:30",
+              "endTime": "13:30",
+              "description": "Break"
+            },
+            {
+              "startTime": "13:30",
+              "endTime": "15:30",
+              "description": "Resident 2 B Wing",
+              "notes": "Confiscate all plastic spoons."
+            }
+          ]
+        }
+      ]
+    }
+
+  ]
+}

@@ -8,263 +8,62 @@
   <% include ../partials/header %>
 
   <main id="content" class="app-container" role="main">
-	
-	<% include ../partials/tabs %>
 
-	<div class="calendar-controls c-align">
-		<span class="calendar-title bold-medium">
-			June 2018
-		</span>
-		<a class="btn-change-month" href="#">Previous month</a>
-		<a class="btn-change-month btn-change-month-with-border" href="#">Next month</a>
-	</div>
-	  
-	<ul class="calendar">
-		 <li class="calendar-item">
-			<a href="/calendar/details/2018-7-1">
-				<span class="day bold-xsmall">Sun, 1</span> 
-				<span class="detail font-xsmall detail-start">Start 07:30</span>
-				<span class="detail font-xsmall detail-finish">Finish 17:30</span>
-				<span class="font-xsmall detail-duration">10hr</span>
-			</a>
-		 </li>		
-		
-		 <li class="calendar-item rest-day">
-			 <span class="day bold-xsmall">Mon, 2</span> 
-			 <span class="event">Rest day</span>
-		 </li>
-		 
-		<li class="calendar-item">
-			<a href="/calendar/details/2018-7-3">
-				<span class="day day-current bold-xsmall">Tue, 3</span> 
-				<span class="detail font-xsmall detail-start">Start 07:30</span>
-				<span class="detail font-xsmall detail-finish">Finish 19:30</span>
-				<span class="font-xsmall detail-duration">12hr</span>
-			</a>
-		 </li>
-		 
-		 <li class="calendar-item rest-day">
-			 <span class="day bold-xsmall">Wed, 4</span> 
-			 <span class="event">Rest day</span>
-		 </li>
-		 
-		 <li class="calendar-item">
-			<a href="/calendar/details/2018-7-5">
-				<span class="day bold-xsmall">Thu, 5</span> 
-				<span class="detail font-xsmall detail-start">Start 07:30</span>
-				<span class="detail font-xsmall detail-finish">Finish 17:30</span>
-				<span class="font-xsmall detail-duration">10hr</span>
-			</a>
-		 </li>
-		 
-		 <li class="calendar-item">
-			 <a href="/calendar/details/2018-7-6">
-				<span class="day bold-xsmall">Fri, 6</span> 
-				<span class="detail font-xsmall detail-start">Start 07:30</span>
-				<span class="detail font-xsmall detail-finish">Finish 19:30</span>
-				<span class="font-xsmall detail-duration">12hr</span>
-			 </a>
-		 </li>
-		 
-		 <li class="last-cell calendar-item">
-			 <a href="/calendar/details/2018-7-7">
-				<span class="day bold-xsmall">Sat, 7</span> 
-				<span class="detail font-xsmall detail-start">Start 07:30</span>
-				<span class="detail font-xsmall detail-finish">Finish 17:30</span>
-				<span class="font-xsmall detail-duration">10hr</span>
-			 </a>
-		 </li>
+    <% include ../partials/tabs %>
 
-		<li class="calendar-item">
-			<a href="/calendar/details/2018-7-8">
-				<span class="day bold-xsmall">Sun, 8</span> 
-				<span class="detail font-xsmall detail-start">Start 12:30</span>
-				<span class="detail font-xsmall detail-finish">Finish 21:00</span>
-				<span class="font-xsmall detail-duration">8hr 30min</span>
-			</a>
-		 </li>
-		 
-		 <li class="calendar-item">
-			<a href="/calendar/details/2018-7-9">
-				<span class="day bold-xsmall">Mon, 9</span> 
-				<span class="detail font-xsmall detail-start">Start 12:30</span>
-				<span class="detail font-xsmall detail-finish">Finish 21:00</span>
-				<span class="font-xsmall detail-duration">8hr 30min</span>
-			</a>
-		 </li>
-		 
-		 <li class="calendar-item rest-day">
-			 <span class="day bold-xsmall">Tue, 10</span> 
-			 <span class="event">Rest day</span>
-		 </li>
-		
-		 <li class="calendar-item rest-day">
-			 <span class="day bold-xsmall">Wed, 11</span> 
-			 <span class="event">Rest day</span>
-		 </li>
-		 
-		 <li class="calendar-item">
-			<a href="/calendar/details/2018-7-12">
-				<span class="day bold-xsmall">Thu, 12</span> 
-				<span class="detail font-xsmall detail-start">Start 12:30</span>
-				<span class="detail font-xsmall detail-finish">Finish 21:00</span>
-				<span class="font-xsmall detail-duration">8hr 30min</span>
-			</a>
-		 </li>
-		 
-		<li class="calendar-item">
-			<a href="/calendar/details/2018-7-13">
-				<span class="day bold-xsmall">Fri, 13</span> 
-				<span class="detail font-xsmall detail-start">Start 07:30</span>
-				<span class="detail font-xsmall detail-finish">Finish 17:30</span>
-				<span class="font-xsmall detail-duration">10hr</span>
-			</a>
-		 </li>
-		
-		 <li class="last-cell calendar-item">
-			<a href="/calendar/details/2018-7-14">
-				<span class="day bold-xsmall">Sat, 14</span> 
-				<span class="detail font-xsmall detail-start">Start 07:30</span>
-				<span class="detail font-xsmall detail-finish">Finish 17:30</span>
-				<span class="font-xsmall detail-duration">10hr</span>
-			</a>
-		 </li>
+    <div class="calendar-controls c-align">
+      <span class="calendar-title bold-medium">
+        June 2018
+      </span>
+      <a class="btn-change-month" href="#">Previous month</a>
+      <a class="btn-change-month btn-change-month-with-border" href="#">Next month</a>
+    </div>
 
-		<li class="calendar-item">
-			<a href="/calendar/details/2018-7-15">
-				<span class="day bold-xsmall">Sun, 15</span> 
-				<span class="detail font-xsmall detail-holiday">Holiday (part)</span>
-				<span class="detail font-xsmall detail-start">Start 12:30</span>
-				<span class="detail font-xsmall detail-finish">Finish 21:00</span>
-				<span class="font-xsmall detail-duration">9hr 30min</span>
-			</a>
-		 </li>
-		 
-		 <li class="calendar-item">
-			<a href="/calendar/details/2018-7-16">
-				<span class="day bold-xsmall">Mon, 16</span> 
-				<span class="detail font-xsmall detail-start">Start 17:30</span>
-				<span class="detail font-xsmall detail-finish">Finish 20:00</span>
-				<span class="font-xsmall detail-duration">2hr 30min</span>
-			</a>
-		 </li>
-		 
-		 <li class="calendar-item">
-			<a href="/calendar/details/2018-7-17">
-				<span class="day bold-xsmall">Tue, 17</span> 
-				<span class="detail font-xsmall detail-start">Start 07:30</span>
-				<span class="detail font-xsmall detail-finish">Finish 21:00</span>
-				<span class="font-xsmall detail-duration">13hr 30min</span>
-			</a>
-		 </li>
-		 
-		 <li class="calendar-item rest-day">
-			 <span class="day bold-xsmall">Wed, 18</span> 
-			 <span class="event">Rest day</span>
-		 </li>
-		
-		 <li class="calendar-item rest-day">
-			 <span class="day bold-xsmall">Thu, 19</span> 
-			 <span class="event">Rest day</span>
-		 </li>
-		 
-		<li class="calendar-item">
-			<a href="/calendar/details/2018-7-20">
-				<span class="day bold-xsmall">Fri, 20</span> 
-				<span class="detail font-xsmall detail-start">Start 07:30</span>
-				<span class="detail font-xsmall detail-finish">Finish 17:30</span>
-				<span class="font-xsmall detail-duration">10hr</span>
-			</a>
-		 </li>
-		 <li class="last-cell calendar-item">
-			<a href="/calendar/details/2018-7-21">
-				<span class="day bold-xsmall">Sat, 21</span> 
-				<span class="detail font-xsmall detail-start">Start 07:30</span>
-				<span class="detail font-xsmall detail-finish">Finish 17:30</span>
-				<span class="font-xsmall detail-duration">10hr</span>
-			</a>
-		 </li>
-		 
-		 <li class=" calendar-item">
-			<a href="/calendar/details/2018-7-22">
-				<span class="day bold-xsmall">Sun, 22</span> 
-				<span class="detail font-xsmall detail-start">Start 17:30</span>
-				<span class="detail font-xsmall detail-finish">Finish 20:00</span>
-				<span class="font-xsmall detail-duration">2hr 30min</span>
-			</a>
-		 </li>
-		
-		 <li class=" calendar-item">
-			<a href="/calendar/details/2018-7-23">
-				<span class="day bold-xsmall">Mon, 23</span> 
-				<span class="detail font-xsmall detail-start">Start 07:30</span>
-				<span class="detail font-xsmall detail-finish">Finish 21:00</span>
-				<span class="font-xsmall detail-duration">13hr 30min</span>
-			</a>
-		 </li>
-		 
-		 <li class=" calendar-item">
-			<a href="/calendar/details/2018-7-24">
-				<span class="day bold-xsmall">Tue, 24</span> 
-				<span class="detail font-xsmall detail-start">Start 17:30</span>
-				<span class="detail font-xsmall detail-finish">Finish 20:00</span>
-				<span class="font-xsmall detail-duration">2hr 30min</span>
-			</a>
-		 </li>
-		 
-		 <li class="calendar-item rest-day">
-			 <span class="day bold-xsmall">Wed, 25</span> 
-			 <span class="event">Rest day</span>
-		 </li>
-		 
-		<li class="calendar-item holiday">
-			<span class="day bold-xsmall">Thu, 26</span>
-			<span class="event event-holiday">Holiday</span>
-		</li>
-		
-		<li class="calendar-item holiday">
-			<span class="day bold-xsmall">Fri, 27</span>
-			<span class="event event-holiday">Holiday</span>
-		</li>
-		
-		<li class="last-cell calendar-item holiday">
-			<span class="day bold-xsmall">Sat, 28</span>
-			<span class="event event-holiday">Holiday</span>
-		</li>
+    <ul class="calendar">
+      <% data.calendar.forEach(function(day){ %>
 
-		 <li class="last-row calendar-item calendar-item">
-			<a href="/calendar/details/2018-7-29">
-				<span class="day bold-xsmall">Sun, 29</span> 
-				<span class="detail font-xsmall detail-start">Start 17:30</span>
-				<span class="detail font-xsmall detail-finish">Finish 20:00</span>
-				<span class="font-xsmall detail-duration">2hr 30min</span>
-			</a>
-		 </li>		
-		
-		 <li class="last-row calendar-item calendar-item">
-			<a href="/calendar/details/2018-7-30">
-				<span class="day bold-xsmall">Mon, 30</span> 
-				<span class="detail font-xsmall detail-start">Start 17:30</span>
-				<span class="detail font-xsmall detail-finish">Finish 20:00</span>
-				<span class="font-xsmall detail-duration">2hr 30min</span>
-			</a>
-		 </li>	
-		
-		 <li class="last-row calendar-item calendar-item">
-			<a href="/calendar/details/2018-7-31">
-				<span class="day bold-xsmall">Tue, 31</span> 
-				<span class="detail font-xsmall detail-start">Start 17:30</span>
-				<span class="detail font-xsmall detail-finish">Finish 20:00</span>
-				<span class="font-xsmall detail-duration">2hr 30min</span>
-			</a>
-		 </li>	
-		
-        <li aria-hidden="true" class="last-row calendar-item no-day">&nbsp;</li>
-		<li aria-hidden="true" class="last-row calendar-item no-day">&nbsp;</li>
-		<li aria-hidden="true" class="last-row calendar-item no-day">&nbsp;</li>
-		<li aria-hidden="true" class="last-row calendar-item no-day last-cell">&nbsp;</li>
-	</ul>
-	  
+        <li class="calendar-item <% if (day.type === 'rest-day') { %>rest-day<% } %><% if (day.type === 'holiday') { %>holiday<% } %><% if (day.type === 'no-day') { %>no-day<% } %>">
+
+          <% if (day.type === 'work') { %>
+            <a href="#">
+              <span class="day bold-xsmall"><%= day.day.substr(0, 3) %>, <%= parseInt(day.date.substr(day.date.length - 2), 10) %></span>
+
+              <% day.events.forEach(function(item){ %>
+
+                <% if (day.type === 'work') { %>
+
+                  <% if (item.type === 'holiday') { %>
+                    <span class="detail font-xsmall detail-holiday">Holiday (part)</span>
+                  <% } %>
+
+                  <% if (item.type === 'work') { %>
+                    <span class="detail font-xsmall detail-start">Start <%= item.startTime %></span>
+                    <span class="detail font-xsmall detail-finish">Finish <%= item.endTime %></span>
+                    <span class="font-xsmall detail-duration"><%= item.duration %></span>
+                  <% } %>
+
+                <% } %>
+
+              <% }); %>
+
+            </a>
+          <% } %>
+
+          <% if (day.type === 'rest-day') { %>
+            <span class="day bold-xsmall"><%= day.day.substr(0, 3) %>, <%= parseInt(day.date.substr(day.date.length - 2), 10) %></span>
+            <span class="event">Rest day</span>
+          <% } %>
+
+          <% if (day.type === 'holiday') { %>
+            <span class="day bold-xsmall"><%= day.day.substr(0, 3) %>, <%= parseInt(day.date.substr(day.date.length - 2), 10) %></span>
+            <span class="event event-holiday">Holiday</span>
+          <% } %>
+
+         </li>
+
+      <% }); %>
+    </ul>
+
   </main>
 
   <% include ../partials/footer %>
