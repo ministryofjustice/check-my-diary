@@ -3,7 +3,7 @@ const fs = require('fs');
 module.exports = function CalendarService() {
 
   /**
-   * @TODO: Replace with API call and sort out resolve/reject
+   * @TODO: Replace with API and sort resolve/reject
    * @returns {any}
    */
   function loadStub() {
