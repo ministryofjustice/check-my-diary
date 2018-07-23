@@ -30,7 +30,7 @@
 
           <% if (day.type === 'work') { %>
             <a href="/calendar/details/<%= day.date %>">
-              <span class="day bold-xsmall"><%= day.day.substr(0, 3) %>, <%= parseDate(day.date) %></span>
+              <span class="day bold-xsmall"><%= day.day.substr(0, 3) %>, <%= parseShortDate(day.date) %></span>
 
               <% day.events.forEach(function(item){ %>
 
@@ -54,12 +54,12 @@
           <% } %>
 
           <% if (day.type === 'rest-day') { %>
-            <span class="day bold-xsmall"><%= day.day.substr(0, 3) %>, <%= parseDate(day.date) %></span>
+            <span class="day bold-xsmall"><%= day.day.substr(0, 3) %>, <%= parseShortDate(day.date) %></span>
             <span class="event">Rest day</span>
           <% } %>
 
           <% if (day.type === 'holiday') { %>
-            <span class="day bold-xsmall"><%= day.day.substr(0, 3) %>, <%= parseDate(day.date) %></span>
+            <span class="day bold-xsmall"><%= day.day.substr(0, 3) %>, <%= parseShortDate(day.date) %></span>
             <span class="event event-holiday">Holiday</span>
           <% } %>
 

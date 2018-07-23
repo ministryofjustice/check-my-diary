@@ -7,8 +7,13 @@ parseDuration = function(duration) {
   return (hours ? hours + 'hr ' : '') + (minutes ? minutes + 'min' : '');
 }
 
-parseDate = function(date) {
+parseShortDate = function(date) {
   return parseInt(date.substr(date.length - 2), 10);
+}
+
+parseDate = function(date) {
+  const split = date.split('-');
+  return split[2] + '/' + split[1] + '/' + split[0];
 }
 
 %>

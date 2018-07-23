@@ -2,14 +2,22 @@ const fs = require('fs');
 
 module.exports = function CalendarService() {
 
-  function readJsonFileSync(filepath, encoding) {
-    if (typeof (encoding) === 'undefined') {
-      encoding = 'utf8';
-    }
+  /**
+   * @TODO: Replace with API call and sort out resolve/reject
+   * @returns {any}
+   */
+  function loadStub() {
+    return JSON.parse(fs.readFileSync(__dirname + '/calendar.stub.json', 'utf8'));
+  }
 
-    const parsedJSON = JSON.parse(fs.readFileSync(filepath, encoding));
+  /**
+   *
+   * @returns {*}
+   */
+  function getCalendarData() {
+    const parsedJSON = loadStub();
 
-    // Ensure that there are 35 calendar blocks
+    // @FIXME: This should be in controller / view
     if (parsedJSON.hasOwnProperty('calendar')) {
       for (let i = parsedJSON.calendar.length, len = 35; i < len; i++) {
         parsedJSON.calendar.push({
@@ -21,11 +29,25 @@ module.exports = function CalendarService() {
     return parsedJSON;
   }
 
-  function getCalendarData() {
-    return readJsonFileSync(__dirname + '/calendar.stub.json');
+  /**
+   *
+   * @param date
+   * @returns {*}
+   */
+  function getCalendarDetails(date) {
+    const parsedJSON = loadStub();
+
+    if (parsedJSON.hasOwnProperty('calendar')) {
+      const filtered = parsedJSON.calendar.filter((item) => {
+        return item.date === date;
+      });
+
+      return filtered[0];
+    }
   }
 
   return {
-    getCalendarData
+    getCalendarData,
+    getCalendarDetails
   };
 };
