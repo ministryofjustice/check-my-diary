@@ -1,0 +1,14 @@
+<%
+
+parseDuration = function(duration) {
+  const split = duration.split(':');
+  const hours = parseInt(split[0], 10);
+  const minutes = parseInt(split[1], 10);
+  return (hours ? hours + 'hr ' : '') + (minutes ? minutes + 'min' : '');
+}
+
+parseDate = function(date) {
+  return parseInt(date.substr(date.length - 2), 10);
+}
+
+%>

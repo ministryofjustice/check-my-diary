@@ -1,7 +1,11 @@
+<% include ../helpers/helpers %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <% include ../partials/head %>
+
 </head>
 <body>
 
@@ -26,7 +30,7 @@
 
           <% if (day.type === 'work') { %>
             <a href="/calendar/details/<%= day.date %>">
-              <span class="day bold-xsmall"><%= day.day.substr(0, 3) %>, <%= parseInt(day.date.substr(day.date.length - 2), 10) %></span>
+              <span class="day bold-xsmall"><%= day.day.substr(0, 3) %>, <%= parseDate(day.date) %></span>
 
               <% day.events.forEach(function(item){ %>
 
@@ -39,7 +43,7 @@
                   <% if (item.type === 'work') { %>
                     <span class="detail font-xsmall detail-start">Start <%= item.startTime %></span>
                     <span class="detail font-xsmall detail-finish">Finish <%= item.endTime %></span>
-                    <span class="font-xsmall detail-duration"><%= item.duration %></span>
+                    <span class="font-xsmall detail-duration"><%= parseDuration(item.duration) %></span>
                   <% } %>
 
                 <% } %>
@@ -50,12 +54,12 @@
           <% } %>
 
           <% if (day.type === 'rest-day') { %>
-            <span class="day bold-xsmall"><%= day.day.substr(0, 3) %>, <%= parseInt(day.date.substr(day.date.length - 2), 10) %></span>
+            <span class="day bold-xsmall"><%= day.day.substr(0, 3) %>, <%= parseDate(day.date) %></span>
             <span class="event">Rest day</span>
           <% } %>
 
           <% if (day.type === 'holiday') { %>
-            <span class="day bold-xsmall"><%= day.day.substr(0, 3) %>, <%= parseInt(day.date.substr(day.date.length - 2), 10) %></span>
+            <span class="day bold-xsmall"><%= day.day.substr(0, 3) %>, <%= parseDate(day.date) %></span>
             <span class="event event-holiday">Holiday</span>
           <% } %>
 
