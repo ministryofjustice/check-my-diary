@@ -17,9 +17,23 @@ module.exports = function CalendarService() {
   function getCalendarData() {
     const parsedJSON = loadStub();
 
-    // @FIXME: This should be in controller / view
     if (parsedJSON.hasOwnProperty('calendar')) {
-      for (let i = parsedJSON.calendar.length, len = 35; i < len; i++) {
+
+      /*
+      // Fixed layout
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      const pad = days.indexOf(parsedJSON.calendar[0].day);
+
+      for (let i = 0, len = pad; i < len; i++) {
+        parsedJSON.calendar.unshift({
+          'type': 'no-day'
+        });
+      }
+      */
+
+      const currentLen = parsedJSON.calendar.length;
+
+      for (let i = currentLen, len = (currentLen > 35 ? 42 : 35); i < len; i++) {
         parsedJSON.calendar.push({
           'type': 'no-day'
         });
