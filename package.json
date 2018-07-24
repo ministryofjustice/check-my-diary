@@ -58,5 +58,8 @@
     "mocha": "5.1.0",
     "nodemon": "1.17.3",
     "sinon": "6.1.4"
+  },
+  "optionalDependencies": {
+    "hoek": "4.2.1"
   }
 }
