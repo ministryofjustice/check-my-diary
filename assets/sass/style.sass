@@ -109,6 +109,11 @@ ul.calendar .calendar-item
 	margin-left: -1px;
 	margin-top: -1px;
 
+ul.calendar .calendar-item.calendar-header
+  border: 0;
+  font-weight: 600;
+  text-align: center;
+
 ul.calendar .calendar-item a:hover,
 ul.calendar .no-day
 	background-color: $grey-4;
@@ -212,6 +217,9 @@ ul.calendar .holiday
         height: inherit;
 
     ul.calendar .no-day
+        display: none;
+
+    ul.calendar .calendar-header
         display: none;
 
     #shiftDetail li

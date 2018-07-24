@@ -24,6 +24,13 @@
     </div>
 
     <ul class="calendar">
+
+      <% getDays().forEach(function(day){ %>
+
+        <li class="calendar-item calendar-header"><%= day.substr(0, 3) %></li>
+
+      <% }); %>
+
       <% data.calendar.forEach(function(day){ %>
 
         <li class="calendar-item <% if (day.type === 'rest-day') { %>rest-day<% } %><% if (day.type === 'holiday') { %>holiday<% } %><% if (day.type === 'no-day') { %>no-day<% } %>">

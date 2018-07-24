@@ -1,26 +1,26 @@
-const express = require('express');
-const addRequestId = require('express-request-id')();
-const helmet = require('helmet');
-const csurf = require('csurf');
-const compression = require('compression');
-const passport = require('passport');
-const bodyParser = require('body-parser');
-const cookieSession = require('cookie-session');
-const cookieParser = require('cookie-parser');
-const createIndexRouter = require('./routes/index');
-const sassMiddleware = require('node-sass-middleware');
-const moment = require('moment');
-const path = require('path');
-const log = require('bunyan-request-logger')();
-const logger = require('../log.js');
+const express = require('express'),
+  addRequestId = require('express-request-id')(),
+  helmet = require('helmet'),
+  csurf = require('csurf'),
+  compression = require('compression'),
+  passport = require('passport'),
+  bodyParser = require('body-parser'),
+  cookieSession = require('cookie-session'),
+  cookieParser = require('cookie-parser'),
+  createIndexRouter = require('./routes/index'),
+  sassMiddleware = require('node-sass-middleware'),
+  moment = require('moment'),
+  path = require('path'),
+  log = require('bunyan-request-logger')(),
+  logger = require('../log.js'),
+  config = require('../server/config');
 
-const config = require('../server/config');
-
-const version = moment.now().toString();
-const production = process.env.NODE_ENV === 'production';
-const testMode = process.env.NODE_ENV === 'test';
+const version = moment.now().toString(),
+  production = process.env.NODE_ENV === 'production',
+  testMode = process.env.NODE_ENV === 'test';
 
 module.exports = function createApp({ logger, calendarService }) { // eslint-disable-line no-shadow
+
   const app = express();
 
   app.set('json spaces', 2);

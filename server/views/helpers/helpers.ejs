@@ -1,5 +1,9 @@
 <%
 
+getDays = function() {
+  return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+}
+
 parseDuration = function(duration) {
   const split = duration.split(':');
   const hours = parseInt(split[0], 10);
@@ -16,7 +20,7 @@ parseDate = function(date) {
 }
 
 getNextDay = function(day) {
-  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const days = getDays();
   return days[days.indexOf(day) + 1] || 'Sunday';
 }
 

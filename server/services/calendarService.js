@@ -19,17 +19,15 @@ module.exports = function CalendarService() {
 
     if (parsedJSON.hasOwnProperty('calendar')) {
 
-      /*
       // Fixed layout
-      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-      const pad = days.indexOf(parsedJSON.calendar[0].day);
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        pad = days.indexOf(parsedJSON.calendar[0].day);
 
       for (let i = 0, len = pad; i < len; i++) {
         parsedJSON.calendar.unshift({
           'type': 'no-day'
         });
       }
-      */
 
       const currentLen = parsedJSON.calendar.length;
 
