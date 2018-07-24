@@ -33,7 +33,7 @@ module.exports = function CalendarService() {
 
       const currentLen = parsedJSON.calendar.length;
 
-      for (let i = currentLen, len = (currentLen > 35 ? 42 : 35); i < len; i++) {
+      for (let i = currentLen, len = currentLen > 35 ? 42 : 35; i < len; i++) {
         parsedJSON.calendar.push({
           'type': 'no-day'
         });
