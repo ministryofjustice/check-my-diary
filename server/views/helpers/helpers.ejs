@@ -16,4 +16,9 @@ parseDate = function(date) {
   return split[2] + '/' + split[1] + '/' + split[0];
 }
 
+getNextDay = function(day) {
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  return days[days.indexOf(day) + 1] || 'Sunday';
+}
+
 %>
