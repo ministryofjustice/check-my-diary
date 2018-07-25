@@ -20,7 +20,6 @@ axios.interceptors.request.use((config) => {
   return config;
 }, (error) => Promise.reject(error));
 
-
 const generateRequestHeaders = (req) => {
   return { jwt: { access_token: req.access_token, refresh_token: req.refresh_token }, host: req.headers.host };
 };

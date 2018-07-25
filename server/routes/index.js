@@ -31,5 +31,10 @@ module.exports = function Index({logger, calendarService}) {
     res.render('pages/maintenance', {csrfToken: req.csrfToken()});
   });
 
+  router.get('*', function(req, res) {
+    logger.info('Catch and redirect');
+    res.redirect('/');
+  });
+
   return router;
 };

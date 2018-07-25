@@ -6,7 +6,6 @@ const encodeToBase64 = (string) => Buffer.from(string).toString('base64');
 const decodedFromBase64 = (string) => Buffer.from(string, 'base64').toString('ascii');
 const getNowInMinutes = () => Math.floor(Date.now() / 60e3);
 
-
 const isHmppsCookieValid = (cookie) => {
   if (!cookie) {
     return false;
@@ -21,7 +20,6 @@ const isAuthenticated = (req) => {
   const hmppsCookie = req.cookies[config.hmppsCookie.name];
   return isHmppsCookieValid(hmppsCookie);
 };
-
 
 const hmppsSessionMiddleWare = (req, res, next) => {
   const hmppsCookie = req.cookies[config.hmppsCookie.name];
