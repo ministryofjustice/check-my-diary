@@ -19,7 +19,8 @@ router.get('/login', async (req, res) => {
     apiUp: isApiUp,
     mailTo: mailTo,
     homeLink: homeLink,
-    csrfToken: req.csrfToken()
+    csrfToken: req.csrfToken(),
+    uid: req.session.uid
   });
 });
 
@@ -34,6 +35,7 @@ const postLogin = async (req, res) => {
   try {
     const response = await gateway.login(req);
     session.setHmppsCookie(res, response.data);
+    req.session.uid = req.body.username;
     res.redirect('/');
   } catch (error) {
     logError(req.url, error, 'Login failure');
@@ -43,7 +45,8 @@ const postLogin = async (req, res) => {
       authErrorText: getAuthErrorDescription(error),
       mailTo: mailTo,
       homeLink: homeLink,
-      csrfToken: req.csrfToken()
+      csrfToken: req.csrfToken(),
+      uid: req.session.uid
     };
 
     res.render('pages/index', data);
