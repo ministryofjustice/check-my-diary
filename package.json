@@ -10,10 +10,6 @@
     "lint": "eslint . --cache --max-warnings 0",
     "test": "NODE_ENV=test mocha test/*.spec.js test/**/*.spec.js"
   },
-  "engines": {
-    "node": ">= 8.11.3 < 9.0.0",
-    "npm": ">=5.6.0 < 6.0.0"
-  },
   "nodemonConfig": {
     "ignore": [
       ".circleci/*",
