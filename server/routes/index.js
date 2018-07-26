@@ -4,16 +4,16 @@ module.exports = function Index({logger, calendarService}) {
 
   const router = express.Router();
 
-  router.get('/', (req, res) => {
+  router.get('/', async (req, res) => {
     logger.info('GET calendar view');
-    const data = calendarService.getCalendarData();
-    res.render('pages/calendar', {tab: 'Calendar', data: data, csrfToken: req.csrfToken()});
+    const request = await calendarService.getCalendarData();
+    res.render('pages/calendar', {tab: 'Calendar', data: calendarService.configureCalendar(request.data), csrfToken: req.csrfToken()});
   });
 
-  router.get('/details/:date', (req, res) => {
+  router.get('/details/:date', async (req, res) => {
     logger.info('GET calendar details');
-    const data = calendarService.getCalendarDetails(req.params.date);
-    res.render('pages/calendar-details', {data: data, csrfToken: req.csrfToken()});
+    const request = await calendarService.getCalendarDetails(req.params.date);
+    res.render('pages/calendar-details', {data: request.data.task, csrfToken: req.csrfToken()});
   });
 
   router.get('/notifications', (req, res) => {
