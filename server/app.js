@@ -13,9 +13,7 @@ const express = require('express'),
   path = require('path'),
   log = require('bunyan-request-logger')(),
   logger = require('../log.js'),
-  config = require('../server/config'),
-  session = require('./session'),
-  authentication = require('./controllers/authentication');
+  config = require('../server/config');
 
 const version = moment.now().toString(),
   production = process.env.NODE_ENV === 'production',
@@ -134,11 +132,6 @@ module.exports = function createApp({ logger, calendarService }) { // eslint-dis
   if (!testMode) {
     app.use(csurf({ cookie: true }));
   }
-
-  app.use('/auth', session.loginMiddleware, authentication.router);
-
-  app.use(session.hmppsSessionMiddleWare);
-  app.use(session.extendHmppsCookieMiddleWare);
 
   // Routing
   app.use('/', createIndexRouter({ logger, calendarService }));
