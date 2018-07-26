@@ -8,8 +8,10 @@
               </a>
           </div>
       </div>
+      <% if (typeof uid !== 'undefined') { %>
       <div id="logoutWrapper">
-          You are logged in as <%= uid %>. <a class="bold-xsmall" href="#">Log out</a>
+          You are logged in as <%= uid %>. <a class="bold-xsmall" href="/auth/logout">Log out</a>
       </div>
+      <% } %>
   </div>
 </header>

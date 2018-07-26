@@ -70,6 +70,9 @@ function getAuthErrorDescription(error) {
 
 router.get('/logout', (req, res) => {
   session.deleteHmppsCookie(res);
+  if (req.hasOwnProperty('session')) {
+    req.session.uid = void 0;
+  }
   res.redirect('/auth/login');
 });
 
