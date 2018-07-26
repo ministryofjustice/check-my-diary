@@ -10,7 +10,7 @@
   <% include ../partials/header %>
 
   <main id="content" class="app-container" role="main">
-    <a href="/" class="link-back">Back</a>
+    <a href="/calendar" class="link-back">Back</a>
 
     <div id="shiftDetail" class="grid-row">
       <div class="column-full">
@@ -74,7 +74,7 @@
 
         <% } %>
 
-        <a id="btnNextShiftDetail" href="/details/<%= data.nextDate %>" class="font-medium"><%= getNextDay(data.day) %> <%= parseDate(data.nextDate) %>  &rarr;</a>
+        <a id="btnNextShiftDetail" href="/calendar/details/<%= data.nextDate %>" class="font-medium"><%= getNextDay(data.day) %> <%= parseDate(data.nextDate) %>  &rarr;</a>
 
       </div>
     </div>
