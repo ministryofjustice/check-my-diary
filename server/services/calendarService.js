@@ -2,14 +2,14 @@ const axios = require('axios');
 
 module.exports = function CalendarService() {
 
-  const eliteApiUrl = process.env.API_ENDPOINT_URL || 'http://localhost:8080/';
+  const apiUrl = process.env.API_ENDPOINT_URL || 'http://localhost:8080/';
 
   /**
    *
    * @returns {*}
    */
   function getCalendarData() {
-    return axios.get(eliteApiUrl + 'api/shifts/');
+    return axios.get(apiUrl + 'api/shifts/');
   }
 
   /**
@@ -18,7 +18,7 @@ module.exports = function CalendarService() {
    * @returns {*}
    */
   function getCalendarDetails(date) {
-    return axios.get(eliteApiUrl + 'api/tasks/');
+    return axios.get(apiUrl + 'api/tasks/');
   }
 
   /**
