@@ -24,6 +24,7 @@
     "delay": "2500"
   },
   "dependencies": {
+    "axios": "0.18.0",
     "body-parser": "1.18.3",
     "bunyan": "1.8.12",
     "bunyan-format": "0.2.1",
@@ -42,6 +43,7 @@
     "govuk_template_jinja": "0.24.1",
     "helmet": "3.13.0",
     "http-errors": "1.6.3",
+    "jsonwebtoken": "8.3.0",
     "moment": "2.22.2",
     "morgan": "1.9.0",
     "node-sass-middleware": "0.11.0",
@@ -49,6 +51,7 @@
     "sass-middleware": "0.0.3"
   },
   "devDependencies": {
+    "axios-mock-adapter": "1.15.0",
     "chai": "4.1.2",
     "chai-as-promised": "7.1.1",
     "chai-string": "1.4.0",
@@ -61,5 +64,13 @@
   },
   "optionalDependencies": {
     "hoek": "5.0.3"
+  },
+  "proxy": {
+    "/auth/*": {
+      "target": "http://localhost:3000"
+    },
+    "/api/*": {
+      "target": "http://localhost:3000"
+    }
   }
 }
