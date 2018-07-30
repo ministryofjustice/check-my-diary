@@ -26,6 +26,11 @@ module.exports = function Index({logger, calendarService}) {
     res.render('pages/notification-settings', {uid: req.session.uid, csrfToken: req.csrfToken()});
   });
 
+  router.post('/notifications/settings', (req, res) => {
+    logger.info('POST notifications view');
+    res.redirect('/notifications');
+  });
+
   router.get('/maintenance', (req, res) => {
     logger.info('GET maintenance view');
     res.render('pages/maintenance', {uid: req.session.uid, csrfToken: req.csrfToken()});

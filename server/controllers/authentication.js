@@ -10,6 +10,7 @@ const gateway = require('../gateway-api');
 const mailTo = config.app.mailTo;
 const homeLink = config.app.notmEndpointUrl;
 
+// @TODO: Reinstate health check
 router.get('/login', async (req, res) => {
   // const healthRes = await health.healthResult();
   const isApiUp = true; //(healthRes.status < 500);
@@ -28,6 +29,7 @@ router.post('/login', (req, res) => {
   postLogin(req, res);
 });
 
+// @TODO: Reinstate health check
 const postLogin = async (req, res) => {
   // const healthRes = await health.healthResult();
   const isApiUp = true; // (healthRes.status < 500);
