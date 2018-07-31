@@ -36,11 +36,12 @@ module.exports = function CalendarService() {
   /**
    *
    * @param uid
+   * @param startDate
    * @returns {Promise<any>}
    */
-  function getCalendarData(uid) {
+  function getCalendarData(uid, startDate) {
     return new Promise((resolve, reject) => {
-      axios.get([apiUrl, 'api/shifts/', uid].join('')).then((response) => {
+      axios.get([apiUrl, 'api/shifts/', uid, '?start=', startDate].join('')).then((response) => {
         resolve(configureCalendar(response.data));
       }).catch((error) => {
         reject(error);

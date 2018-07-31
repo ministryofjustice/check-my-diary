@@ -4,9 +4,9 @@ module.exports = function Index({logger, calendarService}) {
 
   const router = express.Router();
 
-  router.get('/', async (req, res) => {
+  router.get('/calendar/:date', async (req, res) => {
     logger.info('GET calendar view');
-    const apiResponse = await calendarService.getCalendarData(req.session.uid);
+    const apiResponse = await calendarService.getCalendarData(req.session.uid, req.params.date);
     res.render('pages/calendar', {tab: 'Calendar', data: apiResponse, uid: req.session.uid, csrfToken: req.csrfToken()});
   });
 
@@ -37,8 +37,8 @@ module.exports = function Index({logger, calendarService}) {
   });
 
   router.get('*', function(req, res) {
-    logger.info('Catch and redirect');
-    res.redirect('/');
+    logger.info('Catch and redirect to current month view');
+    res.redirect('/calendar/' + [new Date().getFullYear(), ('0' + (new Date().getMonth() + 1)).slice(-2), '01'].join('-'));
   });
 
   return router;
