@@ -6,28 +6,10 @@ module.exports = function CalendarService() {
 
   /**
    *
-   * @returns {*}
-   */
-  function getCalendarData() {
-    return axios.get(apiUrl + 'api/shifts/');
-  }
-
-  /**
-   *
-   * @param date
-   * @returns {*}
-   */
-  function getCalendarDetails(date) {
-    return axios.get(apiUrl + 'api/tasks/');
-  }
-
-  /**
-   *
    * @param data
    * @returns {*}
    */
   function configureCalendar(data) {
-
     if (data.hasOwnProperty('calendar')) {
 
       // Fixed layout
@@ -48,13 +30,42 @@ module.exports = function CalendarService() {
         });
       }
     }
-
     return data;
+  }
+
+  /**
+   *
+   * @param uid
+   * @returns {Promise<any>}
+   */
+  function getCalendarData(uid) {
+    return new Promise((resolve, reject) => {
+      axios.get([apiUrl, 'api/shifts/', uid].join('')).then((response) => {
+        resolve(configureCalendar(response.data));
+      }).catch((error) => {
+        reject(error);
+      });
+    });
+  }
+
+  /**
+   *
+   * @param uid
+   * @param date
+   * @returns {Promise<any>}
+   */
+  function getCalendarDetails(uid, date) {
+    return new Promise((resolve, reject) => {
+      axios.get([apiUrl, 'api/tasks/', uid, '?date=', date].join('')).then((response) => {
+        resolve(response.data.task);
+      }).catch((error) => {
+        reject(error);
+      });
+    });
   }
 
   return {
     getCalendarData,
-    configureCalendar,
     getCalendarDetails
   };
 };

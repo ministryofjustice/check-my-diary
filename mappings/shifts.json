@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "url": "/api/shifts/"
+    "urlPattern": "/api/shifts/.*"
   },
   "response": {
     "status": 200,
