@@ -1,6 +1,7 @@
 {
   "name": "check-my-diary",
   "version": "0.0.0",
+  "license": "MIT",
   "scripts": {
     "start": "npm run css-build && node server.js",
     "start:dev": "yarn build && DEBUG=gov-starter-server* nodemon server.js | bunyan -o short",
@@ -38,7 +39,7 @@
     "govuk_frontend_toolkit": "7.6.0",
     "govuk_template_jinja": "0.24.1",
     "helmet": "3.13.0",
-    "http-errors": "1.6.3",
+    "http-errors": "1.7.0",
     "jsonwebtoken": "8.3.0",
     "moment": "2.22.2",
     "morgan": "1.9.0",

@@ -2,7 +2,7 @@ const axios = require('axios');
 
 module.exports = function CalendarService() {
 
-  const apiUrl = process.env.CALENDAR_API_ENDPOINT_URL || 'http://localhost:8080/';
+  const apiUrl = process.env.API_ENDPOINT_URL || 'http://localhost:8080/';
 
   /**
    *
