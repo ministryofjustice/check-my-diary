@@ -43,13 +43,13 @@ module.exports = function CalendarService() {
 
     // @TODO: This is here to support the API call but is this really needed?
     // Get the end date by retrieving the last date of the current month
-    function getEndDate () {
+    function getEndDate() {
       const splitDate = startDate.split('-');
       return `${splitDate[0]}-${splitDate[1]}-${new Date(splitDate[0], splitDate[1], 0).getDate()}`;
     }
 
     return new Promise((resolve, reject) => {
-      axios.get(`${apiUrl}api/shifts/${uid}?start=${startDate}&end=${getEndDate()}`).then((response) => {
+      axios.get(`${apiUrl}shifts/${uid}?start=${startDate}&end=${getEndDate()}`).then((response) => {
         resolve(configureCalendar(response.data));
       }).catch((error) => {
         reject(error);
@@ -65,7 +65,7 @@ module.exports = function CalendarService() {
    */
   function getCalendarDetails(uid, date) {
     return new Promise((resolve, reject) => {
-      axios.get(`${apiUrl}api/tasks/${uid}?date=${date}`).then((response) => {
+      axios.get(`${apiUrl}tasks/${uid}?date=${date}`).then((response) => {
         resolve(response.data.task);
       }).catch((error) => {
         reject(error);

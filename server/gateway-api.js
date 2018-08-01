@@ -21,10 +21,10 @@ axios.interceptors.request.use((config) => {
 }, (error) => Promise.reject(error));
 
 const generateRequestHeaders = (req) => {
-  return { jwt: { access_token: req.access_token, refresh_token: req.refresh_token }, host: req.headers.host };
+  return {jwt: {access_token: req.access_token, refresh_token: req.refresh_token}, host: req.headers.host};
 };
 
-const getRequest = ({ req, res, url, headers, params, paramsSerializer }) => service.callApi({
+const getRequest = ({req, res, url, headers, params, paramsSerializer}) => service.callApi({
   method: 'get',
   url,
   headers: headers || {},
@@ -34,40 +34,40 @@ const getRequest = ({ req, res, url, headers, params, paramsSerializer }) => ser
   onTokenRefresh: session.updateHmppsCookie(res)
 });
 
-const postRequest = ({ req, res, url, headers }) => service.callApi({
+const postRequest = ({req, res, url, headers}) => service.callApi({
   method: 'post',
   url,
-  headers: headers || { 'content-type': 'application/json' },
+  headers: headers || {'content-type': 'application/json'},
   reqHeaders: generateRequestHeaders(req),
   data: req.data,
   onTokenRefresh: session.updateHmppsCookie(res)
 });
 
-const putRequest = ({ req, res, url, headers }) => service.callApi({
+const putRequest = ({req, res, url, headers}) => service.callApi({
   method: 'put',
   url,
-  headers: headers || { 'content-type': 'application/json' },
+  headers: headers || {'content-type': 'application/json'},
   reqHeaders: generateRequestHeaders(req),
   data: req.body,
   onTokenRefresh: session.updateHmppsCookie(res)
 });
 
-const getHeaders = ({ headers, reqHeaders, token }) => {
+const getHeaders = ({headers, reqHeaders, token}) => {
   return Object.assign({}, headers, {
-    "authorization": 'Bearer ' + token,
+    'authorization': 'Bearer ' + token,
     'access-control-allow-origin': reqHeaders.host
   });
 };
 
-const callApi = ({ method, url, headers, reqHeaders, params, paramsSerializer, onTokenRefresh, responseType, data }) => {
-  const { access_token, refresh_token } = reqHeaders.jwt;
+const callApi = ({method, url, headers, reqHeaders, params, paramsSerializer, onTokenRefresh, responseType, data}) => {
+  const {access_token, refresh_token} = reqHeaders.jwt;
 
   if (!access_token || !refresh_token) { // eslint-disable-line camelcase
-    const message = "Null session or missing jwt";
+    const message = 'Null session or missing jwt';
     log.error(message);
     throw new Error(message);
   }
-  log.debug({ url, data }, 'Calling API');
+  log.debug({url, data}, 'Calling API');
   return axios({
     url,
     method,
@@ -75,11 +75,11 @@ const callApi = ({ method, url, headers, reqHeaders, params, paramsSerializer, o
     params,
     paramsSerializer,
     data,
-    headers: getHeaders({ headers, reqHeaders, token: access_token })
+    headers: getHeaders({headers, reqHeaders, token: access_token})
   }).catch(error => {
     if (error.response) {
       if (error.response.status === 401) {
-        return service.refreshTokenRequest({ token: refresh_token, headers, reqHeaders }).then(response => {
+        return service.refreshTokenRequest({token: refresh_token, headers, reqHeaders}).then(response => {
           onTokenRefresh(response.data);
           return service.retryRequest({
             url,
@@ -88,7 +88,7 @@ const callApi = ({ method, url, headers, reqHeaders, params, paramsSerializer, o
             params,
             paramsSerializer,
             data,
-            headers: getHeaders({ headers, reqHeaders, token: response.data.access_token })
+            headers: getHeaders({headers, reqHeaders, token: response.data.access_token})
           });
         });
       } else if (error.response.status === 404) {
@@ -100,17 +100,17 @@ const callApi = ({ method, url, headers, reqHeaders, params, paramsSerializer, o
   });
 };
 
-const refreshTokenRequest = ({ headers, reqHeaders, token }) => axios({
+const refreshTokenRequest = ({headers, reqHeaders, token}) => axios({
   method: 'post',
   url: `${eliteApiUrl}oauth/token`,
-  headers: getClientHeaders({ headers, reqHeaders }),
+  headers: getClientHeaders({headers, reqHeaders}),
   params: {
     grant_type: 'refresh_token',
     refresh_token: token
   }
 });
 
-function gatewayToken () {
+function gatewayToken() {
   const apiGatewayToken = process.env.API_GATEWAY_TOKEN;
   const milliseconds = Math.round((new Date()).getTime() / 1000);
   const payload = {
@@ -120,14 +120,14 @@ function gatewayToken () {
   const base64PrivateKey = process.env.API_GATEWAY_PRIVATE_KEY || '';
   const privateKey = Buffer.from(base64PrivateKey, 'base64');
   const cert = new Buffer(privateKey);
-  return jwt.sign(payload, cert, { algorithm: 'ES256' });
+  return jwt.sign(payload, cert, {algorithm: 'ES256'});
 }
 
 const apiClientId = process.env.API_CLIENT_ID || 'omic';
 const apiClientSecret = process.env.API_CLIENT_SECRET || 'clientsecret';
 const encodeClientCredentials = () => new Buffer(`${querystring.escape(apiClientId)}:${querystring.escape(apiClientSecret)}`).toString('base64');
 
-const getClientHeaders = ({ headers, reqHeaders }) => Object.assign({}, headers, {
+const getClientHeaders = ({headers, reqHeaders}) => Object.assign({}, headers, {
   "authorization": `Basic ${encodeClientCredentials()}`,
   'Content-Type': 'application/x-www-form-urlencoded',
   'access-control-allow-origin': reqHeaders.host
@@ -144,8 +144,8 @@ const service = {
     const data = `username=${req.body.username.toUpperCase()}&password=${req.body.password}&grant_type=password&client_id=${apiClientId}`;
     return axios.post(`${eliteApiUrl}oauth/token`, data, {
       headers: {
-        "authorization": `Basic ${encodeClientCredentials()}`,
-        "Content-Type": 'application/x-www-form-urlencoded'
+        'authorization': `Basic ${encodeClientCredentials()}`,
+        'Content-Type': 'application/x-www-form-urlencoded'
       }
     });
   }
