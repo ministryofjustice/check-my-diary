@@ -29,19 +29,26 @@ module.exports = function CalendarService() {
         });
       }
     }
-
     return data;
   }
 
   /**
-   *
+   * Get the shift data for the given month (YYYY-MM-DD)
    * @param uid
    * @param startDate
    * @returns {Promise<any>}
    */
   function getCalendarData(uid, startDate) {
+
+    // @TODO: This is here to support the API call but is this really needed?
+    // Get the end date by retrieving the last date of the current month
+    function getEndDate () {
+      const splitDate = startDate.split('-');
+      return `${splitDate[0]}-${splitDate[1]}-${new Date(splitDate[0], splitDate[1], 0).getDate()}`;
+    }
+
     return new Promise((resolve, reject) => {
-      axios.get(`${apiUrl}api/shifts/${uid}?start=${startDate}`).then((response) => {
+      axios.get(`${apiUrl}api/shifts/${uid}?start=${startDate}&end=${getEndDate()}`).then((response) => {
         resolve(configureCalendar(response.data));
       }).catch((error) => {
         reject(error);
@@ -50,7 +57,7 @@ module.exports = function CalendarService() {
   }
 
   /**
-   *
+   * Get the shift details for the given date (YYYY-MM-DD)
    * @param uid
    * @param date
    * @returns {Promise<any>}
