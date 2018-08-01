@@ -6,6 +6,7 @@
   "response": {
     "status": 200,
     "jsonBody": {
+      "start": "2018-06-01",
       "calendar": [
         {
           "date": "2018-06-01",
