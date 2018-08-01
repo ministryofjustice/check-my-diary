@@ -4,21 +4,47 @@ module.exports = function Index({logger, calendarService}) {
 
   const router = express.Router();
 
+  /**
+   * Gets the current month as a date string (YYYY-MM-DD)
+   * @returns {string}
+   */
   function getStartMonth() {
     const now = new Date();
     return [now.getFullYear(), ('0' + (now.getMonth() + 1)).slice(-2), '01'].join('-');
   }
 
+  /**
+   * Service unavailable
+   * @param req
+   * @param res
+   */
+  function serviceUnavailable(req, res) {
+    logger.error('Service unavailable');
+    res.render('pages/index', {
+      authError: false,
+      apiUp: false,
+      csrfToken: req.csrfToken()
+    });
+  }
+
   router.get('/calendar/:date', async (req, res) => {
     logger.info('GET calendar view');
-    const apiResponse = await calendarService.getCalendarData(req.session.uid, req.params.date);
-    res.render('pages/calendar', {tab: 'Calendar', data: apiResponse, uid: req.session.uid, csrfToken: req.csrfToken()});
+    try {
+      const apiResponse = await calendarService.getCalendarData(req.session.uid, req.params.date);
+      res.render('pages/calendar', {tab: 'Calendar', data: apiResponse, uid: req.session.uid, csrfToken: req.csrfToken()});
+    } catch (error) {
+      serviceUnavailable(req, res);
+    }
   });
 
   router.get('/details/:date', async (req, res) => {
     logger.info('GET calendar details');
-    const apiResponse = await calendarService.getCalendarDetails(req.session.uid, req.params.date);
-    res.render('pages/calendar-details', {data: apiResponse, uid: req.session.uid, csrfToken: req.csrfToken()});
+    try {
+      const apiResponse = await calendarService.getCalendarDetails(req.session.uid, req.params.date);
+      res.render('pages/calendar-details', {data: apiResponse, uid: req.session.uid, csrfToken: req.csrfToken()});
+    } catch (error) {
+      serviceUnavailable(req, res);
+    }
   });
 
   router.get('/notifications', (req, res) => {
@@ -43,7 +69,7 @@ module.exports = function Index({logger, calendarService}) {
 
   router.get('*', function(req, res) {
     logger.info('Catch and redirect to current month view');
-    res.redirect('/calendar/' + getStartMonth());
+    res.redirect(`/calendar/${getStartMonth()}`);
   });
 
   return router;

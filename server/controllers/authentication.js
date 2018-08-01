@@ -3,17 +3,16 @@ const router = express.Router();
 const session = require('../session');
 const {logError: logError} = require('../logError');
 const config = require('../config');
-// const health = require('./health');
+const health = require('./health');
 const log = require('../log');
 const gateway = require('../gateway-api');
 
 const mailTo = config.app.mailTo;
 const homeLink = config.app.notmEndpointUrl;
 
-// @TODO: Reinstate health check
 router.get('/login', async (req, res) => {
-  // const healthRes = await health.healthResult();
-  const isApiUp = true; //(healthRes.status < 500);
+  const healthRes = await health.healthResult();
+  const isApiUp = (healthRes.status < 500);
   log.info(`loginIndex - health check called and the isAppUp = ${isApiUp}`);
   res.render('pages/index', {
     authError: false,
@@ -29,10 +28,10 @@ router.post('/login', (req, res) => {
   postLogin(req, res);
 });
 
-// @TODO: Reinstate health check
+// @TODO: Switch this to the 2FA (if not on Quantum) and use this after the 2FA
 const postLogin = async (req, res) => {
-  // const healthRes = await health.healthResult();
-  const isApiUp = true; // (healthRes.status < 500);
+  const healthRes = await health.healthResult();
+  const isApiUp = (healthRes.status < 500);
   log.info(`loginIndex - health check called and the isAppUp = ${isApiUp}`);
   try {
     const response = await gateway.login(req);
