@@ -1,12 +1,12 @@
-const axios = require('axios');
-const session = require('./session');
-const useEliteApiAuth = (process.env.USE_API_GATEWAY_AUTH || 'no') === 'yes';
-const jwt = require('jsonwebtoken');
-const log = require('./log');
-const logError = require('./logError').logError;
-const querystring = require('querystring');
-
-const eliteApiUrl = process.env.API_AUTH_ENDPOINT_URL || 'http://localhost:8080/';
+const axios = require('axios'),
+  session = require('./session'),
+  jwt = require('jsonwebtoken'),
+  log = require('./log'),
+  logError = require('./logError').logError,
+  querystring = require('querystring'),
+  health = require('./controllers/health'),
+  eliteApiUrl = health.apiAuthUrl,
+  useEliteApiAuth = (process.env.USE_API_GATEWAY_AUTH || 'no') === 'yes';
 
 axios.interceptors.request.use((config) => {
   console.log('Gateway: config url :' + config.url);
