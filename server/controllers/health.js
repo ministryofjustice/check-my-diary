@@ -16,7 +16,8 @@ const healthResult = async () => {
   };
 
   try {
-    axios.get(`${apiUrl}api/health`, { timeout: 2000 });
+    const result = await axios.get(`${apiUrl}api/health`, { timeout: 2000 });
+    status = result.status;
   } catch (error) {
     appInfo.api = error.message;
     status = (error.response && error.response.status) || 500;
