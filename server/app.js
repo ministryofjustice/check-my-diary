@@ -43,6 +43,16 @@ module.exports = function createApp({ logger, calendarService }) { // eslint-dis
   // 2. https://www.npmjs.com/package/helmet
   app.use(helmet());
 
+  // Ensure the application uses SSL
+  app.use(function(req, res, next) {
+    if (production && !req.secure) {
+      const redirectUrl = `https://${req.hostname}${req.url}`;
+      logger.info(`Redirecting to ${redirectUrl}`);
+      return res.redirect(redirectUrl);
+    }
+    next();
+  });
+
   app.use(addRequestId);
 
   // csrfProtection uses cookie

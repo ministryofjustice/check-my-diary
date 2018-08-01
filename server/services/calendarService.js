@@ -3,6 +3,7 @@ const axios = require('axios'),
 
 module.exports = function CalendarService() {
 
+  // Get the API URL in from the health check
   const apiUrl = health.apiUrl;
 
   /**
