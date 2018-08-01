@@ -25,4 +25,4 @@ const healthResult = async () => {
   return { appInfo, status };
 };
 
-module.exports = { healthResult };
+module.exports = { healthResult, apiUrl };

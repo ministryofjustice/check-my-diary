@@ -1,8 +1,9 @@
-const axios = require('axios');
+const axios = require('axios'),
+  health = require('../controllers/health');
 
 module.exports = function CalendarService() {
 
-  const apiUrl = process.env.API_ENDPOINT_URL || 'http://localhost:8080/';
+  const apiUrl = health.apiUrl;
 
   /**
    * Configures the calendar data to support a fixed layout (SUN, MON, TUE, WED, THU, FRI, SAT)
