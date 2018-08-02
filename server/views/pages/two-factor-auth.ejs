@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% include ../partials/head %>
+</head>
+<body>
+
+<% include ../partials/header %>
+
+<main id="content" class="app-container" role="main">
+  <div class="grid-row">
+    <div class="column-two-thirds">
+
+      <h1 class="heading-xlarge">Enter the authorisation code</h1>
+
+      <% if (authError) { %>
+      <p class="error-summary">The authorisation code entered is invalid</p>
+      <% } %>
+
+      <form action="/auth/2fa" method="POST">
+        <div class="form-group">
+          <label for="code"><span class="form-label">Authorisation code</span></label>
+          <input type="text" name="code" id="code" class="form-control" autocomplete="off" />
+        </div>
+
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+        <div class="from-group">
+          <input type="submit" class="button" value="Continue" />
+        </div>
+      </form>
+
+    </div>
+
+  </div>
+</main>
+
+<% include ../partials/footer %>
+
+</body>
+</html>
