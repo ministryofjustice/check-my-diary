@@ -1,39 +1,84 @@
 <%
 
-getDays = function() {
+/**
+ * Array of days in same order as the view
+ * @returns {string[]}
+ */
+function getDays() {
   return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 }
 
-parseDuration = function(duration) {
-  const split = duration.split(':');
-  const hours = parseInt(split[0], 10);
-  const minutes = parseInt(split[1], 10);
+/**
+ * Split the string and return an Array ('2018-08-01' = ['2018', '08', '01'])
+ * @param input
+ * @param split
+ * @returns {string[]}
+ */
+function splitString(input, split) {
+  return input.toString().split(split);
+}
+
+/**
+ * Take HH:MM and return HHhr MMmin
+ * @param duration
+ * @returns {string}
+ */
+parseDuration = (duration) => {
+  const split = splitString(duration, ':'),
+    hours = parseInt(split[0], 10),
+    minutes = parseInt(split[1], 10);
+
   return (hours ? hours + 'hr ' : '') + (minutes ? minutes + 'min' : '');
 }
 
-parseShortDate = function(date) {
+/**
+ * Take YYYY-MM-DD and return D
+ * @param date
+ * @returns {number}
+ */
+parseShortDate = (date) => {
   return parseInt(date.substr(date.length - 2), 10);
 }
 
-parseDate = function(date) {
-  return date.split('-').reverse().join('/');
+/**
+ * Take YYYY-MM-DD and return DD/MM/YYYY
+ * @param date
+ * @returns {string}
+ */
+parseDate = (date) => {
+  return splitString(date, '-').reverse().join('/');
 }
 
-getNextDay = function(day) {
+/**
+ * Get the next day
+ * @param day
+ * @returns {string}
+ */
+getNextDay = (day) => {
   const days = getDays();
-  return days[days.indexOf(day) + 1] || 'Sunday';
+  return days[days.indexOf(day) + 1] || days[0];
 }
 
-getPreviousMonth = function(currentDate) {
-  const splitDate = currentDate.split('-'),
+/**
+ * Get the previous month (and year when applicable)
+ * @param currentDate
+ * @returns {string}
+ */
+getPreviousMonth = (currentDate) => {
+  const splitDate = splitString(currentDate, '-'),
     newMonth = parseInt(splitDate[1], 10) - 1,
     currentYear = newMonth ? splitDate[0] : parseInt(splitDate[0]) - 1;
 
   return [currentYear, ('0' + (newMonth || 12)).slice(-2), '01'].join('-');
 }
 
-getNextMonth = function(currentDate) {
-  const splitDate = currentDate.split('-'),
+/**
+ * Get the next month (and year when applicable)
+ * @param currentDate
+ * @returns {string}
+ */
+getNextMonth = (currentDate) => {
+  const splitDate = splitString(currentDate, '-'),
     newMonth = parseInt(splitDate[1], 10) + 1,
     currentYear = newMonth < 13 ? splitDate[0] : parseInt(splitDate[0]) + 1;
 
