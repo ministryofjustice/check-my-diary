@@ -1,27 +1,26 @@
 <% include ../helpers/helpers %>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="govuk-template">
 <head>
 
-    <% include ../partials/head %>
+  <% include ../partials/head %>
 
 </head>
-<body>
+<body class="govuk-template__body">
 
-  <% include ../partials/header %>
+<% include ../partials/header %>
 
-  <main id="content" class="app-container" role="main">
+<div class="govuk-width-container">
 
-    <% include ../partials/alpha-banner %>
-    <% include ../partials/tabs %>
+  <% include ../partials/alpha-banner %>
 
-    <div class="calendar-controls c-align">
-      <span class="calendar-title bold-medium">
-        June 2018
-      </span>
-      <a class="btn-change-month" href="/calendar/<%=getPreviousMonth(startDate)%>">Previous month</a>
-      <a class="btn-change-month btn-change-month-with-border" href="/calendar/<%=getNextMonth(startDate)%>">Next month</a>
+  <main id="main-content" class="govuk-main-wrapper govuk-!-margin-bottom-8" role="main">
+
+    <div class="calendar-controls moj-!-text-align-center govuk-!-margin-bottom-8">
+      <span class="govuk-heading-m govuk-!-margin-bottom-0"><%= getMonthAndYear(startDate) %></span>
+      <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/calendar/<%=getPreviousMonth(startDate)%>">Previous month</a>
+      <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 app-link-!-border" href="/calendar/<%=getNextMonth(startDate)%>">Next month</a>
     </div>
 
     <ul class="calendar">
@@ -34,24 +33,25 @@
 
       <% data.calendar.forEach(function(day){ %>
 
-        <li class="calendar-item <% if (day.type === 'rest-day') { %>rest-day<% } %><% if (day.type === 'holiday') { %>holiday<% } %><% if (day.type === 'no-day') { %>no-day<% } %>">
+        <li
+          class="calendar-item <% if (day.type === 'rest-day') { %>rest-day<% } %><% if (day.type === 'holiday') { %>holiday<% } %><% if (day.type === 'no-day') { %>no-day<% } %>">
 
           <% if (day.type === 'work') { %>
             <a href="/details/<%= day.date %>">
-              <span class="day bold-xsmall"><%= day.day.substr(0, 3) %>, <%= parseShortDate(day.date) %></span>
+              <span class="day govuk-!-font-weight-bold"><%= day.day.substr(0, 3) %>, <%= parseShortDate(day.date) %></span>
 
               <% day.events.forEach(function(item){ %>
 
                 <% if (day.type === 'work') { %>
 
                   <% if (item.type === 'holiday') { %>
-                    <span class="detail font-xsmall detail-holiday">Holiday (part)</span>
+                    <span class="detail detail-holiday">Holiday (part)</span>
                   <% } %>
 
                   <% if (item.type === 'work') { %>
-                    <span class="detail font-xsmall detail-start">Start <%= item.startTime %></span>
-                    <span class="detail font-xsmall detail-finish">Finish <%= item.endTime %></span>
-                    <span class="font-xsmall detail-duration"><%= parseDuration(item.duration) %></span>
+                    <span class="detail detail-start">Start <%= item.startTime %></span>
+                    <span class="detail detail-finish">Finish <%= item.endTime %></span>
+                    <span class="detail-duration"><%= parseDuration(item.duration) %></span>
                   <% } %>
 
                 <% } %>
@@ -62,23 +62,27 @@
           <% } %>
 
           <% if (day.type === 'rest-day') { %>
-            <span class="day bold-xsmall"><%= day.day.substr(0, 3) %>, <%= parseShortDate(day.date) %></span>
-            <span class="event">Rest day</span>
+            <span class="day govuk-!-font-weight-bold"><%= day.day.substr(0, 3) %>, <%= parseShortDate(day.date) %></span>
+            <span class="event govuk-!-font-size-19">Rest day</span>
           <% } %>
 
           <% if (day.type === 'holiday') { %>
-            <span class="day bold-xsmall"><%= day.day.substr(0, 3) %>, <%= parseShortDate(day.date) %></span>
-            <span class="event event-holiday">Holiday</span>
+            <span class="day"><%= day.day.substr(0, 3) %>, <%= parseShortDate(day.date) %></span>
+            <span class="event event-holiday govuk-!-font-size-19">Holiday</span>
           <% } %>
 
-         </li>
+        </li>
 
       <% }); %>
     </ul>
 
-  </main>
+    <div class="govuk-clearfix"></div>
 
-  <% include ../partials/footer %>
+  </main>
+</div>
+
+<% include ../partials/footer %>
+
 </body>
 </html>
 

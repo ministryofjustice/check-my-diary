@@ -1,42 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="govuk-template">
 <head>
-    <% include ../partials/head %>
+  <% include ../partials/head %>
 </head>
-<body>
+<body class="govuk-template__body">
 
-  <% include ../partials/header %>
+<% include ../partials/header %>
 
-  <main id="content" class="app-container" role="main">
-      <% include ../partials/alpha-banner %>
-    <% include ../partials/tabs %>
+<div class="govuk-width-container">
 
-      
-    <div id="notifications" class="grid-row">
-        <div class="column-two-thirds">
-            <ul >
-                <li>
-                    <span class="alert-date bold-xsmall">2 hours ago (new)</span>
-                    Detail change: your location on 3/7/2018 at 12:30 has changed to Res 2
-                </li>
-                <li>
-                    <span class="alert-date bold-xsmall">Yesterday (new)</span>
-                    Shift change: you've been assigned a new shift on Tuesday 3/7/2018 which starts at 12:30 - check calendar for details
-                </li>
-            </ul>
+  <% include ../partials/alpha-banner %>
 
-            <a href="#">Load older notifications</a>
+  <a href="/" class="govuk-back-link">Back</a>
+
+  <main id="main-content" class="govuk-main-wrapper govuk-!-margin-bottom-8" role="main">
+
+    <div id="notifications" class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-l">Notifications</h1>
+
+        <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">2 hours ago (new)</p>
+        <p class="govuk-body govuk-!-font-size-16">Detail change: your location on 3/7/2018 at 12:30 has changed to Res 2</p>
+
+        <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">Yesterday (new)</p>
+        <p class="govuk-body govuk-!-font-size-16">Shift change: you've been assigned a new shift on Tuesday 3/7/2018 which starts at 12:30 - check calendar for details</p>
+
+        <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="#">Load older notifications</a>
+
+      </div>
+      <div class="govuk-grid-column-one-third">
+
+        <div class="moj-card">
+
+          <div class="moj-card__body govuk-!-padding-4">
+
+            <p class="govuk-body">Forward notifications to your email or phone</p>
+            <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/settings">Notification settings</a>
+
+          </div>
+
         </div>
-        <div class="column-one-third">
-            <div class="well">
-                <p>Forward notifications to your email or phone</p>
-                <a href="/notifications/settings">Notification settings</a>
-            </div>
-        </div>
-    </div>      
-      
+
+      </div>
+    </div>
+
   </main>
 
-  <% include ../partials/footer %>
+</div>
+
+<% include ../partials/footer %>
+
 </body>
 </html>

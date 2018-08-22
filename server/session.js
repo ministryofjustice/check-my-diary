@@ -32,6 +32,7 @@ const hmppsSessionMiddleWare = (req, res, next) => {
       return;
     }
 
+    req.session.uid = void 0;
     res.redirect('/auth/login');
     return;
   }

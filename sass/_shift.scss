@@ -1,0 +1,89 @@
+.app-shift-detail {
+  float: left;
+  width: 100%;
+  padding: 0;
+  margin: 0 0 20px 0;
+
+  li {
+    @include govuk-font(24);
+    list-style: none;
+    margin-bottom: 30px;
+
+    span {
+      display: block;
+
+      &.time {
+        border: 1px solid govuk-colour('grey-2');
+        width: 220px;
+        border-radius: 3px;
+        margin-right: 15px;
+        padding: 25px 0 20px 0;
+        float: left;
+        text-align: center;
+      }
+
+      &.description {
+        padding-top: 25px;
+
+        @include app-breakpoint {
+          padding: 0;
+        }
+      }
+    }
+
+    @include app-breakpoint {
+      border-top: 1px solid govuk-colour('grey-2');
+      padding: 15px 0 10px 0;
+      margin-bottom: 10px;
+
+      span.time {
+        float: none;
+        width: 100%;
+        border: none;
+        text-align: left;
+        padding: 0;
+        font-weight: bold;
+      }
+
+      &.detail-start,
+      &.detail-finish,
+      &.detail-holiday {
+        background-color: govuk-colour('green');
+        margin-bottom: 0;
+        color: white;
+        padding: 10px 5px 10px 8px;
+        border-radius: 3px;
+        border: none;
+      }
+
+      &.detail-finish {
+        background-color: govuk-colour('red');
+      }
+
+      &.detail-holiday {
+        background-color: govuk-colour('orange');
+      }
+    }
+
+    &.detail-start span.time,
+    &.detail-finish span.time,
+    &.detail-holiday span.time,
+    &.detail-rest-day span.time {
+      background-color: govuk-colour('green');
+      border: none;
+      color: govuk-colour('white');
+    }
+
+    &.detail-finish span.time {
+      background-color: govuk-colour('red');
+    }
+
+    &.detail-holiday span.time {
+      background-color: govuk-colour('orange');
+    }
+
+    &.detail-rest-day span.time {
+      background-color: govuk-colour('light-blue');
+    }
+  }
+}

@@ -67,7 +67,7 @@ getNextDay = (day) => {
 getPreviousMonth = (currentDate) => {
   const splitDate = splitString(currentDate, '-'),
     newMonth = parseInt(splitDate[1], 10) - 1,
-    currentYear = newMonth ? splitDate[0] : parseInt(splitDate[0]) - 1;
+    currentYear = newMonth ? splitDate[0] : parseInt(splitDate[0], 10) - 1;
 
   return [currentYear, ('0' + (newMonth || 12)).slice(-2), '01'].join('-');
 }
@@ -83,6 +83,17 @@ getNextMonth = (currentDate) => {
     currentYear = newMonth < 13 ? splitDate[0] : parseInt(splitDate[0]) + 1;
 
   return [currentYear, ('0' + (newMonth < 13 ? newMonth : 1)).slice(-2), '01'].join('-');
+}
+
+/**
+ * Get the current month name and year
+ * @param currentDate
+ * @returns {string}
+ */
+getMonthAndYear = (currentDate) => {
+  const splitDate = splitString(currentDate, '-'),
+    months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  return months[parseInt(splitDate[1] - 1, 10)] + ' ' + splitDate[0];
 }
 
 %>

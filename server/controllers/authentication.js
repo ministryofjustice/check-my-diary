@@ -14,8 +14,21 @@ const notifyEmailTemplate = process.env.NOTIFY_EMAIL_TEMPLATE || '';
 const mailTo = config.app.mailTo;
 const homeLink = config.app.notmEndpointUrl;
 
+/**
+ * Gets a simple 6-digit code for 2FA
+ * @returns {number}
+ */
 function get2faCode() {
   return Math.floor(Math.random() * 899999 + 100000);
+}
+
+/**
+ * Gets the current month as a date string (YYYY-MM-DD)
+ * @returns {string}
+ */
+function getStartMonth() {
+  const now = new Date();
+  return [now.getFullYear(), ('0' + (now.getMonth() + 1)).slice(-2), '01'].join('-');
 }
 
 router.get('/login', async (req, res) => {
@@ -77,7 +90,7 @@ router.post('/2fa', (req, res) => {
 
   if (parseInt(req.body.code, 10) === parseInt(req.session.twoFactorCode, 10)) {
     session.setHmppsCookie(res, req.session.cookieData);
-    res.redirect('/');
+    res.redirect(`/calendar/${getStartMonth()}`);
   } else {
     logError(req.url, '2FA failure');
     res.render('pages/two-factor-auth', { authError: true, csrfToken: req.csrfToken() });

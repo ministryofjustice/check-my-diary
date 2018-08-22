@@ -1,55 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="govuk-template">
 <head>
-    <% include ../partials/head %>
+  <% include ../partials/head %>
 </head>
-<body>
+<body class="govuk-template__body">
 
-  <% include ../partials/header %>
+<% include ../partials/header %>
 
-  <main id="content" class="app-container" role="main">
-      <% include ../partials/alpha-banner %>
-      <div class="grid-row">
-        <div class="column-two-thirds">
+<div class="govuk-width-container">
 
-            <h1 class="heading-xlarge">Login</h1>
+  <% include ../partials/alpha-banner %>
 
-            <% if (!apiUp || authError) { %>
+  <main id="main-content" class="govuk-main-wrapper" role="main">
 
-              <p class="error-summary">
-                <% if (apiUp) { %>
-                  <%= authErrorText %>
-                <% } else { %>
-                  Service unavailable. Please try again later.
-                <% } %>
-              </p>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
 
-            <% } %>
+        <h1 class="govuk-heading-xl">Login</h1>
 
-            <form action="/auth/login" method="POST">
-            <div class="form-group">
-                <label for="username"><span class="form-label">Username</span></label>
-                <input type="text" name="username" id="username" class="form-control" autocomplete="off" />
-              </div>
+        <% if (!apiUp || authError) { %>
 
-            <div class="form-group">
-                <label for="password"><span class="form-label">Password</span></label>
-                <input type="password" name="password" id="password" class="form-control" autocomplete="off" />
-              </div>
+          <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+              There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+              <ul class="govuk-list govuk-error-summary__list">
+                <li>
+                  <% if (apiUp) { %>
+                    <%= authErrorText %>
+                  <% } else { %>
+                    Service unavailable. Please try again later.
+                  <% } %>
+                </li>
+              </ul>
+            </div>
+          </div>
 
-              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <% } %>
 
-              <div class="from-group">
-                <input type="submit" class="button" value="Continue" />
-              </div>
-            </form>
+        <form action="/auth/login" method="POST">
+          <div class="govuk-form-group">
+            <label for="username" class="govuk-label">Username</label>
+            <input type="text" name="username" id="username" class="govuk-input" autocomplete="off"/>
+          </div>
 
-        </div>
+          <div class="govuk-form-group">
+            <label for="password" class="govuk-label">Password</label>
+            <input type="password" name="password" id="password" class="govuk-input" autocomplete="off"/>
+          </div>
+
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
+
+          <button type="submit" class="govuk-button">Continue</button>
+
+        </form>
 
       </div>
+
+    </div>
   </main>
 
-  <% include ../partials/footer %>
+</div>
+
+<% include ../partials/footer %>
 
 </body>
 </html>

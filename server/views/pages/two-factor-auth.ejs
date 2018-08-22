@@ -1,40 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="govuk-template">
 <head>
   <% include ../partials/head %>
 </head>
-<body>
+<body class="govuk-template__body">
 
 <% include ../partials/header %>
 
-<main id="content" class="app-container" role="main">
-    <% include ../partials/alpha-banner %>
-  <div class="grid-row">
-    <div class="column-two-thirds">
+<div class="govuk-width-container">
 
-      <h1 class="heading-xlarge">Enter the authorisation code</h1>
+  <% include ../partials/alpha-banner %>
 
-      <% if (authError) { %>
-      <p class="error-summary">The authorisation code entered is invalid</p>
-      <% } %>
+  <main id="main-content" class="govuk-main-wrapper" role="main">
 
-      <form action="/auth/2fa" method="POST">
-        <div class="form-group">
-          <label for="code"><span class="form-label">Authorisation code</span></label>
-          <input type="text" name="code" id="code" class="form-control" autocomplete="off" />
-        </div>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
 
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <h1 class="govuk-heading-xl">Enter the authorisation code</h1>
 
-        <div class="from-group">
-          <input type="submit" class="button" value="Continue" />
-        </div>
-      </form>
+        <% if (authError) { %>
+
+          <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+              There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+              <ul class="govuk-list govuk-error-summary__list">
+                <li>The authorisation code entered is invalid</li>
+              </ul>
+            </div>
+          </div>
+        <% } %>
+
+        <form action="/auth/2fa" method="POST">
+          <div class="govuk-form-group">
+            <label for="code" class="govuk-label">Authorisation code</label>
+            <input type="tel" name="code" id="code" class="govuk-input govuk-!-width-one-third" autocomplete="off"/>
+          </div>
+
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
+
+          <button type="submit" class="govuk-button">Continue</button>
+
+        </form>
+
+      </div>
 
     </div>
+  </main>
 
-  </div>
-</main>
+</div>
 
 <% include ../partials/footer %>
 

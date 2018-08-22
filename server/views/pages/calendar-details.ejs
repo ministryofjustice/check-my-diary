@@ -1,22 +1,26 @@
 <% include ../helpers/helpers %>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="govuk-template">
 <head>
-    <% include ../partials/head %>
+  <% include ../partials/head %>
 </head>
-<body>
+<body class="govuk-template__body">
 
-  <% include ../partials/header %>
+<% include ../partials/header %>
 
-  <main id="content" class="app-container" role="main">
-      <% include ../partials/alpha-banner %>
-    <a href="/" class="link-back">Back</a>
+<div class="govuk-width-container">
 
-    <div id="shiftDetail" class="grid-row">
+  <% include ../partials/alpha-banner %>
+
+  <a href="/" class="govuk-back-link">Back</a>
+
+  <main id="main-content" class="govuk-main-wrapper govuk-!-margin-bottom-8" role="main">
+
+    <div class="grid-row">
       <div class="column-full">
 
-        <h1  class="heading-large"><%= data.day %> <%= parseDate(data.date) %><% if (data.hasOwnProperty('events')) { %>, <%= data.location %><% } %></h1>
+        <h1 class="govuk-heading-l"><%= data.day %> <%= parseDate(data.date) %><% if (data.hasOwnProperty('events')) { %>, <%= data.location %><% } %></h1>
 
         <% if (data.type === 'work') { %>
 
@@ -24,14 +28,17 @@
 
             <% if (event.type === 'work') { %>
 
-              <ul class="font-medium">
+              <ul class="app-shift-detail">
 
                 <% event.detail.forEach(function(detail, index){ %>
 
                   <li class="<% if (index === 0) { %>detail-start<% } %>">
                     <span class="time"><%= detail.startTime %> - <%= detail.endTime %></span>
-                    <span class="description"><% if (index === 0) { %>Start location: <% } %><%= detail.description %></span>
-                    <span class="notes font-xsmall"><%= detail.notes %></span>
+                    <span class="description">
+                      <% if (index === 0) { %>Start location:
+                      <% } %>
+                      <%= detail.description %></span>
+                    <span class="govuk-!-font-size-16"><%= detail.notes %></span>
                   </li>
 
                 <% }); %>
@@ -66,8 +73,14 @@
 
           <ul class="font-medium">
 
-            <li class="<% if (data.type === 'holiday') { %>detail-holiday<% } %><% if (data.type === 'rest-day') { %>detail-rest-day<% } %>">
-              <span class="time"><% if (data.type === 'holiday') { %>Holiday<% } %><% if (data.type === 'rest-day') { %>Rest day<% } %></span>
+            <li
+              class="<% if (data.type === 'holiday') { %>detail-holiday<% } %><% if (data.type === 'rest-day') { %>detail-rest-day<% } %>">
+              <span class="time">
+                <% if (data.type === 'holiday') { %>Holiday
+                <% } %>
+                <% if (data.type === 'rest-day') { %>Rest day
+                <% } %>
+              </span>
               <span class="description">All day</span>
             </li>
 
@@ -75,13 +88,18 @@
 
         <% } %>
 
-        <a id="btnNextShiftDetail" href="/details/<%= data.nextDate %>" class="font-medium"><%= getNextDay(data.day) %> <%= parseDate(data.nextDate) %>  &rarr;</a>
+        <div class="govuk-clearfix"></div>
+
+        <a id="btnNextShiftDetail" href="/details/<%= data.nextDate %>"
+           class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19"><%= getNextDay(data.day) %> <%= parseDate(data.nextDate) %> &rarr;</a>
 
       </div>
     </div>
   </main>
 
-  <% include ../partials/footer %>
+</div>
+
+<% include ../partials/footer %>
 
 </body>
 </html>

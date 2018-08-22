@@ -1,10 +1,11 @@
 {
   "name": "Check my diary",
-  "short_name": "Check my diary",
+  "short_name": "CMD",
   "theme_color": "#000000",
   "background_color": "#000000",
   "display": "standalone",
-  "Scope": "/",
+  "orientation": "portrait",
+  "scope": "/",
   "start_url": "/",
   "icons": [
     {
@@ -47,6 +48,5 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
-  "splash_pages": null
+  ]
 }

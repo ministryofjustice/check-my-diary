@@ -95,40 +95,22 @@ module.exports = function createApp({ logger, calendarService }) { // eslint-dis
 
   if (!production) {
     app.use('/public', sassMiddleware({
-      src: path.join(__dirname, '../assets/sass'),
+      src: path.join(__dirname, '../sass'),
       dest: path.join(__dirname, '../assets/stylesheets'),
       debug: true,
       outputStyle: 'compressed',
       prefix: '/stylesheets/',
       includePaths: [
-        'node_modules/govuk_frontend_toolkit/stylesheets',
-        'node_modules/govuk_template_jinja/assets/stylesheets',
-        'node_modules/govuk-elements-sass/public/sass',
+
       ],
     }));
   }
 
   //  Static Resources Configuration
   const cacheControl = { maxAge: config.staticResourceCacheDuration * 1000 };
-
-  [
-    '../public',
-    '../assets',
-    '../assets/stylesheets',
-    '../node_modules/govuk_template_jinja/assets',
-    '../node_modules/govuk_frontend_toolkit',
-  ].forEach((dir) => {
-    app.use('/public', express.static(path.join(__dirname, dir), cacheControl));
-  });
-
-  [
-    '../node_modules/govuk_frontend_toolkit/images',
-  ].forEach((dir) => {
-    app.use('/public/images/icons', express.static(path.join(__dirname, dir), cacheControl));
-  });
-
-  // GovUK Template Configuration
-  app.locals.asset_path = '/public/';
+  app.use('/public', express.static(path.join(__dirname, '../assets'), cacheControl));
+  app.use('*/images',express.static(path.join(__dirname, '../assets/images'), cacheControl));
+  app.use('*/fonts',express.static(path.join(__dirname, '../assets/fonts'), cacheControl));
 
   function addTemplateVariables(req, res, next) {
     res.locals.user = req.user;
