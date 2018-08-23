@@ -15,7 +15,7 @@ self.addEventListener('install', event => {
         '/public/offline.html'
       ]);
     }).then(() => {
-      console.log('[install] All required resources have been cached, we\'re good!');
+      console.log('[install] All required resources have been cached');
       return self.skipWaiting();
     })
   );
@@ -23,17 +23,30 @@ self.addEventListener('install', event => {
 
 self.addEventListener('activate', event => {
   console.log('[activate] Activating Service Worker ....', event);
-  console.log('[activate] Claiming this ServiceWorker!');
+  console.log('[activate] Claiming this Service Worker');
   event.waitUntil(self.clients.claim());
 });
 
 self.addEventListener('fetch', event => {
-    const req = event.request;
 
-    if (/.*(json)$/.test(req.url)) {
-      event.respondWith(networkFirst(req));
-    } else {
-      event.respondWith(cacheFirst(req));
+    console.info('EVENT:', event);
+
+    if (event.request.mode === 'navigate' || (event.request.method === 'GET' && event.request.headers.get('accept').includes('text/html'))) {
+      event.respondWith(
+        fetch(event.request.url).catch(error => {
+          console.error('[fetch] Failed. Serving cached offline fallback', error);
+          return caches.match('/public/offline.html');
+        })
+      );
+    }
+    else {
+      const req = event.request;
+
+      if (/.*(json)$/.test(req.url)) {
+        event.respondWith(networkFirst(req));
+      } else {
+        event.respondWith(cacheFirst(req));
+      }
     }
   }
 );
@@ -41,13 +54,7 @@ self.addEventListener('fetch', event => {
 async function networkFirst(req) {
   const cache = await caches.open(cacheName);
   try {
-    const fresh = await fetch(req).catch(error => {
-      console.error('[onfetch] Failed. Serving cached offline fallback', error);
-      return caches.open(cacheName).then(function(cache) {
-        return cache.match('/public/offline.html');
-      });
-    });
-
+    const fresh = await fetch(req);
     cache.put(req, fresh.clone());
     return fresh;
   } catch (e) {
