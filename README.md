@@ -1,10 +1,9 @@
-# GOVUK startkit
+# Check my diary
 
-A simple starter kit to start writing node app with the gov uk front end toolkit.
-
+A progressive web application for viewing shift pattern and detail.
 
 ## Getting started
-Install dependencies using `yarn install` ensure you are using >= `Node v8.4.0`
+Install dependencies using `yarn` ensure you are using >= `Node v8.11.3`
 
 Ensure you have a `.env` file containing all default env variables
 
@@ -32,16 +31,3 @@ Ensure you build assets first
 ### Run tests
 
 `yarn test`
-
-
-## Gotchas
-If you get this error when starting the app:
-`Cannot find module './build/Release/DTraceProviderBindings'`
-
-See for more details:
-
-https://stackoverflow.com/questions/37550100/cannot-find-module-dtrace-provider
-
-Run
-
-`npm rebuild dtrace-provider`
