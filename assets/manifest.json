@@ -1,11 +1,11 @@
 {
   "name": "Check my diary",
-  "short_name": "Check my diary",
+  "short_name": "CMD",
   "theme_color": "#000000",
   "background_color": "#000000",
   "display": "standalone",
   "orientation": "portrait",
-  "scope": "/public/",
+  "scope": "/",
   "start_url": "/",
   "icons": [
     {

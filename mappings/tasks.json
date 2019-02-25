@@ -1,0 +1,46 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPattern": "/tasks/.*"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "task": {
+        "date": "2018-06-01",
+        "previousDate": "2018-05-31",
+        "nextDate": "2018-06-02",
+        "day": "Friday",
+        "type": "work",
+        "location": "Pentonville",
+        "events": [
+          {
+            "type": "work",
+            "startTime": "07:00",
+            "endTime": "17:30",
+            "duration": "10:30",
+            "detail": [
+              {
+                "startTime": "07:00",
+                "endTime": "12:30",
+                "description": "Res 2",
+                "notes": "Bring your coat, you're going to get wet."
+              },
+              {
+                "startTime": "12:30",
+                "endTime": "13:30",
+                "description": "Break"
+              },
+              {
+                "startTime": "13:30",
+                "endTime": "17:30",
+                "description": "B Wing",
+                "notes": "Bring your wellies, it'll be wetter than before."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

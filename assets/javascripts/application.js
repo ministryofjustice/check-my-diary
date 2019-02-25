@@ -1,29 +1,23 @@
-/* global $ */
-/* global GOVUK */
-/* global document */
-$(document).ready(function() {
+(function (window) {
 
-    // Use GOV.UK shim-links-with-button-role.js to trigger a link styled to look like a button,
-    // with role="button" when the space key is pressed.
-    GOVUK.shimLinksWithButtonRole.init();
+  document.body.className += ' ' + 'js-enabled';
+  window.GOVUKFrontend.initAll();
 
-    // Show and hide toggled content
-    // Where .block-label uses the data-target attribute
-    // to toggle hidden content
-    var showHideContent = new GOVUK.ShowHideContent();
-    showHideContent.init();
-});
+  window.addEventListener('load', () => {
+    registerSW();
+  });
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker
-    .register('/public/service-worker.js')
-    .then(function(registration) {
-      console.log(
-        'Service Worker registration successful with scope: ',
-        registration.scope
-      );
-    })
-    .catch(function(err) {
-      console.log('Service Worker registration failed: ', err);
-    });
-}
+  async function registerSW() {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/public/service-worker.js')
+        .then(function (registration) {
+          console.log('Service Worker registration successful with scope: ', registration.scope);
+        })
+        .catch(function (err) {
+          console.log('Service Worker registration failed: ', err);
+        });
+    }
+  }
+
+})(window);

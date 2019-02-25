@@ -13,7 +13,9 @@ const express = require('express'),
   path = require('path'),
   log = require('bunyan-request-logger')(),
   logger = require('../log.js'),
-  config = require('../server/config');
+  config = require('../server/config'),
+  session = require('./session'),
+  authentication = require('./controllers/authentication');
 
 const version = moment.now().toString(),
   production = process.env.NODE_ENV === 'production',
@@ -40,6 +42,16 @@ module.exports = function createApp({ logger, calendarService }) { // eslint-dis
   // 1. https://expressjs.com/en/advanced/best-practice-security.html,
   // 2. https://www.npmjs.com/package/helmet
   app.use(helmet());
+
+  // Ensure the application uses SSL
+  app.use(function(req, res, next) {
+    if (production && !req.secure) {
+      const redirectUrl = `https://${req.hostname}${req.url}`;
+      logger.info(`Redirecting to ${redirectUrl}`);
+      return res.redirect(redirectUrl);
+    }
+    next();
+  });
 
   app.use(addRequestId);
 
@@ -83,40 +95,22 @@ module.exports = function createApp({ logger, calendarService }) { // eslint-dis
 
   if (!production) {
     app.use('/public', sassMiddleware({
-      src: path.join(__dirname, '../assets/sass'),
+      src: path.join(__dirname, '../sass'),
       dest: path.join(__dirname, '../assets/stylesheets'),
       debug: true,
       outputStyle: 'compressed',
       prefix: '/stylesheets/',
       includePaths: [
-        'node_modules/govuk_frontend_toolkit/stylesheets',
-        'node_modules/govuk_template_jinja/assets/stylesheets',
-        'node_modules/govuk-elements-sass/public/sass',
+
       ],
     }));
   }
 
   //  Static Resources Configuration
   const cacheControl = { maxAge: config.staticResourceCacheDuration * 1000 };
-
-  [
-    '../public',
-    '../assets',
-    '../assets/stylesheets',
-    '../node_modules/govuk_template_jinja/assets',
-    '../node_modules/govuk_frontend_toolkit',
-  ].forEach((dir) => {
-    app.use('/public', express.static(path.join(__dirname, dir), cacheControl));
-  });
-
-  [
-    '../node_modules/govuk_frontend_toolkit/images',
-  ].forEach((dir) => {
-    app.use('/public/images/icons', express.static(path.join(__dirname, dir), cacheControl));
-  });
-
-  // GovUK Template Configuration
-  app.locals.asset_path = '/public/';
+  app.use('/public', express.static(path.join(__dirname, '../assets'), cacheControl));
+  app.use('*/images',express.static(path.join(__dirname, '../assets/images'), cacheControl));
+  app.use('*/fonts',express.static(path.join(__dirname, '../assets/fonts'), cacheControl));
 
   function addTemplateVariables(req, res, next) {
     res.locals.user = req.user;
@@ -132,6 +126,11 @@ module.exports = function createApp({ logger, calendarService }) { // eslint-dis
   if (!testMode) {
     app.use(csurf({ cookie: true }));
   }
+
+  app.use('/auth', session.loginMiddleware, authentication.router);
+
+  app.use(session.hmppsSessionMiddleWare);
+  app.use(session.extendHmppsCookieMiddleWare);
 
   // Routing
   app.use('/', createIndexRouter({ logger, calendarService }));

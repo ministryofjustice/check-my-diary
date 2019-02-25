@@ -1,10 +1,10 @@
-<div class="tabs-wrapper">
-	<ul role="tablist" class="tabs">
-		<li role="tab">
-			<a <%= tab == "Calendar" ? "class=active" : "" %> href="/">Calendar</a>
+<div class="app-tabs-wrapper">
+	<ul class="app-tabs" role="tablist">
+		<li class="app-tabs-item <%= tab == "Calendar" ? "app-tabs-item--active" : "" %>" role="tab">
+			<a href="/">Calendar</a>
 		</li>
-		<li role="tab">
-			<a <%= tab == "Notifications" ? "class=active" : "" %> href="/notifications">Notifications <span class="badge badge-important loud font-xsmall">2 new</span></a>
+		<li class="app-tabs-item <%= tab == "Notifications" ? "app-tabs-item--active" : "" %>" role="tab">
+			<a href="/notifications">Notifications <span class="app-tabs-item__notification">2 new</span></a>
 		</li>
 	</ul>
 </div>

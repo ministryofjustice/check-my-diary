@@ -1,61 +1,85 @@
-const fs = require('fs');
+const axios = require('axios'),
+  health = require('../controllers/health');
 
 module.exports = function CalendarService() {
 
-  /**
-   * @TODO: Replace with API and sort resolve/reject
-   * @returns {any}
-   */
-  function loadStub() {
-    return JSON.parse(fs.readFileSync(__dirname + '/calendar.stub.json', 'utf8'));
-  }
+  // Get the API URL in from the health check
+  const apiUrl = health.apiUrl;
 
   /**
-   *
+   * Configures the calendar data to support a fixed layout (SUN, MON, TUE, WED, THU, FRI, SAT)
+   * @param data
    * @returns {*}
    */
-  function getCalendarData() {
-    const parsedJSON = loadStub();
+  function configureCalendar(data) {
 
-    if (parsedJSON.hasOwnProperty('calendar')) {
-
-      // Fixed layout
-      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-        pad = days.indexOf(parsedJSON.calendar[0].day);
-
+      // Insert blank days before the first date where necessary
+      const pad = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(getDayOfWeekString(data.shifts[0].startDateTime));
       for (let i = 0, len = pad; i < len; i++) {
-        parsedJSON.calendar.unshift({
+        data.shifts.unshift({
           'type': 'no-day'
         });
       }
 
-      const currentLen = parsedJSON.calendar.length;
-
+      // Insert blank days after the last date where necessary
+      const currentLen = data.shifts.length;
       for (let i = currentLen, len = currentLen > 35 ? 42 : 35; i < len; i++) {
-        parsedJSON.calendar.push({
+        data.shifts.push({
           'type': 'no-day'
         });
       }
-    }
 
-    return parsedJSON;
+    return data;
+  }
+
+  function getDayOfWeekString(date) {
+    var dayOfWeek = new Date(date).getDay();    
+    return isNaN(dayOfWeek) ? null : ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayOfWeek];
   }
 
   /**
-   *
-   * @param date
-   * @returns {*}
+   * Get the shift data for the given month (YYYY-MM-DD)
+   * @param uid
+   * @param startDate
+   * @returns {Promise<any>}
    */
-  function getCalendarDetails(date) {
-    const parsedJSON = loadStub();
+  function getCalendarData(uid, startDate, accessToken) {
 
-    if (parsedJSON.hasOwnProperty('calendar')) {
-      const filtered = parsedJSON.calendar.filter((item) => {
-        return item.date === date;
+    // @TODO: This is here to support the API call but is this really needed?
+    // Get the end date by retrieving the last date of the current month
+    function getEndDate() {
+      const splitDate = startDate.split('-');
+      return `${splitDate[0]}-${splitDate[1]}-${new Date(splitDate[0], splitDate[1], 0).getDate()}`;
+    } 
+
+    return new Promise((resolve, reject) => {      
+        axios.get(`${apiUrl}shifts/quantum/${uid}?startdate=${startDate}&enddate=${getEndDate()}`, {
+        headers: {
+          'authorization': `Bearer ${accessToken}`
+        } 
+      }      
+      ).then((response) => {
+        resolve(configureCalendar(response.data));
+      }).catch((error) => {
+        reject(error);
       });
+    });
+  }
 
-      return filtered[0];
-    }
+  /**
+   * Get the shift details for the given date (YYYY-MM-DD)
+   * @param uid
+   * @param date
+   * @returns {Promise<any>}
+   */
+  function getCalendarDetails(uid, date) {
+    return new Promise((resolve, reject) => {
+      axios.get(`${apiUrl}tasks/${uid}?date=${date}`).then((response) => {
+        resolve(response.data.task);
+      }).catch((error) => {
+        reject(error);
+      });
+    });
   }
 
   return {

@@ -1,19 +1,28 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="govuk-template">
 <head>
-    <% include ../partials/head %>
+  <% include ../partials/head %>
 </head>
-<body>
+<body class="govuk-template__body">
 
-    <% include ../partials/header %>
+<% include ../partials/header %>
 
-    <main class="app-container">
-      <h1><%= message %></h1>
-      <h2><%= error.status %></h2>
-      <pre><%= error.stack %></pre>
-    </main>
+<div class="govuk-width-container">
 
-    <% include ../partials/header %>
+  <% include ../partials/alpha-banner %>
+
+  <main id="main-container" class="govuk-main-wrapper govuk-!-margin-bottom-8" role="main">
+    <h1 class="govuk-heading-l"><%= message %></h1>
+
+    <p class="govuk-caption-l govuk-!-margin-bottom-6"><%= error.status %></p>
+
+    <p class="govuk-body"><%= error.stack %></p>
+
+  </main>
+
+</div>
+
+<% include ../partials/footer %>
+
 </body>
 </html>

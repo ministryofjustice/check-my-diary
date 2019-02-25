@@ -1,0 +1,42 @@
+.app-tabs {
+  height: 50px;
+  border-bottom: 2px solid govuk-colour('blue');
+  margin: 0;
+  padding: 0;
+  @include govuk-responsive-margin(2, top);
+  @include govuk-responsive-margin(6, bottom);
+  @include govuk-responsive-padding(2, left);
+
+  @include govuk-media-query(mobile, tablet) {
+    height: 45px;
+  }
+
+  .app-tabs-item {
+    @include govuk-font(19);
+    float: left;
+    margin: 0;
+    padding: 0;
+    background-color: govuk-colour('grey-4');
+    list-style: none;
+
+    a {
+      padding: 12px 18px;
+      display: block;
+      text-decoration: none;
+    }
+
+    &.app-tabs-item--active a {
+      border: 1px solid govuk-colour('blue');
+      background-color: govuk-colour('blue');
+      color: govuk-colour('white');
+    }
+
+    .app-tabs-item__notification {
+      @include govuk-font(14, bold);
+      color: govuk-colour('white');
+      background: govuk-colour('orange');
+      padding: 5px 10px;
+      margin-left: 5px;
+    }
+  }
+}

@@ -1,0 +1,104 @@
+.app-link-\!-border {
+  border-left: 1px solid govuk-colour('grey-2');
+  padding-left: 5px;
+}
+
+ul.calendar .calendar-item {
+  float: left;
+  width: 14.1%;
+  list-style: none;
+  border: 1px solid govuk-colour('grey-2');
+  margin-left: -1px;
+  margin-top: -1px;
+
+  @include app-breakpoint {
+    clear: left;
+    width: 100%;
+    margin-bottom: 20px;
+    border-right: 1px solid govuk-colour('grey-2');
+    border-bottom: 1px solid govuk-colour('grey-2');
+  }
+}
+
+ul.calendar {
+
+  padding: 0;
+  @include govuk-font(16);
+
+  .rest-day,
+  .holiday,
+  .no-day,
+  .calendar-item a {
+    display: block;
+    height: 150px;
+    text-decoration: none;
+    color: govuk-colour('black');
+
+    @include app-breakpoint {
+      height: inherit;
+    }
+  }
+
+  .rest-day {
+    color: white;
+    background-color: govuk-colour('light-blue');
+  }
+
+  .holiday {
+    color: white;
+    background-color: govuk-colour('orange');
+  }
+
+  .no-day {
+    background-color: govuk-colour('grey-4');
+
+    @include app-breakpoint {
+      display: none;
+    }
+  }
+
+  .calendar-item.calendar-header {
+    @include govuk-typography-weight-bold;
+    border: 0;
+    text-align: center;
+
+    @include app-breakpoint {
+      display: none;
+    }
+  }
+
+  .calendar-item span {
+    display: block;
+    padding-left: 5px;
+
+    &.day {
+      padding-top: 5px;
+      margin-bottom: 3px;
+    }
+
+    &.detail {
+      background-color: govuk-colour('green');
+      padding: 2px 0 0 3px;
+      color: govuk-colour('white');
+      margin: 0 2px;
+      border-radius: 2px;
+      margin-top: 2px;
+    }
+
+    &.detail-finish {
+      background-color: govuk-colour('red');
+    }
+
+    &.detail-holiday {
+      background-color: govuk-colour('orange');
+    }
+
+    &.detail-duration {
+      margin-top: 3px;
+    }
+  }
+}
+
+.calendar-title {
+  display: block;
+}
