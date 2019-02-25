@@ -10,6 +10,55 @@ function splitString(input, split) {
   return input.toString().split(split);
 }
 
+convertSecondsToHms = (d) => {
+  d = Number(d);
+  var h = Math.floor(d / 3600);
+  var m = Math.floor(d % 3600 / 60);
+  var s = Math.floor(d % 3600 % 60);
+
+  var hDisplay = h > 0 ? h + (h == 1 ? "hr " : "hrs ") : "";
+  var mDisplay = m > 0 ? m + (m == 1 ? "min " : "mins ") : "";
+  var sDisplay = s > 0 ? s + (s == 1 ? "sec" : " secs") : "";
+  return hDisplay + mDisplay; 
+}
+
+checkIfStartDateTimeBeforeEndDateTime = (startDateTime, endDateTime) => {
+  var startTime = new Date(startDateTime);
+  var endTime = new Date(endDateTime);
+
+  if (startTime > endTime){
+      return true;
+  } else {
+      return false;
+  }
+}
+
+checkIfDateTimeIsNull = (dateTime) => {
+  if (dateTime == "null"){
+    return true;    
+  } else {
+    return false;
+  }
+}
+
+getTimeFromDate = (dateTime) => {
+
+  var date = new Date(dateTime);
+  var hours = (date.getHours() < 10 ? "0" + date.getHours() : date.getHours());
+  var minutes = (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
+
+  return hours + ":" + minutes;
+}
+
+getDayOfWeek = (date) => {
+  var dayOfWeek = new Date(date).getDay();    
+  return isNaN(dayOfWeek) ? null : ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayOfWeek];
+}
+
+getDatePartFormatted = (dateTime) => {
+  return new Date(dateTime).getFullYear()+'-'+("0"+(new Date(dateTime).getMonth()+1)).slice(-2)+'-'+("0"+new Date(dateTime).getDate()).slice(-2)
+}
+
 /**
  * Array of days in same order as the view
  * @returns {string[]}

@@ -12,25 +12,29 @@ module.exports = function CalendarService() {
    * @returns {*}
    */
   function configureCalendar(data) {
-    if (data.hasOwnProperty('calendar')) {
 
       // Insert blank days before the first date where necessary
-      const pad = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(data.calendar[0].day);
+      const pad = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(getDayOfWeekString(data.shifts[0].startDateTime));
       for (let i = 0, len = pad; i < len; i++) {
-        data.calendar.unshift({
+        data.shifts.unshift({
           'type': 'no-day'
         });
       }
 
       // Insert blank days after the last date where necessary
-      const currentLen = data.calendar.length;
+      const currentLen = data.shifts.length;
       for (let i = currentLen, len = currentLen > 35 ? 42 : 35; i < len; i++) {
-        data.calendar.push({
+        data.shifts.push({
           'type': 'no-day'
         });
       }
-    }
+
     return data;
+  }
+
+  function getDayOfWeekString(date) {
+    var dayOfWeek = new Date(date).getDay();    
+    return isNaN(dayOfWeek) ? null : ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayOfWeek];
   }
 
   /**
@@ -39,17 +43,22 @@ module.exports = function CalendarService() {
    * @param startDate
    * @returns {Promise<any>}
    */
-  function getCalendarData(uid, startDate) {
+  function getCalendarData(uid, startDate, accessToken) {
 
     // @TODO: This is here to support the API call but is this really needed?
     // Get the end date by retrieving the last date of the current month
     function getEndDate() {
       const splitDate = startDate.split('-');
       return `${splitDate[0]}-${splitDate[1]}-${new Date(splitDate[0], splitDate[1], 0).getDate()}`;
-    }
+    } 
 
-    return new Promise((resolve, reject) => {
-      axios.get(`${apiUrl}shifts/${uid}?start=${startDate}&end=${getEndDate()}`).then((response) => {
+    return new Promise((resolve, reject) => {      
+        axios.get(`${apiUrl}shifts/quantum/${uid}?startdate=${startDate}&enddate=${getEndDate()}`, {
+        headers: {
+          'authorization': `Bearer ${accessToken}`
+        } 
+      }      
+      ).then((response) => {
         resolve(configureCalendar(response.data));
       }).catch((error) => {
         reject(error);

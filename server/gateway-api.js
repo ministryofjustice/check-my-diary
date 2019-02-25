@@ -142,6 +142,7 @@ const service = {
   retryRequest: (options) => axios(options),
   login: (req) => {
     const data = `username=${req.body.username.toUpperCase()}&password=${req.body.password}&grant_type=password&client_id=${apiClientId}`;
+    //const data = `username=FMOHAMMED_GEN&password=arsenal23&grant_type=password&client_id=my-diary`;
     return axios.post(`${eliteApiUrl}oauth/token`, data, {
       headers: {
         'authorization': `Basic ${encodeClientCredentials()}`,
