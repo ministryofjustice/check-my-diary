@@ -19,79 +19,59 @@
 
     <div class="grid-row">
       <div class="column-full">
+        
+        <h1 class="govuk-heading-l"><%= getDayOfWeek(data.tasks[0].date) %> <%= parseDate(data.tasks[0].date) %></h1>
+        
+        <ul class="app-shift-detail">
 
-        <h1 class="govuk-heading-l"><%= data.day %> <%= parseDate(data.date) %><% if (data.hasOwnProperty('events')) { %>, <%= data.location %><% } %></h1>
+          <% data.tasks.forEach(function(task, index){ %>
 
-        <% if (data.type === 'work') { %>
+            <% if (task.taskType !== 'Holiday' && task.taskType !== 'Absence') { %>
+                           
+              <li class="<% if (index === 0) { %>detail-start<% } %>">
+                <span class="time"><%= getTimeFromDate(task.startDateTime) %> - <%= getTimeFromDate(task.endDateTime) %></span>
+                <span class="description">
+                  <% if (index === 0) { %>Start of shift:
+                  <% } %>
+                  <%= task.label %></span>
+              </li>
 
-          <% data.events.forEach(function(event){ %>
-
-            <% if (event.type === 'work') { %>
-
-              <ul class="app-shift-detail">
-
-                <% event.detail.forEach(function(detail, index){ %>
-
-                  <li class="<% if (index === 0) { %>detail-start<% } %>">
-                    <span class="time"><%= detail.startTime %> - <%= detail.endTime %></span>
-                    <span class="description">
-                      <% if (index === 0) { %>Start location:
-                      <% } %>
-                      <%= detail.description %></span>
-                    <span class="govuk-!-font-size-16"><%= detail.notes %></span>
-                  </li>
-
-                <% }); %>
-
+              <% if (index === data.tasks.length - 1) { %>
                 <li class="detail-finish">
-                  <span class="time"><%= event.endTime %></span>
+                  <span class="time"><%= getTimeFromDate(task.endDateTime) %></span>
                   <span class="description">End of shift</span>
                 </li>
-
-              </ul>
+              <% } %>
 
             <% } %>
 
-            <% if (event.type === 'holiday') { %>
+            <% if (task.taskType === 'Holiday' || task.taskType === 'Absence') { %>
 
               <ul class="font-medium">
-
-                <li class="detail-holiday">
-                  <span class="time"><%= event.startTime %> - <%= event.endTime %></span>
-                  <span class="description">Holiday (part)</span>
+    
+                <li
+                  class="<% if (task.taskType === 'Holiday') { %>detail-holiday<% } %><% if (task.taskType === 'Absence') { %>detail-rest-day<% } %>">
+                  <span class="time">
+                    <% if (task.taskType === 'Holiday') { %>Holiday
+                    <% } %>
+                    <% if (task.taskType === 'Absence') { %>Rest day
+                    <% } %>
+                  </span>
+                  <span class="description">All day</span>
                 </li>
-
+    
               </ul>
-
+    
             <% } %>
 
-          <% }); %>
+          <% } );%> 
 
-        <% } %>
-
-        <% if (data.type === 'holiday' || data.type === 'rest-day') { %>
-
-          <ul class="font-medium">
-
-            <li
-              class="<% if (data.type === 'holiday') { %>detail-holiday<% } %><% if (data.type === 'rest-day') { %>detail-rest-day<% } %>">
-              <span class="time">
-                <% if (data.type === 'holiday') { %>Holiday
-                <% } %>
-                <% if (data.type === 'rest-day') { %>Rest day
-                <% } %>
-              </span>
-              <span class="description">All day</span>
-            </li>
-
-          </ul>
-
-        <% } %>
+        </ul>
 
         <div class="govuk-clearfix"></div>
 
-        <a id="btnNextShiftDetail" href="/details/<%= data.nextDate %>"
-           class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19"><%= getNextDay(data.day) %> <%= parseDate(data.nextDate) %> &rarr;</a>
+        <a id="btnNextShiftDetail" href="/details/<%= getDatePartFormatted(getNextDate(data.tasks[0].date)) %>"
+          class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19"><%= getNextDay(getDayOfWeek(data.tasks[0].date)) %> <%= parseDate(getNextDate(data.tasks[0].date)) %> &rarr;</a>
 
       </div>
     </div>

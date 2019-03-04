@@ -40,7 +40,8 @@ module.exports = function Index({logger, calendarService}) {
   router.get('/details/:date', async (req, res) => {
     logger.info('GET calendar details');
     try {
-      const apiResponse = await calendarService.getCalendarDetails(req.session.uid, req.params.date);
+      const apiResponse = await calendarService.getCalendarDetails(req.session.uid, req.params.date, req.session.cookieData.access_token);
+      //console.log('calendar details : ' + apiResponse.tasks[0].date);
       res.render('pages/calendar-details', {data: apiResponse, uid: req.session.uid, csrfToken: req.csrfToken()});
     } catch (error) {
       serviceUnavailable(req, res);

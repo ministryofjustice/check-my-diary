@@ -34,7 +34,7 @@
       <% data.shifts.forEach(function(day){ %>
 
         <li
-          class="calendar-item <% if (day.type === 'Rest Day') { %>rest-day<% } %><% if (day.type === 'holiday') { %>holiday<% } %><% if (day.type === 'no-day') { %>no-day<% } %>">
+          class="calendar-item <% if (day.type === 'Rest Day') { %>rest-day<% } %><% if (day.type === 'Holiday') { %>holiday<% } %><% if (day.type === 'no-day') { %>no-day<% } %>">
 
           <% if (day.type === 'Shift') { %>            
             <a href="/details/<%= getDatePartFormatted(day.startDateTime) %>">
