@@ -41,6 +41,15 @@ checkIfDateTimeIsNull = (dateTime) => {
   }
 }
 
+getNextDate = (dateTime) => {
+  var today = new Date(dateTime);
+  var tomorrow = today.setDate(today.getDate()+1);
+  return getDatePartFormatted(tomorrow);
+  //var date = new Date(dateTime);
+  //return date.getDate()+1;
+
+}
+
 getTimeFromDate = (dateTime) => {
 
   var date = new Date(dateTime);

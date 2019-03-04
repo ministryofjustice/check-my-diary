@@ -56,20 +56,29 @@ const postLogin = async (req, res) => {
   try {
     const response = await gateway.login(req);
 
-    // @TODO: 2FA (if not on Quantum) or set cookie and login (if on Quantum)
-    req.session.twoFactorCode = get2faCode();
+    if (process.env.TWO_FACT_AUTH_ON === 'true')
+    {
+      // @TODO: 2FA (if not on Quantum) or set cookie and login (if on Quantum)
+      req.session.twoFactorCode = get2faCode();
 
-    // For SMS
-    await notify.sendSms(notifySmsTemplate, process.env.TEST_MOBILE || '', { personalisation: { '2fa_code': req.session.twoFactorCode }});
+      // For SMS
+      await notify.sendSms(notifySmsTemplate, process.env.TEST_MOBILE || '', { personalisation: { '2fa_code': req.session.twoFactorCode }});
 
-    // For email
-    await notify.sendEmail(notifyEmailTemplate, process.env.TEST_EMAIL || '', { personalisation: { '2fa_code': req.session.twoFactorCode }})
+      // For email
+      await notify.sendEmail(notifyEmailTemplate, process.env.TEST_EMAIL || '', { personalisation: { '2fa_code': req.session.twoFactorCode }})
 
-    req.session.uid = req.body.username;
-    req.session.cookieData = response.data;
+      req.session.uid = req.body.username;
+      req.session.cookieData = response.data;
 
-    res.render('pages/two-factor-auth', { authError: false, csrfToken: req.csrfToken() });
+      res.render('pages/two-factor-auth', { authError: false, csrfToken: req.csrfToken() });
+    } else {
 
+      req.session.uid = req.body.username;
+      req.session.cookieData = response.data;
+      
+      session.setHmppsCookie(res, req.session.cookieData);
+      res.redirect(`/calendar/${getStartMonth()}`);
+    }
   } catch (error) {
     logError(req.url, error, 'Login failure');
     let data = {

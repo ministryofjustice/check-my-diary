@@ -72,10 +72,14 @@ module.exports = function CalendarService() {
    * @param date
    * @returns {Promise<any>}
    */
-  function getCalendarDetails(uid, date) {
+  function getCalendarDetails(uid, date, accessToken) {
     return new Promise((resolve, reject) => {
-      axios.get(`${apiUrl}tasks/${uid}?date=${date}`).then((response) => {
-        resolve(response.data.task);
+      axios.get(`${apiUrl}shifts/quantum/${uid}/tasks?date=${date}`, {
+        headers: {
+          'authorization': `Bearer ${accessToken}`
+        } 
+      }).then((response) => {            
+            resolve(response.data);
       }).catch((error) => {
         reject(error);
       });
