@@ -31,3 +31,12 @@ Ensure you build assets first
 ### Run tests
 
 `yarn test`
+
+## Or run in Docker:
+
+This repo now contains a dockerfile. You can use this to bake a container with the following command:
+`docker build -t [your_dockerhub_username]/check-my-diary .`
+
+Then, to run it locally:
+`docker run --name check-my-diary -p 80:3000 -d [your_dockerhub_username]/check-my-diary`
+You should then be able to connect to the application on localhost:80
