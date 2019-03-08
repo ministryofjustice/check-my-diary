@@ -70,10 +70,9 @@ const postLogin = async (req, res) => {
 
       req.session.uid = req.body.username;
       req.session.cookieData = response.data;
-
       
-
       res.render('pages/two-factor-auth', { authError: false, csrfToken: req.csrfToken() });
+
     } else {
 
       req.session.uid = req.body.username;
@@ -81,7 +80,8 @@ const postLogin = async (req, res) => {
       
       session.setHmppsCookie(res, req.session.cookieData);
 
-      var staffMemberResponse = await staffMemberService.getStaffMemberData(health.apiUrl, req.session.uid, getStartMonth(), req.session.cookieData.access_token);
+      var staffMemberResponse = await staffMemberService.getStaffMemberData(health.apiUrl, req.session.uid, 
+                                            getStartMonth(), req.session.cookieData.access_token);
 
       req.session.employeeName = staffMemberResponse.staffMembers[0].employeeName;
 
@@ -103,10 +103,16 @@ const postLogin = async (req, res) => {
 };
 
 // @FIXME: This isn't very nice
-router.post('/2fa', (req, res) => {
+router.post('/2fa', async (req, res) => {
 
   if (parseInt(req.body.code, 10) === parseInt(req.session.twoFactorCode, 10)) {
     session.setHmppsCookie(res, req.session.cookieData);
+
+    var staffMemberResponse = await staffMemberService.getStaffMemberData(health.apiUrl, req.session.uid, 
+                                        getStartMonth(), req.session.cookieData.access_token);
+
+    req.session.employeeName = staffMemberResponse.staffMembers[0].employeeName;
+
     res.redirect(`/calendar/${getStartMonth()}`);
   } else {
     logError(req.url, '2FA failure');
