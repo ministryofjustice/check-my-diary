@@ -1,46 +1,14 @@
 <header class="govuk-header" role="banner" data-module="header">
   <div class="govuk-header__container govuk-width-container">
     <div class="govuk-header__logo">
-      <a href="/" class="govuk-header__link govuk-header__link--homepage">
-        <span class="govuk-header__logotype">
-          <span class="moj-header__logotype-crest"></span>
-          <span class="govuk-header__logotype-text moj-header__logotype-text">Check my diary</span>
-        </span>
-      </a>
+      <span class="govuk-header__logotype">
+        <span class="moj-header__logotype-crest"></span>
+        <span class="govuk-header-check-my-diary">Check my diary</span>
+      </span>      
     </div>
-    <div class="govuk-header__content">
-
-      <% if (typeof uid !== 'undefined') { %>
-      <div class="moj-header__menu-container">
-
-        <button class="moj-header__menu-container__item js-header-toggle" aria-controls="navigation" aria-label="Show or hide user menu">PM</button>
-
-        <!--
-        <a href="/notifications/settings">
-          <span class="moj-header__menu-container__item moj-header__menu-container__item--grey">
-            <span class="moj-header__menu-container__item__settings"></span>
-          </span>
-        </a>
-        -->
-
-        <a href="/notifications">
-          <span class="moj-header__menu-container__item moj-header__menu-container__item--grey">
-            <span class="moj-header__menu-container__item__notification"></span>
-            <span class="moj-header__menu-container__item__alert">2</span>
-          </span>
-        </a>
-
+    <% if (typeof uid !== 'undefined') { %>
+      <div class="logout-asset">You are logged in as <%= employeeName %>. <a class="bold-xsmall" href="/auth/logout">Log out</a>
       </div>
-
-      <nav id="navigation" class="govuk-header__navigation govuk-header__navigation--no-service-name">
-        <div class="moj-!-text-align-right">
-          <a class="govuk-header__link govuk-!-font-weight-bold" href="/auth/logout">Logout</a>
-        </div>
-      </nav>
-
-    </div>
-    <% } %>
-
+      <% } %>
   </div>
-
 </header>

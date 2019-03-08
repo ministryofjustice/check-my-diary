@@ -31,7 +31,7 @@ module.exports = function Index({logger, calendarService}) {
     logger.info('GET calendar view');
     try {
       const apiResponse = await calendarService.getCalendarData(req.session.uid, req.params.date, req.session.cookieData.access_token);
-      res.render('pages/calendar', {tab: 'Calendar', startDate: req.params.date, data: apiResponse, uid: req.session.uid, csrfToken: req.csrfToken()});
+      res.render('pages/calendar', {tab: 'Calendar', startDate: req.params.date, data: apiResponse, uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
     } catch (error) {
       serviceUnavailable(req, res);
     }
@@ -41,8 +41,8 @@ module.exports = function Index({logger, calendarService}) {
     logger.info('GET calendar details');
     try {
       const apiResponse = await calendarService.getCalendarDetails(req.session.uid, req.params.date, req.session.cookieData.access_token);
-      //console.log('calendar details : ' + apiResponse.tasks[0].date);
-      res.render('pages/calendar-details', {data: apiResponse, uid: req.session.uid, csrfToken: req.csrfToken()});
+      
+      res.render('pages/calendar-details', {data: apiResponse, uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
     } catch (error) {
       serviceUnavailable(req, res);
     }
@@ -50,12 +50,12 @@ module.exports = function Index({logger, calendarService}) {
 
   router.get('/notifications', (req, res) => {
     logger.info('GET notifications view');
-    res.render('pages/notifications', {tab: 'Notifications', uid: req.session.uid, csrfToken: req.csrfToken()});
+    res.render('pages/notifications', {tab: 'Notifications', uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
   });
 
   router.get('/notifications/settings', (req, res) => {
     logger.info('GET notifications view');
-    res.render('pages/notification-settings', {uid: req.session.uid, csrfToken: req.csrfToken()});
+    res.render('pages/notification-settings', {uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
   });
 
   router.post('/notifications/settings', (req, res) => {
@@ -65,7 +65,7 @@ module.exports = function Index({logger, calendarService}) {
 
   router.get('/maintenance', (req, res) => {
     logger.info('GET maintenance view');
-    res.render('pages/maintenance', {uid: req.session.uid, csrfToken: req.csrfToken()});
+    res.render('pages/maintenance', {uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
   });
 
   router.get('*', function(req, res) {

@@ -6,6 +6,7 @@ const config = require('../config');
 const health = require('./health');
 const log = require('../log');
 const gateway = require('../gateway-api');
+const staffMemberService = require('../services/staffMemberService');
 const NotifyClient = require('notifications-node-client').NotifyClient;
 const notify = new NotifyClient(process.env.NOTIFY_CLIENT_KEY || '');
 const notifySmsTemplate = process.env.NOTIFY_SMS_TEMPLATE || '';
@@ -70,6 +71,8 @@ const postLogin = async (req, res) => {
       req.session.uid = req.body.username;
       req.session.cookieData = response.data;
 
+      
+
       res.render('pages/two-factor-auth', { authError: false, csrfToken: req.csrfToken() });
     } else {
 
@@ -77,6 +80,11 @@ const postLogin = async (req, res) => {
       req.session.cookieData = response.data;
       
       session.setHmppsCookie(res, req.session.cookieData);
+
+      var staffMemberResponse = await staffMemberService.getStaffMemberData(health.apiUrl, req.session.uid, getStartMonth(), req.session.cookieData.access_token);
+
+      req.session.employeeName = staffMemberResponse.staffMembers[0].employeeName;
+
       res.redirect(`/calendar/${getStartMonth()}`);
     }
   } catch (error) {

@@ -27,21 +27,67 @@
           <% data.tasks.forEach(function(task, index){ %>
 
             <% if (task.taskType !== 'Holiday' && task.taskType !== 'Absence') { %>
-                           
-              <li class="<% if (index === 0) { %>detail-start<% } %>">
-                <span class="time"><%= getTimeFromDate(task.startDateTime) %> - <%= getTimeFromDate(task.endDateTime) %></span>
-                <span class="description">
-                  <% if (index === 0) { %>Start of shift:
-                  <% } %>
-                  <%= task.label %></span>
-              </li>
 
-              <% if (index === data.tasks.length - 1) { %>
-                <li class="detail-finish">
-                  <span class="time"><%= getTimeFromDate(task.endDateTime) %></span>
-                  <span class="description">End of shift</span>
+              <% if (checkIfDateTimeIsNull(task.dailyStartDateTime) && checkIfDateTimeIsNull(task.dailyEndDateTime)) { %>
+              
+                <li class="<% if (index === 0) { %>detail-start<% } %>">
+                  <span class="time"><%= getTimeFromDate(task.startDateTime) %> - <%= getTimeFromDate(task.endDateTime) %></span>
+                  <span class="description">
+                    <% if (index === 0) { %>Start of shift:
+                    <% } %>
+                    <%= task.label %></span>
                 </li>
+
+                <% if (index === data.tasks.length - 1) { %>
+                  <li class="detail-finish">
+                    <span class="time"><%= getTimeFromDate(task.endDateTime) %></span>
+                    <span class="description">End of shift</span>
+                  </li>
+                <% } %>
+
+              <% } else if (checkIfDateTimeIsNull(task.dailyEndDateTime) && !checkIfDateTimeIsNull(task.dailyStartDateTime)) { %>
+                <li class="<% if (index === 0) { %>detail-start<% } %>">
+                  <span class="time"><%= getTimeFromDate(task.dailyStartDateTime) %> </span>
+                  <span class="description">
+                    <% if (index === 0) { %>Start of shift:
+                    <% } %>
+                    <%= task.label %></span>
+                </li>
+              <% } else if (!checkIfDateTimeIsNull(task.dailyEndDateTime) && checkIfDateTimeIsNull(task.dailyStartDateTime)) { %>
+                <% if (index === data.tasks.length - 1) { %>
+                  <li class="detail-finish">
+                    <span class="time"><%= getTimeFromDate(task.dailyEndDateTime) %></span>
+                    <span class="description">End of shift</span>
+                  </li>
+                <% } %>
+
+              <% } else { %>
+                <% if (checkIfStartDateTimeBeforeEndDateTime(task.dailyStartDateTime, task.dailyEndDateTime)) { %>
+                                    
+                  <li class="detail-finish">
+                    <span class="time"><%= getTimeFromDate(task.dailyEndDateTime) %></span>
+                    <span class="description">End of shift</span>
+                  </li>                 
+
+                  <li class="detail-start">
+                    <span class="time"><%= getTimeFromDate(task.dailyStartDateTime) %></span>
+                    <span class="description">Start of shift: <%= task.label %></span>
+                  </li>
+
+                <% } else { %>
+                  <li class="detail-start">
+                    <span class="time"><%= getTimeFromDate(task.dailyStartDateTime) %></span>
+                    <span class="description">Start of shift: <%= task.label %></span>
+                  </li>
+
+                  <li class="detail-finish">
+                    <span class="time"><%= getTimeFromDate(task.dailyEndDateTime) %></span>
+                    <span class="description">End of shift</span>
+                  </li>                 
+                
+                <% } %>
               <% } %>
+
 
             <% } %>
 
