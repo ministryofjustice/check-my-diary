@@ -80,10 +80,8 @@ const postLogin = async (req, res) => {
       
       session.setHmppsCookie(res, req.session.cookieData);
 
-      var staffMemberResponse = await staffMemberService.getStaffMemberData(health.apiUrl, req.session.uid, 
-                                            getStartMonth(), req.session.cookieData.access_token);
-
-      req.session.employeeName = staffMemberResponse.staffMembers[0].employeeName;
+      req.session.employeeName = await getStaffMemberEmployeeName(health.apiUrl, req.session.uid, 
+                                      getStartMonth(), req.session.cookieData.access_token);
 
       res.redirect(`/calendar/${getStartMonth()}`);
     }
@@ -108,10 +106,8 @@ router.post('/2fa', async (req, res) => {
   if (parseInt(req.body.code, 10) === parseInt(req.session.twoFactorCode, 10)) {
     session.setHmppsCookie(res, req.session.cookieData);
 
-    var staffMemberResponse = await staffMemberService.getStaffMemberData(health.apiUrl, req.session.uid, 
+    req.session.employeeName = await getStaffMemberEmployeeName(health.apiUrl, req.session.uid, 
                                         getStartMonth(), req.session.cookieData.access_token);
-
-    req.session.employeeName = staffMemberResponse.staffMembers[0].employeeName;
 
     res.redirect(`/calendar/${getStartMonth()}`);
   } else {
@@ -134,6 +130,13 @@ function getAuthErrorDescription(error) {
     }
   }
   return type;
+}
+
+async function getStaffMemberEmployeeName(apiUrl, uid, startMonth, accessToken) {
+
+  var staffMemberResponse = await staffMemberService.getStaffMemberData(apiUrl, uid, startMonth, accessToken);
+
+  return staffMemberResponse.staffMembers[0].employeeName;
 }
 
 router.get('/logout', (req, res) => {

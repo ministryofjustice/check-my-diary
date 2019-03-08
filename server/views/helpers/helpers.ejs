@@ -44,10 +44,15 @@ checkIfDateTimeIsNull = (dateTime) => {
 getNextDate = (dateTime) => {
   var today = new Date(dateTime);
   var tomorrow = today.setDate(today.getDate()+1);
-  return getDatePartFormatted(tomorrow);
-  //var date = new Date(dateTime);
-  //return date.getDate()+1;
+  
+  return getDatePartFormatted(tomorrow);  
+}
 
+getPreviousDate = (dateTime) => {
+  var today = new Date(dateTime);
+  var tomorrow = today.setDate(today.getDate()-1);
+  
+  return getDatePartFormatted(tomorrow);  
 }
 
 getTimeFromDate = (dateTime) => {
@@ -115,6 +120,16 @@ parseDate = (date) => {
 getNextDay = (day) => {
   const days = getDays();
   return days[days.indexOf(day) + 1] || days[0];
+}
+
+/**
+ * Get the previous day
+ * @param day
+ * @returns {string}
+ */
+getPreviousDay = (day) => {
+  const days = getDays();
+  return days[days.indexOf(day) - 1] || days[0];
 }
 
 /**

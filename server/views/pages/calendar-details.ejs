@@ -115,10 +115,13 @@
         </ul>
 
         <div class="govuk-clearfix"></div>
+        
+          <a id="btnPreviousShiftDetail" href="/details/<%= getDatePartFormatted(getPreviousDate(data.tasks[0].date)) %>"
+            class="govuk-link govuk-link--no-visited-state govuk-calendar-details-a-ref">&larr; <%= getPreviousDay(getDayOfWeek(data.tasks[0].date)) %> <%= parseDate(getPreviousDate(data.tasks[0].date)) %></a>
 
-        <a id="btnNextShiftDetail" href="/details/<%= getDatePartFormatted(getNextDate(data.tasks[0].date)) %>"
-          class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19"><%= getNextDay(getDayOfWeek(data.tasks[0].date)) %> <%= parseDate(getNextDate(data.tasks[0].date)) %> &rarr;</a>
-
+          <a id="btnNextShiftDetail" href="/details/<%= getDatePartFormatted(getNextDate(data.tasks[0].date)) %>"
+            class="govuk-link govuk-link--no-visited-state app-link-!-border govuk-calendar-details-a-ref"><%= getNextDay(getDayOfWeek(data.tasks[0].date)) %> <%= parseDate(getNextDate(data.tasks[0].date)) %> &rarr;</a>
+       
       </div>
     </div>
   </main>
