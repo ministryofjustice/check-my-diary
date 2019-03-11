@@ -3,6 +3,12 @@ const bunyanFormat = require('bunyan-format');
 
 const formatOut = bunyanFormat({ outputMode: 'short' });
 
-const log = bunyan.createLogger({ name: 'Starter app', stream: formatOut, level: 'debug' });
+const log = bunyan.createLogger({ name: 'Starter app', streams : [
+    {
+        path: './check-my-diary.log'
+    },{
+        stream: process.stdout
+    }
+] });
 
 module.exports = log;
