@@ -33,9 +33,10 @@ function getStartMonth() {
 }
 
 router.get('/login', async (req, res) => {
-  const healthRes = await health.healthResult();
+  /* const healthRes = await health.healthResult();
   const isApiUp = (healthRes.status < 500);
-  log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`);
+  log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`); */
+  const isApiUp = true;
   res.render('pages/index', {
     authError: false,
     apiUp: isApiUp,
@@ -51,9 +52,10 @@ router.post('/login', (req, res) => {
 });
 
 const postLogin = async (req, res) => {
-  const healthRes = await health.healthResult();
+  /* const healthRes = await health.healthResult();
   const isApiUp = (healthRes.status < 500);
-  log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`);
+  log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`); */
+  const isApiUp = true;
   try {
     const response = await gateway.login(req);
 
