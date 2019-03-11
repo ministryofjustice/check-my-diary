@@ -1,3 +1,5 @@
+<% include ../helpers/helpers %>
+
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
 <head>
@@ -11,10 +13,13 @@
 
   <% include ../partials/alpha-banner %>
 
-  <a href="/" class="govuk-back-link">Back</a>
-
-  <main id="main-content" class="govuk-main-wrapper govuk-!-margin-bottom-8" role="main">
-
+  <main id="main-content" role="main">
+    <div class="tabs-wrapper">
+      <ul class="tabs">
+        <li ><a href="/calendar/<%= getStartMonth() %>">Calendar</a></li>
+        <li><a class="active" href="">Notifications</a></li>
+      </ul>
+    </div>
     <div id="notifications" class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
 

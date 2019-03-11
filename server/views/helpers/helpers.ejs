@@ -133,6 +133,15 @@ getPreviousDay = (day) => {
 }
 
 /**
+ * Gets the current month as a date string (YYYY-MM-DD)
+ * @returns {string}
+ */
+getStartMonth = () => {
+  const now = new Date();
+  return [now.getFullYear(), ('0' + (now.getMonth() + 1)).slice(-2), '01'].join('-');
+}
+
+/**
  * Get the previous month (and year when applicable)
  * @param currentDate
  * @returns {string}

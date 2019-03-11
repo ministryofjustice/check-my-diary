@@ -3,9 +3,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
 <head>
-
   <% include ../partials/head %>
-
 </head>
 <body class="govuk-template__body">
 
@@ -15,7 +13,13 @@
 
   <% include ../partials/alpha-banner %>
 
-  <main id="main-content" class="govuk-main-wrapper govuk-!-margin-bottom-8" role="main">
+  <main id="main-content"  role="main">
+    <div class="tabs-wrapper">
+      <ul class="tabs">
+        <li ><a class="active" href="">Calendar</a></li>
+        <li><a href="/notifications">Notifications</a></li>
+      </ul>
+    </div>
 
     <div class="calendar-controls moj-!-text-align-center govuk-!-margin-bottom-8">
       <span class="govuk-heading-m govuk-!-margin-bottom-0"><%= getMonthAndYear(startDate) %></span>
