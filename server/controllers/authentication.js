@@ -83,9 +83,9 @@ const postLogin = async (req, res) => {
       
       session.setHmppsCookie(res, req.session.cookieData);
 
-      var staffMemberResponse = await staffMemberService.getStaffMemberData(health.apiUrl, req.session.uid, getStartMonth(), req.session.cookieData.access_token);
+      //var staffMemberResponse = await staffMemberService.getStaffMemberData(health.apiUrl, req.session.uid, getStartMonth(), req.session.cookieData.access_token);
 
-      req.session.employeeName = staffMemberResponse.staffMembers[0].employeeName;
+      //req.session.employeeName = staffMemberResponse.staffMembers[0].employeeName;
 
       res.redirect(`/calendar/${getStartMonth()}`);
     }
