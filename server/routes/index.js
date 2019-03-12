@@ -33,6 +33,7 @@ module.exports = function Index({logger, calendarService}) {
       const apiResponse = await calendarService.getCalendarData(req.session.uid, req.params.date, req.session.cookieData.access_token);
       res.render('pages/calendar', {tab: 'Calendar', startDate: req.params.date, data: apiResponse, uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
     } catch (error) {
+      logger.error(error);
       serviceUnavailable(req, res);
     }
   });
