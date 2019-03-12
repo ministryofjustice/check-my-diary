@@ -21,6 +21,10 @@ const version = moment.now().toString(),
   production = process.env.NODE_ENV === 'production',
   testMode = process.env.NODE_ENV === 'test';
 
+  if (process.env.REJECT_UNAUTHORIZED) {
+    process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = process.env.REJECT_UNAUTHORIZED;
+  }
+
 module.exports = function createApp({ logger, calendarService }) { // eslint-disable-line no-shadow
 
   const app = express();
