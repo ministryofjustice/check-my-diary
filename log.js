@@ -5,7 +5,7 @@ const formatOut = bunyanFormat({ outputMode: 'short' });
 
 const log = bunyan.createLogger({ name: 'Starter app', streams : [
     {
-        path: './check-my-diary.log'
+        path: './logs/check-my-diary.log'
     },{
         stream: process.stdout
     }

@@ -1,10 +1,10 @@
 const Logger = require('bunyan');
 
 module.exports = new Logger({
-  name: 'keyworkerUI',
+  name: 'check-my-diary',
   streams: [
     {         
-        path: './check-my-diary-internal.log',
+        path: './logs/check-my-diary-internal.log',
         level: 'debug'        
     }
   ]
