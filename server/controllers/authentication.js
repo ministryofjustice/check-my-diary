@@ -33,10 +33,10 @@ function getStartMonth() {
 }
 
 router.get('/login', async (req, res) => {
-  /* const healthRes = await health.healthResult();
+  const healthRes = await health.healthResult();
   const isApiUp = (healthRes.status < 500);
-  log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`); */
-  const isApiUp = true;
+  log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`);
+ 
   res.render('pages/index', {
     authError: false,
     apiUp: isApiUp,
@@ -52,10 +52,10 @@ router.post('/login', (req, res) => {
 });
 
 const postLogin = async (req, res) => {
-  /* const healthRes = await health.healthResult();
+  const healthRes = await health.healthResult();
   const isApiUp = (healthRes.status < 500);
-  log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`); */
-  const isApiUp = true;
+  log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`);
+  
   try {
     const response = await gateway.login(req);
 
@@ -71,9 +71,7 @@ const postLogin = async (req, res) => {
       await notify.sendEmail(notifyEmailTemplate, process.env.TEST_EMAIL || '', { personalisation: { '2fa_code': req.session.twoFactorCode }})
 
       req.session.uid = req.body.username;
-      req.session.cookieData = response.data;
-
-      
+      req.session.cookieData = response.data;      
 
       res.render('pages/two-factor-auth', { authError: false, csrfToken: req.csrfToken() });
     } else {
@@ -83,9 +81,9 @@ const postLogin = async (req, res) => {
       
       session.setHmppsCookie(res, req.session.cookieData);
 
-      //var staffMemberResponse = await staffMemberService.getStaffMemberData(health.apiUrl, req.session.uid, getStartMonth(), req.session.cookieData.access_token);
+      var staffMemberResponse = await staffMemberService.getStaffMemberData(health.apiUrl, req.session.uid, getStartMonth(), req.session.cookieData.access_token);
 
-      //req.session.employeeName = staffMemberResponse.staffMembers[0].employeeName;
+      req.session.employeeName = staffMemberResponse.staffMembers[0].employeeName;
 
       res.redirect(`/calendar/${getStartMonth()}`);
     }
