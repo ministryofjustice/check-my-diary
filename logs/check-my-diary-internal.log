@@ -1,0 +1,3 @@
+{"name":"check-my-diary","hostname":"DELL-LAT-LAPTOP","pid":19700,"level":30,"msg":"loginIndex - health check called and the isAppUp = true with status 200","time":"2019-03-13T18:30:38.535Z","v":0}
+{"name":"check-my-diary","hostname":"DELL-LAT-LAPTOP","pid":19700,"level":30,"msg":"loginIndex - health check called and the isAppUp = true with status 200","time":"2019-03-14T09:34:49.215Z","v":0}
+{"name":"check-my-diary","hostname":"DELL-LAT-LAPTOP","pid":19700,"level":30,"msg":"loginIndex - health check called and the isAppUp = true with status 200","time":"2019-03-14T09:34:52.670Z","v":0}
