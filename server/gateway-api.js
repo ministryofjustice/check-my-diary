@@ -9,7 +9,7 @@ const axios = require('axios'),
   useEliteApiAuth = (process.env.USE_API_GATEWAY_AUTH || 'no') === 'yes';
 
 axios.interceptors.request.use((config) => {
-  console.log('Gateway: config url :' + config.url);
+  
   if (!config.url.includes(process.env.KEYWORKER_API_URL) && useEliteApiAuth) {
     const backendToken = config.headers.authorization;
     if (backendToken) {

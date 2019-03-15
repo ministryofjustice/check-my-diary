@@ -1,5 +1,4 @@
-const axios = require('axios'),
-  health = require('../controllers/health');
+const axios = require('axios');
   
   /**
    * Get the staff member data for the given month (YYYY-MM-DD)
@@ -9,8 +8,7 @@ const axios = require('axios'),
    * @returns {Promise<any>}
    */
   const getStaffMemberData = async (apiUrl, uid, startDate, accessToken) => {
-  //function getStaffMemberData(uid, startDate, accessToken) {
-
+  
     // @TODO: This is here to support the API call but is this really needed?
     // Get the end date by retrieving the last date of the current month
     function getEndDate() {

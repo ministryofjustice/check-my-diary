@@ -7,6 +7,7 @@ const health = require('./health');
 const log = require('../log');
 const gateway = require('../gateway-api');
 const staffMemberService = require('../services/staffMemberService');
+const notificationService = require('../services/notificationService');
 const NotifyClient = require('notifications-node-client').NotifyClient;
 const notify = new NotifyClient(process.env.NOTIFY_CLIENT_KEY || '');
 const notifySmsTemplate = process.env.NOTIFY_SMS_TEMPLATE || '';
@@ -34,7 +35,7 @@ function getStartMonth() {
 
 router.get('/login', async (req, res) => {
   const healthRes = await health.healthResult();
-  const isApiUp = (healthRes.status < 500);
+  const isApiUp = (healthRes.status === 200);
   log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`);
  
   res.render('pages/index', {
@@ -53,7 +54,7 @@ router.post('/login', (req, res) => {
 
 const postLogin = async (req, res) => {
   const healthRes = await health.healthResult();
-  const isApiUp = (healthRes.status < 500);
+  const isApiUp = (healthRes.status === 200);
   log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`);
   
   try {
@@ -61,14 +62,38 @@ const postLogin = async (req, res) => {
 
     if (process.env.TWO_FACT_AUTH_ON === 'true')
     {
+      var notificationSettings = await notificationService.getNotificationSettings(req.body.username);
+
+      if (notificationSettings === null || notificationSettings.length === 0) {
+        throw new Error('Error : No Sms or Email address returned for QuantumId : ' + req.body.username);
+      }
+
+      var userNotificationSetting = notificationSettings[0];
+
+      if ((userNotificationSetting.emailaddress === null || notificationSettings.emailaddress === '')
+          && (userNotificationSetting.sms === null || userNotificationSetting.sms === '')) {
+        throw new Error('Error : Sms or Email address null or empty for QuantumId : ' + req.body.username);
+      }
+
+      var emailEnabled = userNotificationSetting.useemailaddress;
+      var smsEnabled = userNotificationSetting.usesms;
+
+      if ((!emailEnabled && !smsEnabled)) {
+        throw new Error('Error : Sms or Email address both set to false for QuantumId : ' + req.body.username);
+      }
+
       // @TODO: 2FA (if not on Quantum) or set cookie and login (if on Quantum)
       req.session.twoFactorCode = get2faCode();
 
-      // For SMS
-      await notify.sendSms(notifySmsTemplate, process.env.TEST_MOBILE || '', { personalisation: { '2fa_code': req.session.twoFactorCode }});
+      if (smsEnabled) {
+        // For SMS
+        await notify.sendSms(notifySmsTemplate, userNotificationSetting.sms || '', { personalisation: { '2fa_code': req.session.twoFactorCode }});
+      }
 
-      // For email
-      await notify.sendEmail(notifyEmailTemplate, process.env.TEST_EMAIL || '', { personalisation: { '2fa_code': req.session.twoFactorCode }})
+      if (emailEnabled) {
+        // For email
+        await notify.sendEmail(notifyEmailTemplate, userNotificationSetting.emailaddress || '', { personalisation: { '2fa_code': req.session.twoFactorCode }})
+      }
 
       req.session.uid = req.body.username;
       req.session.cookieData = response.data;
