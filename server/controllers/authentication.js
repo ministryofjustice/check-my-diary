@@ -7,7 +7,7 @@ const health = require('./health');
 const log = require('../log');
 const gateway = require('../gateway-api');
 const staffMemberService = require('../services/staffMemberService');
-const notificationService = require('../services/notificationService');
+const userAuthenticationService = require('../services/userAuthenticationService');
 const NotifyClient = require('notifications-node-client').NotifyClient;
 const notify = new NotifyClient(process.env.NOTIFY_CLIENT_KEY || '');
 const notifySmsTemplate = process.env.NOTIFY_SMS_TEMPLATE || '';
@@ -62,21 +62,21 @@ const postLogin = async (req, res) => {
 
     if (process.env.TWO_FACT_AUTH_ON === 'true')
     {
-      var notificationSettings = await notificationService.getNotificationSettings(req.body.username);
+      var userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.body.username);
 
-      if (notificationSettings === null || notificationSettings.length === 0) {
+      if (userAuthenticationDetails === null || userAuthenticationDetails.length === 0) {
         throw new Error('Error : No Sms or Email address returned for QuantumId : ' + req.body.username);
       }
 
-      var userNotificationSetting = notificationSettings[0];
+      var userAuthentication = userAuthenticationDetails[0];
 
-      if ((userNotificationSetting.emailaddress === null || notificationSettings.emailaddress === '')
-          && (userNotificationSetting.sms === null || userNotificationSetting.sms === '')) {
+      if ((userAuthentication.EmailAddress === null || userAuthentication.EmailAddress === '')
+          && (userAuthentication.Sms === null || userAuthentication.Sms === '')) {
         throw new Error('Error : Sms or Email address null or empty for QuantumId : ' + req.body.username);
       }
 
-      var emailEnabled = userNotificationSetting.useemailaddress;
-      var smsEnabled = userNotificationSetting.usesms;
+      var emailEnabled = userAuthentication.UseEmailAddress;
+      var smsEnabled = userAuthentication.UseSms;
 
       if ((!emailEnabled && !smsEnabled)) {
         throw new Error('Error : Sms or Email address both set to false for QuantumId : ' + req.body.username);
@@ -87,12 +87,12 @@ const postLogin = async (req, res) => {
 
       if (smsEnabled) {
         // For SMS
-        await notify.sendSms(notifySmsTemplate, userNotificationSetting.sms || '', { personalisation: { '2fa_code': req.session.twoFactorCode }});
+        await notify.sendSms(notifySmsTemplate, userAuthentication.Sms || '', { personalisation: { '2fa_code': req.session.twoFactorCode }});
       }
 
       if (emailEnabled) {
         // For email
-        await notify.sendEmail(notifyEmailTemplate, userNotificationSetting.emailaddress || '', { personalisation: { '2fa_code': req.session.twoFactorCode }})
+        await notify.sendEmail(notifyEmailTemplate, userAuthentication.EmailAddress || '', { personalisation: { '2fa_code': req.session.twoFactorCode }})
       }
 
       req.session.uid = req.body.username;
