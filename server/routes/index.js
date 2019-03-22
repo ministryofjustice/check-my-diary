@@ -42,7 +42,7 @@ module.exports = function Index({logger, calendarService}) {
     try {
       const apiResponse = await calendarService.getCalendarDetails(req.session.uid, req.params.date, req.session.cookieData.access_token);
       
-      res.render('pages/calendar-details', {data: apiResponse, uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
+      res.render('pages/calendar-details', {data: apiResponse, date: req.params.date, uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
     } catch (error) {
       serviceUnavailable(req, res);
     }

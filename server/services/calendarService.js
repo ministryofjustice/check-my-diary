@@ -13,6 +13,7 @@ module.exports = function CalendarService() {
    */
   function configureCalendar(data) {
 
+    if (data.shifts.length > 0) {
       // Insert blank days before the first date where necessary
       const pad = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(getDayOfWeekString(data.shifts[0].startDateTime));
       for (let i = 0, len = pad; i < len; i++) {
@@ -28,6 +29,7 @@ module.exports = function CalendarService() {
           'type': 'no-day'
         });
       }
+    }
 
     return data;
   }
@@ -53,7 +55,7 @@ module.exports = function CalendarService() {
     } 
 
     return new Promise((resolve, reject) => {      
-        axios.get(`${apiUrl}shifts/quantum/${uid}?startdate=${startDate}&enddate=${getEndDate()}`, {
+        axios.get(`${apiUrl}shifts/quantum/${uid}?startdate=${startDate}&enddate=${getEndDate()}`, {        
         headers: {
           'authorization': `Bearer ${accessToken}`
         } 
@@ -74,7 +76,7 @@ module.exports = function CalendarService() {
    */
   function getCalendarDetails(uid, date, accessToken) {
     return new Promise((resolve, reject) => {
-      axios.get(`${apiUrl}shifts/quantum/${uid}/tasks?date=${date}`, {
+      axios.get(`${apiUrl}shifts/quantum/${uid}/tasks?date=${date}`, {      
         headers: {
           'authorization': `Bearer ${accessToken}`
         } 

@@ -27,13 +27,18 @@
       <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 app-link-!-border" href="/calendar/<%=getNextMonth(startDate)%>">Next month</a>
     </div>
 
+    <% if (data.shifts.length == 0) { %>
+      <span class="govuk-heading-m moj-!-text-align-center">No data available</span>
+    <% } %>
     <ul class="calendar">
 
-      <% getDays().forEach(function(day){ %>
+      <% if (data.shifts.length > 0) { %>
+        <% getDays().forEach(function(day){ %>
 
-        <li class="calendar-item calendar-header"><%= day.substr(0, 3) %></li>
+          <li class="calendar-item calendar-header"><%= day.substr(0, 3) %></li>
 
-      <% }); %>
+        <% }); %>
+      <% } %>
 
       <% data.shifts.forEach(function(day){ %>
 
@@ -61,7 +66,6 @@
             </a>
           <% } %>
           
-
           <% if (day.type === 'Rest Day') { %>
             <span class="day govuk-!-font-weight-bold"><%= getDayOfWeek(day.startDateTime).substr(0, 3) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
             <span class="event govuk-!-font-size-19">Rest day</span>

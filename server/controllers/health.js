@@ -1,11 +1,12 @@
 const axios = require('axios'),
   apiUrl = process.env.API_ENDPOINT_URL || 'http://localhost:8080/',
   apiAuthUrl = process.env.API_AUTH_ENDPOINT_URL || 'http://localhost:8080/',
+  apiNotifyUrl = process.env.NOTIFY_HEALTH_CHECK_URL || 'https://api.notifications.service.gov.uk/_status',
   applicationVersion = require('../application-version'),
   packageData = applicationVersion.packageData,
   buildVersion = applicationVersion.buildNumber;
 
-const getHealth = (uri) => axios.get(`${uri}health`, {timeout: 2000});
+const getHealth = (uri) => axios.get(`${uri}`, {timeout: 2000});
 
 const reflect = (promise) => promise.then(
   response => ({data: response.data, status: response.status}),
@@ -28,8 +29,9 @@ const healthResult = async () => {
   };
 
   const serviceUris = [
-    apiUrl,
-    apiAuthUrl
+    `${apiUrl}health`,
+    `${apiAuthUrl}health`,
+    apiNotifyUrl
   ];
 
   try {

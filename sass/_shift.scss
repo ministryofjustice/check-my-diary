@@ -47,6 +47,7 @@
 
       &.detail-start,
       &.detail-finish,
+      &.detail-rest-day,
       &.detail-holiday {
         background-color: govuk-colour('green');
         margin-bottom: 0;
@@ -62,6 +63,10 @@
 
       &.detail-holiday {
         background-color: govuk-colour('orange');
+      }
+      
+      &.detail-rest-day {
+        background-color: govuk-colour('light-blue');
       }
     }
 
