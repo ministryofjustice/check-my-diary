@@ -97,7 +97,6 @@ const postLogin = async (req, res) => {
 
       req.session.uid = req.body.username;
       req.session.cookieData = response.data;
-      req.session.apiUrl = userAuthentication.ApiUrl;
       
       res.render('pages/two-factor-auth', { authError: false, csrfToken: req.csrfToken() });
 
@@ -108,10 +107,10 @@ const postLogin = async (req, res) => {
       
       session.setHmppsCookie(res, req.session.cookieData);
 
-      req.session.apiUrl = process.env.API_ENDPOINT_URL || 'http://localhost:8080/';
-
       req.session.employeeName = await getStaffMemberEmployeeName(health.apiUrl, req.session.uid, 
                                       getStartMonth(), req.session.cookieData.access_token);
+
+      await userAuthenticationService.updateUserLastLoginDateTime(req.session.uid);
 
       res.redirect(`/calendar/${getStartMonth()}`);
     }
@@ -138,8 +137,6 @@ router.post('/2fa', async (req, res) => {
 
     req.session.employeeName = await getStaffMemberEmployeeName(health.apiUrl, req.session.uid, 
                                         getStartMonth(), req.session.cookieData.access_token);
-
-                                     
 
     await userAuthenticationService.updateUserLastLoginDateTime(req.session.uid);
 

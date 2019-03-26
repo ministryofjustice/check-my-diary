@@ -30,7 +30,7 @@ module.exports = function Index({logger, calendarService}) {
   router.get('/calendar/:date', async (req, res) => {
     logger.info('GET calendar view');
     try {
-      const apiResponse = await calendarService.getCalendarData(req.session.uid, req.session.apiUrl, req.params.date, req.session.cookieData.access_token);
+      const apiResponse = await calendarService.getCalendarData(req.session.uid, req.params.date, req.session.cookieData.access_token);
       res.render('pages/calendar', {tab: 'Calendar', startDate: req.params.date, data: apiResponse, uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
     } catch (error) {      
       serviceUnavailable(req, res);
@@ -40,7 +40,7 @@ module.exports = function Index({logger, calendarService}) {
   router.get('/details/:date', async (req, res) => {
     logger.info('GET calendar details');
     try {
-      const apiResponse = await calendarService.getCalendarDetails(req.session.uid, req.session.apiUrl, req.params.date, req.session.cookieData.access_token);
+      const apiResponse = await calendarService.getCalendarDetails(req.session.uid, req.params.date, req.session.cookieData.access_token);
       
       res.render('pages/calendar-details', {data: apiResponse, date: req.params.date, uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
     } catch (error) {
