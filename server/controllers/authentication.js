@@ -167,7 +167,11 @@ async function getStaffMemberEmployeeName(apiUrl, uid, startMonth, accessToken) 
 
   var staffMemberResponse = await staffMemberService.getStaffMemberData(apiUrl, uid, startMonth, accessToken);
 
-  return staffMemberResponse.staffMembers[0].employeeName;
+  if (staffMemberResponse !== null) {
+    return staffMemberResponse.staffMembers[0].employeeName;
+  } else {
+      return null;
+  }
 }
 
 router.get('/logout', (req, res) => {

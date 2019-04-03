@@ -13,7 +13,7 @@ module.exports = function CalendarService() {
    */
   function configureCalendar(data) {
 
-    if (data.shifts.length > 0) {
+    if (data !== null && data.shifts.length > 0) {
       // Insert blank days before the first date where necessary
       const pad = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(getDayOfWeekString(data.shifts[0].startDateTime));
       for (let i = 0, len = pad; i < len; i++) {
@@ -63,7 +63,14 @@ module.exports = function CalendarService() {
       ).then((response) => {
         resolve(configureCalendar(response.data));
       }).catch((error) => {
-        reject(error);
+        if (error.response) {
+          if (error.response.status === 404) {
+            resolve(null)
+          }
+        }
+        else {
+          reject(error);
+        }
       });
     });
   }
@@ -83,7 +90,14 @@ module.exports = function CalendarService() {
       }).then((response) => {            
             resolve(response.data);
       }).catch((error) => {
-        reject(error);
+        if (error.response) {
+          if (error.response.status === 404) {
+            resolve(null)
+          }
+        }
+        else {
+          reject(error);
+        }
       });
     });
   }

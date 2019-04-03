@@ -17,7 +17,7 @@ const axios = require('axios');
     } 
 
     return new Promise((resolve, reject) => {      
-        axios.get(`${apiUrl}staff-members/quantum/${uid}?startdate=${startDate}&enddate=${getEndDate()}`, {
+        axios.get(`${apiUrl}staff-members/quantum/${uid}?startdate=${startDate}&enddate=${getEndDate()}`, {        
         headers: {
           'authorization': `Bearer ${accessToken}`
         } 
@@ -25,9 +25,16 @@ const axios = require('axios');
       ).then((response) => {
         resolve(response.data);
       }).catch((error) => {
-        reject(error);
+        if (error.response) {
+          if (error.response.status === 404) {
+            resolve(null)
+          }
+        }
+        else {
+          reject(error);
+        }
       });
     });
   };
 
-module.exports = {getStaffMemberData};
+module.exports = { getStaffMemberData };
