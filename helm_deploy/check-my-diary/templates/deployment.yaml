@@ -18,36 +18,69 @@ spec:
           - name: "PORT"
             value: {{ .Values.nodePort }}
           - name: "API_CLIENT_ID"
-            value: {{ .Values.apiClientId }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.applicationName }}-env
+                key: api_client_id
           - name: "API_CLIENT_SECRET"
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.applicationName }}-env
                 key: api_client_secret
           - name: "API_AUTH_ENDPOINT_URL"
-            value: {{ .Values.apiAuthURL }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.applicationName }}-env
+                key: api_auth_endpoint_url
           - name: "API_ENDPOINT_URL"
-            value: {{ .Values.apiURL }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.applicationName }}-env
+                key: api_endpoint_url
           - name: "TWO_FACT_AUTH_ON"
-            value: {{ .Values.twoFactorOn }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.applicationName }}-env
+                key: two_fact_auth_on
           - name: "REJECT_UNAUTHORIZED"
-            value: {{ .Values.rejectUnathorized }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.applicationName }}-env
+                key: reject_unauthorized
           - name: "NOTIFY_CLIENT_KEY"
-            value: {{ .Values.notifyClientKey }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.applicationName }}-env
+                key: notify_client_key
           - name: "NOTIFY_SMS_TEMPLATE"
-            value: {{ .Values.notifySmsTemplate }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.applicationName }}-env
+                key: notify_sms_template
           - name: "NOTIFY_EMAIL_TEMPLATE"
-            value: {{ .Values.notifyEmailTemplate }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.applicationName }}-env
+                key: notify_email_template
           - name: "GOOGLE_ANALYTICS_ID"
-            value: {{ .Values.googleAnalyticsId }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.applicationName }}-env
+                key: google_analytics_id
           - name: "WEB_SESSION_TIMEOUT_IN_MINUTES"
-            value: {{ .Values.webSessionTimeout }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.applicationName }}-env
+                key: web_session_timeout_in_minutes
           - name: "HMPPS_COOKIE_NAME"
             value: {{ .Values.applicationName }}
           - name: "HMPPS_COOKIE_DOMAIN"
             value: {{ .Values.deploy.host }}
           - name: "NOTIFY_HEALTH_CHECK_URL"
-            value: {{ .Values.notifyHealthCheckUrl }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.applicationName }}-env
+                key: notify_health_check_url
           - name: "DATABASE_HOST"
             valueFrom:
               secretKeyRef:
