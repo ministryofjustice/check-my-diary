@@ -13,8 +13,41 @@ spec:
       - name: {{ .Values.applicationName }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         ports:
-        - containerPort: 3000
+        - containerPort: {{ .Values.nodePort }}
         env:
+          - name: "PORT"
+            value: {{ .Values.nodePort }}
+          - name: "API_CLIENT_ID"
+            value: {{ .Values.apiClientId }}
+          - name: "API_CLIENT_SECRET"
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.applicationName }}-env
+                key: api_client_secret
+          - name: "API_AUTH_ENDPOINT_URL"
+            value: {{ .Values.apiAuthURL }}
+          - name: "API_ENDPOINT_URL"
+            value: {{ .Values.apiURL }}
+          - name: "TWO_FACT_AUTH_ON"
+            value: {{ .Values.twoFactorOn }}
+          - name: "REJECT_UNAUTHORIZED"
+            value: {{ .Values.rejectUnathorized }}
+          - name: "NOTIFY_CLIENT_KEY"
+            value: {{ .Values.notifyClientKey }}
+          - name: "NOTIFY_SMS_TEMPLATE"
+            value: {{ .Values.notifySmsTemplate }}
+          - name: "NOTIFY_EMAIL_TEMPLATE"
+            value: {{ .Values.notifyEmailTemplate }}
+          - name: "GOOGLE_ANALYTICS_ID"
+            value: {{ .Values.googleAnalyticsId }}
+          - name: "WEB_SESSION_TIMEOUT_IN_MINUTES"
+            value: {{ .Values.webSessionTimeout }}
+          - name: "HMPPS_COOKIE_NAME"
+            value: {{ .Values.applicationName }}
+          - name: "HMPPS_COOKIE_DOMAIN"
+            value: {{ .Values.deploy.host }}
+          - name: "NOTIFY_HEALTH_CHECK_URL"
+            value: {{ .Values.notifyHealthCheckUrl }}
           - name: "DATABASE_HOST"
             valueFrom:
               secretKeyRef:
