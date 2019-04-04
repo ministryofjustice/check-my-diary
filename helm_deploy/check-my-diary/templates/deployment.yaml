@@ -84,20 +84,20 @@ spec:
           - name: "DATABASE_HOST"
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.applicationName }}-rds-{{ .Values.appEnvironment }}
+                name: check-my-diary-rds-{{ .Values.appEnvironment }}
                 key: rds_instance_address
           - name: "DATABASE_NAME"
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.applicationName }}-rds-{{ .Values.appEnvironment }}
+                name: check-my-diary-rds-{{ .Values.appEnvironment }}
                 key: database_name
           - name: "DATABASE_USER"
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.applicationName }}-rds-{{ .Values.appEnvironment }}
+                name: check-my-diary-rds-{{ .Values.appEnvironment }}
                 key: database_username
           - name: "DATABASE_PASSWORD"
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.applicationName }}-rds-{{ .Values.appEnvironment }}
+                name: check-my-diary-rds-{{ .Values.appEnvironment }}
                 key: database_password
