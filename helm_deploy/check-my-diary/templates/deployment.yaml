@@ -16,7 +16,7 @@ spec:
         - containerPort: {{ .Values.nodePort }}
         env:
           - name: "PORT"
-            value: {{ .Values.nodePort }}
+            value: "{{ .Values.nodePort }}"
           - name: "API_CLIENT_ID"
             valueFrom:
               secretKeyRef:
