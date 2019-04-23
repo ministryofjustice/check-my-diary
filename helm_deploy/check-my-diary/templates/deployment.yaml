@@ -101,3 +101,8 @@ spec:
               secretKeyRef:
                 name: check-my-diary-rds-{{ .Values.appEnvironment }}
                 key: database_password
+          - name: "QUANTUM_ADDRESS"
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.applicationName }}-env
+                key: quantum_address
