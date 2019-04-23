@@ -53,6 +53,14 @@ router.post('/login', (req, res) => {
 });
 
 const postLogin = async (req, res) => {
+
+  const ipAddress = req.headers['x-forwarded-for'] || 
+     req.connection.remoteAddress || 
+     req.socket.remoteAddress ||
+     (req.connection.socket ? req.connection.socket.remoteAddress : null);
+
+  log.info(`Ip Address : ${ipAddress}`);
+  
   const healthRes = await health.healthResult();
   const isApiUp = (healthRes.status === 200);
   log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`);
@@ -60,7 +68,7 @@ const postLogin = async (req, res) => {
   try {
     const response = await gateway.login(req);
 
-    if (process.env.TWO_FACT_AUTH_ON === 'true')
+    if (process.env.TWO_FACT_AUTH_ON === 'true' && ipAddress != process.env.QUANTUM_ADDRESS)
     {
       var userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.body.username);
 
