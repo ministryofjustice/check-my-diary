@@ -68,7 +68,7 @@ const postLogin = async (req, res) => {
   try {
     const response = await gateway.login(req);
 
-    if (process.env.TWO_FACT_AUTH_ON === 'true' && ipAddress != process.env.QUANTUM_ADDRESS)
+    if (process.env.TWO_FACT_AUTH_ON === 'true' && ipAddress !== process.env.QUANTUM_ADDRESS)
     {
       var userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.body.username);
 
