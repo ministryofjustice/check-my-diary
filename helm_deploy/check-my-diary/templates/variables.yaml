@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: check-my-diary-dev-vars
+data:
+  NOTIFICATIONS_API_ENDPOINT_URL: https://checkmydiary-dev.ukwest.cloudapp.azure.com/api/
+  BUSINESS_UNIT: "Deerbolt - Band 3"
+  INTERVAL: "12"
+  INTERVAL_TYPE: hours
+  RUN_AS_JOB: "false"
+  RUN_EVERY: "*/1"
+  LOG_FILE_LOCATION: ./logs/check-my-diary-notificaion-service.log
+  LOG_LEVEL: debug
+  LOG_PERIOD: "1d"
+  LOG_NUMBER_OF_FILES_TO_KEEP: "30"
+  NOTIFY_SMS_TEMPLATE: "6ec05e85-ee56-463e-bf36-8381a1a8c976"
+  NOTIFY_EMAIL_TEMPLATE: "eef32886-12fd-4af1-aca0-3b3248676c05"
