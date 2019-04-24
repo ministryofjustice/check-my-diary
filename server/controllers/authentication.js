@@ -60,6 +60,7 @@ const postLogin = async (req, res) => {
      (req.connection.socket ? req.connection.socket.remoteAddress : null);
 
   log.info(`Ip Address : ${ipAddress}`);
+  log.info(`Quantum Address : ${process.env.QUANTUM_ADDRESS}`);
   
   const healthRes = await health.healthResult();
   const isApiUp = (healthRes.status === 200);
