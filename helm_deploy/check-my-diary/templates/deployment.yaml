@@ -101,6 +101,11 @@ spec:
               secretKeyRef:
                 name: check-my-diary-rds-{{ .Values.appEnvironment }}
                 key: database_password
+          - name: "QUANTUM_ADDRESS"
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.applicationName }}-env
+                key: quantum_address
       - name: "{{ .Values.applicationName }}-notification-service"
         image: "926803513772.dkr.ecr.eu-west-2.amazonaws.com/check-my-diary/check-my-diary-notification-service-dev:{{ .Values.image.tag }}"
         ports:
