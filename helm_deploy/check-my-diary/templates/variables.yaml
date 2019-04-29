@@ -3,15 +3,15 @@ kind: ConfigMap
 metadata:
   name: check-my-diary-dev-vars
 data:
-  NOTIFICATIONS_API_ENDPOINT_URL: https://checkmydiary-dev.ukwest.cloudapp.azure.com/api/
-  BUSINESS_UNIT: "Deerbolt - Band 3"
-  INTERVAL: "12"
-  INTERVAL_TYPE: hours
-  RUN_AS_JOB: "false"
-  RUN_EVERY: "*/1"
-  LOG_FILE_LOCATION: ./logs/check-my-diary-notificaion-service.log
-  LOG_LEVEL: debug
-  LOG_PERIOD: "1d"
-  LOG_NUMBER_OF_FILES_TO_KEEP: "30"
-  NOTIFY_SMS_TEMPLATE: "6ec05e85-ee56-463e-bf36-8381a1a8c976"
-  NOTIFY_EMAIL_TEMPLATE: "eef32886-12fd-4af1-aca0-3b3248676c05"
+  notifications_api_endpoint_url: https://checkmydiary-dev.ukwest.cloudapp.azure.com/api/
+  business_unit: "Deerbolt - Band 3"
+  interval: "12"
+  interval_type: hours
+  run_as_job: "false"
+  run_every: "*/1"
+  log_file_location: ./logs/check-my-diary-notificaion-service.log
+  log_level: debug
+  log_period: "1d"
+  log_number_of_files_to_keep: "30"
+  notify_sms_template: "6ec05e85-ee56-463e-bf36-8381a1a8c976"
+  notify_email_template: "eef32886-12fd-4af1-aca0-3b3248676c05"
