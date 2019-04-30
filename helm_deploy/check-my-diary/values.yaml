@@ -1,7 +1,21 @@
 kind: ConfigMap
-shifts:
+shift:
   dev:
-  - berwyn-12hourly
+  - berwyn-12hourly:
+      name: berwyn-12hourly
+      time: "* * 3 * *"
+      command: "echo HELLO WORLD"
+  - wayland-12hourly:
+      name: wayland-12hourly
+      time: "* * 2 * *"
+      command: "echo HELLO WORLD"
   prod:
-  - berwyn-12hourly
-  - wayland-12hourly
+  - berwyn-12hourly:
+        name: berwyn-12hourly
+        time: "* * 4 * *"
+        command: "echo HELLO WORLD"
+  - wayland-12hourly:
+      name: wayland-12hourly
+      time: "* * 5 * *"
+      command: "echo HELLO WORLD"
+  

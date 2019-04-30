@@ -1,5 +1,6 @@
 {{- $root := . -}}
-{{- range $index, $shift := .Values.shifts }}
+{{- range $index, $env := .Values.shift }} 
+
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
@@ -16,7 +17,7 @@ spec:
             args:
             - /bin/sh
             - -c
-            - date; echo Hello from the Kubernetes cluster - {{ $shift }}
+            - date; echo Hello from the Kubernetes cluster - {{ $env.name }}
             successfulJobsHistoryLimit: 5
             failedJobsHistoryLimit: 5
             ports:
