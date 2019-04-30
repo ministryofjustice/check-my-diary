@@ -1,21 +1,19 @@
 kind: ConfigMap
 shift:
-  dev:
-  - berwyn-12hourly:
-      name: berwyn-12hourly
-      time: "* * 3 * *"
-      command: "echo HELLO WORLD"
-  - wayland-12hourly:
-      name: wayland-12hourly
-      time: "* * 2 * *"
-      command: "echo HELLO WORLD"
-  prod:
-  - berwyn-12hourly:
-        name: berwyn-12hourly
-        time: "* * 4 * *"
-        command: "echo HELLO WORLD"
-  - wayland-12hourly:
-      name: wayland-12hourly
-      time: "* * 5 * *"
-      command: "echo HELLO WORLD"
-  
+ - name: berwyn-12hourly
+   time: "* * 3 * *"
+   command: "echo HELLO WORLD"
+   env: dev
+ - name: wayland-12hourly
+   time: "* * 2 * *"
+   command: "echo HELLO WORLD"
+   env: dev 
+   
+ - name: berwyn-12hourly
+   time: "* * 4 * *"
+   command: "echo HELLO WORLD"
+   env: prod
+ - name: wayland-12hourly
+   time: "* * 5 * *"
+   command: "echo HELLO WORLD"
+   env: prod

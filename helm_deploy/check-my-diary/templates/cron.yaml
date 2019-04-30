@@ -1,12 +1,13 @@
 {{- $root := . -}}
-{{- range $index, $env := .Values.shift }} 
+{{- range .Values.shift }} 
+{{- if eq $root.Values.appEnvironment .env }}
 
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: check-my-diary-notification-12hourly
+  name: check-my-diary-notification-{{ .name }}
 spec:
-  schedule: "0 3,15 * * *"
+  schedule: "{{ .time }}"
   jobTemplate:
     spec:
       template:
@@ -17,7 +18,7 @@ spec:
             args:
             - /bin/sh
             - -c
-            - date; echo Hello from the Kubernetes cluster - {{ $env.name }}
+            - {{ .command }}
             successfulJobsHistoryLimit: 5
             failedJobsHistoryLimit: 5
             ports:
@@ -109,4 +110,4 @@ spec:
                     name: {{ $root.Values.applicationName }}-vars
                     key: log_number_of_files_to_keep
           restartPolicy: OnFailure
-{{- end }}
+{{- end }}{{- end }}
