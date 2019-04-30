@@ -1,0 +1,7 @@
+kind: ConfigMap
+shifts:
+  dev:
+  - berwyn-12hourly
+  prod:
+  - berwyn-12hourly
+  - wayland-12hourly

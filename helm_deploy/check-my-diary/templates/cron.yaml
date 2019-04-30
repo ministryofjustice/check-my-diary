@@ -1,3 +1,5 @@
+{{- $root := . -}}
+{{- range $index, $shift := .Values.shifts }}
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
@@ -8,101 +10,102 @@ spec:
     spec:
       template:
         spec:
-          containers:
+          containers: 
           - name: notification-container
-            image: 926803513772.dkr.ecr.eu-west-2.amazonaws.com/check-my-diary/check-my-diary-notification-service-dev:{{ .Values.image.tag }}
+            image: 926803513772.dkr.ecr.eu-west-2.amazonaws.com/check-my-diary/check-my-diary-notification-service-dev:{{ $root.Values.image.tag }}
             args:
             - /bin/sh
             - -c
-            - date; echo Hello from the Kubernetes cluster
+            - date; echo Hello from the Kubernetes cluster - {{ $shift }}
+            successfulJobsHistoryLimit: 5
+            failedJobsHistoryLimit: 5
             ports:
-            - containerPort: {{ .Values.nodePort }}
+            - containerPort: {{ $root.Values.nodePort }}
             env:
               - name: "NOTIFICATIONS_API_ENDPOINT_URL"
                 valueFrom:
                   configMapKeyRef:
-                    name: {{ .Values.applicationName }}-vars
-                    key: api_endpoint_url
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: notifications_api_endpoint_url
               - name: "NOTIFY_CLIENT_KEY"
                 valueFrom:
                   secretKeyRef:
-                    name: {{ .Values.applicationName }}-env
+                    name: {{ $root.Values.applicationName }}-env
                     key: notify_client_key
               - name: "NOTIFY_SMS_TEMPLATE"
                 valueFrom:
                   configMapKeyRef:
-                    name: {{ .Values.applicationName }}-vars
+                    name: {{ $root.Values.applicationName }}-vars
                     key: notify_sms_template
               - name: "NOTIFY_EMAIL_TEMPLATE"
                 valueFrom:
                   configMapKeyRef:
-                    name: {{ .Values.applicationName }}-vars
+                    name: {{ $root.Values.applicationName }}-vars
                     key: notify_email_template
               - name: "DATABASE_HOST"
                 valueFrom:
                   secretKeyRef:
-                    name: check-my-diary-rds-{{ .Values.appEnvironment }}
+                    name: check-my-diary-rds-{{ $root.Values.appEnvironment }}
                     key: rds_instance_address
               - name: "DATABASE_NAME"
                 valueFrom:
                   secretKeyRef:
-                    name: check-my-diary-rds-{{ .Values.appEnvironment }}
+                    name: check-my-diary-rds-{{ $root.Values.appEnvironment }}
                     key: database_name
               - name: "DATABASE_USER"
                 valueFrom:
                   secretKeyRef:
-                    name: check-my-diary-rds-{{ .Values.appEnvironment }}
+                    name: check-my-diary-rds-{{ $root.Values.appEnvironment }}
                     key: database_username
               - name: "DATABASE_PASSWORD"
                 valueFrom:
                   secretKeyRef:
-                    name: check-my-diary-rds-{{ .Values.appEnvironment }}
+                    name: check-my-diary-rds-{{ $root.Values.appEnvironment }}
                     key: database_password
               - name: "BUSINESS_UNIT"
                 valueFrom:
                   configMapKeyRef:
-                    name: {{ .Values.applicationName }}-vars
+                    name: {{ $root.Values.applicationName }}-vars
                     key: business_unit
               - name: "INTERVAL"
                 valueFrom:
                   configMapKeyRef:
-                    name: {{ .Values.applicationName }}-vars
+                    name: {{ $root.Values.applicationName }}-vars
                     key: interval
               - name: "INTERVAL_TYPE"
                 valueFrom:
                   configMapKeyRef:
-                    name: {{ .Values.applicationName }}-vars
+                    name: {{ $root.Values.applicationName }}-vars
                     key: interval_type
               - name: "RUN_AS_JOB"
                 valueFrom:
                   configMapKeyRef:
-                    name: {{ .Values.applicationName }}-vars
+                    name: {{ $root.Values.applicationName }}-vars
                     key: run_as_job
               - name: "RUN_EVERY"
                 valueFrom:
                   configMapKeyRef:
-                    name: {{ .Values.applicationName }}-vars
+                    name: {{ $root.Values.applicationName }}-vars
                     key: run_every
               - name: "LOG_FILE_LOCATION"
                 valueFrom:
                   configMapKeyRef:
-                    name: {{ .Values.applicationName }}-vars
+                    name: {{ $root.Values.applicationName }}-vars
                     key: log_file_location
               - name: "LOG_LEVEL"
                 valueFrom:
                   configMapKeyRef:
-                    name: {{ .Values.applicationName }}-vars
+                    name: {{ $root.Values.applicationName }}-vars
                     key: log_level
               - name: "LOG_PERIOD"
                 valueFrom:
                   configMapKeyRef:
-                    name: {{ .Values.applicationName }}-vars
+                    name: {{ $root.Values.applicationName }}-vars
                     key: log_period
               - name: "LOG_NUMBER_OF_FILES_TO_KEEP"
                 valueFrom:
                   configMapKeyRef:
-                    name: {{ .Values.applicationName }}-vars
+                    name: {{ $root.Values.applicationName }}-vars
                     key: log_number_of_files_to_keep
           restartPolicy: OnFailure
-          successfulJobsHistoryLimit: 5
-          failedJobsHistoryLimit: 5
+{{- end }}
