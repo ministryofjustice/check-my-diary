@@ -1,6 +1,7 @@
 const express = require('express');
+const moment = require('moment');
 
-module.exports = function Index({logger, calendarService}) {
+module.exports = function Index({logger, calendarService, notificationService}) {
 
   const router = express.Router();
 
@@ -30,8 +31,11 @@ module.exports = function Index({logger, calendarService}) {
   router.get('/calendar/:date', async (req, res) => {
     logger.info('GET calendar view');
     try {
+
+      const shiftNotifications = await notificationService.getShiftNotifications(req.session.uid);
+
       const apiResponse = await calendarService.getCalendarData(req.session.uid, req.params.date, req.session.cookieData.access_token);
-      res.render('pages/calendar', {tab: 'Calendar', startDate: req.params.date, data: apiResponse, uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
+      res.render('pages/calendar', {shiftNotifications : shiftNotifications, tab: 'Calendar', startDate: req.params.date, data: apiResponse, uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
     } catch (error) {      
       serviceUnavailable(req, res);
     }
@@ -48,9 +52,19 @@ module.exports = function Index({logger, calendarService}) {
     }
   });
 
-  router.get('/notifications', (req, res) => {
-    logger.info('GET notifications view');
-    res.render('pages/notifications', {tab: 'Notifications', uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
+  router.get('/notifications', async (req, res) => {
+
+    try {
+      const shiftNotifications = await notificationService.getShiftNotifications(req.session.uid);
+      
+      logger.info('GET notifications view');
+      res.render('pages/notifications', {moment: moment, shiftNotifications : shiftNotifications, tab: 'Notifications', uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
+      
+      await notificationService.updateShiftNotificationsToRead(req.session.uid);
+    } catch (error) {
+      serviceUnavailable(req, res);
+    }
+
   });
 
   router.get('/notifications/settings', (req, res) => {

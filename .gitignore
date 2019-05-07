@@ -19,3 +19,5 @@ yarn-error.log
 .eslintcache
 *.iml
 .vs
+.suo
+.vscode/launch.json

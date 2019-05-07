@@ -25,7 +25,7 @@ const version = moment.now().toString(),
     process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = process.env.REJECT_UNAUTHORIZED;
   }
 
-module.exports = function createApp({ logger, calendarService }) { // eslint-disable-line no-shadow
+module.exports = function createApp({ logger, calendarService }, notificationService) { // eslint-disable-line no-shadow
 
   const app = express();
 
@@ -137,7 +137,7 @@ module.exports = function createApp({ logger, calendarService }) { // eslint-dis
   app.use(session.extendHmppsCookieMiddleWare);
 
   // Routing
-  app.use('/', createIndexRouter({ logger, calendarService }));
+  app.use('/', createIndexRouter({ logger, calendarService, notificationService }));
 
   app.use(renderErrors);
 

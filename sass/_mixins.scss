@@ -24,3 +24,52 @@
 .govuk-calendar-details-a-ref{
   font-size: 1.0rem;
 }
+
+.govuk-notifications {
+
+  ul {    
+    list-style-type: none;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 0px;
+  }
+
+  li {
+    border-bottom: 1px solid;
+    /*padding-bottom: 20px;*/
+    margin-bottom: 20px;
+  }
+}
+
+.govuk-notifications-title{  
+  
+  background-color: #df3034;
+  padding: 0 5px; 
+  
+}
+
+@-webkit-keyframes fade {
+  0% {
+      opacity: 0;
+  }
+
+  10% {
+      opacity: 1;
+  }
+
+  90% {
+      opacity: 1;
+  }
+
+  100% {
+      opacity: 0;
+  }
+}
+
+.fadeOut {
+  -webkit-animation: fade 6s;
+  -webkit-animation-fill-mode: both;
+}
+

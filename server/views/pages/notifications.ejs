@@ -17,20 +17,38 @@
     <div class="tabs-wrapper">
       <ul class="tabs">
         <li ><a href="/calendar/<%= getStartMonth() %>">Calendar</a></li>
-        <li><a class="active" href="">Notifications</a></li>
+        <li><a class="active" href="">Notifications
+
+            <% if (shiftNotifications != null && shiftNotifications.length > 0) { %>
+              <% if (shiftNotifications.filter(function(x){return x.Read==false}).length > 0) { %>               
+                  <span class="govuk-notifications-title fadeout"><%= shiftNotifications.filter(function(x){return x.Read==false}).length %> new</span>
+              <% } %>
+            <% } %>
+            
+        </a></li>
       </ul>
     </div>
     <div id="notifications" class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-
-        <h1 class="govuk-heading-l">Notifications</h1>
-
-        <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">2 hours ago (new)</p>
-        <p class="govuk-body govuk-!-font-size-16">Detail change: your location on 3/7/2018 at 12:30 has changed to Res 2</p>
-
-        <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">Yesterday (new)</p>
-        <p class="govuk-body govuk-!-font-size-16">Shift change: you've been assigned a new shift on Tuesday 3/7/2018 which starts at 12:30 - check calendar for details</p>
-
+        <div class="govuk-notifications">
+          <ul>        
+            <% if (shiftNotifications != null && shiftNotifications.length > 0) { %>
+              <% shiftNotifications.forEach(function(notification){ %>
+                <li>
+                  <span class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0"> <%= moment(notification.LastModifiedDateTime, "YYYYMMDD").fromNow() %>
+                  
+                    <% if (notification.Read == false) { %>
+                      <span class="bold-xsmall">(new)</span>
+                    <% } %>
+                  
+                  </p>
+                  <p class="govuk-body govuk-!-font-size-16"><%= notification.Description %></p>	
+                </li>
+              <% }); %>
+            <% } %>
+          </ul>
+        </div>
+    
         <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="#">Load older notifications</a>
 
       </div>

@@ -17,7 +17,16 @@
     <div class="tabs-wrapper">
       <ul class="tabs">
         <li ><a class="active" href="">Calendar</a></li>
-        <li><a href="/notifications">Notifications</a></li>
+        <li><a href="/notifications">Notifications
+
+          <% if (shiftNotifications != null && shiftNotifications.length > 0) { %>
+            <% if (shiftNotifications.filter(function(x){return x.Read==false}).length > 0) { %>
+
+              <span class="loud font-xsmall" style="background-color: #df3034;padding: 0 5px;color: white;"><%= shiftNotifications.filter(function(x){return x.Read==false}).length %> new</span>
+            <% } %>
+          <% } %>
+          
+      </a></li>
       </ul>
     </div>
 
