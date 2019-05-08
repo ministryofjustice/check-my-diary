@@ -21,7 +21,7 @@
 
             <% if (shiftNotifications != null && shiftNotifications.length > 0) { %>
               <% if (shiftNotifications.filter(function(x){return x.Read==false}).length > 0) { %>               
-                  <span class="govuk-notifications-title fadeout"><%= shiftNotifications.filter(function(x){return x.Read==false}).length %> new</span>
+                  <span class="govuk-notifications-indicator"><%= shiftNotifications.filter(function(x){return x.Read==false}).length %> new</span>
               <% } %>
             <% } %>
             

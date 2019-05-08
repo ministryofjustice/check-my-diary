@@ -37,39 +37,12 @@
   }
 
   li {
-    border-bottom: 1px solid;
-    /*padding-bottom: 20px;*/
+    border-bottom: 1px solid;    
     margin-bottom: 20px;
   }
 }
 
-.govuk-notifications-title{  
-  
+.govuk-notifications-indicator{    
   background-color: #df3034;
-  padding: 0 5px; 
-  
+  padding: 0 5px;   
 }
-
-@-webkit-keyframes fade {
-  0% {
-      opacity: 0;
-  }
-
-  10% {
-      opacity: 1;
-  }
-
-  90% {
-      opacity: 1;
-  }
-
-  100% {
-      opacity: 0;
-  }
-}
-
-.fadeOut {
-  -webkit-animation: fade 6s;
-  -webkit-animation-fill-mode: both;
-}
-

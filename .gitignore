@@ -20,4 +20,3 @@ yarn-error.log
 *.iml
 .vs
 .suo
-.vscode/launch.json
