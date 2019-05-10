@@ -131,7 +131,7 @@ spec:
                     key: jwt_subject
               - name: "JWT_SECRET_KEY"
                 valueFrom:
-                  configMapKeyRef:
+                  secretKeyRef:
                     name: {{ $root.Values.applicationName }}-vars
                     key: jwt_secret_key
               - name: "JWT_EMAIL_ADDRESS"
