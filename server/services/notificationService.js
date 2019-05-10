@@ -17,11 +17,41 @@ const notificationService = () => {
                 Read : false})
                 .update({ Read: true })
                 .catch((err) => { throw err });
-      }
+    }
+
+    const getUserNotificationSettings = async ( quantumId ) => {    
+
+        return db.select("EmailAddress", "Sms", "UseEmailAddress", "UseSms").from('UserNotificationSetting')
+                .where('QuantumId', '=', quantumId )                
+                .catch((err) => { throw err });
+    }
+
+    const updateUserNotificationSettings = async ( quantumId, emailAddress, sms, useEmailAddress, useSms ) => {    
+
+        const userNotificationSetting = await getUserNotificationSettings(quantumId);
+
+        if (userNotificationSetting !== null && userNotificationSetting.length > 0) {
+
+            db("UserNotificationSetting")
+            .where({QuantumId : quantumId})
+            .update({ EmailAddress: emailAddress,
+                    Sms : sms,
+                    UseEmailAddress : useEmailAddress,
+                    UseSms : useSms})
+            .catch((err) => { throw err });
+        } else {
+            db("UserNotificationSetting").insert({ QuantumId: quantumId, EmailAddress : emailAddress, 
+                                      Sms : sms, UseEmailAddress : useEmailAddress, 
+                                      UseSms : useSms})
+                .catch((err) => { throw err });
+        }
+    }
 
     return {
         getShiftNotifications,
-        updateShiftNotificationsToRead
+        updateShiftNotificationsToRead,
+        getUserNotificationSettings,
+        updateUserNotificationSettings
     }
 }
 

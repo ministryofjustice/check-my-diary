@@ -67,14 +67,35 @@ module.exports = function Index({logger, calendarService, notificationService}) 
 
   });
 
-  router.get('/notifications/settings', (req, res) => {
-    logger.info('GET notifications view');
-    res.render('pages/notification-settings', {uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
+  router.get('/notifications/settings', async (req, res) => {
+
+    logger.info('GET notifications settings');
+
+    const userNotificationSettings = await notificationService.getUserNotificationSettings(req.session.uid);
+    
+    if (userNotificationSettings === null || userNotificationSettings.length === 0) {
+      res.render('pages/notification-settings', {userNotificationSettings: null, uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
+    } else {
+      res.render('pages/notification-settings', {userNotificationSettings: userNotificationSettings[0], uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
+    }
   });
 
-  router.post('/notifications/settings', (req, res) => {
-    logger.info('POST notifications view');
-    res.redirect('/notifications');
+  router.post('/notifications/settings', async (req, res) => {
+
+    logger.info('POST notifications settings');
+
+    await notificationService.updateUserNotificationSettings(req.session.uid, req.body.inputEmail === '' ? null : req.body.inputEmail, req.body.inputMobile === '' ? null : req.body.inputMobile, req.body.optionEmail !== undefined ? true : false, req.body.optionMobile !== undefined ? true : false);
+
+
+    res.redirect('/notifications/settings');
+    /*
+    const userNotificationSettings = await notificationService.getUserNotificationSettings(req.session.uid);
+    
+    if (userNotificationSettings === null || userNotificationSettings.length === 0) {
+      res.render('pages/notification-settings', {userNotificationSettings: null, uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
+    } else {
+      res.render('pages/notification-settings', {userNotificationSettings: userNotificationSettings, uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
+    }*/
   });
 
   router.get('/maintenance', (req, res) => {
