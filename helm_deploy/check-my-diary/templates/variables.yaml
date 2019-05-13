@@ -21,3 +21,4 @@ data:
   jwt_subject: notifications
   jwt_email_address: "checkmydiary@digital.justice.gov.uk"
   jwt_expires_in: "30m"
+  reject_unauthorized: "0"

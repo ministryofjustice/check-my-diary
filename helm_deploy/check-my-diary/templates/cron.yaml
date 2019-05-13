@@ -1,5 +1,5 @@
 {{- $root := . -}}
-{{- range .Values.shift }} 
+{{- range .Values.shift }}
 {{- if eq $root.Values.appEnvironment .env }}
 ---
 apiVersion: batch/v1beta1
@@ -12,7 +12,7 @@ spec:
     spec:
       template:
         spec:
-          containers: 
+          containers:
           - name: notification-container
             image: 926803513772.dkr.ecr.eu-west-2.amazonaws.com/check-my-diary/check-my-diary-notification-service-dev:{{ $root.Values.image.tag }}
             args:
@@ -132,7 +132,7 @@ spec:
               - name: "JWT_SECRET_KEY"
                 valueFrom:
                   secretKeyRef:
-                    name: {{ $root.Values.applicationName }}-vars
+                    name: {{ $root.Values.applicationName }}-env
                     key: jwt_secret_key
               - name: "JWT_EMAIL_ADDRESS"
                 valueFrom:
@@ -144,5 +144,10 @@ spec:
                   configMapKeyRef:
                     name: {{ $root.Values.applicationName }}-vars
                     key: jwt_expires_in
+              - name: "REJECT_UNAUTHORIZED"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: reject_unauthorized
           restartPolicy: OnFailure
 {{- end }}{{- end }}
