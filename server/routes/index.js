@@ -1,5 +1,6 @@
 const express = require('express');
 const moment = require('moment');
+const { check, validationResult } = require('express-validator/check');
 
 module.exports = function Index({logger, calendarService, notificationService}) {
 
@@ -80,7 +81,22 @@ module.exports = function Index({logger, calendarService, notificationService}) 
     }
   });
 
-  router.post('/notifications/settings', async (req, res) => {
+  router.post('/notifications/settings', [
+    // email address
+    check('inputEmail', 'Email address is invalid!').isEmail(),
+    // mobile number
+    check('inputMobile', 'Must be only numeric').isNumeric(),
+    check('inputMobile', 'Must be only be a valid mobile number').isMobilePhone('en-GB')
+
+    ], async (req, res) => {
+      // Finds the validation errors in this request and wraps them in an object with handy functions
+      const errors = validationResult(req);
+      console.log(errors.mapped());
+      if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+      }
+      
+      
 
     logger.info('POST notifications settings');
 
@@ -88,14 +104,7 @@ module.exports = function Index({logger, calendarService, notificationService}) 
 
 
     res.redirect('/notifications/settings');
-    /*
-    const userNotificationSettings = await notificationService.getUserNotificationSettings(req.session.uid);
     
-    if (userNotificationSettings === null || userNotificationSettings.length === 0) {
-      res.render('pages/notification-settings', {userNotificationSettings: null, uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
-    } else {
-      res.render('pages/notification-settings', {userNotificationSettings: userNotificationSettings, uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
-    }*/
   });
 
   router.get('/maintenance', (req, res) => {
