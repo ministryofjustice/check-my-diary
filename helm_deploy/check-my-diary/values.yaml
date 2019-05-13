@@ -2,11 +2,11 @@ kind: ConfigMap
 shift:
  - name: berwyn-12hourly
    time: "* * 3 * *"
-   command: "echo HELLO WORLD"
+   command: "echo HELLO WORLD - berwyn"
    env: dev
  - name: wayland-12hourly
    time: "* * 2 * *"
-   command: "echo HELLO WORLD"
+   command: "echo HELLO WORLD - wayland"
    env: dev 
    
  - name: berwyn-12hourly

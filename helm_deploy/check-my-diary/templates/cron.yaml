@@ -1,7 +1,7 @@
 {{- $root := . -}}
 {{- range .Values.shift }} 
 {{- if eq $root.Values.appEnvironment .env }}
-
+---
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
