@@ -1,19 +1,19 @@
 kind: ConfigMap
 shift:
- - name: berwyn-12hourly
-   time: "* * 3 * *"
-   command: "echo HELLO WORLD - berwyn"
+ - name: shift
+   time: "5 * * * *"
+   command: "node server.js --processtype=SHIFT"
    env: dev
- - name: wayland-12hourly
-   time: "* * 2 * *"
-   command: "echo HELLO WORLD - wayland"
-   env: dev 
-   
- - name: berwyn-12hourly
-   time: "* * 4 * *"
-   command: "echo HELLO WORLD"
+ - name: shift-detail
+   time: "1 * * * *"
+   command: "echo 'node server.js --processtype=SHIFT-DETAIL'"
+   env: dev
+
+ - name: shift
+   time: "5 * * * *"
+   command: "node server.js --processtype=SHIFT"
    env: prod
- - name: wayland-12hourly
-   time: "* * 5 * *"
-   command: "echo HELLO WORLD"
+ - name: shift-detail
+   time: "1 * * * *"
+   command: "node server.js --processtype=SHIFT-DETAIL"
    env: prod
