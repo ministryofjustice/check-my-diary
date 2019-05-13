@@ -81,28 +81,12 @@ module.exports = function Index({logger, calendarService, notificationService}) 
     }
   });
 
-  router.post('/notifications/settings', [
-    // email address
-    check('inputEmail', 'Email address is invalid!').isEmail(),
-    // mobile number
-    check('inputMobile', 'Must be only numeric').isNumeric(),
-    check('inputMobile', 'Must be only be a valid mobile number').isMobilePhone('en-GB')
-
-    ], async (req, res) => {
-      // Finds the validation errors in this request and wraps them in an object with handy functions
-      const errors = validationResult(req);
-      console.log(errors.mapped());
-      if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
-      }
-      
-      
+  router.post('/notifications/settings', async (req, res) => {    
 
     logger.info('POST notifications settings');
 
     await notificationService.updateUserNotificationSettings(req.session.uid, req.body.inputEmail === '' ? null : req.body.inputEmail, req.body.inputMobile === '' ? null : req.body.inputMobile, req.body.optionEmail !== undefined ? true : false, req.body.optionMobile !== undefined ? true : false);
-
-
+    
     res.redirect('/notifications/settings');
     
   });
