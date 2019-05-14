@@ -6,23 +6,20 @@ This directory contains the relevant files to deploy the Check My Diary applicat
 ## Installing the Chart
 To install the chart:
 ```
-helm install helm_deploy/check-my-diary/. \
-  --name <app-name> \
-  --namespace <env-name> \
-  --set deploy.host=<URL>
+helm install --name check-my-diary-dev ./helm_deploy/check-my-diary/. --tiller-namespace=check-my-diary-dev --namespace=check-my-diary-dev --set image.repository="926803513772.dkr.ecr.eu-west-1.amazonaws.com/check-my-diary/check-my-diary-dev" --set image.tag='latest' --set deploy.host="check-my-diary-dev.apps.cloud-platform-live-0.k8s.integration.dsd.io" --set replicaCount=1 --set applicationName=check-my-diary-dev --set appEnvironment=dev --dry-run
 ```
-The ```app-name``` will be the name of your deployment. For example our reference Django reference app would be: `django-application`.
+The ```app-name``` will be the name of your deployment. For example `check-my-diary-dev`.
 
 The ```env-name``` here is the environment name (namespace) you've created in the [Creating a Cloud Platform Environment](https://ministryofjustice.github.io/cloud-platform-user-docs/cloud-platform/env-create/#creating-a-cloud-platform-environment) guide.
 
-The ```URL``` argument is the address your application will be served. An example of this is: `django-app.apps.cloud-platforms-test.k8s.integration.dsd.io`.
+The ```URL``` argument is the address your application will be served. An example of this is: `check-my-diary-dev.apps.cloud-platform-live-0.k8s.integration.dsd.io`.
 
-There are a number of install switches available. Please visit the [Helm docs](https://docs.helm.sh/helm/#helm-install) for more information. 
+There are a number of install switches available. Please visit the [Helm docs](https://docs.helm.sh/helm/#helm-install) for more information.
 
 ## Deleting the Chart
 To delete the installation from your cluster:
 ```
-helm del --purge <app-name>
+helm del --purge check-my-diary-dev --tiller-namespace=check-my-diary-dev
 ```
 ## Configuration
 | Parameter  | Description     | Default |
@@ -34,7 +31,7 @@ helm del --purge <app-name>
 
 ## Chart Structure
 ### Chart.yaml
-The YAML for our chart. This contains our API version, chart description, name and version. 
+The YAML for our chart. This contains our API version, chart description, name and version.
 
 ### requirements.yaml
 A YAML file listing dependencies for the chart.
@@ -45,7 +42,7 @@ The default configuration values for this chart.
 ### charts/
 A directory containing any charts upon which this chart depends.
 
-### templates/ 
+### templates/
 A directory of templates that, when combined with values, will generate valid Kubernetes manifest files.
 
 ### templates/NOTES.txt
