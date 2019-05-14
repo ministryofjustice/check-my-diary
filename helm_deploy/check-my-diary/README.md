@@ -6,7 +6,7 @@ This directory contains the relevant files to deploy the Check My Diary applicat
 ## Installing the Chart
 To install the chart:
 ```
-helm install --name check-my-diary-dev ./helm_deploy/check-my-diary/. --tiller-namespace=check-my-diary-dev --namespace=check-my-diary-dev --set image.repository="926803513772.dkr.ecr.eu-west-1.amazonaws.com/check-my-diary/check-my-diary-dev" --set image.tag='latest' --set deploy.host="check-my-diary-dev.apps.cloud-platform-live-0.k8s.integration.dsd.io" --set replicaCount=1 --set applicationName=check-my-diary-dev --set appEnvironment=dev --dry-run
+helm install --name check-my-diary-dev ./helm_deploy/check-my-diary/. --tiller-namespace=check-my-diary-dev --namespace=check-my-diary-dev --set image.repository="926803513772.dkr.ecr.eu-west-1.amazonaws.com/check-my-diary/check-my-diary-dev" --set image.tag='latest' --set deploy.host="check-my-diary-dev.apps.cloud-platform-live-0.k8s.integration.dsd.io" --set replicaCount=1 --set applicationName=check-my-diary-dev --set appEnvironment=dev --debug
 ```
 The ```app-name``` will be the name of your deployment. For example `check-my-diary-dev`.
 
