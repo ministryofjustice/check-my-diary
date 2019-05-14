@@ -25,9 +25,14 @@ helm del --purge check-my-diary-dev --tiller-namespace=check-my-diary-dev
 | Parameter  | Description     | Default |
 | ---------- | --------------- | ------- |
 | `replicaCount` | Used to set the number of replica pods used. | `1` |
-| `image.repository` | The image repository location. | `926803513772.dkr.ecr.eu-west-1.amazonaws.com/cloud-platform-demo-app`|
+| `image.repository` | The image repository location. | `926803513772.dkr.ecr.eu-west-1.amazonaws.com/check-my-diary/check-my-diary-dev`|
 | `image.tag` | The image tag. | `latest` |
 | `deploy.host` | The URL of your application | `""` |
+| `applicationName` | Name of application & tillerNamespace | `check-my-diary-dev` |
+| `appEnvironment` | Environment | `dev` |
+| `--debug` | Enable debug output | `On` |
+| `--dry-run` | Do a dry run of the deployment | `off`
+|
 
 ## Chart Structure
 ### Chart.yaml
