@@ -32,7 +32,6 @@ helm del --purge check-my-diary-dev --tiller-namespace=check-my-diary-dev
 | `appEnvironment` | Environment | `dev` |
 | `--debug` | Enable debug output | `On` |
 | `--dry-run` | Do a dry run of the deployment | `off`
-|
 
 ## Chart Structure
 ### Chart.yaml
