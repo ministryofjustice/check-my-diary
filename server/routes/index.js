@@ -1,5 +1,5 @@
 const express = require('express');
-const moment = require('moment');
+const moment = require('moment-timezone');
 const { check, validationResult } = require('express-validator/check');
 
 module.exports = function Index({logger, calendarService, notificationService}) {
