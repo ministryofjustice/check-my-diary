@@ -192,7 +192,10 @@ getMonthAndYear = (currentDate) => {
 }
 
 getRelativeLastModifiedDateTime = (dateTime) => {  
-  return moment(dateTime).tz("Europe/London").fromNow();
+
+  moment.tz.setDefault("Europe/London");
+
+  return moment(dateTime).fromNow();
 }
 
 %>
