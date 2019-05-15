@@ -191,9 +191,8 @@ getMonthAndYear = (currentDate) => {
   return months[parseInt(splitDate[1] - 1, 10)] + ' ' + splitDate[0];
 }
 
-getRelativeLastModifiedDateTime = (dateTime) => {
-  moment.locale('en-GB');
-  return moment(dateTime).fromNow();
+getRelativeLastModifiedDateTime = (dateTime) => {  
+  return moment.tz(dateTime, 'Europe/London').fromNow();
 }
 
 %>
