@@ -191,8 +191,9 @@ getMonthAndYear = (currentDate) => {
   return months[parseInt(splitDate[1] - 1, 10)] + ' ' + splitDate[0];
 }
 
-convertDateTimeToUTC = (dateTime => {
-  return new Date(dateTime).toUTCString();
-})
+getRelativeLastModifiedDateTime = (dateTime) => {
+  moment.locale('en-GB');
+  return moment(dateTime).fromNow();
+}
 
 %>
