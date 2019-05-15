@@ -35,7 +35,7 @@
             <% if (shiftNotifications != null && shiftNotifications.length > 0) { %>
               <% shiftNotifications.forEach(function(notification){ %>
                 <li>
-                  <span class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0"> <%= moment.utc(notification.LastModifiedDateTime).fromNow() %>
+                  <span class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0"> <%= moment.utc(notification.LastModifiedDateTime).fromNow() %> ::: Current DateTime : <%= moment().format() %>
                   
                     <% if (notification.Read == false) { %>
                       <span class="bold-xsmall">(new)</span>
