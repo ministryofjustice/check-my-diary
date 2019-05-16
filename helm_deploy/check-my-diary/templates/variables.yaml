@@ -12,6 +12,8 @@ data:
   business_unit: "Deerbolt - Band 3"
   shift_interval: "24"
   shift_interval_type: hours
+  shift_task_interval: "12"
+  shift_task_interval_type: hours
   log_file_location: ./logs/check-my-diary-notificaion-service.log
   log_level: debug
   log_period: "1d"
