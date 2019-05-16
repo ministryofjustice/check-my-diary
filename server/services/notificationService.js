@@ -4,8 +4,10 @@ const notificationService = () => {
 
     const getShiftNotifications = async ( quantumId ) => {    
 
-        return db.select("DateTime", "Description", "ShiftDate", "LastModifiedDateTime", "Read").from('ShiftNotification')
-                .where('QuantumId', '=', quantumId )
+        return db.select("DateTime", "Description", "LastModifiedDateTime", "Read").from('ShiftNotification')
+                .where('QuantumId', '=', quantumId ).union(
+                db.select("DateTime", "Description", "LastModifiedDateTime", "Read").from('ShiftTaskNotification')
+                .where('QuantumId', '=', quantumId ))
                 .orderBy('LastModifiedDateTime', 'desc')
                 .catch((err) => { throw err });
     }
@@ -13,6 +15,15 @@ const notificationService = () => {
     const updateShiftNotificationsToRead = async ( quantumId ) => {    
        
         db("ShiftNotification")
+                .where({QuantumId : `${quantumId}`,
+                Read : false})
+                .update({ Read: true })
+                .catch((err) => { throw err });
+    }
+
+    const updateShiftTaskNotificationsToRead = async ( quantumId ) => {    
+       
+        db("ShiftTaskNotification")
                 .where({QuantumId : `${quantumId}`,
                 Read : false})
                 .update({ Read: true })
@@ -50,6 +61,7 @@ const notificationService = () => {
     return {
         getShiftNotifications,
         updateShiftNotificationsToRead,
+        updateShiftTaskNotificationsToRead,
         getUserNotificationSettings,
         updateUserNotificationSettings
     }

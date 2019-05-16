@@ -62,6 +62,7 @@ module.exports = function Index({logger, calendarService, notificationService}) 
       res.render('pages/notifications', {moment: moment, shiftNotifications : shiftNotifications, tab: 'Notifications', uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
       
       await notificationService.updateShiftNotificationsToRead(req.session.uid);
+      await notificationService.updateShiftTaskNotificationsToRead(req.session.uid);
     } catch (error) {
       serviceUnavailable(req, res);
     }
