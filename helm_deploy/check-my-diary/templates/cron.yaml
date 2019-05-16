@@ -149,5 +149,15 @@ spec:
                   configMapKeyRef:
                     name: {{ $root.Values.applicationName }}-vars
                     key: reject_unauthorized
+              - name: "SHIFT_TASK_INTERVAL"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: shift_task_interval
+              - name: "SHIFT_TASK_INTERVAL_TYPE"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: shift_task_interval_type
           restartPolicy: OnFailure
 {{- end }}{{- end }}
