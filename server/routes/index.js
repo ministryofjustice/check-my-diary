@@ -1,5 +1,4 @@
 const express = require('express');
-const moment = require('moment-timezone');
 const { check, validationResult } = require('express-validator/check');
 
 module.exports = function Index({logger, calendarService, notificationService}) {
@@ -59,7 +58,7 @@ module.exports = function Index({logger, calendarService, notificationService}) 
       const shiftNotifications = await notificationService.getShiftNotifications(req.session.uid);
       
       logger.info('GET notifications view');
-      res.render('pages/notifications', {moment: moment, shiftNotifications : shiftNotifications, tab: 'Notifications', uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
+      res.render('pages/notifications', {shiftNotifications : shiftNotifications, tab: 'Notifications', uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
       
       await notificationService.updateShiftNotificationsToRead(req.session.uid);
       await notificationService.updateShiftTaskNotificationsToRead(req.session.uid);
