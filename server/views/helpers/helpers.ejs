@@ -191,17 +191,13 @@ getMonthAndYear = (currentDate) => {
   return months[parseInt(splitDate[1] - 1, 10)] + ' ' + splitDate[0];
 }
 
-getUTCNow = () => {
-    var now = new Date();
-    var time = now.getTime();
-    var offset = now.getTimezoneOffset();
-    offset = offset * 60000;
-    return time - offset;
+convertDateTimeToGMT = (dateTime) => {
+  return new Date(dateTime.toLocaleString('en-GB', { timeZone: 'Europe/London' }) );
 }
 
 getRelativeLastModifiedDateTime = (dateTime) => {  
 
-  var s = ( getUTCNow() - Date.parse(dateTime) ) / 1e3,
+  var s = ( new Date() - convertDateTimeToGMT(dateTime) ) / 1e3,
     m = s / 60,
     h = m / 60,
     d = h / 24,
