@@ -198,7 +198,7 @@ getConvertedDateTime = (dateTimeInSeconds) => {
 
 getRelativeLastModifiedDateTime = (dateTimeInSeconds) => {  
    
-  var s = ( new Date() - getConvertedDateTime(dateTimeInSeconds) ) / 1e3,
+  var s = ( +new Date() - getConvertedDateTime(dateTimeInSeconds) ) / 1e3,
     m = s / 60,
     h = m / 60,
     d = h / 24,
