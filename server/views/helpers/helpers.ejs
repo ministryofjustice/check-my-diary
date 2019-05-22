@@ -198,7 +198,11 @@ getConvertedDateTime = (dateTimeInSeconds) => {
 
 getRelativeLastModifiedDateTime = (dateTimeInSeconds) => {  
    
-  var s = ( +new Date() - getConvertedDateTime(dateTimeInSeconds) ) / 1e3,
+  var now = new Date();
+  var utc_timestamp = Date.UTC(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate() , 
+      now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds());
+            
+  var s = ( +new Date(utc_timestamp) - getConvertedDateTime(dateTimeInSeconds) ) / 1e3,
     m = s / 60,
     h = m / 60,
     d = h / 24,
