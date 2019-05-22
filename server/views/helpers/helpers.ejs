@@ -191,14 +191,14 @@ getMonthAndYear = (currentDate) => {
   return months[parseInt(splitDate[1] - 1, 10)] + ' ' + splitDate[0];
 }
 
-getConvertedDateTime = (dateTime) => {
+getConvertedDateTime = (dateTimeInSeconds) => {
 
-  return dateTime.getFullYear() + "-" + (dateTime.getMonth()+1)  + "-" +  dateTime.getDate() + " " + dateTime.getHours() + ":" + dateTime.getMinutes() + ":" + dateTime.getSeconds();
+  return new Date(dateTimeInSeconds * 1000)
 }
 
-getRelativeLastModifiedDateTime = (dateTime) => {  
+getRelativeLastModifiedDateTime = (dateTimeInSeconds) => {  
    
-  var s = ( new Date() - new Date(getConvertedDateTime(dateTime)) ) / 1e3,
+  var s = ( new Date() - getConvertedDateTime(dateTimeInSeconds) ) / 1e3,
     m = s / 60,
     h = m / 60,
     d = h / 24,

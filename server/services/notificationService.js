@@ -4,11 +4,11 @@ const notificationService = () => {
 
     const getShiftNotifications = async ( quantumId ) => {    
 
-        return db.select("DateTime", "Description", "LastModifiedDateTime", "Read").from('ShiftNotification')
-                .where('QuantumId', '=', quantumId ).union(
-                db.select("DateTime", "Description", "LastModifiedDateTime", "Read").from('ShiftTaskNotification')
+        return db.select("DateTime", "Description", "LastModifiedDateTime", "LastModifiedDateTimeInSeconds", "Read").from('ShiftNotification')
+                .where('QuantumId', '=', quantumId ).union( 
+                db.select("DateTime", "Description", "LastModifiedDateTime", "LastModifiedDateTimeInSeconds", "Read").from('ShiftTaskNotification')
                 .where('QuantumId', '=', quantumId ))
-                .orderBy('LastModifiedDateTime', 'desc')
+                .orderBy('LastModifiedDateTimeInSeconds', 'desc')
                 .catch((err) => { throw err });
     }
 
