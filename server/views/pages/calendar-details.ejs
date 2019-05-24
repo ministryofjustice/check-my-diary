@@ -22,7 +22,7 @@
         
         <% if (data != null && data.tasks.length > 0) { %>
 
-          <h1 class="govuk-heading-l"><%= getDayOfWeek(data.tasks[0].date) %> <%= parseDate(data.tasks[0].date) %></h1>                          
+          <h1 class="govuk-heading-l"><%= getDayOfWeek(data.tasks[0].date) %> <%= parseFullDateFormat(data.tasks[0].date) %></h1>                          
 
           <ul class="app-shift-detail">
 
@@ -114,10 +114,10 @@
           <div class="govuk-clearfix"></div>
           
             <a id="btnPreviousShiftDetail" href="/details/<%= getDatePartFormatted(getPreviousDate(data.tasks[0].date)) %>"
-              class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19">&larr; <%= getPreviousDay(getDayOfWeek(data.tasks[0].date)) %> <%= parseDate(getPreviousDate(data.tasks[0].date)) %></a>
+              class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19">&larr; <%= getPreviousDay(getDayOfWeek(data.tasks[0].date)) %> <%= parseFullDateFormat(getPreviousDate(data.tasks[0].date)) %></a>
 
             <a id="btnNextShiftDetail" href="/details/<%= getDatePartFormatted(getNextDate(data.tasks[0].date)) %>"
-              class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 app-link-!-border "><%= getNextDay(getDayOfWeek(data.tasks[0].date)) %> <%= parseDate(getNextDate(data.tasks[0].date)) %> &rarr;</a>
+              class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 app-link-!-border "><%= getNextDay(getDayOfWeek(data.tasks[0].date)) %> <%= parseFullDateFormat(getNextDate(data.tasks[0].date)) %> &rarr;</a>
         
           </div>
         <% } else { %>
