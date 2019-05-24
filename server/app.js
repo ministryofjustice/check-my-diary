@@ -97,6 +97,11 @@ module.exports = function createApp({ logger, calendarService }, notificationSer
     });
   }
 
+  app.use(function(req, res, next){
+    res.locals.errors = null;
+    next();
+  });
+  
   if (!production) {
     app.use('/public', sassMiddleware({
       src: path.join(__dirname, '../sass'),

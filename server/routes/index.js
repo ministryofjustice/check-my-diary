@@ -75,20 +75,42 @@ module.exports = function Index({logger, calendarService, notificationService}) 
     const userNotificationSettings = await notificationService.getUserNotificationSettings(req.session.uid);
     
     if (userNotificationSettings === null || userNotificationSettings.length === 0) {
-      res.render('pages/notification-settings', {userNotificationSettings: null, uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
+      res.render('pages/notification-settings', {errors : null, userNotificationSettings: null, uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
     } else {
-      res.render('pages/notification-settings', {userNotificationSettings: userNotificationSettings[0], uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
+      res.render('pages/notification-settings', {errors : null, userNotificationSettings: userNotificationSettings[0], uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
     }
   });
 
-  router.post('/notifications/settings', async (req, res) => {    
+  router.post('/notifications/settings',  [
 
-    logger.info('POST notifications settings');
+    // email address
+    check('inputEmail', 'Email address is invalid!').isEmail(),
+    // mobile number
+    //check('inputMobile', 'Must be only numeric').isNumeric(),
+    check('inputMobile', 'Must be only be a valid mobile number').isMobilePhone('en-GB')
 
-    await notificationService.updateUserNotificationSettings(req.session.uid, req.body.inputEmail === '' ? null : req.body.inputEmail, req.body.inputMobile === '' ? null : req.body.inputMobile, req.body.optionEmail !== undefined ? true : false, req.body.optionMobile !== undefined ? true : false);
-    
-    res.redirect('/notifications/settings');
-    
+    ], async (req, res) => {
+      // Finds the validation errors in this request and wraps them in an object with handy functions
+      const errors = validationResult(req);
+      console.log(errors.mapped());
+      if (!errors.isEmpty()) {
+        //return res.status(422).json({ errors: errors.array() });
+        //res.locals.errors = errors.array();
+        const userNotificationSettings = await notificationService.getUserNotificationSettings(req.session.uid);
+        
+        if (userNotificationSettings === null || userNotificationSettings.length === 0) {
+          res.render('pages/notification-settings', {errors : errors.array(), userNotificationSettings: null, uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
+        } else {
+          res.render('pages/notification-settings', {errors : errors.array(), userNotificationSettings: userNotificationSettings[0], uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
+        }
+      } else {
+
+        logger.info('POST notifications settings');
+
+        await notificationService.updateUserNotificationSettings(req.session.uid, req.body.inputEmail === '' ? null : req.body.inputEmail, req.body.inputMobile === '' ? null : req.body.inputMobile, req.body.optionEmail !== undefined ? true : false, req.body.optionMobile !== undefined ? true : false);
+        
+        res.redirect('/notifications/settings');
+      }
   });
 
   router.get('/maintenance', (req, res) => {

@@ -19,7 +19,13 @@
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-
+        <% if (errors != undefined) { %>
+          <ul class="govuk-label govuk-checkboxes__label">
+            <% errors.forEach(function(error) { %>
+              <li> <%= error.msg %></li>
+            <% }) %>
+          </ul>
+        <% } %>
         <form action="/notifications/settings" method="POST">
 
           <div class="govuk-form-group">
@@ -30,52 +36,139 @@
                 </h1>
               </legend>
               <div class="govuk-checkboxes" data-module="checkboxes">
-                <% if (userNotificationSettings === null || !userNotificationSettings.UseEmailAddress) { %>                  
-                  <div class="govuk-checkboxes__item">                  
-                      <input class="govuk-checkboxes__input" id="optionEmail" name="optionEmail" type="checkbox" value="email" data-aria-controls="conditional-email">
+               <% debugger; %>
+                <% if (errors !== undefined && errors !== null) { %>
+                  <% if (errors.find(x => x.param === 'inputEmail') !== undefined ) { %>
+                    <div class="govuk-checkboxes__item">                  
+                      <input class="govuk-checkboxes__input" id="optionEmail" name="optionEmail" type="checkbox" checked="true" value="email" data-aria-controls="conditional-email">
                       <label class="govuk-label govuk-checkboxes__label" for="optionEmail">Email</label>                    
-                  </div>
-                  <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-email">
-                    <div class="govuk-form-group">
-                      <label class="govuk-label" for="inputEmail">Email address</label>
-                      <input class="govuk-input govuk-!-width-two-thirds" id="inputEmail" name="inputEmail" type="email" value="<%= userNotificationSettings !== null ?  userNotificationSettings.EmailAddress : '' %>">
                     </div>
-                  </div>
+                    <div class="govuk-checkboxes__conditional" id="conditional-email">
+                      <div class="govuk-form-group">
+                        <label class="govuk-label" for="inputEmail">Email address</label>
+                        <input class="govuk-input govuk-!-width-two-thirds" id="inputEmail" name="inputEmail" type="email" value="<%= errors.find(x => x.param === 'inputEmail').value %>">
+                        <label class="govuk-label" for="inputEmail"><%= errors.find(x => x.param === 'inputEmail').msg %></label>
+                      </div>
+                    </div>
+                  <% } else { %>
+                    <% if (userNotificationSettings === null || !userNotificationSettings.UseEmailAddress) { %>                  
+                      <div class="govuk-checkboxes__item">                  
+                          <input class="govuk-checkboxes__input" id="optionEmail" name="optionEmail" type="checkbox" value="email" data-aria-controls="conditional-email">
+                          <label class="govuk-label govuk-checkboxes__label" for="optionEmail">Email</label>                    
+                      </div>
+                      <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-email">
+                        <div class="govuk-form-group">
+                          <label class="govuk-label" for="inputEmail">Email address</label>
+                          <input class="govuk-input govuk-!-width-two-thirds" id="inputEmail" name="inputEmail" type="email" value="<%= userNotificationSettings !== null ?  userNotificationSettings.EmailAddress : '' %>">
+                        </div>
+                      </div>
+                    <% } else { %>
+                      <div class="govuk-checkboxes__item">                  
+                        <input class="govuk-checkboxes__input" id="optionEmail" name="optionEmail" type="checkbox" checked="true" value="email" data-aria-controls="conditional-email">
+                        <label class="govuk-label govuk-checkboxes__label" for="optionEmail">Email</label>                    
+                      </div>
+                      <div class="govuk-checkboxes__conditional" id="conditional-email">
+                        <div class="govuk-form-group">
+                          <label class="govuk-label" for="inputEmail">Email address</label>
+                          <input class="govuk-input govuk-!-width-two-thirds" id="inputEmail" name="inputEmail" type="email" value="<%= userNotificationSettings.EmailAddress %>">
+                        </div>
+                      </div>
+                    <% } %>
+                  <% } %>
+
                 <% } else { %>
-                  <div class="govuk-checkboxes__item">                  
-                    <input class="govuk-checkboxes__input" id="optionEmail" name="optionEmail" type="checkbox" checked="true" value="email" data-aria-controls="conditional-email">
-                    <label class="govuk-label govuk-checkboxes__label" for="optionEmail">Email</label>                    
-                  </div>
-                  <div class="govuk-checkboxes__conditional" id="conditional-email">
-                    <div class="govuk-form-group">
-                      <label class="govuk-label" for="inputEmail">Email address</label>
-                      <input class="govuk-input govuk-!-width-two-thirds" id="inputEmail" name="inputEmail" type="email" value="<%= userNotificationSettings.EmailAddress %>">
+
+                  <% if (userNotificationSettings === null || !userNotificationSettings.UseEmailAddress) { %>                  
+                    <div class="govuk-checkboxes__item">                  
+                        <input class="govuk-checkboxes__input" id="optionEmail" name="optionEmail" type="checkbox" value="email" data-aria-controls="conditional-email">
+                        <label class="govuk-label govuk-checkboxes__label" for="optionEmail">Email</label>                    
                     </div>
-                  </div>
+                    <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-email">
+                      <div class="govuk-form-group">
+                        <label class="govuk-label" for="inputEmail">Email address</label>
+                        <input class="govuk-input govuk-!-width-two-thirds" id="inputEmail" name="inputEmail" type="email" value="<%= userNotificationSettings !== null ?  userNotificationSettings.EmailAddress : '' %>">
+                      </div>
+                    </div>
+                  <% } else { %>
+                    <div class="govuk-checkboxes__item">                  
+                      <input class="govuk-checkboxes__input" id="optionEmail" name="optionEmail" type="checkbox" checked="true" value="email" data-aria-controls="conditional-email">
+                      <label class="govuk-label govuk-checkboxes__label" for="optionEmail">Email</label>                    
+                    </div>
+                    <div class="govuk-checkboxes__conditional" id="conditional-email">
+                      <div class="govuk-form-group">
+                        <label class="govuk-label" for="inputEmail">Email address</label>
+                        <input class="govuk-input govuk-!-width-two-thirds" id="inputEmail" name="inputEmail" type="email" value="<%= userNotificationSettings.EmailAddress %>">
+                      </div>
+                    </div>
+                  <% } %>
                 <% } %>
-                
-                <% if (userNotificationSettings === null || !userNotificationSettings.UseSms) { %>
-                  <div class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="optionMobile" name="optionMobile" type="checkbox" value="text message" data-aria-controls="conditional-text-message">
-                    <label class="govuk-label govuk-checkboxes__label" for="optionMobile">Text message</label>
-                  </div>
-                  <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-text-message">
-                    <div class="govuk-form-group">
-                      <label class="govuk-label" for="inputMobile">Mobile phone number</label>
-                      <input class="govuk-input govuk-!-width-two-thirds" id="inputMobile" name="inputMobile" type="tel" value="<%= userNotificationSettings !== null ? userNotificationSettings.Sms : ''%>">
+
+                <% if (errors !== undefined && errors !== null) { %>
+                  <% if (errors.find(x => x.param === 'inputMobile') !== undefined) { %>
+
+                    <div class="govuk-checkboxes__item">
+                      <input class="govuk-checkboxes__input" id="optionMobile" name="optionMobile" type="checkbox" checked="true" value="text message" data-aria-controls="conditional-text-message">
+                      <label class="govuk-label govuk-checkboxes__label" for="optionMobile">Text message</label>
                     </div>
-                  </div>
+                    <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-text-message">
+                      <div class="govuk-form-group">
+                        <label class="govuk-label" for="inputMobile">Mobile phone number</label>
+                        <input class="govuk-input govuk-!-width-two-thirds" id="inputMobile" name="inputMobile" type="tel" value="<%= errors.find(x => x.param === 'inputMobile').value %>">
+                        <label class="govuk-label" for="inputEmail"><%= errors.find(x => x.param === 'inputMobile').msg %></label>
+                      </div>
+                    </div>
+                  <% } else { %>
+                    <% if (userNotificationSettings === null || !userNotificationSettings.UseSms) { %>
+                      <div class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input" id="optionMobile" name="optionMobile" type="checkbox" value="text message" data-aria-controls="conditional-text-message">
+                        <label class="govuk-label govuk-checkboxes__label" for="optionMobile">Text message</label>
+                      </div>
+                      <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-text-message">
+                        <div class="govuk-form-group">
+                          <label class="govuk-label" for="inputMobile">Mobile phone number</label>
+                          <input class="govuk-input govuk-!-width-two-thirds" id="inputMobile" name="inputMobile" type="tel" value="<%= userNotificationSettings !== null ? userNotificationSettings.Sms : ''%>">
+                        </div>
+                      </div>
+                    <% } else { %>
+                      <div class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input" id="optionMobile" name="optionMobile" type="checkbox" checked="true" value="text message" data-aria-controls="conditional-text-message">
+                        <label class="govuk-label govuk-checkboxes__label" for="optionMobile">Text message</label>
+                      </div>
+                      <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-text-message">
+                        <div class="govuk-form-group">
+                          <label class="govuk-label" for="inputMobile">Mobile phone number</label>
+                          <input class="govuk-input govuk-!-width-two-thirds" id="inputMobile" name="inputMobile" type="tel" value="<%= userNotificationSettings.Sms %>">
+                        </div>
+                      </div>
+                    <% } %> 
+                  <% } %>
+
+                  
                 <% } else { %>
-                  <div class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="optionMobile" name="optionMobile" type="checkbox" checked="true" value="text message" data-aria-controls="conditional-text-message">
-                    <label class="govuk-label govuk-checkboxes__label" for="optionMobile">Text message</label>
-                  </div>
-                  <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-text-message">
-                    <div class="govuk-form-group">
-                      <label class="govuk-label" for="inputMobile">Mobile phone number</label>
-                      <input class="govuk-input govuk-!-width-two-thirds" id="inputMobile" name="inputMobile" type="tel" value="<%= userNotificationSettings.Sms %>">
+
+                  <% if (userNotificationSettings === null || !userNotificationSettings.UseSms) { %>
+                    <div class="govuk-checkboxes__item">
+                      <input class="govuk-checkboxes__input" id="optionMobile" name="optionMobile" type="checkbox" value="text message" data-aria-controls="conditional-text-message">
+                      <label class="govuk-label govuk-checkboxes__label" for="optionMobile">Text message</label>
                     </div>
-                  </div>
+                    <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-text-message">
+                      <div class="govuk-form-group">
+                        <label class="govuk-label" for="inputMobile">Mobile phone number</label>
+                        <input class="govuk-input govuk-!-width-two-thirds" id="inputMobile" name="inputMobile" type="tel" value="<%= userNotificationSettings !== null ? userNotificationSettings.Sms : ''%>">
+                      </div>
+                    </div>
+                  <% } else { %>
+                    <div class="govuk-checkboxes__item">
+                      <input class="govuk-checkboxes__input" id="optionMobile" name="optionMobile" type="checkbox" checked="true" value="text message" data-aria-controls="conditional-text-message">
+                      <label class="govuk-label govuk-checkboxes__label" for="optionMobile">Text message</label>
+                    </div>
+                    <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-text-message">
+                      <div class="govuk-form-group">
+                        <label class="govuk-label" for="inputMobile">Mobile phone number</label>
+                        <input class="govuk-input govuk-!-width-two-thirds" id="inputMobile" name="inputMobile" type="tel" value="<%= userNotificationSettings.Sms %>">
+                      </div>
+                    </div>
+                  <% } %> 
                 <% } %>
                 
               </div>
