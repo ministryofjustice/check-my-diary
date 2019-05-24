@@ -103,13 +103,14 @@ parseShortDate = (date) => {
   return parseInt(date.substr(date.length - 2), 10);
 }
 
-/**
- * Take YYYY-MM-DD and return DD/MM/YYYY
- * @param date
- * @returns {string}
- */
-parseDate = (date) => {
-  return splitString(date, '-').reverse().join('/');
+parseFullDateFormat = (date) => {
+  var months    = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  var formattedDate = new Date(date);
+
+  var thisMonth = months[formattedDate.getMonth()];
+
+  return formattedDate.getDate() + ' ' + thisMonth + ' ' + formattedDate.getFullYear();
 }
 
 /**
