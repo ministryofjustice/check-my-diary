@@ -12,6 +12,23 @@ const notificationService = () => {
                 .catch((err) => { throw err });
     }
 
+    const getShiftNotificationsPaged = async ( quantumId, offset, perPage ) => {    
+
+        return  db.select("DateTime", "Description", "LastModifiedDateTime", "LastModifiedDateTimeInSeconds", "Read").from('ShiftTaskNotification')
+                .where('QuantumId', '=', quantumId ).offset(offset).limit(perpage)
+                .orderBy('LastModifiedDateTimeInSeconds', 'desc')
+                .catch((err) => { throw err });
+    }
+
+    const getShiftNotificationsCount = async ( quantumId ) => {    
+
+        return db.sum( 
+                db.select('*').from('ShiftTaskNotification')
+                .where('QuantumId', '=', quantumId )).first()
+                .catch((err) => { throw err });
+    }
+
+
     const updateShiftNotificationsToRead = async ( quantumId ) => {    
        
         db("ShiftNotification")
@@ -60,6 +77,8 @@ const notificationService = () => {
 
     return {
         getShiftNotifications,
+        getShiftNotificationsPaged,
+        getShiftNotificationsCount,
         updateShiftNotificationsToRead,
         updateShiftTaskNotificationsToRead,
         getUserNotificationSettings,

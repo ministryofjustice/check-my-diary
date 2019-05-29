@@ -1,5 +1,7 @@
 const express = require('express');
 const { check, validationResult } = require('express-validator/check');
+const scrollToElement = require('scroll-to-element');
+ 
 
 module.exports = function Index({logger, calendarService, notificationService}) {
 
@@ -55,10 +57,41 @@ module.exports = function Index({logger, calendarService, notificationService}) 
   router.get('/notifications', async (req, res) => {
 
     try {
-      const shiftNotifications = await notificationService.getShiftNotifications(req.session.uid);
+      //const shiftNotifications = await notificationService.getShiftNotifications(req.session.uid);
       
+      var reqData = req.query;
+                var pagination = {};
+                var perPage   = reqData.perPage || 2;
+                var page       = reqData.currentPage || 1;
+                if (page < 1) page = 1;
+                var offset = (page - 1) * perPage;
+
+                Promise.all([
+                  notificationService.getShiftNotificationsCount(req.session.uid),
+                  notificationService.getShiftNotificationsPaged(req.session.uid, offset, perPage)
+                ]).then(([total, rows]) => {
+
+                                        var count = total.count;
+                                        var rows = rows;
+                                        pagination.total = count;
+                                        pagination.per_page = perPage;
+                                        pagination.offset = offset;
+                                        pagination.to = offset + rows.length;
+                                        pagination.last_page = Math.ceil(count / perPage);
+                                        pagination.current_page = page;
+                                        pagination.from = offset;
+                                        pagination.data = rows;
+                                        res.render('pages/notifications', {data: pagination, shiftNotifications : shiftNotifications, tab: 'Notifications', uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
+                                        //res.render('admin/users/index', { data: pagination });
+                                })
+                    .catch(error => {
+
+                    });
+
+
+
       logger.info('GET notifications view');
-      res.render('pages/notifications', {shiftNotifications : shiftNotifications, tab: 'Notifications', uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
+      //res.render('pages/notifications', {shiftNotifications : shiftNotifications, tab: 'Notifications', uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
       
       await notificationService.updateShiftNotificationsToRead(req.session.uid);
       await notificationService.updateShiftTaskNotificationsToRead(req.session.uid);
