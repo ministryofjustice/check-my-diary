@@ -12,22 +12,31 @@ const notificationService = () => {
                 .catch((err) => { throw err });
     }
 
-    const getShiftNotificationsPaged = async ( quantumId, offset, perPage ) => {    
+    const getShiftNotificationsPaged = ( quantumId, offset, perPage ) => {    
 
-        return  db.select("DateTime", "Description", "LastModifiedDateTime", "LastModifiedDateTimeInSeconds", "Read").from('ShiftTaskNotification')
-                .where('QuantumId', '=', quantumId ).offset(offset).limit(perpage)
+        return db.select("DateTime", "Description", "LastModifiedDateTime", "LastModifiedDateTimeInSeconds", "Read")
+                .from('ShiftNotification')
+                .where('QuantumId', '=', quantumId ).union(
+                db.select("DateTime", "Description", "LastModifiedDateTime", "LastModifiedDateTimeInSeconds", "Read")
+                .from('ShiftTaskNotification')
+                .where('QuantumId', '=', quantumId )).offset(offset).limit(perPage)
                 .orderBy('LastModifiedDateTimeInSeconds', 'desc')
+                .catch((err) => { throw err });    
+    }
+
+    const getShiftNotificationsCount = ( quantumId ) => {    
+
+        return db.count("QuantumId").from('ShiftNotification')
+        .where('QuantumId', '=', quantumId ).first()
                 .catch((err) => { throw err });
     }
 
-    const getShiftNotificationsCount = async ( quantumId ) => {    
+    const getShiftTaskNotificationsCount = ( quantumId ) => {    
 
-        return db.sum( 
-                db.select('*').from('ShiftTaskNotification')
-                .where('QuantumId', '=', quantumId )).first()
+        return db.count("QuantumId").from('ShiftTaskNotification')
+        .where('QuantumId', '=', quantumId ).first()
                 .catch((err) => { throw err });
     }
-
 
     const updateShiftNotificationsToRead = async ( quantumId ) => {    
        
@@ -79,6 +88,7 @@ const notificationService = () => {
         getShiftNotifications,
         getShiftNotificationsPaged,
         getShiftNotificationsCount,
+        getShiftTaskNotificationsCount,        
         updateShiftNotificationsToRead,
         updateShiftTaskNotificationsToRead,
         getUserNotificationSettings,

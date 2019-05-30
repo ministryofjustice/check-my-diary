@@ -48,8 +48,15 @@
             <% } %>
           </ul>
         </div>
-    
-        <a id="OlderNotifications" class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="#">Load older notifications</a>
+        
+        <% if (data.per_page > data.total) { %> 
+        <% } else if (data.current_page < 2) { %>
+          <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.next_page%>">Load older notifications</a>         
+        <% } else if (data.last_page === data.next_page-1) { %>
+          <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.previous_page%>">Load newer notifications</a>                        
+        <% } else { %>         
+          <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.previous_page%>">Load newer notifications</a> | <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.next_page%>">Load older notifications</a>          
+        <% } %>
 
       </div>
       <div class="govuk-grid-column-one-third">
