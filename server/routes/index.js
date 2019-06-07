@@ -54,51 +54,6 @@ module.exports = function Index({logger, calendarService, notificationService}) 
     }
   });
 
-  router.get('/notifications/:page', async (req, res) => {
-
-    try {
-      
-      var reqData = req.query;
-      var pagination = {};
-      var perPage = reqData.perPage || 10;
-      var page = parseInt(req.params.page) || 2;
-      if (page < 1) page = 1;
-      var offset = (page - 1) * perPage;
-
-      Promise.all([
-        notificationService.getShiftNotificationsCount(req.session.uid),
-        notificationService.getShiftTaskNotificationsCount(req.session.uid),
-        notificationService.getShiftNotificationsPaged(req.session.uid, offset, perPage)
-      ]).then(([totalShiftNotifications, totalShiftTaskNotifications, rows]) => {
-
-            var count = parseInt(totalShiftNotifications.count) + parseInt(totalShiftTaskNotifications.count);
-            var rows = rows;
-            pagination.total = count;
-            pagination.per_page = perPage;
-            pagination.offset = offset;
-            pagination.to = offset + rows.length;
-            pagination.last_page = Math.ceil(count / perPage);
-            pagination.current_page = page;
-            pagination.previous_page = page-1;
-            pagination.next_page = page+1;
-            pagination.from = offset;
-            pagination.data = rows;
-
-            res.render('pages/notifications', {data: pagination, shiftNotifications : rows, tab: 'Notifications', 
-                        uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});                                        
-          })
-
-      logger.info('GET notifications view');
-      
-      await notificationService.updateShiftNotificationsToRead(req.session.uid);
-      await notificationService.updateShiftTaskNotificationsToRead(req.session.uid);
-      
-    } catch (error) {
-      serviceUnavailable(req, res);
-    }
-
-  });
-
   router.get('/notifications/settings', async (req, res) => {
 
     logger.info('GET notifications settings');
@@ -142,6 +97,51 @@ module.exports = function Index({logger, calendarService, notificationService}) 
         res.redirect('/notifications/settings');
       }
   });
+
+  router.get('/notifications/:page', async (req, res) => {
+
+    try {
+      
+      var reqData = req.query;
+      var pagination = {};
+      var perPage = reqData.perPage || 10;
+      var page = parseInt(req.params.page) || 2;
+      if (page < 1) page = 1;
+      var offset = (page - 1) * perPage;
+
+      Promise.all([
+        notificationService.getShiftNotificationsCount(req.session.uid),
+        notificationService.getShiftTaskNotificationsCount(req.session.uid),
+        notificationService.getShiftNotificationsPaged(req.session.uid, offset, perPage)
+      ]).then(([totalShiftNotifications, totalShiftTaskNotifications, rows]) => {
+
+            var count = parseInt(totalShiftNotifications.count) + parseInt(totalShiftTaskNotifications.count);
+            var rows = rows;
+            pagination.total = count;
+            pagination.per_page = perPage;
+            pagination.offset = offset;
+            pagination.to = offset + rows.length;
+            pagination.last_page = Math.ceil(count / perPage);
+            pagination.current_page = page;
+            pagination.previous_page = page-1;
+            pagination.next_page = page+1;
+            pagination.from = offset;
+            pagination.data = rows;
+
+            res.render('pages/notifications', {data: pagination, shiftNotifications : rows, tab: 'Notifications', 
+                        uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});                                        
+          })
+
+      logger.info('GET notifications view');
+      
+      await notificationService.updateShiftNotificationsToRead(req.session.uid);
+      await notificationService.updateShiftTaskNotificationsToRead(req.session.uid);
+      
+    } catch (error) {
+      serviceUnavailable(req, res);
+    }
+
+  });  
 
   router.get('/maintenance', (req, res) => {
     logger.info('GET maintenance view');
