@@ -3,9 +3,6 @@ const axios = require('axios'),
 
 module.exports = function CalendarService() {
 
-  // Get the API URL in from the health check
-  const apiUrl = health.apiUrl;
-
   /**
    * Configures the calendar data to support a fixed layout (SUN, MON, TUE, WED, THU, FRI, SAT)
    * @param data
@@ -45,7 +42,7 @@ module.exports = function CalendarService() {
    * @param startDate
    * @returns {Promise<any>}
    */
-  function getCalendarData(uid, startDate, accessToken) {
+  function getCalendarData(apiUrl, uid, startDate, accessToken) {
 
     // @TODO: This is here to support the API call but is this really needed?
     // Get the end date by retrieving the last date of the current month
@@ -81,7 +78,7 @@ module.exports = function CalendarService() {
    * @param date
    * @returns {Promise<any>}
    */
-  function getCalendarDetails(uid, date, accessToken) {
+  function getCalendarDetails(apiUrl, uid, date, accessToken) {
     return new Promise((resolve, reject) => {
       axios.get(`${apiUrl}shifts/quantum/${uid}/tasks?date=${date}`, {      
         headers: {

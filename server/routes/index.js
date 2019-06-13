@@ -1,8 +1,6 @@
 const express = require('express');
 const { check, validationResult } = require('express-validator/check');
-const scrollToElement = require('scroll-to-element');
  
-
 module.exports = function Index({logger, calendarService, notificationService}) {
 
   const router = express.Router();
@@ -36,7 +34,7 @@ module.exports = function Index({logger, calendarService, notificationService}) 
 
       const shiftNotifications = await notificationService.getShiftNotifications(req.session.uid);
 
-      const apiResponse = await calendarService.getCalendarData(req.session.uid, req.params.date, req.session.cookieData.access_token);
+      const apiResponse = await calendarService.getCalendarData(req.session.apiUrl, req.session.uid, req.params.date, req.session.cookieData.access_token);
       res.render('pages/calendar', {shiftNotifications : shiftNotifications, tab: 'Calendar', startDate: req.params.date, data: apiResponse, uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
     } catch (error) {      
       serviceUnavailable(req, res);
@@ -46,7 +44,7 @@ module.exports = function Index({logger, calendarService, notificationService}) 
   router.get('/details/:date', async (req, res) => {
     logger.info('GET calendar details');
     try {
-      const apiResponse = await calendarService.getCalendarDetails(req.session.uid, req.params.date, req.session.cookieData.access_token);
+      const apiResponse = await calendarService.getCalendarDetails(req.session.apiUrl, req.session.uid, req.params.date, req.session.cookieData.access_token);
       
       res.render('pages/calendar-details', {data: apiResponse, date: req.params.date, uid: req.session.uid, employeeName: req.session.employeeName, csrfToken: req.csrfToken()});
     } catch (error) {

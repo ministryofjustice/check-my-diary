@@ -12,6 +12,8 @@ const NotifyClient = require('notifications-node-client').NotifyClient;
 const notify = new NotifyClient(process.env.NOTIFY_CLIENT_KEY || '');
 const notifySmsTemplate = process.env.NOTIFY_SMS_TEMPLATE || '';
 const notifyEmailTemplate = process.env.NOTIFY_EMAIL_TEMPLATE || '';
+const apiAuthUrl = process.env.API_AUTH_ENDPOINT_URL || 'http://localhost:8080/';
+const apiNotifyUrl = process.env.NOTIFY_HEALTH_CHECK_URL || 'https://api.notifications.service.gov.uk/_status';
 
 const mailTo = config.app.mailTo;
 const homeLink = config.app.notmEndpointUrl;
@@ -34,7 +36,7 @@ function getStartMonth() {
 }
 
 router.get('/login', async (req, res) => {
-  const healthRes = await health.healthResult();
+  const healthRes = await health.healthResult([apiAuthUrl, apiNotifyUrl]);
   const isApiUp = (healthRes.status === 200);
   log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`);
  
@@ -62,17 +64,37 @@ const postLogin = async (req, res) => {
   log.info(`Ip Address : ${ipAddress}`);
   log.info(`Quantum Address : ${process.env.QUANTUM_ADDRESS}`);
   
-  const healthRes = await health.healthResult();
-  const isApiUp = (healthRes.status === 200);
-  log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`);
+  var healthRes;
+  var isApiUp;  
   
   try {
     const response = await gateway.login(req);
 
+    var userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.body.username);
+
+    if (userAuthenticationDetails === null || userAuthenticationDetails.length === 0) {
+      throw new Error('Error : No Sms or Email address returned for QuantumId : ' + req.body.username);
+    }
+
+    var userAuthentication = userAuthenticationDetails[0];
+
+    // Add Api health check
+    healthRes = await health.healthResult([`${userAuthentication.ApiUrl}health`]);
+    isApiUp = (healthRes.status === 200);
+    log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`);
+    log.info(`${userAuthentication.ApiUrl}health - health check with status ${healthRes.status}`);
+
+    if (isApiUp === false) {
+      res.render('pages/index', {
+        authError: false,
+        apiUp: isApiUp,        
+        csrfToken: req.csrfToken()
+      });
+      return;
+    }
+
     if (process.env.TWO_FACT_AUTH_ON === 'true' && ipAddress !== process.env.QUANTUM_ADDRESS)
     {
-      var userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.body.username);
-
       if (userAuthenticationDetails === null || userAuthenticationDetails.length === 0) {
         throw new Error('Error : No Sms or Email address returned for QuantumId : ' + req.body.username);
       }
@@ -106,6 +128,7 @@ const postLogin = async (req, res) => {
 
       req.session.uid = req.body.username;
       req.session.cookieData = response.data;
+      req.session.apiUrl = userAuthentication.ApiUrl;
       
       res.render('pages/two-factor-auth', { authError: false, csrfToken: req.csrfToken() });
 
@@ -113,10 +136,11 @@ const postLogin = async (req, res) => {
 
       req.session.uid = req.body.username;
       req.session.cookieData = response.data;
+      req.session.apiUrl = userAuthentication.ApiUrl;
       
       session.setHmppsCookie(res, req.session.cookieData);
 
-      req.session.employeeName = await getStaffMemberEmployeeName(health.apiUrl, req.session.uid, 
+      req.session.employeeName = await getStaffMemberEmployeeName(req.session.apiUrl, req.session.uid, 
                                       getStartMonth(), req.session.cookieData.access_token);
 
       await userAuthenticationService.updateUserLastLoginDateTime(req.session.uid);
@@ -125,6 +149,7 @@ const postLogin = async (req, res) => {
     }
   } catch (error) {
     logError(req.url, error, 'Login failure');
+    
     let data = {
       authError: true,
       apiUp: isApiUp,
@@ -144,7 +169,7 @@ router.post('/2fa', async (req, res) => {
   if (parseInt(req.body.code, 10) === parseInt(req.session.twoFactorCode, 10)) {
     session.setHmppsCookie(res, req.session.cookieData);
 
-    req.session.employeeName = await getStaffMemberEmployeeName(health.apiUrl, req.session.uid, 
+    req.session.employeeName = await getStaffMemberEmployeeName(req.session.apiUrl, req.session.uid, 
                                         getStartMonth(), req.session.cookieData.access_token);
 
     await userAuthenticationService.updateUserLastLoginDateTime(req.session.uid);

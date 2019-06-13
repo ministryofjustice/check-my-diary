@@ -5,7 +5,7 @@ const axios = require('axios'),
   logError = require('./logError').logError,
   querystring = require('querystring'),
   health = require('./controllers/health'),
-  eliteApiUrl = health.apiAuthUrl,
+  eliteApiUrl = process.env.API_AUTH_ENDPOINT_URL || 'http://localhost:8080/',
   useEliteApiAuth = (process.env.USE_API_GATEWAY_AUTH || 'no') === 'yes';
 
 axios.interceptors.request.use((config) => {
