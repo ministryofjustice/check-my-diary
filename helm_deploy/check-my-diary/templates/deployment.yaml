@@ -32,11 +32,6 @@ spec:
               secretKeyRef:
                 name: {{ .Values.applicationName }}-env
                 key: api_auth_endpoint_url
-          - name: "API_ENDPOINT_URL"
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.applicationName }}-env
-                key: api_endpoint_url
           - name: "TWO_FACT_AUTH_ON"
             valueFrom:
               secretKeyRef:
