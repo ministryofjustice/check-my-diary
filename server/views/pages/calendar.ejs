@@ -53,7 +53,7 @@
         <% data.shifts.forEach(function(day){ %>
 
           <li
-            class="calendar-item <% if (day.type === 'Rest Day') { %>rest-day<% } %><% if (day.type === 'Holiday') { %>holiday<% } %><% if (day.type === 'no-day') { %>no-day<% } %>">
+            class="calendar-item <% if (day.type === 'Rest Day') { %>rest-day<% } else if (day.type === 'Holiday') { %>holiday<% } else if (day.type === 'Illness') { %>illness<% } else if (day.type === 'no-day') { %>no-day<% } else if (day.type === 'Shift') { %>shift <% } else if (day.type === 'Detached Duty') { %>detached-duty <% } else if (day.type === 'TU Officials Leave Days' || day.type === 'TU Officials Leave Hours') { %>tu-official<% } else { %>absence<% } %>">
 
             <% if (day.type === 'Shift') { %>            
               <a href="/details/<%= getDatePartFormatted(day.startDateTime) %>">
@@ -79,11 +79,21 @@
             <% if (day.type === 'Rest Day') { %>
               <span class="day govuk-!-font-weight-bold"><%= getDayOfWeek(day.startDateTime).substr(0, 3) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
               <span class="event govuk-!-font-size-19">Rest day</span>
-            <% } %>
-
-            <% if (day.type === 'Holiday') { %>
+            <% } else if (day.type === 'Holiday') { %>
               <span class="day"><%= getDayOfWeek(day.startDateTime).substr(0, 3) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
               <span class="event event-holiday govuk-!-font-size-19">Holiday</span>
+            <% } else if (day.type === 'Illness') { %>
+              <span class="day"><%= getDayOfWeek(day.startDateTime).substr(0, 3) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
+              <span class="event event-illness govuk-!-font-size-19">Sick</span>
+            <% } else if (day.type === 'Detached Duty') { %>
+              <span class="day"><%= getDayOfWeek(day.startDateTime).substr(0, 3) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
+              <span class="event event-detach-duty govuk-!-font-size-19">Detached Duty</span>
+            <% } else if (day.type === 'TU Officials Leave Days' || day.type === 'TU Officials Leave Hours') { %>
+              <span class="day"><%= getDayOfWeek(day.startDateTime).substr(0, 3) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
+              <span class="event event-tu-official govuk-!-font-size-19"><%= day.type %></span>
+            <% } else if (day.type !== 'no-day' && day.type !== 'Shift') { %>
+              <span class="day"><%= getDayOfWeek(day.startDateTime).substr(0, 3) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
+              <span class="event event-absence govuk-!-font-size-19"><%= day.type %></span>
             <% } %>
 
           </li>

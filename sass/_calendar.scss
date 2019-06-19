@@ -27,6 +27,11 @@ ul.calendar {
 
   .rest-day,
   .holiday,
+  .shift,
+  .illness,
+  .absence,
+  .detached-duty,
+  .tu-official,
   .no-day,
   .calendar-item a {
     display: block;
@@ -47,6 +52,26 @@ ul.calendar {
   .holiday {
     color: white;
     background-color: govuk-colour('orange');
+  }
+
+  .illness {
+    color: white;
+    background-color: govuk-colour('light-green');
+  }
+
+  .absence {
+    color: white;
+    background-color: govuk-colour('yellow');
+  }
+
+  .detached-duty {
+    color: white;
+    background-color: govuk-colour('brown');
+  }
+
+  .tu-official {
+    color: white;
+    background-color: govuk-colour('pink');
   }
 
   .no-day {
@@ -87,11 +112,7 @@ ul.calendar {
 
     &.detail-finish {
       background-color: govuk-colour('red');
-    }
-
-    &.detail-holiday {
-      background-color: govuk-colour('orange');
-    }
+    }    
 
     &.detail-duration {
       margin-top: 3px;

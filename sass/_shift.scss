@@ -48,6 +48,10 @@
       &.detail-start,
       &.detail-finish,
       &.detail-rest-day,
+      &.detail-illness,
+      &.detail-absence,
+      &.detail-detached-duty,
+      &.detail-tu-official,
       &.detail-holiday {
         background-color: govuk-colour('green');
         margin-bottom: 0;
@@ -68,11 +72,35 @@
       &.detail-rest-day {
         background-color: govuk-colour('light-blue');
       }
+
+      &.detail-holiday {
+        background-color: govuk-colour('orange');
+      }
+  
+      &.detail-illness {
+        background-color: govuk-colour('light-green');
+      }
+  
+      &.detail-absence {
+        background-color: govuk-colour('yellow');
+      }
+  
+      &.detail-detached-duty {
+        background-color: govuk-colour('brown');
+      }
+  
+      &.detail-tu-official {
+        background-color: govuk-colour('pink');
+      }
     }
 
     &.detail-start span.time,
     &.detail-finish span.time,
     &.detail-holiday span.time,
+    &.detail-illness span.time,
+    &.detail-absence span.time,
+    &.detail-detached-duty span.time,
+    &.detail-tu-official span.time,
     &.detail-rest-day span.time {
       background-color: govuk-colour('green');
       border: none;
@@ -89,6 +117,26 @@
 
     &.detail-rest-day span.time {
       background-color: govuk-colour('light-blue');
+    }
+
+    &.detail-holiday span.time {
+      background-color: govuk-colour('orange');
+    }
+
+    &.detail-illness span.time {
+      background-color: govuk-colour('light-green');
+    }
+
+    &.detail-absence span.time {
+      background-color: govuk-colour('yellow');
+    }
+
+    &.detail-detached-duty span.time {
+      background-color: govuk-colour('brown');
+    }
+
+    &.detail-tu-official span.time {
+      background-color: govuk-colour('pink');
     }
   }
 }

@@ -28,7 +28,7 @@
 
             <% data.tasks.forEach(function(task, index){ %>
 
-              <% if (task.taskType !== 'Holiday' && task.taskType !== 'Absence') { %>
+              <% if (task.taskType !== 'Holiday' && task.taskType !== 'Absence' && task.taskType !== 'Illness' && task.taskType !== 'Detached Duty' && task.taskType !== 'TU Officials Leave Days' && task.taskType !== 'TU Officials Leave Hours') { %>
 
                 <% if (checkIfDateTimeIsNull(task.dailyStartDateTime) && checkIfDateTimeIsNull(task.dailyEndDateTime)) { %>
                 
@@ -92,14 +92,19 @@
 
               <% } %>
 
-              <% if (task.taskType === 'Holiday' || task.taskType === 'Absence') { %>
+              <% if (task.taskType === 'Holiday' || task.taskType === 'Absence' || task.taskType === 'Illness' || task.taskType === 'Detached Duty' || task.taskType === 'TU Officials Leave Days' || task.taskType === 'TU Officials Leave Hours') { %>
                     
                   <li
-                    class="<% if (task.taskType === 'Holiday') { %>detail-holiday<% } %><% if (task.taskType === 'Absence') { %>detail-rest-day<% } %>">
+                    class="<% if (task.taskType === 'Holiday') { %>detail-holiday<% } else if (task.taskType === 'Absence' && task.label === 'Rest Day') { %>detail-rest-day<% } else if (task.taskType === 'Illness') { %>detail-illness<% } else if (task.taskType === 'Absence' && task.label === 'Detached Duty') { %>detail-detached-duty<% } else if ((task.taskType === 'Absence' && task.label === 'TU Officials Leave Days') || (task.taskType === 'Absence' && task.label === 'TU Officials Leave Hours')) { %>detail-tu-official<% } else { %>detail-absence<% } %>">
                     <span class="time">
                       <% if (task.taskType === 'Holiday') { %>Holiday
-                      <% } %>
-                      <% if (task.taskType === 'Absence') { %>Rest day
+                      <% } else if (task.taskType === 'Absence') { %><%= task.label %>
+                      <% } else if (task.taskType === 'Illness') { %>Sick
+                        
+                      <% } else if (task.label === 'Detached Duty') { %>Detached Duty   
+                         
+                      <% } else if (task.label === 'TU Officials Leave Days' || task.taskType === 'TU Officials Leave Hours') { %>
+                        <%= task.label %>
                       <% } %>
                     </span>
                     <span class="description">All day</span>
