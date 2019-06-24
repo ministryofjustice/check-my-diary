@@ -6,7 +6,7 @@ shift:
    env: dev
  - name: shift-detail
    time: "* * * * *"
-   command: "node server.js --processtype=SHIFT-DETAIL"
+   command: "node server.js --processtype=SHIFT"
    env: dev
 
  - name: shift
