@@ -1,11 +1,11 @@
 kind: ConfigMap
 shift:
  - name: shift
-   time: "5 * * * *"
+   time: "*/5 * * * *"
    command: "node server.js --processtype=SHIFT"
    env: dev
  - name: shift-detail
-   time: "5 * * * *"
+   time: "*/5 * * * *"
    command: "node server.js --processtype=SHIFT-DETAIL"
    env: dev
 
