@@ -1,12 +1,12 @@
 kind: ConfigMap
 shift:
  - name: shift
-   time: "* * * * *"
-   command: "node server.js --processtype=SHIFT-DISABLE"
+   time: "5 * * * *"
+   command: "node server.js --processtype=SHIFT"
    env: dev
  - name: shift-detail
-   time: "* * * * *"
-   command: "node server.js --processtype=SHIFT-DETAIL-DISABLE"
+   time: "5 * * * *"
+   command: "node server.js --processtype=SHIFT-DETAIL"
    env: dev
 
  - name: shift
