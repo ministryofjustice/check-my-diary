@@ -91,6 +91,12 @@
             <% } else if (day.type === 'TU Officials Leave Days' || day.type === 'TU Officials Leave Hours') { %>
               <span class="day"><%= getDayOfWeek(day.startDateTime).substr(0, 3) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
               <span class="event event-tu-official govuk-!-font-size-19"><%= day.type %></span>
+            <% } else if (day.type !== 'no-day' && day.type !== 'Shift' && day.startDateTime !== day.date + 'T00:00:00' && day.endDateTime !== day.date + 'T23:59:59') { %>              
+              <span class="day govuk-!-font-weight-bold"><%= getDayOfWeek(day.startDateTime).substr(0, 3) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
+              <span class="event event-absence govuk-!-font-size-19"><%= day.type %></span>
+              <span class="detail detail-start">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
+              <span class="detail detail-finish">Finish <%= getTimeFromDate(day.dailyEndDateTime) %></span>
+              <span class="detail-duration"><%= convertSecondsToHms(day.durationInSeconds) %></span>
             <% } else if (day.type !== 'no-day' && day.type !== 'Shift') { %>
               <span class="day"><%= getDayOfWeek(day.startDateTime).substr(0, 3) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
               <span class="event event-absence govuk-!-font-size-19"><%= day.type %></span>
