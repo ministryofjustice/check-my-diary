@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: check-my-diary-dev-vars
+  name: check-my-diary-prod-vars
 data:
-  notifications_api_endpoint_url: https://checkmydiary-dev.ukwest.cloudapp.azure.com/api/
+  notifications_api_endpoint_url: https://checkmydiary.ukwest.cloudapp.azure.com/api/
   notify_health_check_url: https://api.notifications.service.gov.uk/_status
   shift_notify_sms_template: "6ec05e85-ee56-463e-bf36-8381a1a8c976"
   shift_notify_email_template: "eef32886-12fd-4af1-aca0-3b3248676c05"
