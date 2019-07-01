@@ -14,7 +14,7 @@ spec:
         spec:
           containers:
           - name: notification-container
-            image: 926803513772.dkr.ecr.eu-west-2.amazonaws.com/check-my-diary/check-my-diary-notification-service-dev:{{ $root.Values.image.tag }}
+            image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/check-my-diary/check-my-diary-notification-service-preprod:{{ $root.Values.image.tag }}
             args:
             - /bin/sh
             - -c
