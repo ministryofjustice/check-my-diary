@@ -1,7 +1,6 @@
 FROM node:8
 WORKDIR /app
 COPY package.json /app
-RUN adduser --disabled-password node -u 1001
 USER node
 RUN npm install && \
     npm config set prefix /app/npm
