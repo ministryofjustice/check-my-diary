@@ -4,5 +4,5 @@ COPY package.json /app
 RUN npm install
 COPY . /app
 EXPOSE 3000
-USER node
+USER 1000
 CMD npm start
