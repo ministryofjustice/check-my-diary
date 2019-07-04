@@ -1,7 +1,7 @@
 FROM node:8
+USER node
 WORKDIR /app
 COPY package.json /app
-USER node
 RUN npm install && \
     npm config set prefix /app/npm
 ENV PATH="$PATH:/app/npm/bin"
