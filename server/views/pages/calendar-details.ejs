@@ -28,11 +28,11 @@
 
             <% data.tasks.forEach(function(task, index){ %>
               
-              <% if (task.taskType !== 'Holiday' && ((task.taskType === 'Absence' && !task.label.toLowerCase().includes("rest day") && (task.startDateTime !== task.date + 'T00:00:00' && task.endDateTime !== task.date + 'T23:59:59')) || (task.taskType === 'Unspecific' && (task.startDateTime !== task.date + 'T00:00:00' && task.endDateTime !== task.date + 'T23:59:59'))) && task.taskType !== 'Illness' && task.taskType !== 'Detached Duty' && task.taskType !== 'TU Officials Leave Days' && task.taskType !== 'TU Officials Leave Hours') { %>
+              <% if (task.taskType !== 'Holiday' && ((task.taskType === 'Absence' && !task.label.toLowerCase().includes("rest day") && (task.startDateTime !== task.date + 'T00:00:00' && task.endDateTime !== task.date + 'T23:59:59')) || (task.taskType === 'Break') || (task.taskType === 'Unspecific' && (task.startDateTime !== task.date + 'T00:00:00' && task.endDateTime !== task.date + 'T23:59:59'))) && task.taskType !== 'Illness' && task.taskType !== 'Detached Duty' && task.taskType !== 'TU Officials Leave Days' && task.taskType !== 'TU Officials Leave Hours') { %>
 
                 <% if (checkIfDateTimeIsNull(task.dailyStartDateTime) && checkIfDateTimeIsNull(task.dailyEndDateTime)) { %>
                 
-                  <% if (task.taskType === 'Absence') { %>
+                  <% if (task.taskType === 'Absence' || task.taskType === 'Break') { %>
                     <li class="<% if (index === 0) { %>detail-start<% } %>">
                       <span class="time"><%= getTimeFromDate(task.startDateTime) %> - <%= getTimeFromDate(task.endDateTime) %></span>
                       <span class="description">
