@@ -3,8 +3,6 @@ const axios = require('axios'),
   jwt = require('jsonwebtoken'),
   log = require('./log'),
   logError = require('./logError').logError,
-  querystring = require('querystring'),
-  health = require('./controllers/health'),
   eliteApiUrl = process.env.API_AUTH_ENDPOINT_URL || 'http://localhost:8080/',
   useEliteApiAuth = (process.env.USE_API_GATEWAY_AUTH || 'no') === 'yes';
 
@@ -125,7 +123,7 @@ function gatewayToken() {
 
 const apiClientId = process.env.API_CLIENT_ID || 'omic';
 const apiClientSecret = process.env.API_CLIENT_SECRET || 'clientsecret';
-const encodeClientCredentials = () => new Buffer(`${querystring.escape(apiClientId)}:${querystring.escape(apiClientSecret)}`).toString('base64');
+const encodeClientCredentials = () => new Buffer(`${apiClientId}:${apiClientSecret}`).toString('base64');
 
 const getClientHeaders = ({headers, reqHeaders}) => Object.assign({}, headers, {
   "authorization": `Basic ${encodeClientCredentials()}`,
