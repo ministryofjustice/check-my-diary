@@ -8,12 +8,3 @@ shift:
    time: "* * * * *"
    command: "node server.js --processtype=SHIFT-DETAIL"
    env: dev
-
- - name: shift
-   time: "* * * * *"
-   command: "node server.js --processtype=SHIFT"
-   env: prod
- - name: shift-detail
-   time: "* * * * *"
-   command: "node server.js --processtype=SHIFT-DETAIL"
-   env: prod
