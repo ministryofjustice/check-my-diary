@@ -20,3 +20,4 @@ yarn-error.log
 *.iml
 .vs
 .suo
+secrets.yaml
