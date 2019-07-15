@@ -148,8 +148,7 @@ const postLogin = async (req, res) => {
       res.redirect(`/calendar/${getStartMonth()}`);
     }
   } catch (error) {
-    logError(req.url, error, 'Login failure');
-    
+        
     let data = {
       authError: true,
       apiUp: isApiUp,
@@ -158,6 +157,8 @@ const postLogin = async (req, res) => {
       homeLink: homeLink,
       csrfToken: req.csrfToken()
     };
+
+    logError(req.url, data, 'Login failure');
 
     res.render('pages/index', data);
   }
