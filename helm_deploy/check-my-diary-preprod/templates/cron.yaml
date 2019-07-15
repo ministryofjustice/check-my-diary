@@ -1,0 +1,163 @@
+{{- $root := . -}}
+{{- range .Values.shift }}
+{{- if eq $root.Values.appEnvironment .env }}
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: check-my-diary-notification-{{ .name }}
+spec:
+  schedule: "{{ .time }}"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: notification-container
+            image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/check-my-diary/check-my-diary-notification-service-preprod:{{ $root.Values.image.tag }}
+            args:
+            - /bin/sh
+            - -c
+            - {{ .command }}
+            successfulJobsHistoryLimit: 5
+            failedJobsHistoryLimit: 5
+            ports:
+            - containerPort: {{ $root.Values.nodePort }}
+            env:
+              - name: "NOTIFICATIONS_API_ENDPOINT_URL"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: notifications_api_endpoint_url
+              - name: "NOTIFY_HEALTH_CHECK_URL"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: notify_health_check_url
+              - name: "NOTIFY_CLIENT_KEY"
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ $root.Values.applicationName }}-env
+                    key: notify_client_key
+              - name: "SHIFT_NOTIFY_SMS_TEMPLATE"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: shift_notify_sms_template
+              - name: "SHIFT_NOTIFY_EMAIL_TEMPLATE"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: shift_notify_email_template
+              - name: "SHIFT_TASK_NOTIFY_SMS_TEMPLATE"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: shift_task_notify_sms_template
+              - name: "SHIFT_TASK_NOTIFY_EMAIL_TEMPLATE"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: shift_task_notify_email_template
+              - name: "DATABASE_HOST"
+                valueFrom:
+                  secretKeyRef:
+                    name: check-my-diary-rds-{{ $root.Values.appEnvironment }}
+                    key: rds_instance_address
+              - name: "DATABASE_NAME"
+                valueFrom:
+                  secretKeyRef:
+                    name: check-my-diary-rds-{{ $root.Values.appEnvironment }}
+                    key: database_name
+              - name: "DATABASE_USER"
+                valueFrom:
+                  secretKeyRef:
+                    name: check-my-diary-rds-{{ $root.Values.appEnvironment }}
+                    key: database_username
+              - name: "DATABASE_PASSWORD"
+                valueFrom:
+                  secretKeyRef:
+                    name: check-my-diary-rds-{{ $root.Values.appEnvironment }}
+                    key: database_password
+              - name: "BUSINESS_UNIT"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: business_unit
+              - name: "SHIFT_INTERVAL"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: shift_interval
+              - name: "SHIFT_INTERVAL_TYPE"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: shift_interval_type
+              - name: "LOG_FILE_LOCATION"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: log_file_location
+              - name: "LOG_LEVEL"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: log_level
+              - name: "LOG_PERIOD"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: log_period
+              - name: "LOG_NUMBER_OF_FILES_TO_KEEP"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: log_number_of_files_to_keep
+              - name: "JWT_ISSUER"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: jwt_issuer
+              - name: "JWT_AUDIENCE"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: jwt_audience
+              - name: "JWT_SUBJECT"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: jwt_subject
+              - name: "JWT_SECRET_KEY"
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ $root.Values.applicationName }}-env
+                    key: jwt_secret_key
+              - name: "JWT_EMAIL_ADDRESS"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: jwt_email_address
+              - name: "JWT_EXPIRES_IN"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: jwt_expires_in
+              - name: "REJECT_UNAUTHORIZED"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: reject_unauthorized
+              - name: "SHIFT_TASK_INTERVAL"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: shift_task_interval
+              - name: "SHIFT_TASK_INTERVAL_TYPE"
+                valueFrom:
+                  configMapKeyRef:
+                    name: {{ $root.Values.applicationName }}-vars
+                    key: shift_task_interval_type
+          restartPolicy: OnFailure
+{{- end }}{{- end }}

@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: check-my-diary-prod-vars
+data:
+  notifications_api_endpoint_url: https://checkmydiary.ukwest.cloudapp.azure.com/api/
+  notify_health_check_url: https://api.notifications.service.gov.uk/_status
+  shift_notify_sms_template: "6ec05e85-ee56-463e-bf36-8381a1a8c976"
+  shift_notify_email_template: "eef32886-12fd-4af1-aca0-3b3248676c05"
+  shift_task_notify_sms_template: "fe4d0c94-118a-46ba-95ec-e5fd6975950b"
+  shift_task_notify_email_template: "574208ed-7675-4aee-b70e-e88b16a3d808"
+  business_unit: "Manchester Band 5,Moorland Band 4"
+  shift_interval: "24"
+  shift_interval_type: hours
+  shift_task_interval: "12"
+  shift_task_interval_type: hours
+  log_file_location: ./logs/check-my-diary-notificaion-service.log
+  log_level: debug
+  log_period: "1d"
+  log_number_of_files_to_keep: "30"
+  jwt_issuer: check-my-diary-notification-service
+  jwt_audience: "PrisonOfficer.Diary.Api"
+  jwt_subject: notifications
+  jwt_email_address: "checkmydiary@digital.justice.gov.uk"
+  jwt_expires_in: "30m"
+  reject_unauthorized: "0"
