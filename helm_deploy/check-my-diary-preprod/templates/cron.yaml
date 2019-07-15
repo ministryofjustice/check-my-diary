@@ -10,6 +10,8 @@ spec:
   schedule: "{{ .time }}"
   jobTemplate:
     spec:
+      securityContext:
+      runAsUser: 2000
       template:
         spec:
           containers:
