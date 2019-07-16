@@ -8,6 +8,8 @@ metadata:
   name: check-my-diary-notification-{{ .name }}
 spec:
   schedule: "{{ .time }}"
+  securityContext:
+      runAsUser: 2000
   jobTemplate:
     spec:
       template:
