@@ -9,7 +9,7 @@ data:
   shift_notify_email_template: "eef32886-12fd-4af1-aca0-3b3248676c05"
   shift_task_notify_sms_template: "fe4d0c94-118a-46ba-95ec-e5fd6975950b"
   shift_task_notify_email_template: "574208ed-7675-4aee-b70e-e88b16a3d808"
-  business_unit: "Manchester Band 5,Moorland Band 4"
+  business_unit: "Holme House Band 2,Holme House Band 3,Holme House Band 4,Holme House Band 5,Holme House DST,Holme House Gymnasium,Holme House Industries (ICAS)"
   shift_interval: "24"
   shift_interval_type: hours
   shift_task_interval: "12"
