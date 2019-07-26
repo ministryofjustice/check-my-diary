@@ -26,11 +26,6 @@ spec:
             ports:
             - containerPort: {{ $root.Values.nodePort }}
             env:
-              - name: "NOTIFICATIONS_API_ENDPOINT_URL"
-                valueFrom:
-                  configMapKeyRef:
-                    name: {{ $root.Values.applicationName }}-vars
-                    key: notifications_api_endpoint_url
               - name: "NOTIFY_HEALTH_CHECK_URL"
                 valueFrom:
                   configMapKeyRef:
@@ -81,11 +76,6 @@ spec:
                   secretKeyRef:
                     name: check-my-diary-rds-{{ $root.Values.appEnvironment }}
                     key: database_password
-              - name: "BUSINESS_UNIT"
-                valueFrom:
-                  configMapKeyRef:
-                    name: {{ $root.Values.applicationName }}-vars
-                    key: business_unit
               - name: "SHIFT_INTERVAL"
                 valueFrom:
                   configMapKeyRef:
