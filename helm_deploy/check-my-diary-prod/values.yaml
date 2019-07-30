@@ -1,7 +1,7 @@
 kind: ConfigMap
 shift:
  - name: shift-r1
-   time: "* * * * *"
+   time: "0 * * * *"
    command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Holme House Band 2,Holme House Band 3,Holme House Band 4,Holme House Band 5,Holme House DST,Holme House Gymnasium,Holme House Industries (ICAS)" node server.js --processtype=SHIFT-DISABLE'
    env: prod
  - name: shift-detail-r1
@@ -9,7 +9,7 @@ shift:
    command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Holme House Band 2,Holme House Band 3,Holme House Band 4,Holme House Band 5,Holme House DST,Holme House Gymnasium,Holme House Industries (ICAS)" node server.js --processtype=SHIFT-DETAIL-DISABLE'
    env: prod
  - name: shift-r2
-   time: "* * * * *"
+   time: "0 * * * *"
    command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Manchester (ICAS),Manchester Band 2,Manchester Band 3,Manchester Band 4,Manchester Band 5" node server.js --processtype=SHIFT-DISABLE'
    env: prod
  - name: shift-detail-r2
