@@ -39,8 +39,8 @@ spec:
                 key: two_fact_auth_on
           - name: "REJECT_UNAUTHORIZED"
             valueFrom:
-              secretKeyRef:
-                name: {{ .Values.applicationName }}-env
+              configMapKeyRef:
+                name: {{ .Values.applicationName }}-vars
                 key: reject_unauthorized
           - name: "NOTIFY_CLIENT_KEY"
             valueFrom:
