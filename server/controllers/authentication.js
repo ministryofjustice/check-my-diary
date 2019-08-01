@@ -68,7 +68,12 @@ const postLogin = async (req, res) => {
   var isApiUp;  
   
   try {
+
+    log.info(`NOMIS Login : ${req.body.username}`);
+
     const response = await gateway.login(req);
+
+    log.info(`Successful NOMIS Login`);
 
     var userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.body.username);
 
@@ -152,6 +157,7 @@ const postLogin = async (req, res) => {
   } catch (error) {
         
     let data = {
+      id : req.body.username,
       authError: true,
       apiUp: isApiUp,
       authErrorText: getAuthErrorDescription(error),
@@ -186,7 +192,8 @@ router.post('/2fa', async (req, res) => {
 });
 
 function getAuthErrorDescription(error) {
-  log.info(`login error description = ${error.response && error.response.data && error.response.data.error_description}`);
+  log.info(`login error description = ${error}`);
+  log.info(`login response error description = ${error.response && error.response.data && error.response.data.error_description}`);
   let type = 'The username or password you have entered is invalid.';
   if (error.response && error.response.data && error.response.data.error_description) {
     if (error.response.data.error_description.includes('ORA-28000')) {
