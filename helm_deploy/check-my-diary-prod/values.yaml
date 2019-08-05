@@ -2,11 +2,11 @@ kind: ConfigMap
 shift:
  - name: shift-r1
    time: "0 * * * *"
-   command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Holme House Band 2,Holme House Band 3,Holme House Band 4,Holme House Band 5,Holme House DST,Holme House Gymnasium,Holme House Industries (ICAS)" node server.js --processtype=SHIFT'
+   command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Holme House Band 2,Holme House Band 3,Holme House Band 4,Holme House Band 5,Holme House DST,Holme House Gymnasium,Holme House Industries (ICAS),HMP Admin" node server.js --processtype=SHIFT'
    env: prod
  - name: shift-detail-r1
    time: "* * * * *"
-   command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Holme House Band 2,Holme House Band 3,Holme House Band 4,Holme House Band 5,Holme House DST,Holme House Gymnasium,Holme House Industries (ICAS)" node server.js --processtype=SHIFT-DETAIL'
+   command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Holme House Band 2,Holme House Band 3,Holme House Band 4,Holme House Band 5,Holme House DST,Holme House Gymnasium,Holme House Industries (ICAS),HMP Admin" node server.js --processtype=SHIFT-DETAIL'
    env: prod
  - name: shift-r2
    time: "0 * * * *"
