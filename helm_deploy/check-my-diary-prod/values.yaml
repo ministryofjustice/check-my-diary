@@ -10,9 +10,9 @@ shift:
    env: prod
  - name: shift-r2
    time: "0 * * * *"
-   command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Manchester (ICAS),Manchester Band 2,Manchester Band 3,Manchester Band 4,Manchester Band 5" node server.js --processtype=SHIFT-DISABLE'
+   command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Manchester (ICAS),Manchester Band 2,Manchester Band 3,Manchester Band 4,Manchester Band 5" node server.js --processtype=SHIFT'
    env: prod
  - name: shift-detail-r2
    time: "* * * * *"
-   command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Manchester (ICAS),Manchester Band 2,Manchester Band 3,Manchester Band 4,Manchester Band 5" node server.js --processtype=SHIFT-DETAIL-DISABLE'
+   command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Manchester (ICAS),Manchester Band 2,Manchester Band 3,Manchester Band 4,Manchester Band 5" node server.js --processtype=SHIFT-DETAIL'
    env: prod
