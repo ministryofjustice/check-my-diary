@@ -6,8 +6,8 @@
         <span class="govuk-header-check-my-diary">Check my diary</span>
       </span>      
     </div>
-    <% if (typeof uid !== 'undefined') { %>
-      <% if (employeeName != null) { %>
+    <% if (typeof uid !== 'undefined') { %>      
+      <% if (typeof employeeName != 'undefined') { %>
         <div class="logout-asset">
           You are logged in as <%= employeeName %>. <a class="bold-xsmall" href="/auth/logout">Log out</a>
         </div>
