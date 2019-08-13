@@ -84,7 +84,7 @@ const postLogin = async (req, res) => {
     var userAuthentication = userAuthenticationDetails[0];
 
     // Add Api health check
-    healthRes = await health.healthResult([`${userAuthentication.ApiUrl}health`]);
+    healthRes = await health.healthResult([`${userAuthentication.ApiUrl}health`, `${userAuthentication.ApiUrl}health/invision`]);
     isApiUp = (healthRes.status === 200);
     log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`);
     log.info(`${userAuthentication.ApiUrl}health - health check with status ${healthRes.status}`);
