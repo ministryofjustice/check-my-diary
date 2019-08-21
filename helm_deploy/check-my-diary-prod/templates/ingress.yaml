@@ -6,6 +6,7 @@ spec:
   tls:                                                                      
   - hosts:
     - {{ .Values.deploy.host }}
+    secretName: tls-certificate
   rules:
   - host: {{ .Values.deploy.host }}
     http:
