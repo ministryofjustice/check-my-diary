@@ -1,5 +1,6 @@
 const axios = require('axios'),
-  health = require('../controllers/health');
+  health = require('../controllers/health'),
+  logger = require('../log');
 
 module.exports = function CalendarService() {
 
@@ -60,6 +61,7 @@ module.exports = function CalendarService() {
       ).then((response) => {
         resolve(configureCalendar(response.data));
       }).catch((error) => {
+        logger.error(`CalendarService : getCalendarData Error : ${error}`);
         if (error.response) {
           if (error.response.status === 404) {
             resolve(null)
@@ -87,6 +89,7 @@ module.exports = function CalendarService() {
       }).then((response) => {            
             resolve(response.data);
       }).catch((error) => {
+        logger.error(`CalendarService : getCalendarData Error : ${error}`);
         if (error.response) {
           if (error.response.status === 404) {
             resolve(null)

@@ -68,7 +68,12 @@ const postLogin = async (req, res) => {
   var isApiUp;  
   
   try {
+
+    log.info(`NOMIS Login : ${req.body.username}`);
+
     const response = await gateway.login(req);
+
+    log.info(`Successful NOMIS Login`);
 
     var userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.body.username);
 
@@ -79,7 +84,7 @@ const postLogin = async (req, res) => {
     var userAuthentication = userAuthenticationDetails[0];
 
     // Add Api health check
-    healthRes = await health.healthResult([`${userAuthentication.ApiUrl}health`]);
+    healthRes = await health.healthResult([`${userAuthentication.ApiUrl}health`, `${userAuthentication.ApiUrl}health/invision`]);
     isApiUp = (healthRes.status === 200);
     log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`);
     log.info(`${userAuthentication.ApiUrl}health - health check with status ${healthRes.status}`);
@@ -93,7 +98,9 @@ const postLogin = async (req, res) => {
       return;
     }
 
-    if (process.env.TWO_FACT_AUTH_ON === 'true' && ipAddress !== process.env.QUANTUM_ADDRESS)
+    var quantumAddresses = process.env.QUANTUM_ADDRESS.split(',');
+
+    if (process.env.TWO_FACT_AUTH_ON === 'true' && quantumAddresses.includes(ipAddress) === false)
     {
       if (userAuthenticationDetails === null || userAuthenticationDetails.length === 0) {
         throw new Error('Error : No Sms or Email address returned for QuantumId : ' + req.body.username);
@@ -148,9 +155,9 @@ const postLogin = async (req, res) => {
       res.redirect(`/calendar/${getStartMonth()}`);
     }
   } catch (error) {
-    logError(req.url, error, 'Login failure');
-    
+        
     let data = {
+      id : req.body.username,
       authError: true,
       apiUp: isApiUp,
       authErrorText: getAuthErrorDescription(error),
@@ -158,6 +165,8 @@ const postLogin = async (req, res) => {
       homeLink: homeLink,
       csrfToken: req.csrfToken()
     };
+
+    logError(req.url, data, 'Login failure');
 
     res.render('pages/index', data);
   }
@@ -183,7 +192,8 @@ router.post('/2fa', async (req, res) => {
 });
 
 function getAuthErrorDescription(error) {
-  log.info(`login error description = ${error.response && error.response.data && error.response.data.error_description}`);
+  log.info(`login error description = ${error}`);
+  log.info(`login response error description = ${error.response && error.response.data && error.response.data.error_description}`);
   let type = 'The username or password you have entered is invalid.';
   if (error.response && error.response.data && error.response.data.error_description) {
     if (error.response.data.error_description.includes('ORA-28000')) {

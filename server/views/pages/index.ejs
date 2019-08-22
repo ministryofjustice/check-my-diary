@@ -2,6 +2,17 @@
 <html lang="en" class="govuk-template">
 <head>
   <% include ../partials/head %>
+  <script type="text/javascript">
+    function showHide() {
+      var pwd = document.getElementById('password');
+      var showButton = document.getElementById('show-password');
+      if (pwd.getAttribute('type') === 'password') {
+        pwd.setAttribute('type', 'text');        
+      } else {
+        pwd.setAttribute('type', 'password');        
+      }
+    }
+  </script>
 </head>
 <body class="govuk-template__body">
 
@@ -42,12 +53,21 @@
         <form action="/auth/login" method="POST">
           <div class="govuk-form-group">
             <label for="username" class="govuk-label">Username</label>
-            <input type="text" name="username" id="username" class="govuk-input" autocomplete="off"/>
+            <input type="text" name="username" id="username" class="govuk-input" autocomplete="off" autofocus/>
           </div>
 
           <div class="govuk-form-group">
             <label for="password" class="govuk-label">Password</label>
-            <input type="password" name="password" id="password" class="govuk-input" autocomplete="off"/>
+           
+            <div class="show-password">
+              <input class="govuk-input" id="password" name="password" type="password" autocomplete="current-password" data-element-id="password" aria-describedby="password-error">                          
+            </div>            
+          </div>
+          <div class="govuk-form-group">
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="show-password-checkbox" name="show-password-checkbox" onclick="showHide()" type="checkbox" value="show">
+              <label class="govuk-label govuk-checkboxes__label" for="show-password-checkbox">Show Password</label>
+            </div>
           </div>
 
           <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>

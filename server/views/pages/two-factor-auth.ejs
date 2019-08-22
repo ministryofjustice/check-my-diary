@@ -35,7 +35,7 @@
         <form action="/auth/2fa" method="POST">
           <div class="govuk-form-group">
             <label for="code" class="govuk-label">Access code</label>
-            <input type="tel" name="code" id="code" class="govuk-input govuk-!-width-one-third" autocomplete="off"/>
+            <input type="tel" name="code" id="code" class="govuk-input govuk-!-width-one-third" autocomplete="off" autofocus />
           </div>
 
           <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>

@@ -27,89 +27,90 @@
           <ul class="app-shift-detail">
 
             <% data.tasks.forEach(function(task, index){ %>
-              
-              <% if (task.taskType !== 'Holiday' && ((task.taskType === 'Absence' && !task.label.toLowerCase().includes("rest day") && (task.startDateTime !== task.date + 'T00:00:00' && task.endDateTime !== task.date + 'T23:59:59')) || (task.taskType === 'Break') || (task.taskType === 'Unspecific' && (task.startDateTime !== task.date + 'T00:00:00' && task.endDateTime !== task.date + 'T23:59:59'))) && task.taskType !== 'Illness' && task.taskType !== 'Detached Duty' && task.taskType !== 'TU Officials Leave Days' && task.taskType !== 'TU Officials Leave Hours') { %>
+             
+                <% if (task.startDateTime !== task.date + 'T00:00:00' && task.endDateTime !== task.date + 'T23:59:59') { %>
 
-                <% if (checkIfDateTimeIsNull(task.dailyStartDateTime) && checkIfDateTimeIsNull(task.dailyEndDateTime)) { %>
-                
-                  <% if (task.taskType === 'Absence' || task.taskType === 'Break') { %>
-                    <li class="<% if (index === 0) { %>detail-start<% } %>">
-                      <span class="time"><%= getTimeFromDate(task.startDateTime) %> - <%= getTimeFromDate(task.endDateTime) %></span>
-                      <span class="description">
-                        <% if (index === 0) { %>Start :
-                        <% } %>
-                        <%= task.label %></span>
-                    </li>
-
-                    <% if (index === data.tasks.length - 1) { %>
-                      <li class="detail-finish">
-                        <span class="time"><%= getTimeFromDate(task.endDateTime) %></span>
-                        <span class="description">End</span>
+                  <% if (checkIfDateTimeIsNull(task.dailyStartDateTime) && checkIfDateTimeIsNull(task.dailyEndDateTime)) { %>
+                  
+                    <% if (task.taskType === 'Absence' || task.taskType === 'Break') { %>
+                      <li class="<% if (index === 0) { %>detail-start<% } %>">
+                        <span class="time"><%= getTimeFromDate(task.startDateTime) %> - <%= getTimeFromDate(task.endDateTime) %></span>
+                        <span class="description">
+                          <% if (index === 0) { %>Start :
+                          <% } %>
+                          <%= task.label %></span>
                       </li>
-                    <% } %>
-                  <% } else { %>
+
+                      <% if (index === data.tasks.length - 1) { %>
+                        <li class="detail-finish">
+                          <span class="time"><%= getTimeFromDate(task.endDateTime) %></span>
+                          <span class="description">End</span>
+                        </li>
+                      <% } %>
+                    <% } else { %>
+                      <li class="<% if (index === 0) { %>detail-start<% } %>">
+                        <span class="time"><%= getTimeFromDate(task.startDateTime) %> - <%= getTimeFromDate(task.endDateTime) %></span>
+                        <span class="description">
+                          <% if (index === 0) { %>Start of shift:
+                          <% } %>
+                          <%= task.label %></span>
+                      </li>
+
+                      <% if (index === data.tasks.length - 1) { %>
+                        <li class="detail-finish">
+                          <span class="time"><%= getTimeFromDate(task.endDateTime) %></span>
+                          <span class="description">End of shift</span>
+                        </li>
+                      <% } %>
+                    <% }  %>
+
+                  <% } else if (checkIfDateTimeIsNull(task.dailyEndDateTime) && !checkIfDateTimeIsNull(task.dailyStartDateTime)) { %>
                     <li class="<% if (index === 0) { %>detail-start<% } %>">
-                      <span class="time"><%= getTimeFromDate(task.startDateTime) %> - <%= getTimeFromDate(task.endDateTime) %></span>
+                      <span class="time"><%= getTimeFromDate(task.dailyStartDateTime) %> </span>
                       <span class="description">
                         <% if (index === 0) { %>Start of shift:
                         <% } %>
                         <%= task.label %></span>
                     </li>
-
+                  <% } else if (!checkIfDateTimeIsNull(task.dailyEndDateTime) && checkIfDateTimeIsNull(task.dailyStartDateTime)) { %>
                     <% if (index === data.tasks.length - 1) { %>
                       <li class="detail-finish">
-                        <span class="time"><%= getTimeFromDate(task.endDateTime) %></span>
+                        <span class="time"><%= getTimeFromDate(task.dailyEndDateTime) %></span>
                         <span class="description">End of shift</span>
                       </li>
                     <% } %>
-                  <% }  %>
-
-                <% } else if (checkIfDateTimeIsNull(task.dailyEndDateTime) && !checkIfDateTimeIsNull(task.dailyStartDateTime)) { %>
-                  <li class="<% if (index === 0) { %>detail-start<% } %>">
-                    <span class="time"><%= getTimeFromDate(task.dailyStartDateTime) %> </span>
-                    <span class="description">
-                      <% if (index === 0) { %>Start of shift:
-                      <% } %>
-                      <%= task.label %></span>
-                  </li>
-                <% } else if (!checkIfDateTimeIsNull(task.dailyEndDateTime) && checkIfDateTimeIsNull(task.dailyStartDateTime)) { %>
-                  <% if (index === data.tasks.length - 1) { %>
-                    <li class="detail-finish">
-                      <span class="time"><%= getTimeFromDate(task.dailyEndDateTime) %></span>
-                      <span class="description">End of shift</span>
-                    </li>
-                  <% } %>
-
-                <% } else { %>
-                  <% if (checkIfStartDateTimeBeforeEndDateTime(task.dailyStartDateTime, task.dailyEndDateTime)) { %>
-                                      
-                    <li class="detail-finish">
-                      <span class="time"><%= getTimeFromDate(task.dailyEndDateTime) %></span>
-                      <span class="description">End of shift</span>
-                    </li>                 
-
-                    <li class="detail-start">
-                      <span class="time"><%= getTimeFromDate(task.dailyStartDateTime) %></span>
-                      <span class="description">Start of shift: <%= task.label %></span>
-                    </li>
 
                   <% } else { %>
-                    <li class="detail-start">
-                      <span class="time"><%= getTimeFromDate(task.dailyStartDateTime) %></span>
-                      <span class="description">Start of shift: <%= task.label %></span>
-                    </li>
+                    <% if (checkIfStartDateTimeBeforeEndDateTime(task.dailyStartDateTime, task.dailyEndDateTime)) { %>
+                                        
+                      <li class="detail-finish">
+                        <span class="time"><%= getTimeFromDate(task.dailyEndDateTime) %></span>
+                        <span class="description">End of shift</span>
+                      </li>                 
 
-                    <li class="detail-finish">
-                      <span class="time"><%= getTimeFromDate(task.dailyEndDateTime) %></span>
-                      <span class="description">End of shift</span>
-                    </li>
-                  
+                      <li class="detail-start">
+                        <span class="time"><%= getTimeFromDate(task.dailyStartDateTime) %></span>
+                        <span class="description">Start of shift: <%= task.label %></span>
+                      </li>
+
+                    <% } else { %>
+                      <li class="detail-start">
+                        <span class="time"><%= getTimeFromDate(task.dailyStartDateTime) %></span>
+                        <span class="description">Start of shift: <%= task.label %></span>
+                      </li>
+
+                      <li class="detail-finish">
+                        <span class="time"><%= getTimeFromDate(task.dailyEndDateTime) %></span>
+                        <span class="description">End of shift</span>
+                      </li>
+                    
+                    <% } %>
                   <% } %>
+
                 <% } %>
 
-              <% } %>
 
-              <% if (task.taskType === 'Holiday' || task.taskType === 'Illness' || task.taskType === 'Detached Duty' || task.taskType === 'TU Officials Leave Days' || task.taskType === 'TU Officials Leave Hours' || (task.taskType === 'Absence' && (task.startDateTime === task.date + 'T00:00:00' && task.endDateTime === task.date + 'T23:59:59')) || (task.taskType === 'Unspecific' && (task.startDateTime === task.date + 'T00:00:00' && task.endDateTime === task.date + 'T23:59:59')) || (task.taskType === 'Absence' && task.label.toLowerCase().includes("rest day")) ) { %>
+              <% if ((task.taskType === 'Holiday' && task.startDateTime === task.date + 'T00:00:00' && task.endDateTime === task.date + 'T23:59:59') || task.taskType === 'Illness' || task.taskType === 'Detached Duty' || task.taskType === 'TU Officials Leave Days' || task.taskType === 'TU Officials Leave Hours' || (task.taskType === 'Absence' && (task.startDateTime === task.date + 'T00:00:00' && task.endDateTime === task.date + 'T23:59:59')) || (task.taskType === 'Unspecific' && (task.startDateTime === task.date + 'T00:00:00' && task.endDateTime === task.date + 'T23:59:59')) || (task.taskType === 'Absence' && task.label.toLowerCase().includes("rest day")) ) { %>
                     
                   <li
                     class="<% if (task.taskType === 'Holiday') { %>detail-holiday<% } else if (task.taskType === 'Absence' && task.label === 'Rest Day') { %>detail-rest-day<% } else if (task.taskType === 'Illness') { %>detail-illness<% } else if (task.taskType === 'Absence' && task.label === 'Detached Duty') { %>detail-detached-duty<% } else if ((task.taskType === 'Absence' && task.label === 'TU Officials Leave Days') || (task.taskType === 'Absence' && task.label === 'TU Officials Leave Hours')) { %>detail-tu-official<% } else { %>detail-absence<% } %>">

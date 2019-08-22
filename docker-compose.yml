@@ -12,11 +12,10 @@ services:
         - PORT=3000
         - API_CLIENT_ID=my-diary
         - API_CLIENT_SECRET=password123456
-        - API_AUTH_ENDPOINT_URL=https://gateway.t3.nomis-api.hmpps.dsd.io/auth/       
-        - API_ENDPOINT_URL=https://checkmydiary-dev.ukwest.cloudapp.azure.com/api/        
+        - API_AUTH_ENDPOINT_URL=https://gateway.t3.nomis-api.hmpps.dsd.io/auth/               
         - NOTIFY_HEALTH_CHECK_URL=https://api.notifications.service.gov.uk/_status
         - TWO_FACT_AUTH_ON=false
-        - DATABASE_HOST=postgres
+        - DATABASE_HOST=host.docker.internal
         - DATABASE_NAME=CheckMyDiary
         - DATABASE_USER=CheckMyDiaryUser
         - DATABASE_PASSWORD=test
@@ -29,16 +28,16 @@ services:
         - HMPPS_COOKIE_NAME=check-my-diary-dev        
         - WEB_SESSION_TIMEOUT_IN_MINUTES=20
 
-  postgres:
-    container_name: postgres
-    image: postgres
-    environment:
-      - POSTGRES_DB=CheckMyDiary
-      - POSTGRES_USER=CheckMyDiaryUser
-      - POSTGRES_PASSWORD=test
+  #postgres:
+  #  container_name: postgres
+  #  image: postgres
+  #  environment:
+  #    - POSTGRES_DB=CheckMyDiary
+  #    - POSTGRES_USER=CheckMyDiaryUser
+  #    - POSTGRES_PASSWORD=test
       # - PGDATA=/var/lib/postgresql/data/pgdata
-    ports:
-      - 5432:5432
+  #  ports:
+  #    - 5432:5432
     #volumes:
      # - C:\temp\dockercompose:/var/lib/postgresql/data/pgdata
     
