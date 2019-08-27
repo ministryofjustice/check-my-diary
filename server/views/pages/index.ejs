@@ -52,12 +52,12 @@
 
         <form action="/auth/login" method="POST">
           <div class="govuk-form-group">
-            <label for="username" class="govuk-label">Username</label>
+            <label for="username" class="govuk-label"><b>Username</b> (this is the same as your NOMIS username)</label>
             <input type="text" name="username" id="username" class="govuk-input" autocomplete="off" autofocus/>
           </div>
 
           <div class="govuk-form-group">
-            <label for="password" class="govuk-label">Password</label>
+            <label for="password" class="govuk-label"><b>Password</b> (this is the same as your NOMIS password)</label>
            
             <div class="show-password">
               <input class="govuk-input" id="password" name="password" type="password" autocomplete="current-password" data-element-id="password" aria-describedby="password-error">                          
@@ -68,13 +68,34 @@
               <input class="govuk-checkboxes__input" id="show-password-checkbox" name="show-password-checkbox" onclick="showHide()" type="checkbox" value="show">
               <label class="govuk-label govuk-checkboxes__label" for="show-password-checkbox">Show Password</label>
             </div>
-          </div>
+          </div>          
 
           <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
 
           <button type="submit" class="govuk-button">Continue</button>
 
+          <div class="govuk-form-group">
+            <h2 class="govuk-heading-m">Problems signing in</h2>
+            <ul class="govuk-list">
+              <li><a href="https://gateway.prod.nomis-api.service.hmpps.dsd.io/auth/reset-password" id="forgotten-password">I have forgotten my password</a></li>
+            </ul>
+          </div>
+
         </form>
+
+        <details class="govuk-details govuk-form-group" data-module="govuk-details" role="group">
+          <summary class="govuk-details__summary" role="button" aria-controls="details-content-3b501273-0968-41a5-be96-3a5688d3e0c7" aria-expanded="false">
+              <span class="govuk-details__summary-text">
+                Why won’t my password work?
+              </span>
+          </summary>
+          <div class="govuk-details__text" id="details-content-3b501273-0968-41a5-be96-3a5688d3e0c7" aria-hidden="true">
+            <p>
+              Your password is case sensitive which means you must enter your password exactly as you first created it. For
+              example if your password is <strong>H3LloWorlD</strong> you must enter it exactly like that.
+            </p>
+          </div>
+        </details>
 
       </div>
 
