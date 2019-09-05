@@ -38,7 +38,7 @@
             <div class="govuk-error-summary__body">
               <ul class="govuk-list govuk-error-summary__list">
                 <li>
-                  <% if (apiUp) { %>
+                  <% if (apiUp || authError) { %>
                     <%= authErrorText %>
                   <% } else { %>
                     Service unavailable. Please try again later.
