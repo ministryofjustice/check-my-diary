@@ -93,7 +93,6 @@ jobs:
               --tiller-namespace=${KUBE_ENV_DEV_NAMESPACE} \
               --namespace=${KUBE_ENV_DEV_NAMESPACE} \
               --set deploy.host=${KUBE_ENV_DEV_NAMESPACE}.apps.${KUBE_ENV_DEV_NAME} \
-              --set image.ecrEndpoint=${AWS_ECR_ENDPOINT} \
               --set image.repository=${AWS_ECR_ENDPOINT}/check-my-diary/check-my-diary-dev \
               --set image.tag='latest' \
               --set replicaCount=1 \
