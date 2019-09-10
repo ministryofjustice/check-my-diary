@@ -88,7 +88,7 @@ jobs:
       - run:
           name: Deploy to kubernetes cluster
           command: |
-            helm upgrade check-my-diary-dev ~/project/check-my-diary/helm_deploy/check-my-diary-dev/. \
+            helm upgrade check-my-diary-dev ./check-my-diary/helm_deploy/check-my-diary-dev/. \
               --install --wait --force --reset-values --timeout 360 \
               --tiller-namespace=${KUBE_ENV_DEV_NAMESPACE} \
               --namespace=${KUBE_ENV_DEV_NAMESPACE} \
@@ -99,7 +99,7 @@ jobs:
               --set replicaCount=1 \
               --set applicationName=check-my-diary-dev \
               --set appEnvironment=dev \
-              --set 'nodePort=3000' \
+              --set 'nodePort=3000'
 workflows:
   version: 2.1
   build_and_deploy:
@@ -108,6 +108,6 @@ workflows:
       - deploy:
           requires:
             - build
-          filters:
-            branches:
-              only: master
+          #filters:
+            #branches:
+              #only: master
