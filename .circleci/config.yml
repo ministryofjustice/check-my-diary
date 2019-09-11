@@ -1,0 +1,113 @@
+version: 2.1
+
+orbs:
+  aws-cli: circleci/aws-cli@0.1.13
+  kubernetes: circleci/kubernetes@0.4.0
+  helm: circleci/helm@0.1.2
+
+executors:
+  cricleci_slave:
+    docker:
+      - image: circleci/python:3
+    working_directory: ~/project
+
+commands:
+  setup_slave:
+    description: "Install tools and configure kubectl"
+    steps:
+      - aws-cli/install
+      - kubernetes/install
+      - helm/install-helm-client:
+          version: v2.14.3
+      - run:
+          name: Setup kubectl
+          command: |
+            echo -n "${KUBE_ENV_DEV_CACERT}" | base64 -d > /tmp/cluster_ca.crt
+            kubectl config set-cluster "${KUBE_ENV_DEV_NAME}" \
+              --certificate-authority="/tmp/cluster_ca.crt" \
+              --server="https://api.${KUBE_ENV_DEV_NAME}"
+            kubectl config set-credentials circleci \
+              --token="${KUBE_ENV_DEV_TOKEN}"
+            kubectl config set-context circleci \
+              --cluster="${KUBE_ENV_DEV_NAME}" \
+              --user="circleci" \
+              --namespace="${KUBE_ENV_DEV_NAMESPACE}"
+            # confirm setup is ok
+            kubectl config use-context circleci
+
+jobs:
+  build:
+    executor: cricleci_slave
+    steps:
+      - setup_slave
+      - attach_workspace:
+          at: ~/project
+      - checkout:
+          path: ~/project/check-my-diary
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Authenticate with AWS ECR registry
+          command: $(aws ecr get-login --no-include-email)
+      - run:
+          name: Build Docker image and publish it to AWS ECR registry
+          command: |
+            DATE=$(date '+%Y-%m-%d')
+            export BUILD_NUMBER=${DATE}.${CIRCLE_BUILD_NUM}
+
+            # Create Docker image and tag it
+            docker build check-my-diary/ \
+              --tag "${AWS_ECR_ENDPOINT}/check-my-diary/check-my-diary-dev:$BUILD_NUMBER" \
+              --label "build.version=$BUILD_NUMBER" \
+              --label "build.number=$CIRCLE_BUILD_NUM" \
+              --label "build.url=$CIRCLE_BUILD_URL" \
+              --label "build.gitref=$CIRCLE_SHA1"
+
+            if [[ "${CIRCLE_BRANCH}" == "master" ]]; then
+              # Tag Docker image and publish it to AWS ECR registry
+              docker tag ${AWS_ECR_ENDPOINT}/check-my-diary/check-my-diary-dev:$BUILD_NUMBER ${AWS_ECR_ENDPOINT}/check-my-diary/check-my-diary-dev:latest
+              docker push ${AWS_ECR_ENDPOINT}/check-my-diary/check-my-diary-dev:$BUILD_NUMBER
+              docker push ${AWS_ECR_ENDPOINT}/check-my-diary/check-my-diary-dev:latest
+            fi
+      - run:
+          name: List Docker images in AWS ECR registry
+          command: aws ecr list-images --repository-name check-my-diary/check-my-diary-dev --region ${AWS_DEFAULT_REGION}
+      - run: aws ecr list-images --repository-name check-my-diary/check-my-diary-dev --region eu-west-2
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - check-my-diary/*
+  deploy:
+    executor: cricleci_slave
+    steps:
+      - setup_slave
+      - attach_workspace:
+          at: ~/project
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Deploy to kubernetes cluster
+          command: |
+            helm upgrade check-my-diary-dev ./check-my-diary/helm_deploy/check-my-diary-dev/. \
+              --install --wait --force --reset-values --timeout 360 \
+              --tiller-namespace=${KUBE_ENV_DEV_NAMESPACE} \
+              --namespace=${KUBE_ENV_DEV_NAMESPACE} \
+              --set deploy.host=${KUBE_ENV_DEV_NAMESPACE}.apps.${KUBE_ENV_DEV_NAME} \
+              --set image.ecrEndpoint=${AWS_ECR_ENDPOINT} \
+              --set image.repository=${AWS_ECR_ENDPOINT}/check-my-diary/check-my-diary-dev \
+              --set image.tag='latest' \
+              --set replicaCount=1 \
+              --set applicationName=check-my-diary-dev \
+              --set appEnvironment=dev \
+              --set 'nodePort=3000'
+workflows:
+  version: 2.1
+  build_and_deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          #filters:
+            #branches:
+              #only: master
