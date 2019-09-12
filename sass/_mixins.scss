@@ -52,3 +52,11 @@
   font-weight: bold;
   padding: 10px 0px 0px 0px;
 }
+
+.text-box {
+  width: 440px;
+
+  @include app-breakpoint {
+    width: 100%;
+  }
+}

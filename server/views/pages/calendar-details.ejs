@@ -65,7 +65,7 @@
                     <% }  %>
 
                   <% } else if (checkIfDateTimeIsNull(task.dailyEndDateTime) && !checkIfDateTimeIsNull(task.dailyStartDateTime)) { %>
-                    <li class="<% if (index === 0) { %>detail-start<% } %>">
+                    <li class="<% if (index === 0) { %>detail-start-night<% } %>">
                       <span class="time"><%= getTimeFromDate(task.dailyStartDateTime) %> </span>
                       <span class="description">
                         <% if (index === 0) { %>Start of shift:
@@ -88,7 +88,7 @@
                         <span class="description">End of shift</span>
                       </li>                 
 
-                      <li class="detail-start">
+                      <li class="detail-start-night">
                         <span class="time"><%= getTimeFromDate(task.dailyStartDateTime) %></span>
                         <span class="description">Start of shift: <%= task.label %></span>
                       </li>

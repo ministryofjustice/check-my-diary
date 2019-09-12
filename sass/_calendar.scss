@@ -20,6 +20,18 @@ ul.calendar .calendar-item {
   }
 }
 
+@media(max-width:1023px){
+  .hide-0-to-1024{
+    display:none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hide-1024-up {
+    display: none;
+  }
+}
+
 ul.calendar {
 
   padding: 0;
@@ -99,16 +111,42 @@ ul.calendar {
     &.day {
       padding-top: 5px;
       margin-bottom: 3px;
-    }
+    }         
 
     &.detail {
-      background-color: govuk-colour('green');
+      background-color: govuk-colour('green');      
       padding: 2px 0 0 3px;
       color: govuk-colour('white');
       margin: 0 2px;
       border-radius: 2px;
       margin-top: 2px;
     }
+
+    &.detail-start-night {
+      background-color: govuk-colour('black');
+    } 
+
+    &.detail-start-night-full {
+      background-color: govuk-colour('black');
+      height: 92px;
+      background-image: url("../assets/images/night-shift.PNG");
+      background-repeat: no-repeat;
+      background-size: auto;
+      background-position: top 20px left;
+    }
+    
+    &.detail-start-night-half {
+      background-color: govuk-colour('black');
+      height: 45px;
+      background-image: url("../assets/images/night-shift.PNG");
+      background-repeat: no-repeat;
+      background-size: auto;
+      background-position: bottom right;
+    }
+    
+    &.detail-finish-night {
+      background-color: govuk-colour('black');
+    }   
 
     &.detail-finish {
       background-color: govuk-colour('red');

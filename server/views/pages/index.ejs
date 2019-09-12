@@ -27,7 +27,7 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
 
-        <h1 class="govuk-heading-xl">Login</h1>
+        <h1 class="govuk-heading-l">Sign In</h1>
 
         <% if (!apiUp || authError) { %>
 
@@ -53,14 +53,14 @@
         <form action="/auth/login" method="POST">
           <div class="govuk-form-group">
             <label for="username" class="govuk-label"><b>Username</b> (this is the same as your NOMIS username)</label>
-            <input type="text" name="username" id="username" class="govuk-input" autocomplete="off" autofocus/>
+            <input type="text" name="username" id="username" class="govuk-input text-box" autocomplete="off" autofocus/>
           </div>
 
           <div class="govuk-form-group">
             <label for="password" class="govuk-label"><b>Password</b> (this is the same as your NOMIS password)</label>
            
             <div class="show-password">
-              <input class="govuk-input" id="password" name="password" type="password" autocomplete="current-password" data-element-id="password" aria-describedby="password-error">                          
+              <input class="govuk-input text-box" id="password" name="password" type="password" autocomplete="current-password" data-element-id="password" aria-describedby="password-error">                          
             </div>            
           </div>
           <div class="govuk-form-group">

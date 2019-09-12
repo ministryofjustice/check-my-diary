@@ -46,6 +46,7 @@
       }
 
       &.detail-start,
+      &.detail-start-night,
       &.detail-finish,
       &.detail-rest-day,
       &.detail-illness,
@@ -61,6 +62,9 @@
         border: none;
       }
 
+      &.detail-start-night {
+        background-color: govuk-colour('black');
+      }
       &.detail-finish {
         background-color: govuk-colour('red');
       }
@@ -95,6 +99,7 @@
     }
 
     &.detail-start span.time,
+    &.detail-start-night span.time,
     &.detail-finish span.time,
     &.detail-holiday span.time,
     &.detail-illness span.time,
@@ -105,10 +110,14 @@
       background-color: govuk-colour('green');
       border: none;
       color: govuk-colour('white');
-    }
-
+    }    
+    
     &.detail-finish span.time {
       background-color: govuk-colour('red');
+    }
+
+    &.detail-start-night span.time {
+      background-color: govuk-colour('black');
     }
 
     &.detail-holiday span.time {
