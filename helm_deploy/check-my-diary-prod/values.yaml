@@ -5,7 +5,7 @@ shift:
    command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Holme House Band 2,Holme House Band 3,Holme House Band 4,Holme House Band 5,Holme House DST,Holme House Gymnasium,Holme House Industries (ICAS),HMP Admin" node server.js --processtype=SHIFT'
    env: prod
  - name: shift-detail-r1
-   time: "* * * * *"
+   time: "*/10 * * * *"
    command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Holme House Band 2,Holme House Band 3,Holme House Band 4,Holme House Band 5,Holme House DST,Holme House Gymnasium,Holme House Industries (ICAS),HMP Admin" node server.js --processtype=SHIFT-DETAIL'
    env: prod
  - name: shift-r2
@@ -13,6 +13,6 @@ shift:
    command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Moorland Band 2,Moorland Band 3,Moorland Band 4,Moorland Band 5,Moorland Gymnasium,Moorland Industries (ICAS)" node server.js --processtype=SHIFT'
    env: prod
  - name: shift-detail-r2
-   time: "* * * * *"
+   time: "*/10 * * * *"
    command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Moorland Band 2,Moorland Band 3,Moorland Band 4,Moorland Band 5,Moorland Gymnasium,Moorland Industries (ICAS)" node server.js --processtype=SHIFT-DETAIL'
    env: prod
