@@ -24,3 +24,19 @@ shift:
    time: "*/10 * * * *"
    command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Leeds (virtual),Leeds Band 2,Leeds Band 3,Leeds Band 4,Leeds Band 5,Leeds GYM,Leeds Industries (ICAS),Leeds OSG 2,Leeds Officer Group 2,Leeds Officer Group 3,Leeds Operations" node server.js --processtype=SHIFT-DETAIL'
    env: prod
+ - name: shift-r4
+   time: "0 * * * *"
+   command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Lindholme (virtual),Lindholme,Lindholme Custodial Manager,Lindholme Industries (ICAS),Lindholme OSG,Lindholme Officer,Lindholme Supervising Officer" node server.js --processtype=SHIFT'
+   env: prod
+ - name: shift-detail-r4
+   time: "*/10 * * * *"
+   command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Lindholme (virtual),Lindholme,Lindholme Custodial Manager,Lindholme Industries (ICAS),Lindholme OSG,Lindholme Officer,Lindholme Supervising Officer" node server.js --processtype=SHIFT-DETAIL'
+   env: prod   
+ - name: shift-r5
+   time: "0 * * * *"
+   command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Hull (virtual),Hull Industries (ICAS),Hull OSG,Hull Ops,Hull Res Officers,Hull SO / OMU,Hull Standalone" node server.js --processtype=SHIFT'
+   env: prod
+ - name: shift-detail-r5
+   time: "*/10 * * * *"
+   command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Hull (virtual),Hull Industries (ICAS),Hull OSG,Hull Ops,Hull Res Officers,Hull SO / OMU,Hull Standalone" node server.js --processtype=SHIFT-DETAIL'
+   env: prod
