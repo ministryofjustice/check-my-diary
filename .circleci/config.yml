@@ -63,7 +63,7 @@ jobs:
               --label "build.url=$CIRCLE_BUILD_URL" \
               --label "build.gitref=$CIRCLE_SHA1"
 
-            if [[ "${CIRCLE_BRANCH}" == "master" ]]; then
+            if [[ "${CIRCLE_BRANCH}" == "develop" ]]; then
               # Tag Docker image and publish it to AWS ECR registry
               docker tag ${AWS_ECR_ENDPOINT}/check-my-diary/check-my-diary-dev:$BUILD_NUMBER ${AWS_ECR_ENDPOINT}/check-my-diary/check-my-diary-dev:latest
               docker push ${AWS_ECR_ENDPOINT}/check-my-diary/check-my-diary-dev:$BUILD_NUMBER
@@ -110,4 +110,4 @@ workflows:
             - build
           filters:
             branches:
-              only: master
+              only: develop
