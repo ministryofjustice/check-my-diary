@@ -79,3 +79,4 @@ Output for the installation - not yet populated.
 ## Adding/Updating cronjobs
 
 templates/cron.yaml loops over data provided in values.yaml. So within values.yaml you can add extra jobs or update the commands/params the container runs. To do this, edit the file then run a new deployment with `helm upgrade`
+
