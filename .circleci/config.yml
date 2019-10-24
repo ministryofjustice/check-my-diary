@@ -9,7 +9,6 @@ executors:
   cricleci_slave:
     docker:
       - image: circleci/python:3
-        environment:
     working_directory: ~/project
 
 commands:
@@ -33,11 +32,11 @@ commands:
               --cluster="${KUBE_ENV_DEV_NAME}" \
               --user="circleci" \
               --namespace="${KUBE_ENV_DEV_NAMESPACE}"
+
             # confirm setup is ok
             kubectl config use-context circleci
-
 jobs:
-  build:
+  build_docker_image:
     executor: cricleci_slave
     steps:
       - setup_slave
@@ -54,7 +53,6 @@ jobs:
           name: Build Docker image and publish it to AWS ECR registry
           command: |
             DATE=$(date '+%Y-%m-%d')
-            export BUILD_NUMBER=${DATE}_${CIRCLE_BUILD_NUM}
             echo "${DATE}_${CIRCLE_BUILD_NUM}_${CIRCLE_SHA1}" >> ~/project/build_number
             export BUILD_NUMBER=$(cat ~/project/build_number)
 
@@ -81,7 +79,7 @@ jobs:
             - check-my-diary/*
             - build_number
 
-  deploy:
+  deploy_to_kubernetes:
     executor: cricleci_slave
     steps:
       - setup_slave
@@ -111,21 +109,19 @@ jobs:
           command: |
             kubectl get pods --namespace ${KUBE_ENV_DEV_NAMESPACE}
             CMD_POD=$(kubectl get pods --namespace ${KUBE_ENV_DEV_NAMESPACE} | grep ${KUBE_ENV_DEV_NAMESPACE} | sed 's/ .*//') \
-
             kubectl describe pod ${CMD_POD} --namespace ${KUBE_ENV_DEV_NAMESPACE}
       - run:
           name: List Helm deployments
-          command: |
-            helm list --all --tiller-namespace ${KUBE_ENV_DEV_NAMESPACE}
+          command: helm list --all --tiller-namespace ${KUBE_ENV_DEV_NAMESPACE}
 
 workflows:
   version: 2.1
   build_and_deploy:
     jobs:
-      - build
-      - deploy:
+      - build_docker_image
+      - deploy_to_kubernetes:
           requires:
-            - build
+            - build_docker_image
           filters:
             branches:
               only: develop
