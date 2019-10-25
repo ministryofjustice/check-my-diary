@@ -39,9 +39,9 @@
               <ul class="govuk-list govuk-error-summary__list">
                 <li>
                   <% if (apiUp || authError) { %>
-                    <%= authErrorText %>
+                    <b><%= authErrorText %></b>
                   <% } else { %>
-                    Service unavailable. Please try again later.
+                    Service temporarily unavailable. Please try again later.
                   <% } %>
                 </li>
               </ul>

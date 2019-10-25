@@ -195,27 +195,25 @@ function getAuthErrorDescription(error) {
   log.info(`login error description = ${error}`);
   log.info(`login response error description = ${error.response && error.response.data && error.response.data.error_description}`);
   let type = 'The username or password you have entered is invalid.';  
-  if (error.response && error.response.data && error.response.data.error_description) {
-    if (error.response.data.error_description.includes('Bad credentials')) {
+  if (error.response && error.response.data && error.response.data.error_description) {    
+    if (error.response.data.error_description.includes('No credentials provided')) {
+      type = "The username or password you have entered is invalid."
+    } else if (error.response.data.error_description.includes('Bad credentials')) {
       type = "The username you have entered is invalid."
     } else if (error.response.data.error_description.includes('password does not match stored value')) {
       type = "The password you have entered is invalid."
     } else if (error.response.data.error_description.includes('User account is locked')) {
-      type = "Your NOMIS account is locked."    
+      type = "Your NOMIS account is locked. Please contact your Local Systems Admin or the NOMIS support team."    
     } else if (error.response.data.error_description.includes('User credentials have expired')) {
-      type = "Your NOMIS account has expired."          
-    } else if (error.response.data.error_description.includes('does not have access to caseload NWEB')) {
-      type = 'You are not enabled for this service, please contact admin and request access.';
-    } else if (error.response.data.error_description.includes('ORA-28001')) {
-      type = 'Your password has expired.';
-    }
+      type = "Your NOMIS account has expired. Please contact your Local Systems Admin or the NOMIS support team."          
+    } 
   } else if (error !== null && error.message !== '') {
     if (error.message.includes('No Sms or Email address returned for QuantumId')) {
-      type = "You have not been setup on Check My Diary. Please contact a member of the support team."
+      type = "You have not been setup on Check My Diary. Please contact us via: checkmydiary@digital.justice.gov.uk if you would like to be included."
     } else if (error.message.includes('Sms or Email address null or empty for QuantumId')) {
-      type = "You have not been setup with an email address or mobile number. Please contact a member of the support team."
+      type = "You have not been setup with a email address or mobile number. Please contact us via: checkmydiary@digital.justice.gov.uk."
     } else if (error.message.includes('Sms or Email address both set to false for QuantumId')) {
-      type = "Your email address or mobile number has not been enabled. Please contact a member of the support team."      
+      type = "Your email address or mobile number has not been enabled. Please contact us via: checkmydiary@digital.justice.gov.uk."      
     } 
   }
   return type;
