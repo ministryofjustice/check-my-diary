@@ -92,7 +92,7 @@ module.exports = function Index({logger, calendarService, notificationService}) 
       } else {
         
         await notificationService.updateUserNotificationSettings(req.session.uid, req.body.inputEmail === '' ? null : req.body.inputEmail, req.body.inputMobile === '' ? null : req.body.inputMobile, req.body.optionEmail !== undefined && req.body.inputEmail != '' ? true : false, req.body.optionMobile !== undefined && req.body.inputMobile != '' ? true : false);        
-        res.redirect('/notifications/settings');
+        res.redirect('/notifications/1');
       }
   });
 
