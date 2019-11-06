@@ -99,9 +99,9 @@ const postLogin = async (req, res) => {
       return;
     }
 
-    var quantumAddresses = process.env.QUANTUM_ADDRESS.split(',');  
+    var quantumAddresses = process.env.QUANTUM_ADDRESS.split(',');
 
-    if (process.env.TWO_FACT_AUTH_ON === 'true' && ipRangeCheck(quantumAddresses, ipAddress) === false)
+    if (process.env.TWO_FACT_AUTH_ON === 'true' && ipRangeCheck(ipAddress, quantumAddresses) === false)
     {
       if (userAuthenticationDetails === null || userAuthenticationDetails.length === 0) {
         throw new Error('Error : No Sms or Email address returned for QuantumId : ' + req.body.username);
