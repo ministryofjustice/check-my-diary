@@ -14,6 +14,7 @@ const notifySmsTemplate = process.env.NOTIFY_SMS_TEMPLATE || '';
 const notifyEmailTemplate = process.env.NOTIFY_EMAIL_TEMPLATE || '';
 const apiAuthUrl = process.env.API_AUTH_ENDPOINT_URL || 'http://localhost:8080/';
 const apiNotifyUrl = process.env.NOTIFY_HEALTH_CHECK_URL || 'https://api.notifications.service.gov.uk/_status';
+var ipRangeCheck = require("ip-range-check");
 
 const mailTo = config.app.mailTo;
 const homeLink = config.app.notmEndpointUrl;
@@ -98,9 +99,9 @@ const postLogin = async (req, res) => {
       return;
     }
 
-    var quantumAddresses = process.env.QUANTUM_ADDRESS.split(',');
+    var quantumAddresses = process.env.QUANTUM_ADDRESS.split(',');  
 
-    if (process.env.TWO_FACT_AUTH_ON === 'true' && quantumAddresses.includes(ipAddress) === false)
+    if (process.env.TWO_FACT_AUTH_ON === 'true' && ipRangeCheck(quantumAddresses, ipAddress) === false)
     {
       if (userAuthenticationDetails === null || userAuthenticationDetails.length === 0) {
         throw new Error('Error : No Sms or Email address returned for QuantumId : ' + req.body.username);
