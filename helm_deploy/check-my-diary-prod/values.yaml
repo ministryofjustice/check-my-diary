@@ -40,3 +40,27 @@ shift:
    time: "*/10 * * * *"
    command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Hull (virtual),Hull Industries (ICAS),Hull OSG,Hull Ops,Hull Res Officers,Hull SO / OMU,Hull Standalone" node server.js --processtype=SHIFT-DETAIL'
    env: prod
+ - name: shift-r6
+   time: "2 * * * *"
+   command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Hatfield (virtual),Hatfield Band 2's,Hatfield Band 3's,Hatfield Band 4's,Hatfield Band 5's,Hatfield GYM/Standalone,Hatfield Industries (ICAS)" node server.js --processtype=SHIFT'
+   env: prod
+ - name: shift-detail-r6
+   time: "2-59/10 * * * *"
+   command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Hatfield (virtual),Hatfield Band 2's,Hatfield Band 3's,Hatfield Band 4's,Hatfield Band 5's,Hatfield GYM/Standalone,Hatfield Industries (ICAS)" node server.js --processtype=SHIFT-DETAIL'
+   env: prod   
+ - name: shift-r8
+   time: "2 * * * *"
+   command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Wealstun (virtual),Wealstun Band 2,Wealstun Band 3,Wealstun Band 4,Wealstun Band 4 (PEI),Wealstun Band 5,Wealstun Industries (ICAS),Wealstun Planning Unit 2,Wealstun Planning Unit 3,Wealstun Planning Unit 4" node server.js --processtype=SHIFT'
+   env: prod
+ - name: shift-detail-r8
+   time: "2-59/10 * * * *"
+   command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Wealstun (virtual),Wealstun Band 2,Wealstun Band 3,Wealstun Band 4,Wealstun Band 4 (PEI),Wealstun Band 5,Wealstun Industries (ICAS),Wealstun Planning Unit 2,Wealstun Planning Unit 3,Wealstun Planning Unit 4" node server.js --processtype=SHIFT-DETAIL'
+   env: prod   
+ - name: shift-r9
+   time: "2 * * * *"
+   command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Wetherby (virtual),Wetherby Band 2,Wetherby Band 3,Wetherby Band 4,Wetherby Band 5,,Wetherby Kepple,Wetherby Standalone" node server.js --processtype=SHIFT'
+   env: prod
+ - name: shift-detail-r9
+   time: "2-59/10 * * * *"
+   command: 'NOTIFICATIONS_API_ENDPOINT_URL="https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/" BUSINESS_UNIT="Wetherby (virtual),Wetherby Band 2,Wetherby Band 3,Wetherby Band 4,Wetherby Band 5,,Wetherby Kepple,Wetherby Standalone" node server.js --processtype=SHIFT-DETAIL'
+   env: prod 
