@@ -64,3 +64,11 @@ shift:
    time: "2-59/10 * * * *"
    command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Wetherby (virtual),Wetherby Band 2,Wetherby Band 3,Wetherby Band 4,Wetherby Band 5,Wetherby Kepple,Wetherby Standalone\" node server.js --processtype=SHIFT-DETAIL"
    env: prod 
+ - name: shift-r10
+   time: "2 * * * *"
+   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Full Sutton (virtual),Full Sutton Band 4,Full Sutton Industries (ICAS),Full Sutton Managers,Full Sutton OSG,Full Sutton Officers 1\" node server.js --processtype=SHIFT"
+   env: prod
+ - name: shift-detail-r10
+   time: "2-59/10 * * * *"
+   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Full Sutton (virtual),Full Sutton Band 4,Full Sutton Industries (ICAS),Full Sutton Managers,Full Sutton OSG,Full Sutton Officers 1\" node server.js --processtype=SHIFT-DETAIL"
+   env: prod
