@@ -72,6 +72,22 @@ shift:
    time: "2-59/10 * * * *"
    command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Full Sutton Band 4,Full Sutton Industries (ICAS),Full Sutton Managers,Full Sutton OSG,Full Sutton Officers 1\" node server.js --processtype=SHIFT-DETAIL"
    env: prod
+ - name: shift-r11
+   time: "2 * * * *"
+   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Kirklevington Grange,Kirklevington Industries (ICAS)\" node server.js --processtype=SHIFT"
+   env: prod
+ - name: shift-detail-r11
+   time: "2-59/10 * * * *"
+   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Kirklevington Grange,Kirklevington Industries (ICAS)\" node server.js --processtype=SHIFT-DETAIL"
+   env: prod   
+ - name: shift-r12
+   time: "2 * * * *"
+   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Durham Band 4,Durham Custodial Managers,Durham Industries (ICAS),Durham OSG,Durham Officers,Durham Standalone\" node server.js --processtype=SHIFT"
+   env: prod
+ - name: shift-detail-r12
+   time: "2-59/10 * * * *"
+   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Durham Band 4,Durham Custodial Managers,Durham Industries (ICAS),Durham OSG,Durham Officers,Durham Standalone\" node server.js --processtype=SHIFT-DETAIL"
+   env: prod
  - name: shift-r14
    time: "2 * * * *"
    command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Wakefield Band 2,Wakefield Band 3,Wakefield Band 4,Wakefield Band 4 (Specialist),Wakefield Band 5,Wakefield Industries (ICAS)\" node server.js --processtype=SHIFT"
@@ -79,4 +95,20 @@ shift:
  - name: shift-detail-r14
    time: "2-59/10 * * * *"
    command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Wakefield Band 2,Wakefield Band 3,Wakefield Band 4,Wakefield Band 4 (Specialist),Wakefield Band 5,Wakefield Industries (ICAS)\" node server.js --processtype=SHIFT-DETAIL"
+   env: prod
+ - name: shift-r15
+   time: "2 * * * *"
+   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Long Lartin Band 2,Long Lartin Band 3,Long Lartin Band 4,Long Lartin Band 5,Long Lartin Industries (ICAS),Long Lartin PIU\" node server.js --processtype=SHIFT"
+   env: prod
+ - name: shift-detail-r15
+   time: "2-59/10 * * * *"
+   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Long Lartin Band 2,Long Lartin Band 3,Long Lartin Band 4,Long Lartin Band 5,Long Lartin Industries (ICAS),Long Lartin PIU\" node server.js --processtype=SHIFT-DETAIL"
+   env: prod      
+ - name: shift-r16
+   time: "2 * * * *"
+   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Woodhill Band 2,Woodhill Band 3,Woodhill Band 4,Woodhill Band 5,Woodhill Instructors (ICAS),Woodhill Residential 1,Woodhill Residential 2\" node server.js --processtype=SHIFT"
+   env: prod
+ - name: shift-detail-r16
+   time: "2-59/10 * * * *"
+   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Woodhill Band 2,Woodhill Band 3,Woodhill Band 4,Woodhill Band 5,Woodhill Instructors (ICAS),Woodhill Residential 1,Woodhill Residential 2\" node server.js --processtype=SHIFT-DETAIL"
    env: prod
