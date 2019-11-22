@@ -74,11 +74,11 @@ shift:
    env: prod
  - name: shift-r11
    time: "2 * * * *"
-   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Kirklevington Grange,Kirklevington Industries (ICAS)\" node server.js --processtype=SHIFT"
+   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Kirklevington Grange,Kirklevington Grange Industries (ICAS)\" node server.js --processtype=SHIFT"
    env: prod
  - name: shift-detail-r11
    time: "2-59/10 * * * *"
-   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Kirklevington Grange,Kirklevington Industries (ICAS)\" node server.js --processtype=SHIFT-DETAIL"
+   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Kirklevington Grange,Kirklevington Grange Industries (ICAS)\" node server.js --processtype=SHIFT-DETAIL"
    env: prod   
  - name: shift-r12
    time: "2 * * * *"
