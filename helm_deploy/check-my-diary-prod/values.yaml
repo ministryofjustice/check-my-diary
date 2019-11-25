@@ -90,7 +90,7 @@ shift:
    env: prod
  - name: shift-r14
    time: "2 * * * *"
-   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Wakefield Band 2,Wakefield Band 3,Wakefield Band 4,Wakefield Band 4 (Specialist),Wakefield Band 5,Wakefield Industries (ICAS)\" node server.js --processtype=SHIFT"
+   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Wakefield Band 2,Wakefield Band 3,Wakefield Band 4,Wakefield Band 4 (Specialist),Wakefield Band 5,Wakefield Industries (ICAS)\" node server.js --processtype=SHIFT"
    env: prod
  - name: shift-detail-r14
    time: "2-59/10 * * * *"
