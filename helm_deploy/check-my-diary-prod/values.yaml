@@ -82,7 +82,7 @@ shift:
    env: prod   
  - name: shift-r12
    time: "2 * * * *"
-   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Durham Band 4,Durham Custodial Managers,Durham Industries (ICAS),Durham OSG,Durham Officers,Durham Standalone\" node server.js --processtype=SHIFT"
+   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Durham Band 4,Durham Custodial Managers,Durham Industries (ICAS),Durham OSG,Durham Officers,Durham Standalone\" node server.js --processtype=SHIFT"
    env: prod
  - name: shift-detail-r12
    time: "2-59/10 * * * *"
