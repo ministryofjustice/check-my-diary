@@ -41,6 +41,19 @@ router.get('/login', async (req, res) => {
   const isApiUp = (healthRes.status === 200);
   log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`);
  
+  var maintenanceStartDateTime = new Date(process.env.MAINTENANCE_START);
+  var maintenanceEndDateTime = new Date(process.env.MAINTENANCE_END);
+
+  var currentDateTime = new Date();
+
+  if (currentDateTime >= maintenanceStartDateTime && currentDateTime <= maintenanceEndDateTime) {
+    res.render('pages/maintenance', {
+      startDateTime: maintenanceStartDateTime,
+      endDateTime: maintenanceEndDateTime
+    });
+    return;
+  } 
+  
   res.render('pages/index', {
     authError: false,
     apiUp: isApiUp,
