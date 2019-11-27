@@ -124,14 +124,21 @@ const postLogin = async (req, res) => {
       // @TODO: 2FA (if not on Quantum) or set cookie and login (if on Quantum)
       req.session.twoFactorCode = get2faCode();
 
+      var emailSent = false;
+      var smsSent = false;
+      
       if (smsEnabled) {
         // For SMS
-        await notify.sendSms(notifySmsTemplate, userAuthentication.Sms || '', { personalisation: { '2fa_code': req.session.twoFactorCode }});
+        await notify.sendSms(notifySmsTemplate, userAuthentication.Sms || '', { personalisation: { '2fa_code': req.session.twoFactorCode }})
+        .then(response => smsSend = true)
+        .catch(err => { throw new Error(err)});
       }
-
+      
       if (emailEnabled) {
         // For email
         await notify.sendEmail(notifyEmailTemplate, userAuthentication.EmailAddress || '', { personalisation: { '2fa_code': req.session.twoFactorCode }})
+        .then(response => emailSent = true)
+        .catch(err => { throw new Error(err)});
       }
 
       req.session.uid = req.body.username;
@@ -207,7 +214,7 @@ function getAuthErrorDescription(error) {
       type = "Your NOMIS account is locked. Please contact your Local Systems Admin or the NOMIS support team."    
     } else if (error.response.data.error_description.includes('User credentials have expired')) {
       type = "Your NOMIS account has expired. Please contact your Local Systems Admin or the NOMIS support team."          
-    } 
+    }
   } else if (error !== null && error.message !== '') {
     if (error.message.includes('No Sms or Email address returned for QuantumId')) {
       type = "You have not been setup on Check My Diary. Please contact us via: checkmydiary@digital.justice.gov.uk if you would like to be included."
@@ -215,7 +222,14 @@ function getAuthErrorDescription(error) {
       type = "You have not been setup with a email address or mobile number. Please contact us via: checkmydiary@digital.justice.gov.uk."
     } else if (error.message.includes('Sms or Email address both set to false for QuantumId')) {
       type = "Your email address or mobile number has not been enabled. Please contact us via: checkmydiary@digital.justice.gov.uk."      
-    } 
+    } else if (error.message.includes('email_address Not a valid email address')) {
+      //type = "Your email address or mobile number stored with Check My Diary is not valid. Please contact us via: checkmydiary@digital.justice.gov.uk." 
+      type = "Your email address stored with Check My Diary is not valid. Please contact us via: checkmydiary@digital.justice.gov.uk." 
+    } else if (error.message.includes('phone_number Not enough digits') 
+                    || error.message.includes('phone_number Must not contain letters or symbols')
+                    || error.message.includes('phone_number Too many digits')) {
+      type = "Your mobile number stored with Check My Diary is not valid. Please contact us via: checkmydiary@digital.justice.gov.uk."       
+    }
   }
   return type;
 }

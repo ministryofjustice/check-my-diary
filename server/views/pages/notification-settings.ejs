@@ -167,7 +167,13 @@
               </div>
             </fieldset>
           </div>
-
+          <div class="govuk-warning-text">
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">
+              <span class="govuk-warning-text__assistive">Warning</span>
+              Please contact us via checkmydiary@digital.justice.gov.uk whenever you would like to change your email address or mobile phone number associated with Check My Diary. This is because we use them to send access codes as part of the sign in process.
+            </strong>
+          </div>
           <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
 
           <button type="submit" class="govuk-button">Update</button>
