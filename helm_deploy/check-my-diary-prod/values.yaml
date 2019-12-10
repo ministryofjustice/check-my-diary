@@ -124,15 +124,23 @@ shift:
    time: "7 * * * *"
    command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Whitemoor Band 2,Whitemoor Band 2 SCDU TBSR,Whitemoor Band 3 Fens Unit,Whitemoor Band 3 Residential,Whitemoor Band 3 Standalone,Whitemoor Band 4,Whitemoor Band 4 Fens Unit,Whitemoor Band 4 Gymnasium TBSR,Whitemoor Band 5,Whitemoor Dog Handlers,Whitemoor Instructors (ICAS)\" node server.js --processtype=SHIFT"
    env: prod
- - name: shift-detail-r18
+- name: shift-detail-r18
    time: "7-59/10 * * * *"
    command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Whitemoor Band 2,Whitemoor Band 2 SCDU TBSR,Whitemoor Band 3 Fens Unit,Whitemoor Band 3 Residential,Whitemoor Band 3 Standalone,Whitemoor Band 4,Whitemoor Band 4 Fens Unit,Whitemoor Band 4 Gymnasium TBSR,Whitemoor Band 5,Whitemoor Dog Handlers,Whitemoor Instructors (ICAS)\" node server.js --processtype=SHIFT-DETAIL"
    env: prod
- - name: shift-r19
+- name: shift-r19
    time: "7 * * * *"
    command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Frankland ICAS,Frankland OSG,Frankland Res 1,Frankland Res 2,Frankland Res 3,Frankland Residential SO,Frankland Standalone Managers,Frankland Standalone Officers,Frankland Westgate\" node server.js --processtype=SHIFT"
    env: prod
- - name: shift-detail-r19
+- name: shift-detail-r19
    time: "7-59/10 * * * *"
    command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Frankland ICAS,Frankland OSG,Frankland Res 1,Frankland Res 2,Frankland Res 3,Frankland Residential SO,Frankland Standalone Managers,Frankland Standalone Officers,Frankland Westgate\" node server.js --processtype=SHIFT-DETAIL"
+   env: prod
+- name: shift-r20
+   time: "7 * * * *"
+   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Swinfen Hall,Swinfen Hall Band 2,Swinfen Hall Band 4,Swinfen Hall Band 4 Gymnasium,Swinfen Hall Band 5,Swinfen Hall Industries (ICAS),Swinfen Hall PIPE & Interventions\" node server.js --processtype=SHIFT"
+   env: prod
+- name: shift-detail-r20
+   time: "7-59/10 * * * *"
+   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Swinfen Hall,Swinfen Hall Band 2,Swinfen Hall Band 4,Swinfen Hall Band 4 Gymnasium,Swinfen Hall Band 5,Swinfen Hall Industries (ICAS),Swinfen Hall PIPE & Interventions\" node server.js --processtype=SHIFT-DETAIL"
    env: prod
