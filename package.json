@@ -52,8 +52,7 @@
     "passport": "0.4.0",
     "pg": "^7.8.2",
     "sass-middleware": "0.0.3",
-    "scroll-to-element": "^2.0.3",
-    "serialize-javascript": "^2.1.2"
+    "scroll-to-element": "^2.0.3"
   },
   "devDependencies": {
     "axios-mock-adapter": "1.15.0",
