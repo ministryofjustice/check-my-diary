@@ -61,23 +61,31 @@ router.get('/login', async (req, res) => {
 
   var showMaintenancePage = false;
   var currentDateTime = new Date();
-  var maintenanceStartDateTime = new Date(process.env.MAINTENANCE_START);
 
-  if (!isNullOrEmpty(process.env.MAINTENANCE_END)){
-    var maintenanceEndDateTime = new Date(process.env.MAINTENANCE_END);
-    showMaintenancePage = (currentDateTime >= maintenanceStartDateTime && currentDateTime <= maintenanceEndDateTime) ? true: false;
-  }else{
-    showMaintenancePage = (areDatesTheSame(currentDateTime, maintenanceStartDateTime));
+  //if maintenance start/end dates exist then dcheck whether to display maintenance page
+  //otherwise just ignore the following, it will become effective as soon as those environment
+  //variables are created.  13DEC19.
+  try
+  {
+    var maintenanceStartDateTime = new Date(process.env.MAINTENANCE_START);
+
+    if (!isNullOrEmpty(process.env.MAINTENANCE_END)){
+      var maintenanceEndDateTime = new Date(process.env.MAINTENANCE_END);
+      showMaintenancePage = (currentDateTime >= maintenanceStartDateTime && currentDateTime <= maintenanceEndDateTime) ? true: false;
+    }else{
+      showMaintenancePage = (areDatesTheSame(currentDateTime, maintenanceStartDateTime));
+    }
+
+
+    if (showMaintenancePage){
+      res.render('pages/maintenance', {
+        startDateTime: maintenanceStartDateTime,
+        endDateTime: maintenanceEndDateTime
+      });
+      return;
+    } 
   }
-
-
-  if (showMaintenancePage){
-    res.render('pages/maintenance', {
-      startDateTime: maintenanceStartDateTime,
-      endDateTime: maintenanceEndDateTime
-    });
-    return;
-  } 
+  catch{}
 
   res.render('pages/index', {
     authError: false,
