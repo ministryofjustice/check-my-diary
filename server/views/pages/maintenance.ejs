@@ -20,13 +20,18 @@
 
         <h1 class="govuk-heading-l">Service unavailable</h1>
 
+        <% if (checkIfDateTimeIsNullOrUndefined(endDateTime)) { %>
+          <p class="govuk-caption-l govuk-!-margin-bottom-6">
+            We are performing some scheduled maintenance on <%= parseFullDateFormat(startDateTime) %> at <%= getTimeFromDate(startDateTime) %>.          
+          </p>
+        <% } else { %>
         <p class="govuk-caption-l govuk-!-margin-bottom-6">
-          Due to scheduled maintenance for Check My Diary the service is unavailable from <%= parseFullDateFormat(startDateTime) %> at <%= getTimeFromDate(startDateTime) %> to <%= parseFullDateFormat(endDateTime) %> at <%= getTimeFromDate(endDateTime) %>.          
+          We are performing some scheduled maintenance from <%= parseFullDateFormat(startDateTime) %> at <%= getTimeFromDate(startDateTime) %> to <%= parseFullDateFormat(endDateTime) %> at <%= getTimeFromDate(endDateTime) %>.          
         </p>
+        <% } %>
 
         <p class="govuk-body">
-          This service is currently undergoing planned maintenance by our development team. Contact the orderly officers
-          for shift detail
+          The service will be unavailable during this time, please try again later.
         </p>
 
       </div>

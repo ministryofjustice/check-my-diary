@@ -36,24 +36,49 @@ function getStartMonth() {
   return [now.getFullYear(), ('0' + (now.getMonth() + 1)).slice(-2), '01'].join('-');
 }
 
+function isNullOrEmpty( str ) {
+  if (typeof str == 'undefined' || !str || str.length === 0 || str === '' || !/[^\s]/.test(str) || /^\s*$/.test(str) || str.replace(/\s/g,'') === '')
+    {
+        return true
+    }
+    else
+    {
+        return false
+    }
+}
+
+function areDatesTheSame (date1, date2) {
+  return (date1.getFullYear() === date2.getFullYear()) &&
+         // getMonth is 0-indexed
+         (date1.getMonth() === date2.getMonth()) &&
+         (date1.getDate() == date2.getDate());
+}
+
 router.get('/login', async (req, res) => {
   const healthRes = await health.healthResult([apiAuthUrl, apiNotifyUrl]);
   const isApiUp = (healthRes.status === 200);
   log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`);
- 
-  var maintenanceStartDateTime = new Date(process.env.MAINTENANCE_START);
-  var maintenanceEndDateTime = new Date(process.env.MAINTENANCE_END);
 
+  var showMaintenancePage = false;
   var currentDateTime = new Date();
+  var maintenanceStartDateTime = new Date(process.env.MAINTENANCE_START);
 
-  if (currentDateTime >= maintenanceStartDateTime && currentDateTime <= maintenanceEndDateTime) {
+  if (!isNullOrEmpty(process.env.MAINTENANCE_END)){
+    var maintenanceEndDateTime = new Date(process.env.MAINTENANCE_END);
+    showMaintenancePage = (currentDateTime >= maintenanceStartDateTime && currentDateTime <= maintenanceEndDateTime) ? true: false;
+  }else{
+    showMaintenancePage = (areDatesTheSame(currentDateTime, maintenanceStartDateTime));
+  }
+
+
+  if (showMaintenancePage){
     res.render('pages/maintenance', {
       startDateTime: maintenanceStartDateTime,
       endDateTime: maintenanceEndDateTime
     });
     return;
   } 
-  
+
   res.render('pages/index', {
     authError: false,
     apiUp: isApiUp,
