@@ -10,7 +10,7 @@ data:
   shift_task_notify_email_template: "574208ed-7675-4aee-b70e-e88b16a3d808"
   shift_interval: "24"
   shift_interval_type: hours
-  shift_task_interval: "12"
+  shift_task_interval: "24"
   shift_task_interval_type: hours
   log_file_location: ./logs/check-my-diary-notificaion-service.log
   log_level: debug
