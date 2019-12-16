@@ -67,34 +67,51 @@ router.get('/login', async (req, res) => {
   //variables are created.  13DEC19.
   try
   {
-    var maintenanceStartDateTime = new Date(process.env.MAINTENANCE_START);
-
-    if (!isNullOrEmpty(process.env.MAINTENANCE_END)){
-      var maintenanceEndDateTime = new Date(process.env.MAINTENANCE_END);
-      showMaintenancePage = (currentDateTime >= maintenanceStartDateTime && currentDateTime <= maintenanceEndDateTime) ? true: false;
-    }else{
-      showMaintenancePage = (areDatesTheSame(currentDateTime, maintenanceStartDateTime));
-    }
-
-
-    if (showMaintenancePage){
-      res.render('pages/maintenance', {
-        startDateTime: maintenanceStartDateTime,
-        endDateTime: maintenanceEndDateTime
+    if (isNullOrEmpty(process.env.MAINTENANCE_START) && isNullOrEmpty(process.env.MAINTENANCE_END))
+    {
+      res.render('pages/index', {
+        authError: false,
+        apiUp: isApiUp,
+        mailTo: mailTo,
+        homeLink: homeLink,
+        csrfToken: req.csrfToken(),
+        uid: req.session.uid
       });
       return;
+
+    } else {
+    
+      var maintenanceStartDateTime = Date.parse(process.env.MAINTENANCE_START) ? new Date(process.env.MAINTENANCE_START) : null;
+      var maintenanceEndDateTime = Date.parse(process.env.MAINTENANCE_END) ? new Date(process.env.MAINTENANCE_END) : null;
+
+      if (maintenanceEndDateTime !== null){
+        showMaintenancePage = (currentDateTime >= maintenanceStartDateTime && currentDateTime <= maintenanceEndDateTime) ? true: false;
+      } else{
+        showMaintenancePage = (areDatesTheSame(currentDateTime, maintenanceStartDateTime));
+      }
+
+      if (showMaintenancePage){
+        res.render('pages/maintenance', {
+          startDateTime: maintenanceStartDateTime,
+          endDateTime: maintenanceEndDateTime
+        });
+        return;
+      } else {
+        res.render('pages/index', {
+          authError: false,
+          apiUp: isApiUp,
+          mailTo: mailTo,
+          homeLink: homeLink,
+          csrfToken: req.csrfToken(),
+          uid: req.session.uid
+        });
+        return;
+      }
     } 
   }
-  catch{}
-
-  res.render('pages/index', {
-    authError: false,
-    apiUp: isApiUp,
-    mailTo: mailTo,
-    homeLink: homeLink,
-    csrfToken: req.csrfToken(),
-    uid: req.session.uid
-  });
+  catch(error){
+    logError(req.url, data, 'Login failure');
+  }  
 });
 
 router.post('/login', (req, res) => {
