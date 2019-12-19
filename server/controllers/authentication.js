@@ -36,19 +36,82 @@ function getStartMonth() {
   return [now.getFullYear(), ('0' + (now.getMonth() + 1)).slice(-2), '01'].join('-');
 }
 
+function isNullOrEmpty( str ) {
+  if (typeof str == 'undefined' || !str || str.length === 0 || str === '' || !/[^\s]/.test(str) || /^\s*$/.test(str) || str.replace(/\s/g,'') === '')
+    {
+        return true
+    }
+    else
+    {
+        return false
+    }
+}
+
+function areDatesTheSame (date1, date2) {
+  return (date1.getFullYear() === date2.getFullYear()) &&
+         // getMonth is 0-indexed
+         (date1.getMonth() === date2.getMonth()) &&
+         (date1.getDate() == date2.getDate());
+}
+
 router.get('/login', async (req, res) => {
   const healthRes = await health.healthResult([apiAuthUrl, apiNotifyUrl]);
   const isApiUp = (healthRes.status === 200);
   log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`);
- 
-  res.render('pages/index', {
-    authError: false,
-    apiUp: isApiUp,
-    mailTo: mailTo,
-    homeLink: homeLink,
-    csrfToken: req.csrfToken(),
-    uid: req.session.uid
-  });
+
+  var showMaintenancePage = false;
+  var currentDateTime = new Date();
+
+  //if maintenance start/end dates exist then dcheck whether to display maintenance page
+  //otherwise just ignore the following, it will become effective as soon as those environment
+  //variables are created.  13DEC19.
+  try
+  {
+    if (isNullOrEmpty(process.env.MAINTENANCE_START) && isNullOrEmpty(process.env.MAINTENANCE_END))
+    {
+      res.render('pages/index', {
+        authError: false,
+        apiUp: isApiUp,
+        mailTo: mailTo,
+        homeLink: homeLink,
+        csrfToken: req.csrfToken(),
+        uid: req.session.uid
+      });
+      return;
+
+    } else {
+    
+      var maintenanceStartDateTime = Date.parse(process.env.MAINTENANCE_START) ? new Date(process.env.MAINTENANCE_START) : null;
+      var maintenanceEndDateTime = Date.parse(process.env.MAINTENANCE_END) ? new Date(process.env.MAINTENANCE_END) : null;
+
+      if (maintenanceEndDateTime !== null){
+        showMaintenancePage = (currentDateTime >= maintenanceStartDateTime && currentDateTime <= maintenanceEndDateTime) ? true: false;
+      } else{
+        showMaintenancePage = (areDatesTheSame(currentDateTime, maintenanceStartDateTime));
+      }
+
+      if (showMaintenancePage){
+        res.render('pages/maintenance', {
+          startDateTime: maintenanceStartDateTime,
+          endDateTime: maintenanceEndDateTime
+        });
+        return;
+      } else {
+        res.render('pages/index', {
+          authError: false,
+          apiUp: isApiUp,
+          mailTo: mailTo,
+          homeLink: homeLink,
+          csrfToken: req.csrfToken(),
+          uid: req.session.uid
+        });
+        return;
+      }
+    } 
+  }
+  catch(error){
+    logError(req.url, data, 'Login failure');
+  }  
 });
 
 router.post('/login', (req, res) => {
