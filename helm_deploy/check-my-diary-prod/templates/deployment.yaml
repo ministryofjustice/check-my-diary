@@ -101,3 +101,13 @@ spec:
               secretKeyRef:
                 name: {{ .Values.applicationName }}-env
                 key: quantum_address
+          - name: "MAINTENANCE_START"
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.applicationName }}-env
+                key: maintenance_start
+          - name: "MAINTENANCE_END"
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.applicationName }}-env
+                key: maintenance_end
