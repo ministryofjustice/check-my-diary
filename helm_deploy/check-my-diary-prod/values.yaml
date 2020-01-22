@@ -188,7 +188,7 @@ shift:
    time: "9 * * * *"
    command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"DST North\" node server.js --processtype=SHIFT"
    env: prod
- - name: shift-detail-r23
+ - name: shift-detail-r24
    time: "9-59/10 * * * *"
    command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"DST North\" node server.js --processtype=SHIFT-DETAIL"
    env: prod
