@@ -146,11 +146,11 @@ shift:
    env: prod
  - name: shift-r7
    time: "9 * * * *"
-   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Humber Band 2s,Humber Band 3s,Humber Band 4s,Humber Custodial Manager,Humber Gymnasium,Humber Industries (ICAS),Humber Waste Management\" node server.js --processtype=SHIFT"
+   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Humber Band 2s,Humber Band 3s,Humber Band 4s,Humber Custodial Manager,Humber Gymnasium,Humber Industries (ICAS),Humber Waste Management\" node server.js --processtype=SHIFT"
    env: prod
  - name: shift-detail-r7
    time: "9-59/10 * * * *"
-   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Humber Band 2s,Humber Band 3s,Humber Band 4s,Humber Custodial Manager,Humber Gymnasium,Humber Industries (ICAS),Humber Waste Management\" node server.js --processtype=SHIFT-DETAIL"
+   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Humber Band 2s,Humber Band 3s,Humber Band 4s,Humber Custodial Manager,Humber Gymnasium,Humber Industries (ICAS),Humber Waste Management\" node server.js --processtype=SHIFT-DETAIL"
    env: prod
  - name: shift-r13
    time: "9 * * * *"
@@ -170,19 +170,19 @@ shift:
    env: prod
  - name: shift-r22
    time: "9 * * * *"
-   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Werrington Casework,Werrington Custodial Managers,Werrington Denby,Werrington Doulton,Werrington GymnasiumWerrington Industries (ICAS),Werrington OSG,Werrington Safeguard,Werrington Supervising Officers\" node server.js --processtype=SHIFT"
+   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Werrington Casework,Werrington Custodial Managers,Werrington Denby,Werrington Doulton,Werrington Gymnasium,Werrington Industries (ICAS),Werrington OSG,Werrington Safeguard,Werrington Supervising Officers\" node server.js --processtype=SHIFT"
    env: prod
  - name: shift-detail-r22
    time: "9-59/10 * * * *"
-   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Werrington Casework,Werrington Custodial Managers,Werrington Denby,Werrington Doulton,Werrington GymnasiumWerrington Industries (ICAS),Werrington OSG,Werrington Safeguard,Werrington Supervising Officers\" node server.js --processtype=SHIFT-DETAIL"
+   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Werrington Casework,Werrington Custodial Managers,Werrington Denby,Werrington Doulton,Werrington Gymnasium,Werrington Industries (ICAS),Werrington OSG,Werrington Safeguard,Werrington Supervising Officers\" node server.js --processtype=SHIFT-DETAIL"
    env: prod
  - name: shift-r23
    time: "9 * * * *"
-   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Belmarsh Custodial Manager,Belmarsh Dog Section,Belmarsh Industries (ICAS),Belmarsh OSG,Belmarsh Operations,Belmarsh Residential,Belmarsh SO,Belmarsh Security,Belmarsh Standalone OSG,Belmarsh Standalone Officer\" node server.js --processtype=SHIFT"
+   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Belmarsh Custodial Manager,Belmarsh Dog Section,Belmarsh Industries (ICAS),Belmarsh OSG,Belmarsh Operations,Belmarsh Residential,Belmarsh SO,Belmarsh Security,Belmarsh Standalone OSG,Belmarsh Standalone Officer\" node server.js --processtype=SHIFT"
    env: prod
  - name: shift-detail-r23
    time: "9-59/10 * * * *"
-   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region1.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Belmarsh Custodial Manager,Belmarsh Dog Section,Belmarsh Industries (ICAS),Belmarsh OSG,Belmarsh Operations,Belmarsh Residential,Belmarsh SO,Belmarsh Security,Belmarsh Standalone OSG,Belmarsh Standalone Officer\" node server.js --processtype=SHIFT-DETAIL"
+   command: "NOTIFICATIONS_API_ENDPOINT_URL=https://checkmydiary-api-prod-region2.service.hmpps.dsd.io/api/ BUSINESS_UNIT=\"Belmarsh Custodial Manager,Belmarsh Dog Section,Belmarsh Industries (ICAS),Belmarsh OSG,Belmarsh Operations,Belmarsh Residential,Belmarsh SO,Belmarsh Security,Belmarsh Standalone OSG,Belmarsh Standalone Officer\" node server.js --processtype=SHIFT-DETAIL"
    env: prod
  - name: shift-r24
    time: "9 * * * *"
