@@ -1,5 +1,5 @@
 defaults: &defaults
-  working_directory: ~/mojdigitalstudio/form-app-starter
+  working_directory: ~/mojdigitalstudio/check-my-diary
   docker:
     - image: circleci/node:10.15.3-browsers
       environment:
@@ -73,7 +73,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ~/mojdigitalstudio/form-app-starter
+          at: ~/mojdigitalstudio/check-my-diary
       - setup_remote_docker:
           exclusive: true
       - run:
@@ -102,7 +102,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ~/mojdigitalstudio/form-app-starter
+          at: ~/mojdigitalstudio/check-my-diary
       - setup_remote_docker
       - *install_aws_cli
       - run:
@@ -127,7 +127,7 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - attach_workspace:
-          at: ~/mojdigitalstudio/form-app-starter
+          at: ~/mojdigitalstudio/check-my-diary
       - run:
           name: Kubectl deployment dev setup
           command: |
@@ -137,9 +137,9 @@ jobs:
       - deploy:
           name: Deploy to Dev
           command: |
-            APP_VERSION=$(egrep buildNumber ~/mojdigitalstudio/form-app-starter/build-info.json  | awk -F"\"" '{print $4}')
+            APP_VERSION=$(egrep buildNumber ~/mojdigitalstudio/check-my-diary/build-info.json  | awk -F"\"" '{print $4}')
             AWS_ACCESS_KEY_ID=${SM_AWS_ACCESS_KEY_ID} AWS_SECRET_ACCESS_KEY=${SM_AWS_SECRET_ACCESS_KEY} aws secretsmanager --region ${AWS_DEFAULT_REGION} get-secret-value --secret-id sentence-planning-development | jq -r .SecretString | \
-            helm upgrade form-app-starter helm_deploy/form-app-starter/. \
+            helm upgrade check-my-diary helm_deploy/check-my-diary/. \
               --install --wait \
               --tiller-namespace=${KUBE_ENV_DEVELOPMENT_NAMESPACE} \
               --namespace=${KUBE_ENV_DEVELOPMENT_NAMESPACE} \
