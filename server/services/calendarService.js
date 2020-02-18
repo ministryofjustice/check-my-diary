@@ -1,6 +1,5 @@
-const axios = require('axios'),
-  health = require('../controllers/health'),
-  logger = require('../log');
+const axios = require('axios')
+const logger = require('../../log')
 
 module.exports = function CalendarService() {
 
@@ -13,28 +12,28 @@ module.exports = function CalendarService() {
 
     if (data !== null && data.shifts.length > 0) {
       // Insert blank days before the first date where necessary
-      const pad = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(getDayOfWeekString(data.shifts[0].startDateTime));
+      const pad = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(getDayOfWeekString(data.shifts[0].startDateTime))
       for (let i = 0, len = pad; i < len; i++) {
         data.shifts.unshift({
           'type': 'no-day'
-        });
+        })
       }
 
       // Insert blank days after the last date where necessary
-      const currentLen = data.shifts.length;
+      const currentLen = data.shifts.length
       for (let i = currentLen, len = currentLen > 35 ? 42 : 35; i < len; i++) {
         data.shifts.push({
           'type': 'no-day'
-        });
+        })
       }
     }
 
-    return data;
+    return data
   }
 
   function getDayOfWeekString(date) {
-    var dayOfWeek = new Date(date).getDay();    
-    return isNaN(dayOfWeek) ? null : ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayOfWeek];
+    var dayOfWeek = new Date(date).getDay()
+    return isNaN(dayOfWeek) ? null : ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayOfWeek]
   }
 
   /**
@@ -48,8 +47,8 @@ module.exports = function CalendarService() {
     // @TODO: This is here to support the API call but is this really needed?
     // Get the end date by retrieving the last date of the current month
     function getEndDate() {
-      const splitDate = startDate.split('-');
-      return `${splitDate[0]}-${splitDate[1]}-${new Date(splitDate[0], splitDate[1], 0).getDate()}`;
+      const splitDate = startDate.split('-')
+      return `${splitDate[0]}-${splitDate[1]}-${new Date(splitDate[0], splitDate[1], 0).getDate()}`
     } 
 
     return new Promise((resolve, reject) => {      
@@ -59,19 +58,19 @@ module.exports = function CalendarService() {
         } 
       }      
       ).then((response) => {
-        resolve(configureCalendar(response.data));
+        resolve(configureCalendar(response.data))
       }).catch((error) => {
-        logger.error(`CalendarService : getCalendarData Error : ${error}`);
+        logger.error(`CalendarService : getCalendarData Error : ${error}`)
         if (error.response) {
           if (error.response.status === 404) {
             resolve(null)
           }
         }
         else {
-          reject(error);
+          reject(error)
         }
-      });
-    });
+      })
+    })
   }
 
   /**
@@ -87,23 +86,23 @@ module.exports = function CalendarService() {
           'authorization': `Bearer ${accessToken}`
         } 
       }).then((response) => {            
-            resolve(response.data);
+            resolve(response.data)
       }).catch((error) => {
-        logger.error(`CalendarService : getCalendarData Error : ${error}`);
+        logger.error(`CalendarService : getCalendarData Error : ${error}`)
         if (error.response) {
           if (error.response.status === 404) {
             resolve(null)
           }
         }
         else {
-          reject(error);
+          reject(error)
         }
-      });
-    });
+      })
+    })
   }
 
   return {
     getCalendarData,
     getCalendarDetails
-  };
-};
+  }
+}

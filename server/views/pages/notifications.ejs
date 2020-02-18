@@ -44,12 +44,12 @@
                   </p>
                   <p class="govuk-body govuk-!-font-size-16"><%= notification.Description %></p>	
                 </li>
-              <% }); %>
+              <% }) %>
             <% } %>
           </ul>
         </div>
         <% if (data.total === 0) { %>
-          <span class="govuk-heading-m moj-!-text-align-center">No data available</span>
+          <span class="govuk-heading-m center-align">No data available</span>
         <% } else if (data.per_page > data.total) { %> 
         <% } else if (data.current_page < 2) { %>
           <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.next_page%>">Load older notifications</a>         

@@ -3,7 +3,7 @@
 .start.pid
 .port.tmp
 public
-assets/stylesheets/application.css
+assets/stylesheets/*.css
 lib/govuk_template.html
 govuk_modules
 node_modules/*
@@ -17,7 +17,8 @@ build-info.json
 .env
 yarn-error.log
 .eslintcache
-*.iml
-.vs
-.suo
-secrets.yaml
+
+reports/test-reports.html
+*/*.iml
+*secrets*.yaml
+!secrets-example.yaml

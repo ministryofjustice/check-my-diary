@@ -1,4 +1,4 @@
-const log = require('./log');
+const log = require('../log')
 
 const logError = (url, error, msg) => {
   if (error.response) {
@@ -11,7 +11,7 @@ const logError = (url, error, msg) => {
       stack: error.stack,
       data: error.response.data,
       message: error.message
-    }, msg);
+    }, msg)
   } else if (error.request) {
     // request is too big and best skipped
     log.error({
@@ -19,16 +19,14 @@ const logError = (url, error, msg) => {
       code: error.code,
       stack: error.stack,
       message: error.message
-    }, msg);
+    }, msg)
   } else {
     log.error({
       url,
       stack: error,
       message: error
-    }, msg);
+    }, msg)
   }
-};
+}
 
-module.exports = {
-  logError
-};
+module.exports = logError

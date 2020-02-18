@@ -1,129 +1,168 @@
-version: 2.1
+defaults: &defaults
+  working_directory: ~/mojdigitalstudio/form-app-starter
+  docker:
+    - image: circleci/node:10.15.3-browsers
+      environment:
+        GITHUB_TEAM_NAME_SLUG: digital-prison-services
+        APPLICATON_DEPLOY_NAME: node-form-builder
+        REPONAME: node-form-builder
 
-orbs:
-  aws-cli: circleci/aws-cli@0.1.13
-  kubernetes: circleci/kubernetes@0.4.0
-  helm: circleci/helm@0.1.2
+deploy_container_config: &deploy_container_config
+  docker:
+    - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
+      environment:
+        GITHUB_TEAM_NAME_SLUG: digital-prison-services
+        APPLICATON_DEPLOY_NAME: node-form-builder
+        REPONAME: node-form-builder
 
-executors:
-  cricleci_slave:
-    docker:
-      - image: circleci/python:3
-    working_directory: ~/project
+install_aws_cli: &install_aws_cli
+  run:
+    name: Set up aws
+    command: |
+      sudo apt-get update
+      sudo apt-get --assume-yes install python3-pip
+      sudo pip3 install awscli
+      $(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)
 
-commands:
-  setup_slave:
-    description: "Install tools and configure kubectl"
-    steps:
-      - aws-cli/install
-      - kubernetes/install
-      - helm/install-helm-client:
-          version: v2.14.3
-      - run:
-          name: Setup kubectl
-          command: |
-            echo -n "${KUBE_ENV_DEV_CACERT}" | base64 -d > /tmp/cluster_ca.crt
-            kubectl config set-cluster "${KUBE_ENV_DEV_NAME}" \
-              --certificate-authority="/tmp/cluster_ca.crt" \
-              --server="https://api.${KUBE_ENV_DEV_NAME}"
-            kubectl config set-credentials circleci \
-              --token="${KUBE_ENV_DEV_TOKEN}"
-            kubectl config set-context circleci \
-              --cluster="${KUBE_ENV_DEV_NAME}" \
-              --user="circleci" \
-              --namespace="${KUBE_ENV_DEV_NAMESPACE}"
-
-            # confirm setup is ok
-            kubectl config use-context circleci
+version: 2
 jobs:
-  build_docker_image:
-    executor: cricleci_slave
+  build:
+    <<: *defaults
     steps:
-      - setup_slave
-      - attach_workspace:
-          at: ~/project
-      - checkout:
-          path: ~/project/check-my-diary
-      - setup_remote_docker:
-          docker_layer_caching: true
+      - checkout
       - run:
-          name: Authenticate with AWS ECR registry
-          command: $(aws ecr get-login --no-include-email)
+          name: Update npm
+          command: 'sudo npm install -g npm@latest'
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
-          name: Build Docker image and publish it to AWS ECR registry
-          command: |
-            DATE=$(date '+%Y-%m-%d')
-            echo "${DATE}_${CIRCLE_BUILD_NUM}_${CIRCLE_SHA1}" >> ~/project/build_number
-            export BUILD_NUMBER=$(cat ~/project/build_number)
-
-            # Create Docker image and tag it
-            docker build check-my-diary/ \
-              --tag "${AWS_ECR_ENDPOINT}/check-my-diary/check-my-diary-dev:$BUILD_NUMBER" \
-              --label "build.version=$BUILD_NUMBER" \
-              --label "build.number=$CIRCLE_BUILD_NUM" \
-              --label "build.url=$CIRCLE_BUILD_URL" \
-              --label "build.gitref=$CIRCLE_SHA1"
-
-            if [[ "${CIRCLE_BRANCH}" == "master" ]] || [[ "${CIRCLE_BRANCH}" == "develop" ]]; then
-              # Tag Docker image and publish it to AWS ECR registry
-              docker tag ${AWS_ECR_ENDPOINT}/check-my-diary/check-my-diary-dev:$BUILD_NUMBER ${AWS_ECR_ENDPOINT}/check-my-diary/check-my-diary-dev:latest
-              docker push ${AWS_ECR_ENDPOINT}/check-my-diary/check-my-diary-dev:$BUILD_NUMBER
-              docker push ${AWS_ECR_ENDPOINT}/check-my-diary/check-my-diary-dev:latest
-
-              # Confirm the Docker image in AWS ECR registry exists and has the correct tags
-              aws ecr describe-images --repository-name check-my-diary/check-my-diary-dev --image-ids imageTag=${BUILD_NUMBER} --region ${AWS_DEFAULT_REGION}
-            fi
-      - persist_to_workspace:
-          root: ~/project
+          name: Install Dependencies
+          command: npm ci
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
-            - check-my-diary/*
-            - build_number
+            - node_modules
+      - run:
+          name: Linter check
+          command: npm run lint
+      - run:
+          command: |
+            npm run build
+            DATE=$(date '+%Y-%m-%d')
+            export BUILD_NUMBER=${DATE}.${CIRCLE_BUILD_NUM}
+            export GIT_REF="$CIRCLE_SHA1"
+            npm run record-build-info
+      - persist_to_workspace:
+          root: .
+          paths:
+            - node_modules
+            - build-info.json
+            - assets/stylesheets
 
-  deploy_to_kubernetes:
-    executor: cricleci_slave
+  test:
+    <<: *defaults
     steps:
-      - setup_slave
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: unit tests
+          command: npm run test
+      - store_test_results:
+          path: ./reports
+
+  build_docker:
+    <<: *defaults
+    steps:
+      - checkout
       - attach_workspace:
-          at: ~/project
+          at: ~/mojdigitalstudio/form-app-starter
+      - setup_remote_docker:
+          exclusive: true
+      - run:
+          name: Build container and publish to docker hub (master only)
+          command: |
+            VERSION=$(egrep buildNumber build-info.json  | awk -F"\"" '{print $4}')
+            GIT_REF=$(egrep gitRef build-info.json  | awk -F"\"" '{print $8}')
+            BUILD_VERSION=${VERSION}
+
+            docker build --rm=false . \
+                --build-arg BUILD_NUMBER=$VERSION \
+                --build-arg GIT_REF=$GIT_REF \
+                --tag "mojdigitalstudio/${REPONAME}:$BUILD_VERSION" \
+                --label "maintainer=hmpps@digital.justice.gov.uk" \
+                --label "build.number=$CIRCLE_BUILD_NUM" \
+                --label "build.url=$CIRCLE_BUILD_URL" \
+                --label "build.gitref=$GIT_REF"
+
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker tag mojdigitalstudio/${REPONAME}:$BUILD_VERSION mojdigitalstudio/${REPONAME}:latest
+            docker push mojdigitalstudio/${REPONAME}:$BUILD_VERSION
+            docker push mojdigitalstudio/${REPONAME}:latest
+
+  copy_image_to_ecs:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/mojdigitalstudio/form-app-starter
+      - setup_remote_docker
+      - *install_aws_cli
+      - run:
+          name: publish image to ecs
+          command: |
+            APP_VERSION=$(egrep buildNumber build-info.json  | awk -F"\"" '{print $4}')
+
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker pull mojdigitalstudio/${REPONAME}:$APP_VERSION
+
+            docker tag mojdigitalstudio/${REPONAME}:$APP_VERSION "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${REPONAME}:${APP_VERSION}"
+            docker tag "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${REPONAME}:${APP_VERSION}" "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${REPONAME}:latest"
+            login="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
+            ${login}
+            docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${REPONAME}:${APP_VERSION}"
+            docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${REPONAME}:latest"
+
+  deploy_dev:
+    <<: *deploy_container_config
+    steps:
+      - checkout
       - setup_remote_docker:
           docker_layer_caching: true
+      - attach_workspace:
+          at: ~/mojdigitalstudio/form-app-starter
       - run:
-          name: Deploy to kubernetes cluster
+          name: Kubectl deployment dev setup
           command: |
-            export BUILD_NUMBER=$(cat ~/project/build_number)
-
-            helm upgrade check-my-diary-dev ./check-my-diary/helm_deploy/check-my-diary-dev/. \
-              --install --wait --force --reset-values --timeout 360 \
-              --tiller-namespace=${KUBE_ENV_DEV_NAMESPACE} \
-              --namespace=${KUBE_ENV_DEV_NAMESPACE} \
-              --description="build.version=$BUILD_NUMBER, build.number=$CIRCLE_BUILD_NUM, build.url=$CIRCLE_BUILD_URL, build.gitref=$CIRCLE_SHA1" \
-              --set deploy.host=${KUBE_ENV_DEV_NAMESPACE}.apps.${KUBE_ENV_DEV_NAME} \
-              --set image.repository=${AWS_ECR_ENDPOINT}/check-my-diary/check-my-diary-dev \
-              --set image.tag=$BUILD_NUMBER \
-              --set replicaCount=1 \
-              --set applicationName=check-my-diary-dev \
-              --set appEnvironment=dev \
-              --set 'nodePort=3000'
-      - run:
-          name: Get the check-my-diary pod's info
+            $(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)
+            setup-kube-auth
+            kubectl config use-context development
+      - deploy:
+          name: Deploy to Dev
           command: |
-            kubectl get pods --namespace ${KUBE_ENV_DEV_NAMESPACE}
-            CMD_POD=$(kubectl get pods --namespace ${KUBE_ENV_DEV_NAMESPACE} | grep ${KUBE_ENV_DEV_NAMESPACE} | sed 's/ .*//') \
-            kubectl describe pod ${CMD_POD} --namespace ${KUBE_ENV_DEV_NAMESPACE}
-      - run:
-          name: List Helm deployments
-          command: helm list --all --tiller-namespace ${KUBE_ENV_DEV_NAMESPACE}
+            APP_VERSION=$(egrep buildNumber ~/mojdigitalstudio/form-app-starter/build-info.json  | awk -F"\"" '{print $4}')
+            AWS_ACCESS_KEY_ID=${SM_AWS_ACCESS_KEY_ID} AWS_SECRET_ACCESS_KEY=${SM_AWS_SECRET_ACCESS_KEY} aws secretsmanager --region ${AWS_DEFAULT_REGION} get-secret-value --secret-id sentence-planning-development | jq -r .SecretString | \
+            helm upgrade form-app-starter helm_deploy/form-app-starter/. \
+              --install --wait \
+              --tiller-namespace=${KUBE_ENV_DEVELOPMENT_NAMESPACE} \
+              --namespace=${KUBE_ENV_DEVELOPMENT_NAMESPACE} \
+              --values - \
+              --values ./helm_deploy/values-development.yaml \
+              --set image.repository="${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${REPONAME}" \
+              --set image.tag="${APP_VERSION}"
 
 workflows:
-  version: 2.1
-  build_and_deploy:
+  version: 2
+  build_test_deploy:
     jobs:
-      - build_docker_image
-      - deploy_to_kubernetes:
+      - build
+      - test:
           requires:
-            - build_docker_image
+            - build
+      - build_docker:
+          requires:
+            - test
           filters:
             branches:
               only:
                 - master
-                - develop

@@ -30,14 +30,14 @@
       </ul>
     </div>
 
-    <div class="calendar-controls moj-!-text-align-center govuk-!-margin-bottom-8">
+    <div class="calendar-controls center-align govuk-!-margin-bottom-8">
       <span class="govuk-heading-m govuk-!-margin-bottom-0"><%= getMonthAndYear(startDate) %></span>
       <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/calendar/<%=getPreviousMonth(startDate)%>">Last month</a>
       <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 app-link-!-border" href="/calendar/<%=getNextMonth(startDate)%>">Next month</a>
     </div>
    
     <% if (data == null || data.shifts.length == 0) { %>
-      <span class="govuk-heading-m moj-!-text-align-center">No data available</span>
+      <span class="govuk-heading-m center-align">No data available</span>
     <% } %>
     <ul class="calendar">
 
