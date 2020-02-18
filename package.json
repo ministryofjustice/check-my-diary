@@ -2,13 +2,13 @@
   "name": "check-my-diary",
   "version": "0.0.1",
   "description": "HMPPS check my diary",
-  "repository": "git@github.com:ministryofjustice/form-app-starter.git",
+  "repository": "git@github.com:ministryofjustice/check-my-diary.git",
   "license": "MIT",
   "scripts": {
     "start": "node server.js",
     "start:dev": "npm build && DEBUG=gov-starter-server* nodemon server.js | bunyan -o short",
     "build": "npm run css-build",
-    "css-build": "bin\\build-css",
+    "css-build": "./bin/build-css",
     "clean": "rm -rf assets/* .port.tmp *.log build/* uploads/* test-results.xml",
     "lint": "eslint . --cache --max-warnings 0",
     "test": "jest",
@@ -17,7 +17,7 @@
   },
   "engines": {
     "node": ">=10.15.3",
-    "npm": ">=6.4.1"
+    "npm": ">=6.13.4"
   },
   "jest": {
     "collectCoverageFrom": [

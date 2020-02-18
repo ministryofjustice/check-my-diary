@@ -1,9 +1,11 @@
-FROM node:13.5.0
+FROM node:13-buster-slim
 MAINTAINER HMPPS Digital Studio <info@digital.justice.gov.uk>
 ARG BUILD_NUMBER
 ARG GIT_REF
 
-RUN apt-get update && apt-get install -y make python
+RUN apt-get update \
+    && apt-get install curl make python -y \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV TZ=Europe/London
 RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone
@@ -22,6 +24,8 @@ ADD . .
 # Install AWS RDS Root cert
 RUN curl https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem > /app/root.cert
 RUN curl https://s3.amazonaws.com/rds-downloads/rds-ca-2015-root.pem >> /app/root.cert
+
+RUN ls -l bin
 
 RUN npm install && \
     npm run build && \
