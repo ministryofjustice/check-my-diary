@@ -4,13 +4,11 @@
     "node": true,
     "jest": true
   },
- "extends": ["airbnb-base", "plugin:prettier/recommended"],
+  "extends": ["airbnb-base", "prettier"],
   "rules": {
     "no-use-before-define": 0,
     "semi": 0,
+    "endOfLine": "auto",
     "comma-dangle": ["error", "always-multiline"]
   }
- }
-
-
-
+}

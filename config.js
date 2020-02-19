@@ -27,7 +27,7 @@ module.exports = {
     timeout: {
       response: 30000,
       deadline: 35000,
-    },    
+    },
     agent: {
       maxSockets: 100,
       maxFreeSockets: 10,
@@ -37,36 +37,36 @@ module.exports = {
     apiClientSecret: process.env.API_CLIENT_SECRET,
   },
   app: {
-    production: production,
+    production,
     notmEndpointUrl: process.env.NN_ENDPOINT_URL || 'http://localhost:3000/',
-    mailTo: process.env.MAIL_TO || 'feedback@digital.justice.gov.uk'
+    mailTo: process.env.MAIL_TO || 'feedback@digital.justice.gov.uk',
   },
   log: {
     fileLocation: process.env.LOG_FILE_LOCATION,
     level: process.env.LOG_LEVEL,
     period: process.env.LOG_PERIOD,
-    numberOfLogFilesToKeep: process.env.LOG_NUMBER_OF_FILES_TO_KEEP
+    numberOfLogFilesToKeep: process.env.LOG_NUMBER_OF_FILES_TO_KEEP,
   },
   maintenance: {
     start: process.env.MAINTENANCE_START,
-    end: process.env.MAINTENANCE_END
+    end: process.env.MAINTENANCE_END,
   },
   notify: {
     clientKey: process.env.NOTIFY_CLIENT_KEY,
     smsTemplateId: process.env.NOTIFY_SMS_TEMPLATE,
-    emailTemplateId: process.env.NOTIFY_EMAIL_TEMPLATE
+    emailTemplateId: process.env.NOTIFY_EMAIL_TEMPLATE,
   },
   hmppsCookie: {
     name: process.env.HMPPS_COOKIE_NAME || 'hmpps-session-dev',
     domain: process.env.HMPPS_COOKIE_DOMAIN || 'localhost',
-    expiryMinutes: process.env.WEB_SESSION_TIMEOUT_IN_MINUTES || 20
+    expiryMinutes: process.env.WEB_SESSION_TIMEOUT_IN_MINUTES || 20,
   },
   port: process.env.PORT,
   domain: process.env.HMPPS_COOKIE_DOMAIN,
   sessionTimeout: process.env.WEB_SESSION_TIMEOUT_IN_MINUTES,
   quantumAddresses: process.env.QUANTUM_ADDRESS,
-  rejectUnauthorized : process.env.REJECT_UNAUTHORIZED,
+  rejectUnauthorized: process.env.REJECT_UNAUTHORIZED,
   twoFactorAuthOn: process.env.TWO_FACT_AUTH_ON,
   notifyHealthCheckUrl: process.env.NOTIFY_HEALTH_CHECK_URL,
-  https: production
+  https: production,
 }

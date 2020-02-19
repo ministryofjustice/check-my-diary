@@ -10,8 +10,8 @@ const passport = require('passport')
 const bodyParser = require('body-parser')
 const cookieSession = require('cookie-session')
 const sassMiddleware = require('node-sass-middleware')
-const utilities = require('./helpers/utilities')
 
+const cookieParser = require('cookie-parser')
 const healthcheck = require('./services/healthcheck')
 const createLoginRouter = require('./routes/login')
 const createCalendarRouter = require('./routes/calendar')
@@ -22,7 +22,6 @@ const standardRouter = require('./routes/standardRouter')
 const logger = require('../log.js')
 const auth = require('./authentication/auth')
 const config = require('../config')
-const cookieParser = require('cookie-parser')
 
 const { authenticationMiddleware } = auth
 
@@ -31,9 +30,10 @@ const production = process.env.NODE_ENV === 'production'
 const testMode = process.env.NODE_ENV === 'test'
 
 if (config.rejectUnauthorized) {
-  process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = config.rejectUnauthorized
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = config.rejectUnauthorized
 }
 
+// eslint-disable-next-line no-shadow
 module.exports = function createApp({ signInService }, logger, calendarService, notificationService) {
   const app = express()
 
@@ -70,7 +70,7 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
       httpOnly: true,
       signed: true,
       overwrite: true,
-      sameSite: 'lax'
+      sameSite: 'lax',
     })
   )
 
@@ -119,17 +119,17 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
     '../assets',
     '../assets/stylesheets',
     '../node_modules/govuk-frontend/assets',
-    '../node_modules/govuk-frontend'
+    '../node_modules/govuk-frontend',
   ].forEach(dir => {
     app.use('/public', express.static(path.join(__dirname, dir), cacheControl))
   })
   ;['../node_modules/govuk_frontend_toolkit/images'].forEach(dir => {
-    app.use('/public/images/icons', express.static(path.join(__dirname, dir), cacheControl))   
+    app.use('/public/images/icons', express.static(path.join(__dirname, dir), cacheControl))
   })
 
   app.use('/public', express.static(path.join(__dirname, '../assets'), cacheControl))
-  app.use('*/images',express.static(path.join(__dirname, '../assets/images'), cacheControl))
-  
+  app.use('*/images', express.static(path.join(__dirname, '../assets/images'), cacheControl))
+
   // Express Routing Configuration
   app.get('/health', (req, res, next) => {
     healthcheck((err, result) => {
@@ -187,18 +187,6 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
     return next()
   })
 
-  // token refresh
-/*   app.use(async (req, res, next) => {
-    if (req.user) {
-      const timeToRefresh = new Date() > req.user.refreshTime
-      if (timeToRefresh) {
-        req.session.returnTo = req.originalUrl
-        return res.redirect('/login')
-      }
-    }
-    return next()
-  }) */
-
   // Update a value in the cookie so that the set-cookie will be sent.
   // Only changes every minute so that it's not sent with every request.
   app.use((req, res, next) => {
@@ -235,11 +223,14 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
 
   // Routing
   app.use('/', standardRoute(createLoginRouter()))
-  app.use('/calendar', authHandler, standardRoute(createCalendarRouter( logger, calendarService, notificationService )))
-  app.use('/details', authHandler, standardRoute(createCalendarDetailRouter( logger, calendarService )))
-  app.use('/notifications', authHandler, standardRoute(createNotificationRouter( logger, notificationService )))
-  app.use('/maintenance', authHandler, standardRoute(createMaintenanceRouter( logger, calendarService, notificationService )))
-
+  app.use('/calendar', authHandler, standardRoute(createCalendarRouter(logger, calendarService, notificationService)))
+  app.use('/details', authHandler, standardRoute(createCalendarDetailRouter(logger, calendarService)))
+  app.use('/notifications', authHandler, standardRoute(createNotificationRouter(logger, notificationService)))
+  app.use(
+    '/maintenance',
+    authHandler,
+    standardRoute(createMaintenanceRouter(logger, calendarService, notificationService))
+  )
 
   app.use((req, res, next) => {
     next(new Error('Not found'))
@@ -266,12 +257,11 @@ function renderErrors(error, req, res, next) {
 }
 
 function authHandler(req, res, next) {
-
-  if (req.user.apiUrl != undefined) {
+  if (req.user.apiUrl !== undefined) {
     if (new Date() > new Date(req.user.sessionExpires)) {
       res.redirect('/logout')
-    } else {    
-      next();
+    } else {
+      next()
     }
   } else {
     res.redirect('/login')

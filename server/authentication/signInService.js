@@ -1,30 +1,3 @@
-/* const log = require('../../log')
-
-function signInService() {
-  return {
-    getUser(token, refreshToken, expiresIn, username) {
-      log.info(`User profile for: ${username}`)
-
-      return {
-        token,
-        refreshToken,
-        refreshTime: getRefreshTime(expiresIn),
-        username,
-      }
-    },
-  }
-
-  function getRefreshTime(expiresIn) {
-    // arbitrary five minute before expiry time
-    const now = new Date()
-    const secondsUntilExpiry = now.getSeconds() + (expiresIn - 300)
-    return now.setSeconds(secondsUntilExpiry)
-  }
-}
-
-module.exports = signInService
- */
-
 const querystring = require('querystring')
 const superagent = require('superagent')
 const Agent = require('agentkeepalive')
@@ -67,7 +40,7 @@ function getOauthToken(requestSpec) {
     .auth(clientId, clientSecret)
     .set('content-type', 'application/x-www-form-urlencoded')
     .agent(keepaliveAgent)
-    .retry(2, (err, res) => {
+    .retry(2, err => {
       if (err) log.info(`Retry handler found API error with ${err.code} ${err.message}`)
       return undefined // retry handler only for logging retries, not to influence retry logic
     })
