@@ -42,6 +42,7 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - node_modules
+            - ~/.cache
       - run:
           name: Linter check
           command: npm run lint
