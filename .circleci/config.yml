@@ -1,7 +1,7 @@
 defaults: &defaults
   working_directory: ~/mojdigitalstudio/check-my-diary
   docker:
-    - image: circleci/node:10.15.3-browsers
+    - image: circleci/node:13-buster-browsers
       environment:
         GITHUB_TEAM_NAME_SLUG: digital-prison-services
         APPLICATON_DEPLOY_NAME: node-form-builder
