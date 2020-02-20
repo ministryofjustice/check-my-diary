@@ -5,8 +5,10 @@ const calendarService = require('./services/calendarService')
 const notificationService = require('./services/notificationService')
 
 // pass in dependencies of service
-const app = createApp({
-  signInService: createSignInService()},
+const app = createApp(
+  {
+    signInService: createSignInService(logger),
+  },
   logger,
   calendarService(),
   notificationService()
