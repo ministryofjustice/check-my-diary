@@ -83,7 +83,8 @@ jobs:
           name: Build container and publish to docker hub
           command: |
             DATE=$(date '+%Y-%m-%d')
-            APP_VERSION="${DATE}_${CIRCLE_BUILD_NUM}_${CIRCLE_SHA1}"
+            SHORT_SHA1=$(echo $CIRCLE_SHA1 | cut -c1-7)
+            APP_VERSION="${DATE}_${CIRCLE_BUILD_NUM}_${SHORT_SHA1}"
             echo $APP_VERSION | tee app-version.txt
             IMAGE_NAME="quay.io/hmpps/check-my-diary"
             docker build --rm=false . \
@@ -141,7 +142,9 @@ workflows:
             - build
           filters:
             branches:
-              only: master
+              only:
+                - master
+                - circle_updates
       - request-preprod-approval:
           type: approval
           requires:
