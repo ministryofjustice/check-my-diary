@@ -4,10 +4,11 @@ const asyncMiddleware = require('../middleware/asyncMiddleware')
 module.exports = (logger, calendarService, notificationService) => router => {
   function serviceUnavailable(req, res) {
     logger.error('Service unavailable')
+
     res.render('pages/index', {
       authError: false,
       apiUp: false,
-      csrfToken: req.csrfToken(),
+      csrfToken: res.locals.csrfToken,
     })
   }
 
@@ -18,12 +19,22 @@ module.exports = (logger, calendarService, notificationService) => router => {
       try {
         const shiftNotifications = await notificationService.getShiftNotifications(req.user.username)
 
+        // eslint-disable-next-line no-console
+        // console.log(JSON.stringify(shiftNotifications))
+
         const apiResponse = await calendarService.getCalendarData(
           req.user.apiUrl,
           req.user.username,
           req.params.date,
           req.user.token
         )
+
+        // eslint-disable-next-line no-console
+        // console.log(JSON.stringify(apiResponse))
+
+        // eslint-disable-next-line no-console
+        // console.log(`date : ${req.params.date}`)
+
         res.render('pages/calendar', {
           shiftNotifications,
           tab: 'Calendar',
@@ -31,7 +42,7 @@ module.exports = (logger, calendarService, notificationService) => router => {
           data: apiResponse,
           uid: req.user.username,
           employeeName: req.user.employeeName,
-          csrfToken: req.csrfToken(),
+          csrfToken: res.locals.csrfToken,
         })
       } catch (error) {
         serviceUnavailable(req, res)

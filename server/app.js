@@ -12,7 +12,7 @@ const cookieSession = require('cookie-session')
 const sassMiddleware = require('node-sass-middleware')
 
 const cookieParser = require('cookie-parser')
-const healthcheck = require('./services/healthcheck')
+const healthcheckFactory = require('./services/healthcheck')
 const createLoginRouter = require('./routes/login')
 const createCalendarRouter = require('./routes/calendar')
 const createCalendarDetailRouter = require('./routes/calendar-detail')
@@ -129,6 +129,8 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
 
   app.use('/public', express.static(path.join(__dirname, '../assets'), cacheControl))
   app.use('*/images', express.static(path.join(__dirname, '../assets/images'), cacheControl))
+
+  const healthcheck = healthcheckFactory(config.nomis.authUrl)
 
   // Express Routing Configuration
   app.get('/health', (req, res, next) => {

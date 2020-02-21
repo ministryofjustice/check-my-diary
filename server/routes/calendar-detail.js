@@ -6,7 +6,7 @@ module.exports = (logger, calendarService) => router => {
     res.render('pages/index', {
       authError: false,
       apiUp: false,
-      csrfToken: req.csrfToken(),
+      csrfToken: res.locals.csrfToken,
     })
   }
 
@@ -27,7 +27,7 @@ module.exports = (logger, calendarService) => router => {
           date: req.params.date,
           uid: req.user.username,
           employeeName: req.user.employeeName,
-          csrfToken: req.csrfToken(),
+          csrfToken: res.locals.csrfToken,
         })
       } catch (error) {
         serviceUnavailable(req, res)

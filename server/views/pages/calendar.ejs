@@ -2,160 +2,194 @@
 
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
-<head>
-  <% include ../partials/head %>
-</head>
-<body class="govuk-template__body">
+  <head>
+    <% include ../partials/head %>
+  </head>
+  <body class="govuk-template__body">
+    <% include ../partials/header %>
 
-<% include ../partials/header %>
+    <div class="govuk-width-container">
+      <% include ../partials/beta-banner %>
 
-<div class="govuk-width-container">
+      <main id="main-content" role="main">
+        <div class="tabs-wrapper">
+          <ul class="tabs">
+            <li><a class="active" href="">Calendar</a></li>
+            <li>
+              <a href="/notifications/1"
+                >Notifications <% if (shiftNotifications != null && shiftNotifications.length > 0) { %> <% if
+                (shiftNotifications.filter(function(x){return x.Read==false}).length > 0) { %>
 
-  <% include ../partials/beta-banner %>
+                <span class="loud font-xsmall" style="background-color: #df3034;padding: 0 5px;color: white;"
+                  ><%= shiftNotifications.filter(function(x){return x.Read==false}).length %> new</span
+                >
+                <% } %> <% } %>
+              </a>
+            </li>
+          </ul>
+        </div>
 
-  <main id="main-content"  role="main">
-    <div class="tabs-wrapper">
-      <ul class="tabs">
-        <li ><a class="active" href="">Calendar</a></li>
-        <li><a href="/notifications/1">Notifications
+        <div class="calendar-controls center-align govuk-!-margin-bottom-8">
+          <span class="govuk-heading-m govuk-!-margin-bottom-0"><%= getMonthAndYear(startDate) %></span>
+          <a
+            class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19"
+            href="/calendar/<%=getPreviousMonth(startDate)%>"
+            >Last month</a
+          >
+          <a
+            class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 app-link-!-border"
+            href="/calendar/<%=getNextMonth(startDate)%>"
+            >Next month</a
+          >
+        </div>
 
-          <% if (shiftNotifications != null && shiftNotifications.length > 0) { %>
-            <% if (shiftNotifications.filter(function(x){return x.Read==false}).length > 0) { %>
-
-              <span class="loud font-xsmall" style="background-color: #df3034;padding: 0 5px;color: white;"><%= shiftNotifications.filter(function(x){return x.Read==false}).length %> new</span>
-            <% } %>
-          <% } %>
-          
-      </a></li>
-      </ul>
-    </div>
-
-    <div class="calendar-controls center-align govuk-!-margin-bottom-8">
-      <span class="govuk-heading-m govuk-!-margin-bottom-0"><%= getMonthAndYear(startDate) %></span>
-      <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/calendar/<%=getPreviousMonth(startDate)%>">Last month</a>
-      <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 app-link-!-border" href="/calendar/<%=getNextMonth(startDate)%>">Next month</a>
-    </div>
-   
-    <% if (data == null || data.shifts.length == 0) { %>
-      <span class="govuk-heading-m center-align">No data available</span>
-    <% } %>
-    <ul class="calendar">
-
-      <% if (data != null && data.shifts.length > 0) { %>
-        <% getDays().forEach(function(day){ %>
+        <% if (data == null || data.shifts.length == 0) { %>
+        <span class="govuk-heading-m center-align">No data available</span>
+        <% } %>
+        <ul class="calendar">
+          <% if (data != null && data.shifts.length > 0) { %> <% getDays().forEach(function(day){ %>
 
           <li class="calendar-item calendar-header"><%= day %></li>
 
-        <% }); %>
-      <% } %>
-      
-      <% if (data != null && data.shifts.length > 0) { %>
-        <% data.shifts.forEach(function(day){ %>
+          <% }); %> <% } %> <% if (data != null && data.shifts.length > 0) { %> <% data.shifts.forEach(function(day){ %>
 
           <li
-            class="calendar-item <% if (day.type === 'Rest Day') { %>rest-day<% } else if (day.type === 'Holiday') { %>holiday<% } else if (day.type === 'Illness') { %>illness<% } else if (day.type === 'no-day') { %>no-day<% } else if (day.type === 'Shift') { %>shift <% } else if (day.type === 'Detached Duty') { %>detached-duty <% } else if (day.type === 'TU Officials Leave Days' || day.type === 'TU Officials Leave Hours') { %>tu-official<% } else { %>absence<% } %>">
+            class="calendar-item <% if (day.type === 'Rest Day') { %>rest-day<% } else if (day.type === 'Holiday') { %>holiday<% } else if (day.type === 'Illness') { %>illness<% } else if (day.type === 'no-day') { %>no-day<% } else if (day.type === 'Shift') { %>shift <% } else if (day.type === 'Detached Duty') { %>detached-duty <% } else if (day.type === 'TU Officials Leave Days' || day.type === 'TU Officials Leave Hours') { %>tu-official<% } else { %>absence<% } %>"
+          >
+            <% if (day.type === 'Shift') { %>
+            <a href="/details/<%= getDatePartFormatted(day.startDateTime) %>">
+              <div class="hide-1024-up">
+                <span class="day govuk-!-font-weight-bold"
+                  ><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime))
+                  %></span
+                >
+              </div>
+              <div class="hide-0-to-1024">
+                <span class="day govuk-!-font-weight-bold"
+                  ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
+                >
+              </div>
 
-            <% if (day.type === 'Shift') { %>            
-              <a href="/details/<%= getDatePartFormatted(day.startDateTime) %>">
-                <div class="hide-1024-up">
-                  <span class="day govuk-!-font-weight-bold"><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
-                </div>
-                <div class="hide-0-to-1024">
-                  <span class="day govuk-!-font-weight-bold"><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
-                </div>
-                
-                <% if (checkIfDateTimeIsNull(day.dailyStartDateTime)) { %>
-                  <span class="detail detail-finish-night">Finish <%= getTimeFromDate(day.dailyEndDateTime) %></span>
-                  <span class="detail-duration"><%= convertSecondsToHms(day.durationInSeconds) %></span>
-                <% } else if (checkIfDateTimeIsNull(day.dailyEndDateTime)) { %>
-                  <span class="detail detail-start-night-full">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
-                <% } else if (checkIfStartDateTimeBeforeEndDateTime(day.dailyStartDateTime, day.dailyEndDateTime)) { %>
-                  <span class="detail detail-finish-night">Finish <%= getTimeFromDate(day.dailyEndDateTime) %></span>
-                  <span class="detail-duration"><%= convertSecondsToHms(day.durationInSeconds) %></span>
-                  <span class="detail detail-start-night-half">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
-                <% } else { %>                 
-                  <span class="detail detail-start">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
-                  <span class="detail detail-finish">Finish <%= getTimeFromDate(day.dailyEndDateTime) %></span>
-                  <span class="detail-duration"><%= convertSecondsToHms(day.durationInSeconds) %></span>
-                <% } %>
-              </a>
-            <% } %>
-            
-            <% if (day.type === 'Rest Day') { %>
-              <div class="hide-1024-up">
-                <span class="day govuk-!-font-weight-bold"><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
-              </div>
-              <div class="hide-0-to-1024">
-                <span class="day govuk-!-font-weight-bold"><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
-              </div>
-              <span class="event govuk-!-font-size-19">Rest day</span>
-            <% } else if (day.type === 'Holiday') { %>
-              <div class="hide-1024-up">
-                <span class="day govuk-!-font-weight-bold"><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
-              </div>
-              <div class="hide-0-to-1024">
-                <span class="day govuk-!-font-weight-bold"><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
-              </div>
-              <span class="event event-holiday govuk-!-font-size-19">Holiday</span>
-            <% } else if (day.type === 'Illness') { %>
-              <div class="hide-1024-up">
-                <span class="day govuk-!-font-weight-bold"><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
-              </div>
-              <div class="hide-0-to-1024">
-                <span class="day govuk-!-font-weight-bold"><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
-              </div>
-              <span class="event event-illness govuk-!-font-size-19">Sick</span>
-            <% } else if (day.type === 'Detached Duty') { %>
-              <div class="hide-1024-up">
-                <span class="day govuk-!-font-weight-bold"><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
-              </div>
-              <div class="hide-0-to-1024">
-                <span class="day govuk-!-font-weight-bold"><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
-              </div>
-              <span class="event event-detach-duty govuk-!-font-size-19">Detached Duty</span>
-            <% } else if (day.type === 'TU Officials Leave Days' || day.type === 'TU Officials Leave Hours') { %>
-              <div class="hide-1024-up">
-                <span class="day govuk-!-font-weight-bold"><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
-              </div>
-              <div class="hide-0-to-1024">
-                <span class="day govuk-!-font-weight-bold"><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
-              </div>
-              <span class="event event-tu-official govuk-!-font-size-19"><%= day.type %></span>
-            <% } else if (day.type !== 'no-day' && day.type !== 'Shift' && day.startDateTime !== day.date + 'T00:00:00' && day.endDateTime !== day.date + 'T23:59:59') { %>              
-              <div class="hide-1024-up">
-                <span class="day govuk-!-font-weight-bold"><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
-              </div>
-              <div class="hide-0-to-1024">
-                <span class="day govuk-!-font-weight-bold"><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
-              </div>
-              <span class="event event-absence govuk-!-font-size-19"><%= day.type %></span>
+              <% if (checkIfDateTimeIsNull(day.dailyStartDateTime)) { %>
+              <span class="detail detail-finish-night">Finish <%= getTimeFromDate(day.dailyEndDateTime) %></span>
+              <span class="detail-duration"><%= convertSecondsToHms(day.durationInSeconds) %></span>
+              <% } else if (checkIfDateTimeIsNull(day.dailyEndDateTime)) { %>
+              <span class="detail detail-start-night-full">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
+              <% } else if (checkIfStartDateTimeBeforeEndDateTime(day.dailyStartDateTime, day.dailyEndDateTime)) { %>
+              <span class="detail detail-finish-night">Finish <%= getTimeFromDate(day.dailyEndDateTime) %></span>
+              <span class="detail-duration"><%= convertSecondsToHms(day.durationInSeconds) %></span>
+              <span class="detail detail-start-night-half">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
+              <% } else { %>
               <span class="detail detail-start">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
               <span class="detail detail-finish">Finish <%= getTimeFromDate(day.dailyEndDateTime) %></span>
               <span class="detail-duration"><%= convertSecondsToHms(day.durationInSeconds) %></span>
+              <% } %>
+            </a>
+            <% } %> <% if (day.type === 'Rest Day') { %>
+            <div class="hide-1024-up">
+              <span class="day govuk-!-font-weight-bold"
+                ><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime))
+                %></span
+              >
+            </div>
+            <div class="hide-0-to-1024">
+              <span class="day govuk-!-font-weight-bold"
+                ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
+              >
+            </div>
+            <span class="event govuk-!-font-size-19">Rest day</span>
+            <% } else if (day.type === 'Holiday') { %>
+            <div class="hide-1024-up">
+              <span class="day govuk-!-font-weight-bold"
+                ><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime))
+                %></span
+              >
+            </div>
+            <div class="hide-0-to-1024">
+              <span class="day govuk-!-font-weight-bold"
+                ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
+              >
+            </div>
+            <span class="event event-holiday govuk-!-font-size-19">Holiday</span>
+            <% } else if (day.type === 'Illness') { %>
+            <div class="hide-1024-up">
+              <span class="day govuk-!-font-weight-bold"
+                ><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime))
+                %></span
+              >
+            </div>
+            <div class="hide-0-to-1024">
+              <span class="day govuk-!-font-weight-bold"
+                ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
+              >
+            </div>
+            <span class="event event-illness govuk-!-font-size-19">Sick</span>
+            <% } else if (day.type === 'Detached Duty') { %>
+            <div class="hide-1024-up">
+              <span class="day govuk-!-font-weight-bold"
+                ><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime))
+                %></span
+              >
+            </div>
+            <div class="hide-0-to-1024">
+              <span class="day govuk-!-font-weight-bold"
+                ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
+              >
+            </div>
+            <span class="event event-detach-duty govuk-!-font-size-19">Detached Duty</span>
+            <% } else if (day.type === 'TU Officials Leave Days' || day.type === 'TU Officials Leave Hours') { %>
+            <div class="hide-1024-up">
+              <span class="day govuk-!-font-weight-bold"
+                ><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime))
+                %></span
+              >
+            </div>
+            <div class="hide-0-to-1024">
+              <span class="day govuk-!-font-weight-bold"
+                ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
+              >
+            </div>
+            <span class="event event-tu-official govuk-!-font-size-19"><%= day.type %></span>
+            <% } else if (day.type !== 'no-day' && day.type !== 'Shift' && day.startDateTime !== day.date + 'T00:00:00'
+            && day.endDateTime !== day.date + 'T23:59:59') { %>
+            <div class="hide-1024-up">
+              <span class="day govuk-!-font-weight-bold"
+                ><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime))
+                %></span
+              >
+            </div>
+            <div class="hide-0-to-1024">
+              <span class="day govuk-!-font-weight-bold"
+                ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
+              >
+            </div>
+            <span class="event event-absence govuk-!-font-size-19"><%= day.type %></span>
+            <span class="detail detail-start">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
+            <span class="detail detail-finish">Finish <%= getTimeFromDate(day.dailyEndDateTime) %></span>
+            <span class="detail-duration"><%= convertSecondsToHms(day.durationInSeconds) %></span>
             <% } else if (day.type !== 'no-day' && day.type !== 'Shift') { %>
-              <div class="hide-1024-up">
-                <span class="day govuk-!-font-weight-bold"><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
-              </div>
-              <div class="hide-0-to-1024">
-                <span class="day govuk-!-font-weight-bold"><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span>
-              </div>
-              <span class="event event-absence govuk-!-font-size-19"><%= day.type %></span>
+            <div class="hide-1024-up">
+              <span class="day govuk-!-font-weight-bold"
+                ><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime))
+                %></span
+              >
+            </div>
+            <div class="hide-0-to-1024">
+              <span class="day govuk-!-font-weight-bold"
+                ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
+              >
+            </div>
+            <span class="event event-absence govuk-!-font-size-19"><%= day.type %></span>
             <% } %>
-
           </li>
 
-          <% }); %>
-        <% } %>
-    </ul>
+          <% }); %> <% } %>
+        </ul>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <div class="govuk-clearfix"></div>
+      </main>
+    </div>
 
-    <div class="govuk-clearfix"></div>
-
-  </main>
-</div>
-
-<% include ../partials/footer %>
-
-</body>
+    <% include ../partials/footer %>
+  </body>
 </html>
-
-

@@ -44,7 +44,7 @@ module.exports = () => router => {
         res.redirect(`/calendar/${utilities.getStartMonth()}`)
       } else {
         logError(req.url, '2FA failure')
-        res.render('pages/two-factor-auth', { authError: true, csrfToken: req.csrfToken() })
+        res.render('pages/two-factor-auth', { authError: true, csrfToken: res.locals.csrfToken })
       }
     })
   )
@@ -108,7 +108,7 @@ module.exports = () => router => {
         res.render('pages/index', {
           authError: false,
           apiUp: isApiUp,
-          csrfToken: req.csrfToken(),
+          csrfToken: res.locals.csrfToken,
         })
         return
       }
@@ -165,7 +165,7 @@ module.exports = () => router => {
         req.user.apiUrl = userAuthentication.ApiUrl
         req.user.sessionExpires = new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000)
 
-        res.render('pages/two-factor-auth', { authError: false, csrfToken: req.csrfToken() })
+        res.render('pages/two-factor-auth', { authError: false, csrfToken: res.locals.csrfToken })
       } else {
         req.user.apiUrl = userAuthentication.ApiUrl
         req.user.sessionExpires = new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000)
@@ -187,7 +187,7 @@ module.exports = () => router => {
         authError: true,
         apiUp: isApiUp,
         authErrorText: utilities.getAuthErrorDescription(error),
-        csrfToken: req.csrfToken(),
+        csrfToken: res.locals.csrfToken,
       }
 
       logError(req.url, data, 'Login failure')

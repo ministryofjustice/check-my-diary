@@ -1,61 +1,58 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
-<head>
-  <% include ../partials/head %>
-  <script type="text/javascript">
-    function showHide() {
-      var pwd = document.getElementById('password');
-      var showButton = document.getElementById('show-password');
-      if (pwd.getAttribute('type') === 'password') {
-        pwd.setAttribute('type', 'text');        
-      } else {
-        pwd.setAttribute('type', 'password');        
+  <head>
+    <% include ../partials/head %>
+    <script type="text/javascript">
+      function showHide() {
+        var pwd = document.getElementById('password')
+        var showButton = document.getElementById('show-password')
+        if (pwd.getAttribute('type') === 'password') {
+          pwd.setAttribute('type', 'text')
+        } else {
+          pwd.setAttribute('type', 'password')
+        }
       }
-    }
-  </script>
-</head>
-<body class="govuk-template__body">
+    </script>
+  </head>
+  <body class="govuk-template__body">
+    <% include ../partials/header %>
 
-<% include ../partials/header %>
+    <div class="govuk-width-container">
+      <% include ../partials/beta-banner %>
 
-<div class="govuk-width-container">
+      <main id="main-content" class="govuk-main-wrapper" role="main">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            <% if (!apiUp || authError) { %>
 
-  <% include ../partials/beta-banner %>
-
-  <main id="main-content" class="govuk-main-wrapper" role="main">
-
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">        
-
-        <% if (!apiUp || authError) { %>
-
-          <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
-            <h2 class="govuk-error-summary__title" id="error-summary-title">
-              There is a problem
-            </h2>
-            <div class="govuk-error-summary__body">
-              <ul class="govuk-list govuk-error-summary__list">
-                <li>
-                  <% if (apiUp || authError) { %>
+            <div
+              class="govuk-error-summary"
+              aria-labelledby="error-summary-title"
+              role="alert"
+              tabindex="-1"
+              data-module="error-summary"
+            >
+              <h2 class="govuk-error-summary__title" id="error-summary-title">
+                There is a problem
+              </h2>
+              <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                  <li>
+                    <% if (apiUp || authError) { %>
                     <b><%= authErrorText %></b>
-                  <% } else { %>
-                    Service temporarily unavailable. Please try again later.
-                  <% } %>
-                </li>
-              </ul>
+                    <% } else { %> Service temporarily unavailable. Please try again later. <% } %>
+                  </li>
+                </ul>
+              </div>
             </div>
+
+            <% } %>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
           </div>
-
-        <% } %>       
-
-      </div>
-
+        </div>
+      </main>
     </div>
-  </main>
 
-</div>
-
-<% include ../partials/footer %>
-
-</body>
+    <% include ../partials/footer %>
+  </body>
 </html>

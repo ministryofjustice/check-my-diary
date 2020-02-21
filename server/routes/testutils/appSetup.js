@@ -9,39 +9,18 @@ const path = require('path')
 module.exports = route => {
   const app = express()
 
-  app.set('view engine', 'html')
-
-  const njkEnv = nunjucks.configure(
-    [
-      path.join(__dirname, '../../../server/views'),
-      'node_modules/govuk-frontend/',
-      'node_modules/govuk-frontend/components/',
-    ],
-    {
-      autoescape: true,
-      express: app,
-    }
-  )
-
-  njkEnv.addFilter('findError', (array, formFieldId) => {
-    const item = array.find(error => error.href === `#${formFieldId}`)
-    if (item) {
-      return {
-        text: item.text,
-      }
-    }
-    return null
-  })
+  app.set('views', path.join(__dirname, '../../views'))
+  app.set('view engine', 'ejs')
 
   app.use((req, res, next) => {
-    req.user = {
+    ;(req.user = {
       firstName: 'first',
       lastName: 'last',
       userId: 'id',
       token: 'token',
       username: 'user1',
-    }
-    next()
+    }),
+      next()
   })
   app.use(cookieSession({ keys: [''] }))
   app.use(bodyParser.json())

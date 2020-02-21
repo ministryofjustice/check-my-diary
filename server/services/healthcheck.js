@@ -1,28 +1,30 @@
-const { dbCheck, authCheck } = require('../data/healthcheck')
+const { dbCheck, serviceCheckFactory } = require('../data/healthcheck')
 
-function db() {
-  return dbCheck()
+const db = () =>
+  dbCheck()
     .then(() => ({ name: 'db', status: 'ok', message: 'OK' }))
     .catch(err => ({ name: 'db', status: 'ERROR', message: err.message }))
+
+const service = (name, url) => {
+  const check = serviceCheckFactory(name, url)
+  return () =>
+    check()
+      .then(result => ({ name, status: 'ok', message: result }))
+      .catch(err => ({ name, status: 'ERROR', message: err }))
 }
 
-function auth() {
-  return authCheck()
-    .then(result => ({ name: 'auth', status: 'ok', message: result }))
-    .catch(err => ({ name: 'auth', status: 'ERROR', message: err }))
-}
+module.exports = function healthcheckFactory(authUrl) {
+  const checks = [db, service('auth', `${authUrl}/health/ping`)]
 
-module.exports = function healthcheck(callback) {
-  const checks = [db, auth]
-
-  return Promise.all(checks.map(fn => fn())).then(checkResults => {
-    const allOk = checkResults.every(item => item.status === 'ok')
-    const result = {
-      healthy: allOk,
-      checks: checkResults.reduce(gatherCheckInfo, {}),
-    }
-    callback(null, addAppInfo(result))
-  })
+  return callback =>
+    Promise.all(checks.map(fn => fn())).then(checkResults => {
+      const allOk = checkResults.every(item => item.status === 'ok')
+      const result = {
+        healthy: allOk,
+        checks: checkResults.reduce(gatherCheckInfo, {}),
+      }
+      callback(null, addAppInfo(result))
+    })
 }
 
 function gatherCheckInfo(total, currentValue) {

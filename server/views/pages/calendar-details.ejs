@@ -149,6 +149,7 @@
         <% } else { %>
           <span class="govuk-heading-m center-align">No data available</span>
         <% } %>
+		<input type="hidden" name="_csrf" value="<%= csrfToken %>" />
     </div>
   </main>
 

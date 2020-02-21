@@ -12,7 +12,7 @@ module.exports = (logger, notificationService) => router => {
     res.render('pages/index', {
       authError: false,
       apiUp: false,
-      csrfToken: req.csrfToken(),
+      csrfToken: res.locals.csrfToken,
     })
   }
 
@@ -29,7 +29,7 @@ module.exports = (logger, notificationService) => router => {
           userNotificationSettings: null,
           uid: req.user.username,
           employeeName: req.user.employeeName,
-          csrfToken: req.csrfToken(),
+          csrfToken: res.locals.csrfToken,
         })
       } else {
         res.render('pages/notification-settings', {
@@ -37,7 +37,7 @@ module.exports = (logger, notificationService) => router => {
           userNotificationSettings: userNotificationSettings[0],
           uid: req.user.username,
           employeeName: req.user.employeeName,
-          csrfToken: req.csrfToken(),
+          csrfToken: res.locals.csrfToken,
         })
       }
     })
@@ -55,7 +55,7 @@ module.exports = (logger, notificationService) => router => {
         .optional({ checkFalsy: true })
         .isMobilePhone('en-GB'),
     ],
-    async (req, res) => {
+    asyncMiddleware(async (req, res) => {
       logger.info('POST notifications settings')
 
       // Finds the validation errors in this request and wraps them in an object with handy functions
@@ -75,7 +75,7 @@ module.exports = (logger, notificationService) => router => {
           userNotificationSettings: null,
           uid: req.user.username,
           employeeName: req.user.employeeName,
-          csrfToken: req.csrfToken(),
+          csrfToken: res.locals.csrfToken,
         })
       } else {
         await notificationService.updateUserNotificationSettings(
@@ -87,7 +87,7 @@ module.exports = (logger, notificationService) => router => {
         )
         res.redirect('/notifications/1')
       }
-    }
+    })
   )
 
   router.get(
@@ -126,7 +126,7 @@ module.exports = (logger, notificationService) => router => {
             tab: 'Notifications',
             uid: req.user.username,
             employeeName: req.user.employeeName,
-            csrfToken: req.csrfToken(),
+            csrfToken: res.locals.csrfToken,
           })
         })
 
