@@ -64,7 +64,7 @@ jobs:
           version: v2.13.1
       - run:
           name: Run helm lint
-          command: helm lint check-my-diary --values=values-dev.yaml --values=secrets-example.yaml
+          command: helm lint check-my-diary --values=values-dev.yaml
           working_directory: helm_deploy
 
   build:
