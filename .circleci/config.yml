@@ -140,6 +140,7 @@ workflows:
       - deploy_dev:
           requires:
             - build
+            - validate 
           filters:
             branches:
               only:

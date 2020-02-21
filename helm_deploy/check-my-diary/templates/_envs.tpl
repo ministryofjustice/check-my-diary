@@ -61,25 +61,25 @@ env:
   - name: "DATABASE_HOST"
     valueFrom:
       secretKeyRef:
-        name: check-my-diary-rds-{{ .Values.appEnvironment }}-env
+        name: check-my-diary-rds
         key: rds_instance_address
 
   - name: "DATABASE_NAME"
     valueFrom:
       secretKeyRef:
-        name: check-my-diary-rds-{{ .Values.appEnvironment }}-env
+        name: check-my-diary-rds
         key: database_name
 
   - name: "DATABASE_USER"
     valueFrom:
       secretKeyRef:
-        name: check-my-diary-rds-{{ .Values.appEnvironment }}-env
+        name: check-my-diary-rds
         key: database_username
 
   - name: "DATABASE_PASSWORD"
     valueFrom:
       secretKeyRef:
-        name: check-my-diary-rds-{{ .Values.appEnvironment }}-env
+        name: check-my-diary-rds
         key: database_password
 
   - name: QUANTUM_ADDRESS
