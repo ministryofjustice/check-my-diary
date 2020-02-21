@@ -21,3 +21,5 @@ yarn-error.log
 .vs
 .suo
 secrets.yaml
+*secrets*.yaml
+!secret-example.yaml
