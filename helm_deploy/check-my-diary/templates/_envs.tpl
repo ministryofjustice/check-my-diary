@@ -7,19 +7,19 @@ env:
   - name: API_CLIENT_ID
     valueFrom:
       secretKeyRef:
-        name: {{ template "app.name" . }}
+        name: check-my-diary-app
         key: API_CLIENT_ID
 
   - name: API_CLIENT_SECRET
     valueFrom:
       secretKeyRef:
-        name: {{ template "app.name" . }}
+        name: check-my-diary-app
         key: API_CLIENT_SECRET
 
   - name: API_AUTH_ENDPOINT_URL
     valueFrom:
       secretKeyRef:
-        name: {{ template "app.name" . }}
+        name: check-my-diary-app
         key: API_AUTH_ENDPOINT_URL
 
   - name: TWO_FACT_AUTH_ON
@@ -31,7 +31,7 @@ env:
   - name: NOTIFY_CLIENT_KEY
     valueFrom:
       secretKeyRef:
-        name: {{ template "app.name" . }}
+        name: check-my-diary-app 
         key: NOTIFY_CLIENT_KEY
 
   - name: NOTIFY_SMS_TEMPLATE
@@ -43,7 +43,7 @@ env:
   - name: GOOGLE_ANALYTICS_ID
     valueFrom:
       secretKeyRef:
-        name: {{ template "app.name" . }}
+        name: check-my-diary-app
         key: GOOGLE_ANALYTICS_ID
 
   - name: WEB_SESSION_TIMEOUT_IN_MINUTES
