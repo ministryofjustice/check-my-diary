@@ -40,7 +40,6 @@ commands:
               --install --wait --reset-values --timeout 5m --history-max 10 \
               --namespace=${KUBE_ENV_NAMESPACE} \
               --values ~/git/helm_deploy/values-<< parameters.env >>.yaml \
-              --values - \
               --set image.tag="${APP_VERSION}"
 executors:
   deployer:
