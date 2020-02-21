@@ -3,7 +3,6 @@ commands:
   setup:
     description: "Install tools and configure kubectl"
     steps:
-      - aws-cli/install
       - kubernetes/install
       - helm/install-helm-client:
           version: v3.0.2
@@ -37,7 +36,6 @@ commands:
             APP=check-my-diary
             APP_VERSION=$(cat app-version.txt)
             sed -i "s/appVersion: \".*\"/appVersion: \"${APP_VERSION}\"/g" ~/git/helm_deploy/${APP}/Chart.yaml
-            aws secretsmanager get-secret-value --secret-id ${AWS_SECRET_NAME} | jq -r .SecretString | \
             helm upgrade ${APP} ~/git/helm_deploy/${APP}/. \
               --install --wait --reset-values --timeout 5m --history-max 10 \
               --namespace=${KUBE_ENV_NAMESPACE} \
@@ -55,7 +53,6 @@ executors:
     working_directory: ~/app
 
 orbs:
-  aws-cli: circleci/aws-cli@0.1.18
   kubernetes: circleci/kubernetes@0.10.1
   helm: circleci/helm@0.2.3
 
