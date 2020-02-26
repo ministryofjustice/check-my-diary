@@ -22,6 +22,12 @@ env:
         name: check-my-diary-app
         key: API_AUTH_ENDPOINT_URL
 
+  - name: SESSION_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: check-my-diary-app
+        key: SESSION_SECRET
+
   - name: TWO_FACT_AUTH_ON
     value: {{ .Values.env.TWO_FACT_AUTH_ON | quote }}
 
