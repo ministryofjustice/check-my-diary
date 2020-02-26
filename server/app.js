@@ -196,7 +196,7 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
     next()
   })
 
-  const authLogoutUrl = `${config.nomis.authExternalUrl}/logout?client_id=${config.nomis.apiClientId}&redirect_uri=${config.domain}`
+  const authLogoutUrl = `${config.nomis.authExternalUrl}/logout?client_id=${config.nomis.apiClientId}&redirect_uri=${config.app.url}`
 
   app.get('/autherror', (req, res) => {
     res.status(401)
