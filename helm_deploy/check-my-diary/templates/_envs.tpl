@@ -37,7 +37,7 @@ env:
   - name: NOTIFY_CLIENT_KEY
     valueFrom:
       secretKeyRef:
-        name: check-my-diary-app 
+        name: check-my-diary-app
         key: NOTIFY_CLIENT_KEY
 
   - name: NOTIFY_SMS_TEMPLATE
@@ -87,6 +87,9 @@ env:
       secretKeyRef:
         name: check-my-diary-rds
         key: database_password
+
+  - name: DB_SSL_ENABLED
+    value: "true"
 
   - name: QUANTUM_ADDRESS
     value: {{ .Values.env.QUANTUM_ADDRESS | quote }}

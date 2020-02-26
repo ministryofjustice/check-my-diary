@@ -81,18 +81,9 @@ jobs:
       - run:
           name: Run Tests
           command: npm run test
-      - run: NODE_ENV=production npm run build
-      - run: |
-          DATE=$(date '+%Y-%m-%d')
-          export BUILD_NUMBER=${DATE}.${CIRCLE_BUILD_NUM}
-          export GIT_REF="${CIRCLE_SHA1}"
-          npm run record-build-info
-      - persist_to_workspace:
-          root: .
-          paths:
-            - node_modules
-            - build-info.json
-            - assets/stylesheets
+      - run:
+          name: Build Application
+          command: NODE_ENV=production npm run build
 
   build:
     executor: deployer
@@ -120,13 +111,11 @@ jobs:
               --label "build.url=$CIRCLE_BUILD_URL" \
               --label "build.gitref=$CIRCLE_SHA1"
 
-            if [[ "${CIRCLE_BRANCH}" == "master" ]]; then
-              #push to quay.io
-              docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
-              docker tag "${IMAGE_NAME}:$APP_VERSION" "${IMAGE_NAME}:latest"
-              docker push "${IMAGE_NAME}:${APP_VERSION}"
-              docker push "${IMAGE_NAME}:latest"
-            fi
+            #push to quay.io
+            docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
+            docker tag "${IMAGE_NAME}:$APP_VERSION" "${IMAGE_NAME}:latest"
+            docker push "${IMAGE_NAME}:${APP_VERSION}"
+            docker push "${IMAGE_NAME}:latest"
 
   deploy_dev:
     executor: deployer
@@ -157,7 +146,7 @@ workflows:
             branches:
               only:
                 - master
-                - feature/single_sign_on
+                - develop
       - deploy_dev:
           requires:
             - build
@@ -166,6 +155,7 @@ workflows:
             branches:
               only:
                 - master
+                - develop
       - request-preprod-approval:
           type: approval
           requires:
@@ -182,3 +172,7 @@ workflows:
           context: check-my-diary-prod
           requires:
             - request-prod-approval
+          filters:
+            branches:
+              only:
+                - master
