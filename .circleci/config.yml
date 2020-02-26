@@ -1,168 +1,158 @@
-defaults: &defaults
-  working_directory: ~/mojdigitalstudio/check-my-diary
-  docker:
-    - image: circleci/node:13-buster-browsers
-      environment:
-        GITHUB_TEAM_NAME_SLUG: digital-prison-services
-        APPLICATON_DEPLOY_NAME: check-my-diary
-        REPONAME: check-my-diary
+version: 2.1
+commands:
+  setup:
+    description: "Install tools and configure kubectl"
+    steps:
+      - kubernetes/install
+      - helm/install-helm-client:
+          version: v3.0.2
+      - run:
+          name: Setup kubectl
+          command: |
+            echo -n "${KUBE_ENV_CACERT}" | base64 -d > /tmp/cluster_ca.crt
+            kubectl config set-cluster "${KUBE_ENV_NAME}" \
+              --certificate-authority="/tmp/cluster_ca.crt" \
+              --server="https://api.${KUBE_ENV_NAME}"
+            kubectl config set-credentials circleci \
+              --token="${KUBE_ENV_TOKEN}"
+            kubectl config set-context circleci \
+              --cluster="${KUBE_ENV_NAME}" \
+              --user="circleci" \
+              --namespace="${KUBE_ENV_NAMESPACE}"
+            kubectl config use-context circleci
+  deploy_to_env:
+    parameters:
+      env:
+        type: string
+    steps:
+      - setup
+      - checkout:
+          path: ~/git
+      - attach_workspace:
+          at: ~/app
+      - deploy:
+          name: Deploy to << parameters.env >>
+          command: |
+            APP=check-my-diary
+            APP_VERSION=$(cat app-version.txt)
+            sed -i "s/appVersion: \".*\"/appVersion: \"${APP_VERSION}\"/g" ~/git/helm_deploy/${APP}/Chart.yaml
+            helm upgrade ${APP} ~/git/helm_deploy/${APP}/. \
+              --install --wait --reset-values --timeout 5m --history-max 10 \
+              --namespace=${KUBE_ENV_NAMESPACE} \
+              --values ~/git/helm_deploy/values-<< parameters.env >>.yaml \
+              --set image.tag="${APP_VERSION}"
+executors:
+  deployer:
+    docker:
+      - image: circleci/python:3
+    working_directory: ~/app
+  builder:
+    docker:
+      - image: circleci/node:13-buster-browsers
+    working_directory: ~/app
 
-deploy_container_config: &deploy_container_config
-  docker:
-    - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
-      environment:
-        GITHUB_TEAM_NAME_SLUG: digital-prison-services
-        APPLICATON_DEPLOY_NAME: check-my-diary
-        REPONAME: check-my-diary
+orbs:
+  kubernetes: circleci/kubernetes@0.10.1
+  helm: circleci/helm@0.2.3
 
-install_aws_cli: &install_aws_cli
-  run:
-    name: Set up aws
-    command: |
-      sudo apt-get update
-      sudo apt-get --assume-yes install python3-pip
-      sudo pip3 install awscli
-      $(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)
-
-version: 2
 jobs:
-  build:
-    <<: *defaults
+  validate:
+    executor: builder
     steps:
       - checkout
+      - helm/install-helm-client:
+          version: v2.13.1
       - run:
-          name: Update npm
-          command: 'sudo npm install -g npm@latest'
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
+          name: Run helm lint
+          command: helm lint check-my-diary --values=values-dev.yaml
+          working_directory: helm_deploy
+
+  build:
+    executor: deployer
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/app
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run:
-          name: Install Dependencies
-          command: npm ci
-      - save_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-          paths:
-            - node_modules
-      - run:
-          name: Linter check
-          command: npm run lint
-      - run:
+          name: Build container and publish to docker hub
           command: |
-            npm run build
             DATE=$(date '+%Y-%m-%d')
-            export BUILD_NUMBER=${DATE}.${CIRCLE_BUILD_NUM}
-            export GIT_REF="$CIRCLE_SHA1"
-            npm run record-build-info
+            SHORT_SHA1=$(echo $CIRCLE_SHA1 | cut -c1-7)
+            APP_VERSION="${DATE}_${CIRCLE_BUILD_NUM}_${SHORT_SHA1}"
+            echo $APP_VERSION | tee app-version.txt
+            IMAGE_NAME="quay.io/hmpps/check-my-diary"
+            docker build --rm=false . \
+              --tag "${IMAGE_NAME}:${APP_VERSION}" \
+              --label "app.version=$APP_VERSION" \
+              --label "build.version=$APP_VERSION" \
+              --label "build.number=$CIRCLE_BUILD_NUM" \
+              --label "build.url=$CIRCLE_BUILD_URL" \
+              --label "build.gitref=$CIRCLE_SHA1"
+
+            if [[ "${CIRCLE_BRANCH}" == "master" ]]; then
+              #push to quay.io
+              docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
+              docker tag "${IMAGE_NAME}:$APP_VERSION" "${IMAGE_NAME}:latest"
+              docker push "${IMAGE_NAME}:${APP_VERSION}"
+              docker push "${IMAGE_NAME}:latest"
+            fi
       - persist_to_workspace:
           root: .
           paths:
-            - node_modules
-            - build-info.json
-            - assets/stylesheets
-
-  test:
-    <<: *defaults
-    steps:
-      - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-      - run:
-          name: unit tests
-          command: npm run test
-      - store_test_results:
-          path: ./reports
-
-  build_docker:
-    <<: *defaults
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ~/mojdigitalstudio/check-my-diary
-      - setup_remote_docker:
-          exclusive: true
-      - run:
-          name: Build container and publish to docker hub (master only)
-          command: |
-            VERSION=$(egrep buildNumber build-info.json  | awk -F"\"" '{print $4}')
-            GIT_REF=$(egrep gitRef build-info.json  | awk -F"\"" '{print $8}')
-            BUILD_VERSION=${VERSION}
-
-            docker build --rm=false . \
-                --build-arg BUILD_NUMBER=$VERSION \
-                --build-arg GIT_REF=$GIT_REF \
-                --tag "mojdigitalstudio/${REPONAME}:$BUILD_VERSION" \
-                --label "maintainer=hmpps@digital.justice.gov.uk" \
-                --label "build.number=$CIRCLE_BUILD_NUM" \
-                --label "build.url=$CIRCLE_BUILD_URL" \
-                --label "build.gitref=$GIT_REF"
-
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker tag mojdigitalstudio/${REPONAME}:$BUILD_VERSION mojdigitalstudio/${REPONAME}:latest
-            docker push mojdigitalstudio/${REPONAME}:$BUILD_VERSION
-            docker push mojdigitalstudio/${REPONAME}:latest
-
-  copy_image_to_ecs:
-    <<: *defaults
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ~/mojdigitalstudio/check-my-diary
-      - setup_remote_docker
-      - *install_aws_cli
-      - run:
-          name: publish image to ecs
-          command: |
-            APP_VERSION=$(egrep buildNumber build-info.json  | awk -F"\"" '{print $4}')
-
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker pull mojdigitalstudio/${REPONAME}:$APP_VERSION
-
-            docker tag mojdigitalstudio/${REPONAME}:$APP_VERSION "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${REPONAME}:${APP_VERSION}"
-            docker tag "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${REPONAME}:${APP_VERSION}" "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${REPONAME}:latest"
-            login="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
-            ${login}
-            docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${REPONAME}:${APP_VERSION}"
-            docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${REPONAME}:latest"
+            - app-version.txt
 
   deploy_dev:
-    <<: *deploy_container_config
+    executor: deployer
     steps:
-      - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - attach_workspace:
-          at: ~/mojdigitalstudio/check-my-diary
-      - run:
-          name: Kubectl deployment dev setup
-          command: |
-            $(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)
-            setup-kube-auth
-            kubectl config use-context development
-      - deploy:
-          name: Deploy to Dev
-          command: |
-            APP_VERSION=$(egrep buildNumber ~/mojdigitalstudio/check-my-diary/build-info.json  | awk -F"\"" '{print $4}')
-            AWS_ACCESS_KEY_ID=${SM_AWS_ACCESS_KEY_ID} AWS_SECRET_ACCESS_KEY=${SM_AWS_SECRET_ACCESS_KEY} aws secretsmanager --region ${AWS_DEFAULT_REGION} get-secret-value --secret-id sentence-planning-development | jq -r .SecretString | \
-            helm upgrade check-my-diary helm_deploy/check-my-diary/. \
-              --install --wait \
-              --tiller-namespace=${KUBE_ENV_DEVELOPMENT_NAMESPACE} \
-              --namespace=${KUBE_ENV_DEVELOPMENT_NAMESPACE} \
-              --values - \
-              --values ./helm_deploy/values-development.yaml \
-              --set image.repository="${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${REPONAME}" \
-              --set image.tag="${APP_VERSION}"
+      - deploy_to_env:
+          env: "dev"
+  deploy_preprod:
+    executor: deployer
+    steps:
+      - deploy_to_env:
+          env: "preprod"
+  deploy_prod:
+    executor: deployer
+    steps:
+      - deploy_to_env:
+          env: "prod"
 
 workflows:
   version: 2
-  build_test_deploy:
+  build-test-and-deploy:
     jobs:
-      - build
-      - test:
-          requires:
-            - build
-      - build_docker:
-          requires:
-            - test
+      - validate:
+          filters:
+            tags:
+              ignore: /.*/
+      - build:
           filters:
             branches:
               only:
                 - master
+      - deploy_dev:
+          requires:
+            - build
+            - validate 
+          filters:
+            branches:
+              only:
+                - master
+      - request-preprod-approval:
+          type: approval
+          requires:
+            - deploy_dev
+      - deploy_preprod:
+          context: check-my-diary-preprod
+          requires:
+            - request-preprod-approval
+      - request-prod-approval:
+          type: approval
+          requires:
+            - deploy_preprod
+      - deploy_prod:
+          context: check-my-diary-prod
+          requires:
+            - request-prod-approval
