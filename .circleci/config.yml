@@ -91,7 +91,7 @@ jobs:
               --label "build.url=$CIRCLE_BUILD_URL" \
               --label "build.gitref=$CIRCLE_SHA1"
 
-            if [[ "${CIRCLE_BRANCH}" == "master" ]] || [[ "${CIRCLE_BRANCH}" == "circle_updates" ]]; then
+            if [[ "${CIRCLE_BRANCH}" == "master" ]]; then
               #push to quay.io
               docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
               docker tag "${IMAGE_NAME}:$APP_VERSION" "${IMAGE_NAME}:latest"
@@ -132,7 +132,6 @@ workflows:
             branches:
               only:
                 - master
-                - circle_updates
       - deploy_dev:
           requires:
             - build
@@ -141,7 +140,6 @@ workflows:
             branches:
               only:
                 - master
-                - circle_updates
       - request-preprod-approval:
           type: approval
           requires:
