@@ -34,7 +34,7 @@ commands:
           name: Deploy to << parameters.env >>
           command: |
             APP=check-my-diary
-            APP_VERSION=$(cat app-version.txt)
+            APP_VERSION=$(egrep buildNumber build-info.json  | awk -F"\"" '{print $4}')
             sed -i "s/appVersion: \".*\"/appVersion: \"${APP_VERSION}\"/g" ~/git/helm_deploy/${APP}/Chart.yaml
             helm upgrade ${APP} ~/git/helm_deploy/${APP}/. \
               --install --wait --reset-values --timeout 5m --history-max 10 \
@@ -111,11 +111,18 @@ jobs:
               --label "build.url=$CIRCLE_BUILD_URL" \
               --label "build.gitref=$CIRCLE_SHA1"
 
+            # Copy build-info.json from image
+            docker run -it --rm "${IMAGE_NAME}:${APP_VERSION}" cat /app/build-info.json > build-info.json
+
             #push to quay.io
             docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
             docker tag "${IMAGE_NAME}:$APP_VERSION" "${IMAGE_NAME}:latest"
             docker push "${IMAGE_NAME}:${APP_VERSION}"
             docker push "${IMAGE_NAME}:latest"
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build-info.json
 
   deploy_dev:
     executor: deployer
@@ -168,6 +175,10 @@ workflows:
           type: approval
           requires:
             - deploy_preprod
+          filters:
+            branches:
+              only:
+                - master
       - deploy_prod:
           context: check-my-diary-prod
           requires:
