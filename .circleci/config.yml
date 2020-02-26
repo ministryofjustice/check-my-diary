@@ -56,45 +56,6 @@ orbs:
   helm: circleci/helm@0.2.3
 
 jobs:
-
-validate:
-  executor: builder
-  steps:
-    - checkout
-    - helm/install-helm-client:
-        version: v2.13.1
-    - run:
-        name: Run helm lint
-        command: helm lint check-my-diary --values=values-dev.yaml
-        working_directory: helm_deploy
-    - restore_cache:
-        key: dependency-cache-{{ checksum "package-lock.json" }}
-    - run:
-        name: Install Dependencies
-        command: npm ci
-    - save_cache:
-        key: dependency-cache-{{ checksum "package-lock.json" }}
-        paths:
-          - ./node_modules
-    - run:
-        name: Run eslint
-        command: npm run lint
-    - run:
-        name: Run Tests
-        command: npm run test
-    - run: NODE_ENV=production npm run build
-    - run: |
-        DATE=$(date '+%Y-%m-%d')
-        export BUILD_NUMBER=${DATE}.${CIRCLE_BUILD_NUM}
-        export GIT_REF="${CIRCLE_SHA1}"
-        npm run record-build-info
-    - persist_to_workspace:
-        root: .
-        paths:
-          - node_modules
-          - build-info.json
-          - assets/stylesheets
-
   validate:
     executor: builder
     steps:
@@ -105,6 +66,33 @@ validate:
           name: Run helm lint
           command: helm lint check-my-diary --values=values-dev.yaml
           working_directory: helm_deploy
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install Dependencies
+          command: npm ci
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: Run eslint
+          command: npm run lint
+      - run:
+          name: Run Tests
+          command: npm run test
+      - run: NODE_ENV=production npm run build
+      - run: |
+          DATE=$(date '+%Y-%m-%d')
+          export BUILD_NUMBER=${DATE}.${CIRCLE_BUILD_NUM}
+          export GIT_REF="${CIRCLE_SHA1}"
+          npm run record-build-info
+      - persist_to_workspace:
+          root: .
+          paths:
+            - node_modules
+            - build-info.json
+            - assets/stylesheets
 
   build:
     executor: deployer
