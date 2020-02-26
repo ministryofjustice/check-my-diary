@@ -1,6 +1,14 @@
 {
-  "extends": "airbnb-base",
+  "env": {
+    "browser": true,
+    "node": true,
+    "jest": true
+  },
+  "extends": ["airbnb-base", "prettier"],
   "rules": {
-    "no-use-before-define": 0
+    "no-use-before-define": 0,
+    "semi": 0,
+    "endOfLine": "auto",
+    "comma-dangle": ["error", "always-multiline"]
   }
 }

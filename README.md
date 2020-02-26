@@ -1,45 +1,38 @@
-# Check my diary
+# Form app starter
+A simple starter kit to start writing form based node app with the gov uk front end toolkit.
 
-A progressive web application for viewing shift pattern and detail.
 
 ## Getting started
-Install dependencies using `yarn` ensure you are using >= `Node v8.11.3`
+The easiest way to get started is to use docker compose to download and run the three required containers.
 
-Ensure you have a `.env` file containing all default env variables
+`docker-compose pull`
 
-`cp .env-template .env`
+`docker-compose up`
 
-**Starting the app**
+for detailed instructions see `https://dsdmoj.atlassian.net/wiki/spaces/NFS/overview`
 
-### Build assets
-`yarn build`
+### Users
+You can log in with users stored in the seeded nomis oauth db e.g. `CA_USER, password123456`
 
-### Start the app.
+### Dependencies
+The app authenticates using nomis `Nomis Oauth2 Server` and saves to a Postgres database.
 
-Ensure you build assets first
+### Runing the app for development**
 
-`yarn start`
+#### Build assets
+`npm run build`
 
-### Runing the app in dev mode**
+Install dependencies using `npm install` ensure you are using >= `Node v10.15.3`
 
-`yarn start:dev`
+#### Env variables
+In config.js you can see all the required variables. These are set with defaults that will allow the application to run, but you will need to add a `.env` file at some point.
+
+`npm run start`
 
 ### Run linter
 
-`yarn lint`
+`npm run lint`
 
 ### Run tests
 
-`yarn test`
-
-## Or run in Docker:
-
-This repo now contains a dockerfile. You can use this to bake a container with the following command:
-
-`docker build -t [your_dockerhub_username]/check-my-diary .`
-
-Then, to run it locally:
-
-`docker run --name check-my-diary -p 80:3000 -d [your_dockerhub_username]/check-my-diary`
-
-You should then be able to connect to the application on localhost:80
+`npm run test`

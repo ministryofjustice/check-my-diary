@@ -1,12 +1,15 @@
-const knex = require('knex')({
-    client: 'pg',
-    connection : {
-        host: process.env.DATABASE_HOST,
-        database: process.env.DATABASE_NAME,
-        user: process.env.DATABASE_USER,
-        password: process.env.DATABASE_PASSWORD
-    },
-    pool: { min: 0, max: 7 }
-});
+const config = require('../../config.js')
 
-module.exports = knex;
+// eslint-disable-next-line import/order
+const knex = require('knex')({
+  client: 'pg',
+  connection: {
+    host: config.db.server,
+    database: config.db.database,
+    user: config.db.username,
+    password: config.db.password,
+  },
+  pool: { min: 0, max: 7 },
+})
+
+module.exports = knex

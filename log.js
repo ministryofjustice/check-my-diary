@@ -1,17 +1,30 @@
-const bunyan = require('bunyan');
-const bunyanFormat = require('bunyan-format');
+/* const bunyan = require('bunyan')
+const config = require('./config')
 
-const formatOut = bunyanFormat({ outputMode: 'short' });
-
-const log = bunyan.createLogger({ name: 'Starter app', streams : [
+const log = bunyan.createLogger({
+  name: 'Check My Diary',
+  streams: [
     {
-        path: './logs/check-my-diary.log',
-        level: 'debug'
+      path: config.log.fileLocation,
+      level: config.log.level,
+      type: 'rotating-file',
+      period: config.log.period,
+      count: Number(config.log.numberOfLogFilesToKeep),
     },
     {
-        stream : process.stdout,
-        level : 'debug'
-    }
-] });
+      stream: process.stdout,
+      level: config.log.level,
+    },
+  ],
+})
 
-module.exports = log;
+module.exports = log */
+
+const bunyan = require('bunyan')
+const bunyanFormat = require('bunyan-format')
+
+const formatOut = bunyanFormat({ outputMode: 'json', color: true })
+
+const log = bunyan.createLogger({ name: 'Check My Diary', stream: formatOut, level: 'debug' })
+
+module.exports = log
