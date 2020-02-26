@@ -61,6 +61,9 @@ env:
   - name: "HMPPS_COOKIE_DOMAIN"
     value: {{ .Values.ingress.host | quote }}
 
+  - name: "CHECK_MY_DIARY_URL"
+    value: https://{{ .Values.ingress.host }}
+
   - name: NOTIFY_HEALTH_CHECK_URL
     value: {{ .Values.env.NOTIFY_HEALTH_CHECK_URL | quote }}
 
