@@ -12,18 +12,20 @@ function get(name, fallback, options = {}) {
   throw new Error(`Missing env var ${name}`)
 }
 
+const requiredInProduction = { requireInProduction: true }
+
 module.exports = {
-  sessionSecret: get('SESSION_SECRET', 'app-insecure-default-session', { requireInProduction: true }),
+  sessionSecret: get('SESSION_SECRET', 'app-insecure-default-session', requiredInProduction),
   db: {
-    username: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    server: process.env.DATABASE_HOST,
-    database: process.env.DATABASE_NAME,
-    sslEnabled: 'false',
+    username: get('DATABASE_USER', 'check-my-diary'),
+    password: get('DATABASE_PASSWORD', 'check-my-diary'),
+    server: get('DATABASE_HOST', 'localhost'),
+    database: get('DATABASE_NAME', 'check-my-diary'),
+    sslEnabled: get('DB_SSL_ENABLED', 'false'),
   },
   nomis: {
-    authUrl: process.env.API_AUTH_ENDPOINT_URL,
-    authExternalUrl: process.env.API_AUTH_ENDPOINT_URL,
+    authUrl: get('API_AUTH_ENDPOINT_URL', get('NOMIS_AUTH_URL', 'http://localhost:9090/auth')),
+    authExternalUrl: get('API_AUTH_EXTERNAL_ENDPOINT_URL', get('API_AUTH_ENDPOINT_URL', 'http://localhost:9090/auth')),
     timeout: {
       response: 30000,
       deadline: 35000,
@@ -33,12 +35,11 @@ module.exports = {
       maxFreeSockets: 10,
       freeSocketTimeout: 30000,
     },
-    apiClientId: process.env.API_CLIENT_ID,
-    apiClientSecret: process.env.API_CLIENT_SECRET,
+    apiClientId: get('API_CLIENT_ID', 'my-diary', requiredInProduction),
+    apiClientSecret: get('API_CLIENT_SECRET', 'clientsecret', requiredInProduction),
   },
   app: {
     production,
-    notmEndpointUrl: process.env.NN_ENDPOINT_URL || 'http://localhost:3000/',
     mailTo: process.env.MAIL_TO || 'feedback@digital.justice.gov.uk',
   },
   log: {

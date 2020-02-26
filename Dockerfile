@@ -1,11 +1,13 @@
-FROM node:13-buster-slim
+FROM node:12-buster-slim
 MAINTAINER HMPPS Digital Studio <info@digital.justice.gov.uk>
 ARG BUILD_NUMBER
 ARG GIT_REF
 
-RUN apt-get update \
-    && apt-get install curl make python -y \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y make python curl wget && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
 
 ENV TZ=Europe/London
 RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone
@@ -27,7 +29,7 @@ RUN curl https://s3.amazonaws.com/rds-downloads/rds-ca-2015-root.pem >> /app/roo
 
 RUN ls -l bin
 
-RUN npm install && \
+RUN npm ci --only=production && \
     npm run build && \
     export BUILD_NUMBER=${BUILD_NUMBER} && \
     export GIT_REF=${GIT_REF} && \

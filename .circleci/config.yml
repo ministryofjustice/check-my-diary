@@ -48,7 +48,7 @@ executors:
     working_directory: ~/app
   builder:
     docker:
-      - image: circleci/node:13-buster-browsers
+      - image: circleci/node:12-buster-browsers
     working_directory: ~/app
 
 orbs:
@@ -56,6 +56,45 @@ orbs:
   helm: circleci/helm@0.2.3
 
 jobs:
+
+validate:
+  executor: builder
+  steps:
+    - checkout
+    - helm/install-helm-client:
+        version: v2.13.1
+    - run:
+        name: Run helm lint
+        command: helm lint check-my-diary --values=values-dev.yaml
+        working_directory: helm_deploy
+    - restore_cache:
+        key: dependency-cache-{{ checksum "package-lock.json" }}
+    - run:
+        name: Install Dependencies
+        command: npm ci
+    - save_cache:
+        key: dependency-cache-{{ checksum "package-lock.json" }}
+        paths:
+          - ./node_modules
+    - run:
+        name: Run eslint
+        command: npm run lint
+    - run:
+        name: Run Tests
+        command: npm run test
+    - run: NODE_ENV=production npm run build
+    - run: |
+        DATE=$(date '+%Y-%m-%d')
+        export BUILD_NUMBER=${DATE}.${CIRCLE_BUILD_NUM}
+        export GIT_REF="${CIRCLE_SHA1}"
+        npm run record-build-info
+    - persist_to_workspace:
+        root: .
+        paths:
+          - node_modules
+          - build-info.json
+          - assets/stylesheets
+
   validate:
     executor: builder
     steps:
@@ -84,6 +123,8 @@ jobs:
             echo $APP_VERSION | tee app-version.txt
             IMAGE_NAME="quay.io/hmpps/check-my-diary"
             docker build --rm=false . \
+              --build-arg BUILD_NUMBER=$APP_VERSION \
+              --build-arg GIT_REF=$CIRCLE_SHA1 \
               --tag "${IMAGE_NAME}:${APP_VERSION}" \
               --label "app.version=$APP_VERSION" \
               --label "build.version=$APP_VERSION" \
@@ -98,10 +139,6 @@ jobs:
               docker push "${IMAGE_NAME}:${APP_VERSION}"
               docker push "${IMAGE_NAME}:latest"
             fi
-      - persist_to_workspace:
-          root: .
-          paths:
-            - app-version.txt
 
   deploy_dev:
     executor: deployer
@@ -132,10 +169,11 @@ workflows:
             branches:
               only:
                 - master
+                - feature/single_sign_on
       - deploy_dev:
           requires:
             - build
-            - validate 
+            - validate
           filters:
             branches:
               only:
