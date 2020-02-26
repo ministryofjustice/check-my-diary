@@ -1,4 +1,4 @@
-const bunyan = require('bunyan')
+/* const bunyan = require('bunyan')
 const config = require('./config')
 
 const log = bunyan.createLogger({
@@ -17,5 +17,14 @@ const log = bunyan.createLogger({
     },
   ],
 })
+
+module.exports = log */
+
+const bunyan = require('bunyan')
+const bunyanFormat = require('bunyan-format')
+
+const formatOut = bunyanFormat({ outputMode: 'json', color: true })
+
+const log = bunyan.createLogger({ name: 'Check My Diary', stream: formatOut, level: 'debug' })
 
 module.exports = log

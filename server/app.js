@@ -255,7 +255,7 @@ function renderErrors(error, req, res, next) {
 
   res.status(error.status || 500)
 
-  res.render('pages/error')
+  res.render('pages/error', { csrfToken: res.locals.csrfToken })
 }
 
 function authHandler(req, res, next) {
