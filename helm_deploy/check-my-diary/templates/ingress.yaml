@@ -19,9 +19,8 @@ metadata:
       SecAuditEngine RelevantOnly
       SecAuditLog /var/log/nginx/error.log
       SecAuditLogType Serial
-      SecRequestBodyLimit 104857600
-      SecRuleUpdateActionById 949110 "t:none,deny,status:406"
-      SecRuleUpdateActionById 959100 "t:none,deny,status:406"
+      SecRuleUpdateActionById 949110 "t:none,deny,status:406,logdata:%{SERVER_NAME}"
+      SecRuleUpdateActionById 959100 "t:none,deny,status:406,logdata:%{SERVER_NAME}"
     nginx.ingress.kubernetes.io/custom-http-errors: "418"
     {{ if .Values.ingress.enable_whitelist }}nginx.ingress.kubernetes.io/whitelist-source-range: {{ include "app.joinListWithComma" .Values.whitelist | quote }}{{ end }}
 spec:
