@@ -37,7 +37,7 @@ env:
   - name: NOTIFY_CLIENT_KEY
     valueFrom:
       secretKeyRef:
-        name: check-my-diary-app 
+        name: check-my-diary-app
         key: NOTIFY_CLIENT_KEY
 
   - name: NOTIFY_SMS_TEMPLATE
@@ -60,6 +60,9 @@ env:
 
   - name: "HMPPS_COOKIE_DOMAIN"
     value: {{ .Values.ingress.host | quote }}
+
+  - name: "CHECK_MY_DIARY_URL"
+    value: https://{{ .Values.ingress.host }}
 
   - name: NOTIFY_HEALTH_CHECK_URL
     value: {{ .Values.env.NOTIFY_HEALTH_CHECK_URL | quote }}
@@ -87,6 +90,9 @@ env:
       secretKeyRef:
         name: check-my-diary-rds
         key: database_password
+
+  - name: DB_SSL_ENABLED
+    value: "true"
 
   - name: QUANTUM_ADDRESS
     value: {{ .Values.env.QUANTUM_ADDRESS | quote }}

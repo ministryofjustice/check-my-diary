@@ -1,0 +1,77 @@
+@mixin app-breakpoint() {
+  @media (min-width: 320px) and (max-width: 1023px) {
+    @content;
+  }
+}
+
+.logout-asset {
+  margin-top: 10px;
+	float: right !important;	
+	color: white;
+}
+
+.logout-asset  a{
+	color: white;
+	font-weight: bold;
+}
+
+.govuk-header-check-my-diary{
+  font-size: 2.0rem;
+  line-height: 1.25;
+  font-weight: bold;
+}
+
+.govuk-calendar-details-a-ref{
+  font-size: 1.0rem;
+}
+
+.govuk-notifications {
+
+  ul {    
+    list-style-type: none;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 0px;
+  }
+
+  li {
+    border-bottom: 1px solid;    
+    margin-bottom: 20px;
+  }
+}
+
+.govuk-notifications-indicator{    
+  background-color: #df3034;
+  padding: 0 5px;   
+}
+
+.govuk-notifications-settings-error{    
+  color: #df3034;
+  font-weight: bold;
+  padding: 10px 0px 0px 0px;
+}
+
+.text-box {
+  width: 440px;
+
+  @include app-breakpoint {
+    width: 100%;
+  }
+}
+
+.center-align {
+  text-align: center;
+}
+
+.moj-header__logotype-crest {
+  display: inline-block;
+  content: "";
+  background: url(/public/images/moj-logotype.png) no-repeat;
+  background-size: contain;
+  width: 36px;
+  height: 30px;
+  margin-bottom: -2px;
+  margin-right: 10px;
+}

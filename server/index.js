@@ -1,16 +1,17 @@
-const createApp = require('./app'),
-  logger = require('../log'),
-  calendar = require('./services/calendarService');
-const { notificationService } = require('./services/notificationService');
-  
+const createApp = require('./app')
+const createSignInService = require('./authentication/signInService')
+const logger = require('../log')
+const calendarService = require('./services/calendarService')
+const notificationService = require('./services/notificationService')
+
 // pass in dependencies of service
-const calendarService = calendar();
-const notification = notificationService();
-
-const app = createApp({
+const app = createApp(
+  {
+    signInService: createSignInService(),
+  },
   logger,
-  calendarService},
-  notification
-);
+  calendarService(),
+  notificationService()
+)
 
-module.exports = app;
+module.exports = app

@@ -34,7 +34,7 @@ commands:
           name: Deploy to << parameters.env >>
           command: |
             APP=check-my-diary
-            APP_VERSION=$(cat app-version.txt)
+            APP_VERSION=$(egrep buildNumber build-info.json  | awk -F"\"" '{print $4}')
             sed -i "s/appVersion: \".*\"/appVersion: \"${APP_VERSION}\"/g" ~/git/helm_deploy/${APP}/Chart.yaml
             helm upgrade ${APP} ~/git/helm_deploy/${APP}/. \
               --install --wait --reset-values --timeout 5m --history-max 10 \
@@ -48,7 +48,7 @@ executors:
     working_directory: ~/app
   builder:
     docker:
-      - image: circleci/node:13-buster-browsers
+      - image: circleci/node:12-buster-browsers
     working_directory: ~/app
 
 orbs:
@@ -66,6 +66,24 @@ jobs:
           name: Run helm lint
           command: helm lint check-my-diary --values=values-dev.yaml
           working_directory: helm_deploy
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install Dependencies
+          command: npm ci
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: Run eslint
+          command: npm run lint
+      - run:
+          name: Run Tests
+          command: npm run test
+      - run:
+          name: Build Application
+          command: NODE_ENV=production npm run build
 
   build:
     executor: deployer
@@ -84,6 +102,8 @@ jobs:
             echo $APP_VERSION | tee app-version.txt
             IMAGE_NAME="quay.io/hmpps/check-my-diary"
             docker build --rm=false . \
+              --build-arg BUILD_NUMBER=$APP_VERSION \
+              --build-arg GIT_REF=$CIRCLE_SHA1 \
               --tag "${IMAGE_NAME}:${APP_VERSION}" \
               --label "app.version=$APP_VERSION" \
               --label "build.version=$APP_VERSION" \
@@ -91,17 +111,18 @@ jobs:
               --label "build.url=$CIRCLE_BUILD_URL" \
               --label "build.gitref=$CIRCLE_SHA1"
 
-            if [[ "${CIRCLE_BRANCH}" == "master" ]]; then
-              #push to quay.io
-              docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
-              docker tag "${IMAGE_NAME}:$APP_VERSION" "${IMAGE_NAME}:latest"
-              docker push "${IMAGE_NAME}:${APP_VERSION}"
-              docker push "${IMAGE_NAME}:latest"
-            fi
+            # Copy build-info.json from image
+            docker run -it --rm "${IMAGE_NAME}:${APP_VERSION}" cat /app/build-info.json > build-info.json
+
+            #push to quay.io
+            docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
+            docker tag "${IMAGE_NAME}:$APP_VERSION" "${IMAGE_NAME}:latest"
+            docker push "${IMAGE_NAME}:${APP_VERSION}"
+            docker push "${IMAGE_NAME}:latest"
       - persist_to_workspace:
           root: .
           paths:
-            - app-version.txt
+            - build-info.json
 
   deploy_dev:
     executor: deployer
@@ -132,14 +153,16 @@ workflows:
             branches:
               only:
                 - master
+                - develop
       - deploy_dev:
           requires:
             - build
-            - validate 
+            - validate
           filters:
             branches:
               only:
                 - master
+                - develop
       - request-preprod-approval:
           type: approval
           requires:
@@ -152,7 +175,15 @@ workflows:
           type: approval
           requires:
             - deploy_preprod
+          filters:
+            branches:
+              only:
+                - master
       - deploy_prod:
           context: check-my-diary-prod
           requires:
             - request-prod-approval
+          filters:
+            branches:
+              only:
+                - master
