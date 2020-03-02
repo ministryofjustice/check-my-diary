@@ -243,9 +243,6 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
 // eslint-disable-next-line no-unused-vars
 function renderErrors(error, req, res, next) {
   logger.error(error)
-
-  // code to handle unknown errors
-
   res.locals.error = error
   res.locals.stack = production ? null : error.stack
   res.locals.message = production ? 'Something went wrong. The error has been logged. Please try again' : error.message
