@@ -24,6 +24,9 @@ commands:
     parameters:
       env:
         type: string
+      slack_notification:
+        type: boolean
+        default: false
     steps:
       - setup
       - checkout:
@@ -35,12 +38,20 @@ commands:
           command: |
             APP=check-my-diary
             APP_VERSION=$(egrep buildNumber build-info.json  | awk -F"\"" '{print $4}')
+            echo "export APP_VERSION=$APP_VERSION;export APP=$APP" >> $BASH_ENV
             sed -i "s/appVersion: \".*\"/appVersion: \"${APP_VERSION}\"/g" ~/git/helm_deploy/${APP}/Chart.yaml
             helm upgrade ${APP} ~/git/helm_deploy/${APP}/. \
               --install --wait --reset-values --timeout 5m --history-max 10 \
               --namespace=${KUBE_ENV_NAMESPACE} \
               --values ~/git/helm_deploy/values-<< parameters.env >>.yaml \
               --set image.tag="${APP_VERSION}"
+      - when:
+          condition: <<parameters.slack_notification>>
+          steps:
+            - slack/notify:
+                message: "*${APP}* version:*${APP_VERSION}* deployed to << parameters.env >>"
+                include_project_field: false
+                include_job_number_field: false
 executors:
   deployer:
     docker:
@@ -54,6 +65,7 @@ executors:
 orbs:
   kubernetes: circleci/kubernetes@0.10.1
   helm: circleci/helm@0.2.3
+  slack: circleci/slack@3.4.2
 
 jobs:
   validate:
@@ -139,6 +151,7 @@ jobs:
     steps:
       - deploy_to_env:
           env: "prod"
+          slack_notification: true
 
 workflows:
   version: 2
