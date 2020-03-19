@@ -19,7 +19,7 @@ module.exports = (logger, calendarService) => router => {
           req.user.apiUrl,
           req.user.username,
           req.params.date,
-          req.user.token
+          req.user.token,
         )
 
         res.render('pages/calendar-details', {
@@ -32,7 +32,7 @@ module.exports = (logger, calendarService) => router => {
       } catch (error) {
         serviceUnavailable(req, res)
       }
-    })
+    }),
   )
 
   return router

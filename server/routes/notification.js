@@ -40,7 +40,7 @@ module.exports = (logger, notificationService) => router => {
           csrfToken: res.locals.csrfToken,
         })
       }
-    })
+    }),
   )
 
   router.post(
@@ -83,11 +83,11 @@ module.exports = (logger, notificationService) => router => {
           req.body.inputEmail === '' ? null : req.body.inputEmail,
           req.body.inputMobile === '' ? null : req.body.inputMobile,
           !!(req.body.optionEmail !== undefined && req.body.inputEmail !== ''),
-          !!(req.body.optionMobile !== undefined && req.body.inputMobile !== '')
+          !!(req.body.optionMobile !== undefined && req.body.inputMobile !== ''),
         )
         res.redirect('/notifications/1')
       }
-    })
+    }),
   )
 
   router.get(
@@ -137,7 +137,7 @@ module.exports = (logger, notificationService) => router => {
       } catch (error) {
         serviceUnavailable(req, res)
       }
-    })
+    }),
   )
 
   return router

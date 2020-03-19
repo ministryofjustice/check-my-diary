@@ -38,7 +38,7 @@ function getAuthErrorDescription(error) {
   log.info(
     `login response error description = ${error.response &&
       error.response.data &&
-      error.response.data.error_description}`
+      error.response.data.error_description}`,
   )
   let type = 'The username or password you have entered is invalid.'
   if (error !== null && error.message !== '') {

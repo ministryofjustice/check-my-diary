@@ -10,7 +10,7 @@ const notificationService = () => {
         db
           .select('DateTime', 'Description', 'LastModifiedDateTime', 'LastModifiedDateTimeInSeconds', 'Read')
           .from('ShiftTaskNotification')
-          .where('QuantumId', '=', quantumId.toLowerCase())
+          .where('QuantumId', '=', quantumId.toLowerCase()),
       )
       .orderBy('LastModifiedDateTimeInSeconds', 'desc')
       .catch(err => {
@@ -27,7 +27,7 @@ const notificationService = () => {
         db
           .select('DateTime', 'Description', 'LastModifiedDateTime', 'LastModifiedDateTimeInSeconds', 'Read')
           .from('ShiftTaskNotification')
-          .where('QuantumId', '=', quantumId.toLowerCase())
+          .where('QuantumId', '=', quantumId.toLowerCase()),
       )
       .offset(offset)
       .limit(perPage)

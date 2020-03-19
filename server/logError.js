@@ -13,7 +13,7 @@ const logError = (url, error, msg) => {
         data: error.response.data,
         message: error.message,
       },
-      msg
+      msg,
     )
   } else if (error.request) {
     // request is too big and best skipped
@@ -24,7 +24,7 @@ const logError = (url, error, msg) => {
         stack: error.stack,
         message: error.message,
       },
-      msg
+      msg,
     )
   } else {
     log.error(
@@ -33,7 +33,7 @@ const logError = (url, error, msg) => {
         stack: error,
         message: error,
       },
-      msg
+      msg,
     )
   }
 }

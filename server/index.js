@@ -11,7 +11,7 @@ const app = createApp(
   },
   logger,
   calendarService(),
-  notificationService()
+  notificationService(),
 )
 
 module.exports = app

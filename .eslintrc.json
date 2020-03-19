@@ -8,7 +8,7 @@
   "rules": {
     "no-use-before-define": 0,
     "semi": 0,
-    "endOfLine": "auto",
+    "endOfLine": "off",
     "comma-dangle": ["error", "always-multiline"]
   }
 }

@@ -26,7 +26,7 @@ module.exports = (logger, calendarService, notificationService) => router => {
           req.user.apiUrl,
           req.user.username,
           req.params.date,
-          req.user.token
+          req.user.token,
         )
 
         // eslint-disable-next-line no-console
@@ -47,7 +47,7 @@ module.exports = (logger, calendarService, notificationService) => router => {
       } catch (error) {
         serviceUnavailable(req, res)
       }
-    })
+    }),
   )
 
   // eslint-disable-next-line func-names

@@ -40,7 +40,7 @@ function init(signInService) {
       const user = signInService.getUser(accessToken, refreshToken, params.expires_in, params.user_name)
 
       return done(null, user)
-    }
+    },
   )
 
   passport.use(strategy)
