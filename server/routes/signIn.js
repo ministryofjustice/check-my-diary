@@ -24,7 +24,7 @@ module.exports = function createRouter() {
       successRedirect: '/',
       failureRedirect: '/login',
       failureFlash: true,
-    })(req, res)
+    })(req, res),
   )
 
   return router

@@ -70,7 +70,7 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
       signed: true,
       overwrite: true,
       sameSite: 'lax',
-    })
+    }),
   )
 
   app.use(passport.initialize())
@@ -105,7 +105,7 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
         outputStyle: 'compressed',
         prefix: '/stylesheets/',
         includePaths: ['node_modules/govuk-frontend'],
-      })
+      }),
     )
   }
 
@@ -174,7 +174,7 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
           logger.info(
             `updating time by ${newToken.refreshTime - req.user.refreshTime} from ${req.user.refreshTime} to ${
               newToken.refreshTime
-            }`
+            }`,
           )
           req.user.refreshTime = newToken.refreshTime
         } catch (error) {
@@ -208,7 +208,7 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
     passport.authenticate('oauth2', {
       successReturnToOrRedirect: req.session.returnTo || '/',
       failureRedirect: '/autherror',
-    })(req, res, next)
+    })(req, res, next),
   )
 
   app.use('/logout', (req, res) => {
@@ -228,7 +228,7 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
   app.use(
     '/maintenance',
     authHandler,
-    standardRoute(createMaintenanceRouter(logger, calendarService, notificationService))
+    standardRoute(createMaintenanceRouter(logger, calendarService, notificationService)),
   )
 
   app.use((req, res, next) => {

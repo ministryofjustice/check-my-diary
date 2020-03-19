@@ -14,7 +14,7 @@ const reflect = promise =>
         return { data: error.response.data, status: error.response.status }
       }
       return { data: error.message, status: 500 }
-    }
+    },
   )
 
 const healthResult = async serviceUris => {

@@ -18,14 +18,14 @@ module.exports = () => router => {
     '/',
     asyncMiddleware(async (req, res) => {
       postLogin(req, res)
-    })
+    }),
   )
 
   router.get(
     '/auth/login',
     asyncMiddleware(async (req, res) => {
       postLogin(req, res)
-    })
+    }),
   )
 
   router.post(
@@ -36,7 +36,7 @@ module.exports = () => router => {
           req.user.apiUrl,
           req.user.username,
           utilities.getStartMonth(),
-          req.user.token
+          req.user.token,
         )
 
         await userAuthenticationService.updateUserLastLoginDateTime(req.user.username)
@@ -46,7 +46,7 @@ module.exports = () => router => {
         logError(req.url, '2FA failure')
         res.render('pages/two-factor-auth', { authError: true, csrfToken: res.locals.csrfToken })
       }
-    })
+    }),
   )
 
   const postLogin = asyncMiddleware(async (req, res) => {
@@ -174,7 +174,7 @@ module.exports = () => router => {
           req.user.apiUrl,
           req.user.username,
           utilities.getStartMonth(),
-          req.user.token
+          req.user.token,
         )
 
         await userAuthenticationService.updateUserLastLoginDateTime(req.user.username)

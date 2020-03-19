@@ -11,7 +11,7 @@ module.exports = function CalendarService() {
     if (data !== null && data.shifts.length > 0) {
       // Insert blank days before the first date where necessary
       const pad = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(
-        getDayOfWeekString(data.shifts[0].startDateTime)
+        getDayOfWeekString(data.shifts[0].startDateTime),
       )
       // eslint-disable-next-line no-plusplus
       for (let i = 0, len = pad; i < len; i++) {
