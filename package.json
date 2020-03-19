@@ -54,7 +54,7 @@
         "node-sass": "^4.13.0",
         "node-sass-middleware": "0.11.0",
         "notifications-node-client": "^4.5.1",
-        "nunjucks": "^3.2.0",
+        "nunjucks": "^3.2.1",
         "passport": "^0.4.0",
         "passport-local": "^1.0.0",
         "passport-oauth2": "^1.5.0",
@@ -64,7 +64,7 @@
         "superagent": "^5.1.0"
     },
     "devDependencies": {
-        "eslint": "^5.16.0",
+        "eslint": "^6.8.0",
         "eslint-config-airbnb-base": "^13.1.0",
         "eslint-config-prettier": "^4.3.0",
         "eslint-plugin-import": "^2.17.3",
