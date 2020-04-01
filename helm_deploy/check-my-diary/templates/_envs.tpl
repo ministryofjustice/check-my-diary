@@ -103,4 +103,10 @@ env:
   - name: MAINTENANCE_END
     value: {{ .Values.env.MAINTENANCE_END | quote }}
 
+  - name: APPINSIGHTS_INSTRUMENTATIONKEY
+    valueFrom:
+      secretKeyRef:
+        name: check-my-diary-app
+        key: APPINSIGHTS_INSTRUMENTATIONKEY
+
 {{- end -}}
