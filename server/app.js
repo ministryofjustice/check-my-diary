@@ -142,6 +142,7 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
       return result
     })
   })
+  app.get('/ping', (req, res) => res.send('pong'))
 
   // GovUK Template Configuration
   app.locals.asset_path = '/assets/'
