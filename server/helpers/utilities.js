@@ -36,9 +36,9 @@ function areDatesTheSame(date1, date2) {
 function getAuthErrorDescription(error) {
   log.info(`login error description = ${error}`)
   log.info(
-    `login response error description = ${error.response &&
-      error.response.data &&
-      error.response.data.error_description}`,
+    `login response error description = ${
+      error.response && error.response.data && error.response.data.error_description
+    }`,
   )
   let type = 'The username or password you have entered is invalid.'
   if (error !== null && error.message !== '') {

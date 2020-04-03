@@ -19,7 +19,7 @@ const pool = new Pool({
       : false,
 })
 
-pool.on('error', error => {
+pool.on('error', (error) => {
   logger.error('Unexpected error on idle client', error)
 })
 

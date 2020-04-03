@@ -1,7 +1,7 @@
 const { check, validationResult } = require('express-validator')
 const asyncMiddleware = require('../middleware/asyncMiddleware')
 
-module.exports = (logger, notificationService) => router => {
+module.exports = (logger, notificationService) => (router) => {
   /**
    * Service unavailable
    * @param req
@@ -47,13 +47,9 @@ module.exports = (logger, notificationService) => router => {
     '/settings',
     [
       // email address
-      check('inputEmail', 'Must be a valid email address')
-        .optional({ checkFalsy: true })
-        .isEmail(),
+      check('inputEmail', 'Must be a valid email address').optional({ checkFalsy: true }).isEmail(),
       // mobile number
-      check('inputMobile', 'Must be a valid mobile number')
-        .optional({ checkFalsy: true })
-        .isMobilePhone('en-GB'),
+      check('inputMobile', 'Must be a valid mobile number').optional({ checkFalsy: true }).isMobilePhone('en-GB'),
     ],
     asyncMiddleware(async (req, res) => {
       logger.info('POST notifications settings')

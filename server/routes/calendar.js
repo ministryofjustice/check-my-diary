@@ -1,7 +1,7 @@
 const utilities = require('../helpers/utilities')
 const asyncMiddleware = require('../middleware/asyncMiddleware')
 
-module.exports = (logger, calendarService, notificationService) => router => {
+module.exports = (logger, calendarService, notificationService) => (router) => {
   function serviceUnavailable(req, res) {
     logger.error('Service unavailable')
 
@@ -51,7 +51,7 @@ module.exports = (logger, calendarService, notificationService) => router => {
   )
 
   // eslint-disable-next-line func-names
-  router.get('*', function(req, res) {
+  router.get('*', function (req, res) {
     logger.info('Catch and redirect to current month view')
     res.redirect(`/calendar/${utilities.getStartMonth()}`)
   })

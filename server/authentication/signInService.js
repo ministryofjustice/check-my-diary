@@ -40,7 +40,7 @@ function getOauthToken(requestSpec) {
     .auth(clientId, clientSecret)
     .set('content-type', 'application/x-www-form-urlencoded')
     .agent(keepaliveAgent)
-    .retry(2, err => {
+    .retry(2, (err) => {
       if (err) log.info(`Retry handler found API error with ${err.code} ${err.message}`)
       return undefined // retry handler only for logging retries, not to influence retry logic
     })

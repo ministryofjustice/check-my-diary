@@ -28,13 +28,13 @@ passport.deserializeUser((user, done) => {
 function init(signInService) {
   const strategy = new Strategy(
     {
-      authorizationURL: `${config.nomis.authExternalUrl}/oauth/authorize`,      
-      tokenURL: `${config.nomis.authUrl}/oauth/token`,      
+      authorizationURL: `${config.nomis.authExternalUrl}/oauth/authorize`,
+      tokenURL: `${config.nomis.authUrl}/oauth/token`,
       clientID: config.nomis.apiClientId,
       clientSecret: config.nomis.apiClientSecret,
-      callbackURL: `${config.app.url}/login/callback`,      
+      callbackURL: `${config.app.url}/login/callback`,
       state: true,
-      customHeaders: { Authorization: generateOauthClientToken() },     
+      customHeaders: { Authorization: generateOauthClientToken() },
     },
     (accessToken, refreshToken, params, profile, done) => {
       const user = signInService.getUser(accessToken, refreshToken, params.expires_in, params.user_name)

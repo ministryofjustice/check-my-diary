@@ -650,7 +650,7 @@ describe('GET and POST for /:date', () => {
       .get('/2020-02-01')
       .expect(200)
       .expect('Content-Type', 'text/html; charset=utf-8')
-      .expect(res => {
+      .expect((res) => {
         expect(res.text).toContain('February 2020')
         expect(res.text).toContain('Sunday')
         expect(res.text).toContain('Monday')
@@ -677,7 +677,7 @@ describe('GET and POST for /:date', () => {
       .get('/2020-03-01')
       .expect(200)
       .expect('Content-Type', 'text/html; charset=utf-8')
-      .expect(res => {
+      .expect((res) => {
         expect(res.text).toContain('March 2020')
         expect(res.text).toContain('Sunday')
         expect(res.text).toContain('Monday')
