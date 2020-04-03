@@ -7,25 +7,25 @@ env:
   - name: API_CLIENT_ID
     valueFrom:
       secretKeyRef:
-        name: check-my-diary-app
+        name: {{ template "app.name" . }}
         key: API_CLIENT_ID
 
   - name: API_CLIENT_SECRET
     valueFrom:
       secretKeyRef:
-        name: check-my-diary-app
+        name: {{ template "app.name" . }}
         key: API_CLIENT_SECRET
 
   - name: API_AUTH_ENDPOINT_URL
     valueFrom:
       secretKeyRef:
-        name: check-my-diary-app
+        name: {{ template "app.name" . }}
         key: API_AUTH_ENDPOINT_URL
 
   - name: SESSION_SECRET
     valueFrom:
       secretKeyRef:
-        name: check-my-diary-app
+        name: {{ template "app.name" . }}
         key: SESSION_SECRET
 
   - name: TWO_FACT_AUTH_ON
@@ -37,7 +37,7 @@ env:
   - name: NOTIFY_CLIENT_KEY
     valueFrom:
       secretKeyRef:
-        name: check-my-diary-app
+        name: {{ template "app.name" . }}
         key: NOTIFY_CLIENT_KEY
 
   - name: NOTIFY_SMS_TEMPLATE
@@ -49,7 +49,7 @@ env:
   - name: GOOGLE_ANALYTICS_ID
     valueFrom:
       secretKeyRef:
-        name: check-my-diary-app
+        name: {{ template "app.name" . }}
         key: GOOGLE_ANALYTICS_ID
 
   - name: WEB_SESSION_TIMEOUT_IN_MINUTES
@@ -106,7 +106,7 @@ env:
   - name: APPINSIGHTS_INSTRUMENTATIONKEY
     valueFrom:
       secretKeyRef:
-        name: check-my-diary-app
+        name: {{ template "app.name" . }}
         key: APPINSIGHTS_INSTRUMENTATIONKEY
 
 {{- end -}}
