@@ -117,10 +117,10 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
     '../assets/stylesheets',
     '../node_modules/govuk-frontend/assets',
     '../node_modules/govuk-frontend',
-  ].forEach(dir => {
+  ].forEach((dir) => {
     app.use('/public', express.static(path.join(__dirname, dir), cacheControl))
   })
-  ;['../node_modules/govuk_frontend_toolkit/images'].forEach(dir => {
+  ;['../node_modules/govuk_frontend_toolkit/images'].forEach((dir) => {
     app.use('/public/images/icons', express.static(path.join(__dirname, dir), cacheControl))
   })
 

@@ -22,10 +22,10 @@ const getStaffMemberData = async (apiUrl, uid, startDate, accessToken) => {
           authorization: `Bearer ${accessToken}`,
         },
       })
-      .then(response => {
+      .then((response) => {
         resolve(response.data)
       })
-      .catch(error => {
+      .catch((error) => {
         if (error.response) {
           if (error.response.status === 404) {
             resolve(null)

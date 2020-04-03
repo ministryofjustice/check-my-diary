@@ -1,6 +1,6 @@
 const asyncMiddleware = require('../middleware/asyncMiddleware')
 
-module.exports = (logger, calendarService) => router => {
+module.exports = (logger, calendarService) => (router) => {
   function serviceUnavailable(req, res) {
     logger.error('Service unavailable')
     res.render('pages/index', {

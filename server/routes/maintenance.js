@@ -1,4 +1,4 @@
-module.exports = logger => router => {
+module.exports = (logger) => (router) => {
   router.get('/', (req, res) => {
     logger.info('GET maintenance view')
     res.render('pages/maintenance', {

@@ -24,7 +24,7 @@ function serviceCheckFactory(name, url) {
       superagent
         .get(url)
         .agent(keepaliveAgent)
-        .retry(2, err => {
+        .retry(2, (err) => {
           if (err) logger.info(`Retry handler found API error with ${err.code} ${err.message}`)
           return undefined // retry handler only for logging retries, not to influence retry logic
         })

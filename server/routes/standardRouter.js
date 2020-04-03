@@ -1,7 +1,7 @@
 const express = require('express')
 
 module.exports = ({ authenticationMiddleware }) => {
-  return routes => {
+  return (routes) => {
     const router = express.Router()
 
     router.use(authenticationMiddleware())
