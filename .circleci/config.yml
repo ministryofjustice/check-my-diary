@@ -41,6 +41,7 @@ workflows:
           filters:
             tags:
               ignore: /.*/
+      - dps/helm_lint
       - dps/build_docker:
           name: build_docker
           filters:
