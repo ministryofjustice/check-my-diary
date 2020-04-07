@@ -1,14 +1,7 @@
 version: 2.1
-parameters:
-  image_name:
-    type: string
-    default: "quay.io/hmpps/check-my-diary"
-  app_name:
-    type: string
-    default: "check-my-diary"
 
 orbs:
-  dps: ministryofjustice/dps@1.1.0
+  dps: ministryofjustice/dps@1.2.1
 
 executors:
   validator:
@@ -40,22 +33,6 @@ jobs:
           name: Build Application
           command: NODE_ENV=production npm run build
 
-  security_audit:
-    executor: validator
-    steps:
-      - checkout
-      - run:
-          name: update-npm
-          command: 'sudo npm install -g npm'
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: install-npm
-          command: 'npm ci --no-audit'
-      - run:
-          name: run-security-audit
-          command: 'npm run security_audit'
-
 workflows:
   version: 2
   build-test-and-deploy:
@@ -66,7 +43,6 @@ workflows:
               ignore: /.*/
       - dps/build_docker:
           name: build_docker
-          image_name: << pipeline.parameters.image_name >>
           filters:
             branches:
               only:
@@ -74,7 +50,6 @@ workflows:
       - dps/deploy_env:
           name: deploy_dev
           env: "dev"
-          app_name: << pipeline.parameters.app_name >>
           filters:
             branches:
               only:
@@ -89,7 +64,6 @@ workflows:
       - dps/deploy_env:
           name: deploy_preprod
           env: "preprod"
-          app_name: << pipeline.parameters.app_name >>
           context: check-my-diary-preprod
           requires:
             - request-preprod-approval
@@ -100,7 +74,6 @@ workflows:
       - dps/deploy_env:
           name: deploy_prod
           env: "prod"
-          app_name: << pipeline.parameters.app_name >>
           slack_notification: true
           context: check-my-diary-prod
           requires:
@@ -115,4 +88,4 @@ workflows:
               only:
                 - master
     jobs:
-      - security_audit
+      - dps/npm_security_audit
