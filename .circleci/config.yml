@@ -41,7 +41,8 @@ workflows:
           filters:
             tags:
               ignore: /.*/
-      - dps/helm_lint
+      - dps/helm_lint:
+          name: helm_lint
       - dps/build_docker:
           name: build_docker
           filters:
@@ -57,6 +58,7 @@ workflows:
                 - master
           requires:
             - validate
+            - helm_lint 
             - build_docker
       - request-preprod-approval:
           type: approval
