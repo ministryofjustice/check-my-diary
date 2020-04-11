@@ -62,10 +62,10 @@ module.exports = function CalendarService() {
             authorization: `Bearer ${accessToken}`,
           },
         })
-        .then(response => {
+        .then((response) => {
           resolve(configureCalendar(response.data))
         })
-        .catch(error => {
+        .catch((error) => {
           logger.error(`CalendarService : getCalendarData Error : ${error}`)
           if (error.response) {
             if (error.response.status === 404) {
@@ -92,10 +92,10 @@ module.exports = function CalendarService() {
             authorization: `Bearer ${accessToken}`,
           },
         })
-        .then(response => {
+        .then((response) => {
           resolve(response.data)
         })
-        .catch(error => {
+        .catch((error) => {
           logger.error(`CalendarService : getCalendarData Error : ${error}`)
           if (error.response) {
             if (error.response.status === 404) {

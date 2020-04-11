@@ -13,7 +13,7 @@ const notify = new NotifyClient(config.notify.clientKey || '')
 const notifySmsTemplate = config.notify.smsTemplateId || ''
 const notifyEmailTemplate = config.notify.emailTemplateId || ''
 
-module.exports = () => router => {
+module.exports = () => (router) => {
   router.get(
     '/',
     asyncMiddleware(async (req, res) => {
@@ -152,7 +152,7 @@ module.exports = () => router => {
             .sendSms(notifySmsTemplate, userAuthentication.Sms || '', {
               personalisation: { '2fa_code': twofactorCode },
             })
-            .catch(err => {
+            .catch((err) => {
               throw new Error(err)
             })
         }
@@ -163,7 +163,7 @@ module.exports = () => router => {
             .sendEmail(notifyEmailTemplate, userAuthentication.EmailAddress || '', {
               personalisation: { '2fa_code': twofactorCode },
             })
-            .catch(err => {
+            .catch((err) => {
               throw new Error(err)
             })
         }

@@ -4,12 +4,12 @@ const applicationVersion = require('../application-version')
 const { packageData } = applicationVersion
 const buildVersion = applicationVersion.buildNumber
 
-const getHealth = uri => axios.get(`${uri}`, { timeout: 2000 })
+const getHealth = (uri) => axios.get(`${uri}`, { timeout: 2000 })
 
-const reflect = promise =>
+const reflect = (promise) =>
   promise.then(
-    response => ({ data: response.data, status: response.status }),
-    error => {
+    (response) => ({ data: response.data, status: response.status }),
+    (error) => {
       if (error.response) {
         return { data: error.response.data, status: error.response.status }
       }
@@ -17,7 +17,7 @@ const reflect = promise =>
     },
   )
 
-const healthResult = async serviceUris => {
+const healthResult = async (serviceUris) => {
   let status
 
   const appInfo = {

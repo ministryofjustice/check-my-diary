@@ -1,10 +1,13 @@
 const db = require('../database')
 
-const getUserAuthenticationDetails = async ( quantumId ) => {    
- 
-        return db.select("EmailAddress", "Sms", "UseEmailAddress", "UseSms", "ApiUrl").from('UserAuthentication')
-                    .where('QuantumId', '=', quantumId.toLowerCase() )        
-                    .catch((err) => { throw err })
+const getUserAuthenticationDetails = async (quantumId) => {
+  return db
+    .select('EmailAddress', 'Sms', 'UseEmailAddress', 'UseSms', 'ApiUrl')
+    .from('UserAuthentication')
+    .where('QuantumId', '=', quantumId.toLowerCase())
+    .catch((err) => {
+      throw err
+    })
 }
 
 const updateUserSessionExpiryAndLastLoginDateTime = async ( quantumId, dateTime ) => {

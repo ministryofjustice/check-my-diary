@@ -6,7 +6,7 @@ const bodyParser = require('body-parser')
 const cookieSession = require('cookie-session')
 const path = require('path')
 
-module.exports = route => {
+module.exports = (route) => {
   const app = express()
 
   app.set('views', path.join(__dirname, '../../views'))

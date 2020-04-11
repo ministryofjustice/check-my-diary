@@ -20,7 +20,7 @@ yarn-error.log
 *.iml
 .vs
 .suo
-secrets.yaml
 *secrets*.yaml
 *secrets*.yml
-!secrets-example.yaml
+!helm_deploy/check-my-diary/templates/secrets.yaml
+!helm_deploy/secrets-example.yaml
