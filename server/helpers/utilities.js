@@ -1,3 +1,4 @@
+const crypto = require('crypto')
 const log = require('../../log')
 
 function getStartMonth() {
@@ -7,6 +8,13 @@ function getStartMonth() {
 
 function get2faCode() {
   return Math.floor(Math.random() * 899999 + 100000)
+}
+
+function createTwoFactorAuthenticationHash(input) {
+
+  return crypto.createHash('sha256')
+          .update(input.toString())
+          .digest('base64')
 }
 
 function isNullOrEmpty(str) {
@@ -86,4 +94,5 @@ module.exports = {
   areDatesTheSame,
   getAuthErrorDescription,
   calculateMaintenanceDates,
+  createTwoFactorAuthenticationHash,
 }

@@ -21,6 +21,7 @@ const standardRouter = require('./routes/standardRouter')
 const logger = require('../log.js')
 const auth = require('./authentication/auth')
 const config = require('../config')
+const userAuthenticationService = require('./services/userAuthenticationService')
 
 const { authenticationMiddleware } = auth
 
@@ -212,8 +213,10 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
     })(req, res, next),
   )
 
-  app.use('/logout', (req, res) => {
+  app.use('/logout', async (req, res) => {
     if (req.user) {
+      await userAuthenticationService.updateSessionExpiryDateTime(req.user.username)
+
       req.logout()
     }
     res.redirect(authLogoutUrl)
@@ -253,7 +256,19 @@ function renderErrors(error, req, res, next) {
   res.render('pages/error', { csrfToken: res.locals.csrfToken })
 }
 
-function authHandler(req, res, next) {
+async function authHandler(req, res, next) {
+
+  const userSessionExpiryDateTime = await userAuthenticationService.getSessionExpiryDateTime(req.user.username)
+
+  if (userSessionExpiryDateTime !== null && userSessionExpiryDateTime[0] != null) {
+    if (new Date() > new Date(userSessionExpiryDateTime[0].SessionExpiryDateTime)) {
+      res.redirect('/logout')
+    } else {
+      next()
+    }
+  }
+
+  /*
   if (req.user.apiUrl !== undefined) {
     if (new Date() > new Date(req.user.sessionExpires)) {
       res.redirect('/logout')
@@ -262,5 +277,5 @@ function authHandler(req, res, next) {
     }
   } else {
     res.redirect('/login')
-  }
+  } */
 }
