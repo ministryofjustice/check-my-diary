@@ -226,8 +226,8 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
 
   // Routing
   app.use('/', standardRoute(createLoginRouter()))
-  app.use('/calendar', authHandler, standardRoute(createCalendarRouter(logger, calendarService, notificationService)))
-  app.use('/details', authHandler, standardRoute(createCalendarDetailRouter(logger, calendarService)))
+  app.use('/calendar', authHandler, standardRoute(createCalendarRouter(logger, calendarService, notificationService, userAuthenticationService)))
+  app.use('/details', authHandler, standardRoute(createCalendarDetailRouter(logger, calendarService, userAuthenticationService)))
   app.use('/notifications', authHandler, standardRoute(createNotificationRouter(logger, notificationService)))
   app.use(
     '/maintenance',

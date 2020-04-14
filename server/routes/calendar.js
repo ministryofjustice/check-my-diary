@@ -1,8 +1,7 @@
 const utilities = require('../helpers/utilities')
 const asyncMiddleware = require('../middleware/asyncMiddleware')
-const userAuthenticationService = require('../services/userAuthenticationService')
 
-module.exports = (logger, calendarService, notificationService) => (router) => {
+module.exports = (logger, calendarService, notificationService, userAuthenticationService) => (router) => {
   function serviceUnavailable(req, res) {
     logger.error('Service unavailable')
 
@@ -19,7 +18,7 @@ module.exports = (logger, calendarService, notificationService) => (router) => {
       logger.info('GET calendar view')
       try {
 
-        const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
+        const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)       
 
         const shiftNotifications = await notificationService.getShiftNotifications(req.user.username)
      

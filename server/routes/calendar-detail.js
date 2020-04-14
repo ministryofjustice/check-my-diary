@@ -1,7 +1,6 @@
 const asyncMiddleware = require('../middleware/asyncMiddleware')
-const userAuthenticationService = require('../services/userAuthenticationService')
 
-module.exports = (logger, calendarService) => (router) => {
+module.exports = (logger, calendarService, userAuthenticationService) => (router) => {
   function serviceUnavailable(req, res) {
     logger.error('Service unavailable')
     res.render('pages/index', {
