@@ -21,6 +21,7 @@ const standardRouter = require('./routes/standardRouter')
 const logger = require('../log.js')
 const auth = require('./authentication/auth')
 const config = require('../config')
+const userAuthenticationService = require('./services/userAuthenticationService')
 
 const { authenticationMiddleware } = auth
 
@@ -212,8 +213,10 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
     })(req, res, next),
   )
 
-  app.use('/logout', (req, res) => {
+  app.use('/logout', async (req, res) => {
     if (req.user) {
+      await userAuthenticationService.updateSessionExpiryDateTime(req.user.username)
+
       req.logout()
     }
     res.redirect(authLogoutUrl)
@@ -223,8 +226,8 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
 
   // Routing
   app.use('/', standardRoute(createLoginRouter()))
-  app.use('/calendar', authHandler, standardRoute(createCalendarRouter(logger, calendarService, notificationService)))
-  app.use('/details', authHandler, standardRoute(createCalendarDetailRouter(logger, calendarService)))
+  app.use('/calendar', authHandler, standardRoute(createCalendarRouter(logger, calendarService, notificationService, userAuthenticationService)))
+  app.use('/details', authHandler, standardRoute(createCalendarDetailRouter(logger, calendarService, userAuthenticationService)))
   app.use('/notifications', authHandler, standardRoute(createNotificationRouter(logger, notificationService)))
   app.use(
     '/maintenance',
@@ -253,14 +256,15 @@ function renderErrors(error, req, res, next) {
   res.render('pages/error', { csrfToken: res.locals.csrfToken })
 }
 
-function authHandler(req, res, next) {
-  if (req.user.apiUrl !== undefined) {
-    if (new Date() > new Date(req.user.sessionExpires)) {
+async function authHandler(req, res, next) {
+
+  const userSessionExpiryDateTime = await userAuthenticationService.getSessionExpiryDateTime(req.user.username)
+
+  if (userSessionExpiryDateTime !== null && userSessionExpiryDateTime[0] != null) {
+    if (new Date() > new Date(userSessionExpiryDateTime[0].SessionExpiryDateTime)) {
       res.redirect('/logout')
     } else {
       next()
     }
-  } else {
-    res.redirect('/login')
-  }
+  } 
 }

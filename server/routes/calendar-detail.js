@@ -1,6 +1,6 @@
 const asyncMiddleware = require('../middleware/asyncMiddleware')
 
-module.exports = (logger, calendarService) => (router) => {
+module.exports = (logger, calendarService, userAuthenticationService) => (router) => {
   function serviceUnavailable(req, res) {
     logger.error('Service unavailable')
     res.render('pages/index', {
@@ -15,8 +15,11 @@ module.exports = (logger, calendarService) => (router) => {
     asyncMiddleware(async (req, res) => {
       logger.info('GET calendar details')
       try {
+
+        const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
+
         const apiResponse = await calendarService.getCalendarDetails(
-          req.user.apiUrl,
+          userAuthenticationDetails[0].ApiUrl,
           req.user.username,
           req.params.date,
           req.user.token,

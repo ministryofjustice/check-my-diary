@@ -31,15 +31,20 @@ module.exports = () => (router) => {
   router.post(
     '/auth/2fa',
     asyncMiddleware(async (req, res) => {
-      if (parseInt(req.body.code, 10) === parseInt(req.user.twoFactorCode, 10)) {
+      
+      const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
+
+      const inputTwoFactorCode = utilities.createTwoFactorAuthenticationHash(req.body.code)
+
+      if (inputTwoFactorCode === userAuthenticationDetails[0].TwoFactorAuthenticationHash) {
         req.user.employeeName = await getStaffMemberEmployeeName(
-          req.user.apiUrl,
+          userAuthenticationDetails[0].ApiUrl,
           req.user.username,
           utilities.getStartMonth(),
           req.user.token,
         )
 
-        await userAuthenticationService.updateUserLastLoginDateTime(req.user.username)
+        await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(req.user.username, new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000))
 
         res.redirect(`/calendar/${utilities.getStartMonth()}`)
       } else {
@@ -136,15 +141,16 @@ module.exports = () => (router) => {
         if (!emailEnabled && !smsEnabled) {
           throw new Error(`Error : Sms or Email address both set to false for QuantumId : ${req.user.username}`)
         }
-
-        // @TODO: 2FA (if not on Quantum) or set cookie and login (if on Quantum)
-        req.user.twoFactorCode = utilities.get2faCode()
+        
+        const twofactorCode = utilities.get2faCode() 
+                
+        await userAuthenticationService.updateTwoFactorAuthenticationHash(req.user.username, utilities.createTwoFactorAuthenticationHash(twofactorCode.toString()))
 
         if (smsEnabled) {
           // For SMS
           await notify
             .sendSms(notifySmsTemplate, userAuthentication.Sms || '', {
-              personalisation: { '2fa_code': req.user.twoFactorCode },
+              personalisation: { '2fa_code': twofactorCode },
             })
             .catch((err) => {
               throw new Error(err)
@@ -155,29 +161,24 @@ module.exports = () => (router) => {
           // For email
           await notify
             .sendEmail(notifyEmailTemplate, userAuthentication.EmailAddress || '', {
-              personalisation: { '2fa_code': req.user.twoFactorCode },
+              personalisation: { '2fa_code': twofactorCode },
             })
             .catch((err) => {
               throw new Error(err)
             })
         }
-
-        req.user.apiUrl = userAuthentication.ApiUrl
-        req.user.sessionExpires = new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000)
-
+               
         res.render('pages/two-factor-auth', { authError: false, csrfToken: res.locals.csrfToken })
       } else {
-        req.user.apiUrl = userAuthentication.ApiUrl
-        req.user.sessionExpires = new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000)
-
+        
         req.user.employeeName = await getStaffMemberEmployeeName(
-          req.user.apiUrl,
+          userAuthentication.ApiUrl,
           req.user.username,
           utilities.getStartMonth(),
           req.user.token,
         )
 
-        await userAuthenticationService.updateUserLastLoginDateTime(req.user.username)
+        await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(req.user.username)
 
         res.redirect(`/calendar/${utilities.getStartMonth()}`)
       }
