@@ -266,16 +266,5 @@ async function authHandler(req, res, next) {
     } else {
       next()
     }
-  }
-
-  /*
-  if (req.user.apiUrl !== undefined) {
-    if (new Date() > new Date(req.user.sessionExpires)) {
-      res.redirect('/logout')
-    } else {
-      next()
-    }
-  } else {
-    res.redirect('/login')
-  } */
+  } 
 }

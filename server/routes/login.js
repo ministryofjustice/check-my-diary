@@ -32,13 +32,13 @@ module.exports = () => (router) => {
     '/auth/2fa',
     asyncMiddleware(async (req, res) => {
       
-      const userTwoFactorCode = await userAuthenticationService.getTwoFactorAuthenticationHash(req.user.username)
+      const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
 
       const inputTwoFactorCode = utilities.createTwoFactorAuthenticationHash(req.body.code)
 
-      if (inputTwoFactorCode === userTwoFactorCode[0].TwoFactorAuthenticationHash) {
+      if (inputTwoFactorCode === userAuthenticationDetails[0].TwoFactorAuthenticationHash) {
         req.user.employeeName = await getStaffMemberEmployeeName(
-          req.user.apiUrl,
+          userAuthenticationDetails[0].ApiUrl,
           req.user.username,
           utilities.getStartMonth(),
           req.user.token,
@@ -167,15 +167,12 @@ module.exports = () => (router) => {
               throw new Error(err)
             })
         }
-
-        req.user.apiUrl = userAuthentication.ApiUrl
-       
+               
         res.render('pages/two-factor-auth', { authError: false, csrfToken: res.locals.csrfToken })
       } else {
-        req.user.apiUrl = userAuthentication.ApiUrl
         
         req.user.employeeName = await getStaffMemberEmployeeName(
-          req.user.apiUrl,
+          userAuthentication.ApiUrl,
           req.user.username,
           utilities.getStartMonth(),
           req.user.token,
