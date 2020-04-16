@@ -4,7 +4,7 @@ const asyncMiddleware = require('../middleware/asyncMiddleware')
 module.exports = (logger, notificationService) => (router) => {
   /**
    * Service unavailable
-   * @param reqw
+   * @param req
    * @param res
    */
   function serviceUnavailable(req, res) {
