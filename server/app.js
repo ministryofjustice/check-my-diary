@@ -50,7 +50,7 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
   app.set('view engine', 'ejs')
 
   // Server Configuration
-  app.set('port', config.port || 3005)
+  app.set('port', config.port)
 
   // Secure code best practice - see:
   // 1. https://expressjs.com/en/advanced/best-practice-security.html,
@@ -226,8 +226,16 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
 
   // Routing
   app.use('/', standardRoute(createLoginRouter()))
-  app.use('/calendar', authHandler, standardRoute(createCalendarRouter(logger, calendarService, notificationService, userAuthenticationService)))
-  app.use('/details', authHandler, standardRoute(createCalendarDetailRouter(logger, calendarService, userAuthenticationService)))
+  app.use(
+    '/calendar',
+    authHandler,
+    standardRoute(createCalendarRouter(logger, calendarService, notificationService, userAuthenticationService)),
+  )
+  app.use(
+    '/details',
+    authHandler,
+    standardRoute(createCalendarDetailRouter(logger, calendarService, userAuthenticationService)),
+  )
   app.use('/notifications', authHandler, standardRoute(createNotificationRouter(logger, notificationService)))
   app.use(
     '/maintenance',
@@ -257,7 +265,6 @@ function renderErrors(error, req, res, next) {
 }
 
 async function authHandler(req, res, next) {
-
   const userSessionExpiryDateTime = await userAuthenticationService.getSessionExpiryDateTime(req.user.username)
 
   if (userSessionExpiryDateTime !== null && userSessionExpiryDateTime[0] != null) {
@@ -266,5 +273,5 @@ async function authHandler(req, res, next) {
     } else {
       next()
     }
-  } 
+  }
 }

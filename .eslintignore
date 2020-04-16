@@ -3,3 +3,5 @@ public
 assets
 package-lock.json
 package.json
+cypress.json
+reporter-config.json

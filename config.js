@@ -2,19 +2,18 @@ require('dotenv').config()
 
 const production = process.env.NODE_ENV === 'production'
 
-function get(name, fallback, options = {}) {
-  if (process.env[name]) {
-    return process.env[name]
-  }
-  if (fallback !== undefined && (!production || !options.requireInProduction)) {
-    return fallback
-  }
+const get = (name, fallback, { requireInProduction, noFallbackInProduction } = {}) => {
+  if (process.env[name]) return process.env[name]
+
+  if (production && noFallbackInProduction) return undefined
+
+  if (fallback !== undefined && !(production && requireInProduction)) return fallback
+
   throw new Error(`Missing env var ${name}`)
 }
 
-const requiredInProduction = {
-  requireInProduction: true,
-}
+const requiredInProduction = { requireInProduction: true }
+const noFallbackInProduction = { noFallbackInProduction: true }
 
 module.exports = {
   sessionSecret: get('SESSION_SECRET', 'app-insecure-default-session', requiredInProduction),
@@ -26,8 +25,8 @@ module.exports = {
     sslEnabled: get('DB_SSL_ENABLED', 'false'),
   },
   nomis: {
-    authUrl: get('API_AUTH_ENDPOINT_URL', get('NOMIS_AUTH_URL', 'http://localhost:9090/auth')),
-    authExternalUrl: get('API_AUTH_EXTERNAL_ENDPOINT_URL', get('API_AUTH_ENDPOINT_URL', 'http://localhost:9090/auth')),
+    authUrl: get('API_AUTH_ENDPOINT_URL', get('NOMIS_AUTH_URL', 'http://localhost:9191/auth')),
+    authExternalUrl: get('API_AUTH_EXTERNAL_ENDPOINT_URL', get('API_AUTH_ENDPOINT_URL', 'http://localhost:9191/auth')),
     timeout: {
       response: 30000,
       deadline: 35000,
@@ -43,28 +42,29 @@ module.exports = {
   app: {
     production,
     mailTo: process.env.MAIL_TO || 'feedback@digital.justice.gov.uk',
-    url: process.env.CHECK_MY_DIARY_URL || `http://localhost:${process.env.PORT || 3000}/`,
+    url: process.env.CHECK_MY_DIARY_URL || `http://localhost:${process.env.PORT || 3005}`,
   },
   maintenance: {
     start: process.env.MAINTENANCE_START,
     end: process.env.MAINTENANCE_END,
   },
   notify: {
-    clientKey: process.env.NOTIFY_CLIENT_KEY,
-    smsTemplateId: process.env.NOTIFY_SMS_TEMPLATE,
-    emailTemplateId: process.env.NOTIFY_EMAIL_TEMPLATE,
+    url: get('NOTIFY_URL', 'http://localhost:9191', noFallbackInProduction),
+    clientKey: get('NOTIFY_CLIENT_KEY', 'some_invalid_key', requiredInProduction),
+    smsTemplateId: get('NOTIFY_SMS_TEMPLATE', 'not_sms', requiredInProduction),
+    emailTemplateId: get('NOTIFY_EMAIL_TEMPLATE', 'not_email', requiredInProduction),
   },
   hmppsCookie: {
     name: process.env.HMPPS_COOKIE_NAME || 'hmpps-session-dev',
     domain: process.env.HMPPS_COOKIE_DOMAIN || 'localhost',
     expiryMinutes: process.env.WEB_SESSION_TIMEOUT_IN_MINUTES || 20,
   },
-  port: process.env.PORT,
+  port: get('PORT', 3005, requiredInProduction),
   domain: process.env.HMPPS_COOKIE_DOMAIN,
   sessionTimeout: process.env.WEB_SESSION_TIMEOUT_IN_MINUTES,
-  quantumAddresses: process.env.QUANTUM_ADDRESS,
+  quantumAddresses: get('QUANTUM_ADDRESS', '127.0.0.1', requiredInProduction),
   rejectUnauthorized: process.env.REJECT_UNAUTHORIZED,
   twoFactorAuthOn: process.env.TWO_FACT_AUTH_ON,
-  notifyHealthCheckUrl: process.env.NOTIFY_HEALTH_CHECK_URL,
+  notifyHealthCheckUrl: get('NOTIFY_HEALTH_CHECK_URL', 'http://localhost:9191/_status', requiredInProduction),
   https: production,
 }

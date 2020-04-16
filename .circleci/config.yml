@@ -8,6 +8,15 @@ executors:
     docker:
       - image: circleci/node:12-buster-browsers
     working_directory: ~/app
+  integration-tests:
+    docker:
+      - image: circleci/openjdk:11-jdk-node-browsers
+      - image: circleci/postgres:10.6-alpine-ram
+        environment:
+          POSTGRES_PASSWORD: check-my-diary
+          POSTGRES_USER: check-my-diary
+          POSTGRES_DB: check-my-diary
+    working_directory: ~/app
 
 jobs:
   validate:
@@ -23,6 +32,7 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
+            - ~/.cache
       - run:
           name: Run eslint
           command: npm run lint
@@ -32,6 +42,47 @@ jobs:
       - run:
           name: Build Application
           command: NODE_ENV=production npm run build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - node_modules
+            - .cache/Cypress
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: test-results/unit-test-reports.html
+
+  integration_test:
+    executor: integration-tests
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/app
+      - run:
+          name: Get wiremock
+          command: curl -o wiremock.jar https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-standalone/2.26.3/wiremock-standalone-2.26.3.jar
+      - run:
+          name: Run wiremock
+          command: java -jar wiremock.jar --port 9091
+          background: true
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Run the node app.
+          command: npm run start-feature
+          background: true
+      - run:
+          name: Wait for node app to start
+          command: sleep 5
+      - run:
+          name: integration tests
+          command: npm run int-test
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: integration-tests/videos
+      - store_artifacts:
+          path: integration-tests/screenshots
 
 workflows:
   version: 2
@@ -41,6 +92,9 @@ workflows:
           filters:
             tags:
               ignore: /.*/
+      - integration_test:
+          requires:
+            - validate
       - dps/helm_lint:
           name: helm_lint
       - dps/build_docker:
@@ -57,8 +111,8 @@ workflows:
               only:
                 - master
           requires:
-            - validate
-            - helm_lint 
+            - helm_lint
+            - integration_test
             - build_docker
       - request-preprod-approval:
           type: approval
