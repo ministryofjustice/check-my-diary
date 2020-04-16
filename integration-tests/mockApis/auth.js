@@ -64,7 +64,7 @@ const logout = () =>
     },
   })
 
-const token = ({ isReviewer = false, isCoordinator = false }) =>
+const token = () =>
   stubFor({
     request: {
       method: 'POST',
@@ -77,7 +77,7 @@ const token = ({ isReviewer = false, isCoordinator = false }) =>
         Location: 'http://localhost:3007/login/callback?code=codexxxx&state=stateyyyy',
       },
       jsonBody: {
-        access_token: createToken(isReviewer, isCoordinator),
+        access_token: createToken(),
         token_type: 'bearer',
         refresh_token: 'refresh',
         user_name: 'TEST_USER',
@@ -88,65 +88,7 @@ const token = ({ isReviewer = false, isCoordinator = false }) =>
     },
   })
 
-const stubUser = (username) =>
-  stubFor({
-    request: {
-      method: 'GET',
-      urlPattern: `/auth/api/user/${encodeURI(username)}`,
-    },
-    response: {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      jsonBody: {
-        user_name: username,
-        staffId: 231232,
-        username,
-        active: true,
-        name: `${username} name`,
-        authSource: 'nomis',
-        activeCaseLoadId: 'MDI',
-      },
-    },
-  })
-
-const stubEmail = (username) =>
-  stubFor({
-    request: {
-      method: 'GET',
-      urlPattern: `/auth/api/user/${encodeURI(username)}/email`,
-    },
-    response: {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      jsonBody: {
-        username,
-        email: `${username}@gov.uk`,
-      },
-    },
-  })
-
-const stubUnverifiedEmail = (username) =>
-  stubFor({
-    request: {
-      method: 'GET',
-      urlPattern: `/auth/api/user/${encodeURI(username)}/email`,
-    },
-    response: {
-      status: 204,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      jsonBody: {},
-    },
-  })
-
 module.exports = {
   getLoginUrl,
-  stubLogin: (options) => Promise.all([favicon(), redirect(), logout(), token(options)]),
-  stubUserDetailsRetrieval: (username) => Promise.all([stubUser(username), stubEmail(username)]),
-  stubUnverifiedUserDetailsRetrieval: (username) => Promise.all([stubUser(username), stubUnverifiedEmail(username)]),
+  stubLogin: () => Promise.all([favicon(), redirect(), logout(), token()]),
 }
