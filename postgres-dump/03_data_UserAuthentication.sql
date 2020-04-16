@@ -31,7 +31,7 @@ VALUES ('user3', 'user.3@digital.justice.gov.uk', null, true, false, '2019-11-06
         'http://localhost:9191/api/', 3);
 INSERT INTO "UserAuthentication" ("QuantumId", "EmailAddress", "Sms", "UseEmailAddress", "UseSms", "LastLoginDateTime",
                                   "ApiUrl", "PrisonId")
-VALUES ('user2', 'user.2@digital.justice.gov.uk', null, true, false, '2020-03-04 13:59:09.000000',
+VALUES ('itag_user', 'itag_user@digital.justice.gov.uk', null, true, false, '2020-03-04 13:59:09.000000',
         'http://localhost:9191/api/', null);
 INSERT INTO "UserAuthentication" ("QuantumId", "EmailAddress", "Sms", "UseEmailAddress", "UseSms", "LastLoginDateTime",
                                   "ApiUrl", "PrisonId")

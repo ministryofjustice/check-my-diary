@@ -1,7 +1,7 @@
 INSERT INTO "UserNotificationSetting" ("QuantumId", "EmailAddress", "Sms", "UseEmailAddress", "UseSms")
 VALUES ('user1', 'user.1@digital.justice.gov.uk', null, true, false);
 INSERT INTO "UserNotificationSetting" ("QuantumId", "EmailAddress", "Sms", "UseEmailAddress", "UseSms")
-VALUES ('user2', 'user.2@digital.justice.gov.uk', null, true, false);
+VALUES ('itag_user', 'itag_user@digital.justice.gov.uk', null, true, false);
 INSERT INTO "UserNotificationSetting" ("QuantumId", "EmailAddress", "Sms", "UseEmailAddress", "UseSms")
 VALUES ('user3', 'user.3@digital.justice.gov.uk', null, true, false);
 INSERT INTO "UserNotificationSetting" ("QuantumId", "EmailAddress", "Sms", "UseEmailAddress", "UseSms")

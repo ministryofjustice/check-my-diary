@@ -50,7 +50,7 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
   app.set('view engine', 'ejs')
 
   // Server Configuration
-  app.set('port', config.port)
+  app.set('port', config.port || 3005)
 
   // Secure code best practice - see:
   // 1. https://expressjs.com/en/advanced/best-practice-security.html,
@@ -265,16 +265,13 @@ function renderErrors(error, req, res, next) {
 }
 
 async function authHandler(req, res, next) {
-  if (config.twoFactorAuthOn !== 'true') next()
-  else {
-    const userSessionExpiryDateTime = await userAuthenticationService.getSessionExpiryDateTime(req.user.username)
+  const userSessionExpiryDateTime = await userAuthenticationService.getSessionExpiryDateTime(req.user.username)
 
-    if (userSessionExpiryDateTime !== null && userSessionExpiryDateTime[0] != null) {
-      if (new Date() > new Date(userSessionExpiryDateTime[0].SessionExpiryDateTime)) {
-        res.redirect('/logout')
-      } else {
-        next()
-      }
+  if (userSessionExpiryDateTime !== null && userSessionExpiryDateTime[0] != null) {
+    if (new Date() > new Date(userSessionExpiryDateTime[0].SessionExpiryDateTime)) {
+      res.redirect('/logout')
+    } else {
+      next()
     }
   }
 }
