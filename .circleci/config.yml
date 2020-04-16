@@ -46,6 +46,7 @@ jobs:
           root: .
           paths:
             - node_modules
+            - dist
             - .cache/Cypress
       - store_test_results:
           path: test-results
