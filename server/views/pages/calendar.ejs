@@ -30,7 +30,7 @@
         </div>
 
         <div class="calendar-controls center-align govuk-!-margin-bottom-8">
-          <span class="govuk-heading-m govuk-!-margin-bottom-0"><%= getMonthAndYear(startDate) %></span>
+          <h1 class="govuk-heading-m govuk-!-margin-bottom-0"><%= getMonthAndYear(startDate) %></h1>
           <a
             class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19"
             href="/calendar/<%=getPreviousMonth(startDate)%>"
@@ -44,7 +44,7 @@
         </div>
 
         <% if (data == null || data.shifts.length == 0) { %>
-        <span class="govuk-heading-m center-align">No data available</span>
+        <h1 class="govuk-heading-m center-align">No data available</h1>
         <% } %>
         <ul class="calendar">
           <% if (data != null && data.shifts.length > 0) { %> <% getDays().forEach(function(day){ %>

@@ -9,9 +9,13 @@ const utilities = require('../helpers/utilities')
 const staffMemberService = require('../services/staffMemberService')
 const userAuthenticationService = require('../services/userAuthenticationService')
 
-const notify = new NotifyClient(config.notify.clientKey || '')
-const notifySmsTemplate = config.notify.smsTemplateId || ''
-const notifyEmailTemplate = config.notify.emailTemplateId || ''
+const {
+  notify: { url, clientKey, smsTemplateId, emailTemplateId },
+} = config
+const notify = url ? new NotifyClient(url, clientKey) : new NotifyClient(clientKey)
+
+const notifySmsTemplate = smsTemplateId || ''
+const notifyEmailTemplate = emailTemplateId || ''
 
 module.exports = () => (router) => {
   router.get(
@@ -31,7 +35,6 @@ module.exports = () => (router) => {
   router.post(
     '/auth/2fa',
     asyncMiddleware(async (req, res) => {
-      
       const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
 
       const inputTwoFactorCode = utilities.createTwoFactorAuthenticationHash(req.body.code)
@@ -44,7 +47,10 @@ module.exports = () => (router) => {
           req.user.token,
         )
 
-        await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(req.user.username, new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000))
+        await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(
+          req.user.username,
+          new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000),
+        )
 
         res.redirect(`/calendar/${utilities.getStartMonth()}`)
       } else {
@@ -141,10 +147,13 @@ module.exports = () => (router) => {
         if (!emailEnabled && !smsEnabled) {
           throw new Error(`Error : Sms or Email address both set to false for QuantumId : ${req.user.username}`)
         }
-        
-        const twofactorCode = utilities.get2faCode() 
-                
-        await userAuthenticationService.updateTwoFactorAuthenticationHash(req.user.username, utilities.createTwoFactorAuthenticationHash(twofactorCode.toString()))
+
+        const twofactorCode = utilities.get2faCode()
+
+        await userAuthenticationService.updateTwoFactorAuthenticationHash(
+          req.user.username,
+          utilities.createTwoFactorAuthenticationHash(twofactorCode.toString()),
+        )
 
         if (smsEnabled) {
           // For SMS
@@ -167,10 +176,9 @@ module.exports = () => (router) => {
               throw new Error(err)
             })
         }
-               
+
         res.render('pages/two-factor-auth', { authError: false, csrfToken: res.locals.csrfToken })
       } else {
-        
         req.user.employeeName = await getStaffMemberEmployeeName(
           userAuthentication.ApiUrl,
           req.user.username,

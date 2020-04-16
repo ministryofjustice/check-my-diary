@@ -19,19 +19,19 @@
 
     <div class="grid-row">
       <div class="column-full">
-        
+
         <% if (data != null && data.tasks.length > 0) { %>
 
-          <h1 class="govuk-heading-l"><%= getDayOfWeek(data.tasks[0].date) %> <%= parseFullDateFormat(data.tasks[0].date) %></h1>                          
+          <h1 class="govuk-heading-l"><%= getDayOfWeek(data.tasks[0].date) %> <%= parseFullDateFormat(data.tasks[0].date) %></h1>
 
           <ul class="app-shift-detail">
 
             <% data.tasks.forEach(function(task, index){ %>
-             
+
                 <% if (task.startDateTime !== task.date + 'T00:00:00' && task.endDateTime !== task.date + 'T23:59:59') { %>
 
                   <% if (checkIfDateTimeIsNull(task.dailyStartDateTime) && checkIfDateTimeIsNull(task.dailyEndDateTime)) { %>
-                  
+
                     <% if (task.taskType === 'Absence' || task.taskType === 'Break') { %>
                       <li class="<% if (index === 0) { %>detail-start<% } %>">
                         <span class="time"><%= getTimeFromDate(task.startDateTime) %> - <%= getTimeFromDate(task.endDateTime) %></span>
@@ -82,11 +82,11 @@
 
                   <% } else { %>
                     <% if (checkIfStartDateTimeBeforeEndDateTime(task.dailyStartDateTime, task.dailyEndDateTime)) { %>
-                                        
+
                       <li class="detail-finish">
                         <span class="time"><%= getTimeFromDate(task.dailyEndDateTime) %></span>
                         <span class="description">End of shift</span>
-                      </li>                 
+                      </li>
 
                       <li class="detail-start-night">
                         <span class="time"><%= getTimeFromDate(task.dailyStartDateTime) %></span>
@@ -103,7 +103,7 @@
                         <span class="time"><%= getTimeFromDate(task.dailyEndDateTime) %></span>
                         <span class="description">End of shift</span>
                       </li>
-                    
+
                     <% } %>
                   <% } %>
 
@@ -111,43 +111,43 @@
 
 
               <% if ((task.taskType === 'Holiday' && task.startDateTime === task.date + 'T00:00:00' && task.endDateTime === task.date + 'T23:59:59') || task.taskType === 'Illness' || task.taskType === 'Detached Duty' || task.taskType === 'TU Officials Leave Days' || task.taskType === 'TU Officials Leave Hours' || (task.taskType === 'Absence' && (task.startDateTime === task.date + 'T00:00:00' && task.endDateTime === task.date + 'T23:59:59')) || (task.taskType === 'Unspecific' && (task.startDateTime === task.date + 'T00:00:00' && task.endDateTime === task.date + 'T23:59:59')) || (task.taskType === 'Absence' && task.label.toLowerCase().includes("rest day")) ) { %>
-                    
+
                   <li
                     class="<% if (task.taskType === 'Holiday') { %>detail-holiday<% } else if (task.taskType === 'Absence' && task.label === 'Rest Day') { %>detail-rest-day<% } else if (task.taskType === 'Illness') { %>detail-illness<% } else if (task.taskType === 'Absence' && task.label === 'Detached Duty') { %>detail-detached-duty<% } else if ((task.taskType === 'Absence' && task.label === 'TU Officials Leave Days') || (task.taskType === 'Absence' && task.label === 'TU Officials Leave Hours')) { %>detail-tu-official<% } else { %>detail-absence<% } %>">
                     <span class="time">
-                      
+
                       <% if (task.taskType === 'Holiday') { %>Holiday
                       <% } else if (task.taskType === 'Absence') { %><%= task.label %>
                       <% } else if (task.taskType === 'Illness') { %>Sick
-                        
-                      <% } else if (task.label === 'Detached Duty') { %>Detached Duty   
-                         
+
+                      <% } else if (task.label === 'Detached Duty') { %>Detached Duty
+
                       <% } else if (task.label === 'TU Officials Leave Days' || task.taskType === 'TU Officials Leave Hours') { %>
-                        <%= task.label %>                      
+                        <%= task.label %>
                       <% } else if (task.taskType === 'Unspecific' && (task.startDateTime === task.date + 'T00:00:00' && task.endDateTime === task.date + 'T23:59:59')) { %>
                         <%= task.label %>
                       <% } %>
                     </span>
                     <span class="description">All day</span>
                   </li>
-                    
+
               <% } %>
 
-            <% } );%> 
+            <% } );%>
 
-          </ul>          
-          
+          </ul>
+
           <div class="govuk-clearfix"></div>
-          
+
             <a id="btnPreviousShiftDetail" href="/details/<%= getDatePartFormatted(getPreviousDate(data.tasks[0].date)) %>"
               class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19">&larr; <%= getPreviousDay(getDayOfWeek(data.tasks[0].date)) %> <%= parseFullDateFormat(getPreviousDate(data.tasks[0].date)) %></a>
 
             <a id="btnNextShiftDetail" href="/details/<%= getDatePartFormatted(getNextDate(data.tasks[0].date)) %>"
               class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 app-link-!-border "><%= getNextDay(getDayOfWeek(data.tasks[0].date)) %> <%= parseFullDateFormat(getNextDate(data.tasks[0].date)) %> &rarr;</a>
-        
+
           </div>
         <% } else { %>
-          <span class="govuk-heading-m center-align">No data available</span>
+          <h1 class="govuk-heading-m center-align">No data available</h1>
         <% } %>
 		<input type="hidden" name="_csrf" value="<%= csrfToken %>" />
     </div>
