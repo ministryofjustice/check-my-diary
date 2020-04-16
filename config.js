@@ -65,6 +65,5 @@ module.exports = {
   quantumAddresses: get('QUANTUM_ADDRESS', '127.0.0.1', requiredInProduction),
   rejectUnauthorized: process.env.REJECT_UNAUTHORIZED,
   twoFactorAuthOn: process.env.TWO_FACT_AUTH_ON,
-  notifyHealthCheckUrl: get('NOTIFY_HEALTH_CHECK_URL', 'http://localhost:9191/_status', requiredInProduction),
   https: production,
 }

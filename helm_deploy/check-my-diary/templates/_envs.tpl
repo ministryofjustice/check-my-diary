@@ -64,9 +64,6 @@ env:
   - name: "CHECK_MY_DIARY_URL"
     value: https://{{ .Values.ingress.host }}
 
-  - name: NOTIFY_HEALTH_CHECK_URL
-    value: {{ .Values.env.NOTIFY_HEALTH_CHECK_URL | quote }}
-
   - name: "DATABASE_HOST"
     valueFrom:
       secretKeyRef:
