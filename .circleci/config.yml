@@ -63,7 +63,7 @@ jobs:
           command: curl -o wiremock.jar https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-standalone/2.26.3/wiremock-standalone-2.26.3.jar
       - run:
           name: Run wiremock
-          command: java -jar wiremock.jar --port 9091
+          command: java -jar wiremock.jar --port 9191
           background: true
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
