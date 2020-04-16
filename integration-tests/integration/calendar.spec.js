@@ -21,34 +21,47 @@ context('A staff member can view their calendar', () => {
 
     // day shift
     const dayShift = calendarPage.day('2020-03-04')
-    dayShift.should('contain.text', 'Wednesday, 4')
-    dayShift
-      .children('.detail-start')
-      .should('contain.text', 'Start 07:30')
-      .next()
-      .should('contain.text', 'Finish 17:15')
-      .next()
-      .should('contain.text', '8hrs 45mins')
+    dayShift.children().should((spans) => {
+      const allText = spans.map((i, el) => Cypress.$(el).text().trim())
+      expect(allText.get()).to.deep.eq(['Wednesday, 4', '4', 'Start 07:30', 'Finish 17:15', '8hrs 45mins'])
+    })
   })
 
-  it('A staff member can drill into a day', () => {
+  it('A staff member can drill into a day shift', () => {
     cy.task('stubTasks')
     const calendarPage = CalendarPage.verifyOnPage(moment().format('MMMM YYYY'))
     const dayShift = calendarPage.day('2020-03-04')
     dayShift.click()
 
     const calendarDetailPage = CalendarDetailPage.verifyOnPage('Friday 6 March 2020')
-    calendarDetailPage
-      .detailStart()
-      .should('contain', 'Start of shift')
-      .should('contain', 'Training - Internal')
-      .next()
-      .should('contain.text', 'Break (Unpaid)')
-      .next()
-      .should('contain.text', 'Duty Manager')
-      .next()
-      .should('contain.text', 'Present')
-      .next()
-      .should('contain.text', 'End of shift')
+    calendarDetailPage.detailStart().should('contain', 'Start of shift').should('contain', 'Training - Internal')
+    calendarDetailPage.detailFinish().should('contain.text', 'End of shift')
+  })
+
+  it('A staff member can drill into a night shift', () => {
+    cy.task('stubTasks')
+    const calendarPage = CalendarPage.verifyOnPage(moment().format('MMMM YYYY'))
+    const nightShift = calendarPage.day('2020-03-07')
+    nightShift.click()
+
+    // the title comes from the seed data, hence the jumping between dates
+    const nightShiftPage = CalendarDetailPage.verifyOnPage('Sunday 22 March 2020')
+    nightShiftPage.detailFinish().should('contain.text', 'End of shift')
+    nightShiftPage.detailStartNight().should('contain', 'Start of shift').should('contain', 'Night Duties')
+  })
+
+  it('A staff member navigate to different days', () => {
+    cy.task('stubTasks')
+    const calendarPage = CalendarPage.verifyOnPage(moment().format('MMMM YYYY'))
+    const dayShift = calendarPage.day('2020-03-04')
+    dayShift.click()
+
+    const calendarDetailPage = CalendarDetailPage.verifyOnPage('Friday 6 March 2020')
+    calendarDetailPage.nextDay().should('contain.text', 'Saturday 7 March 2020').click()
+    // the title comes from the seed data, hence the jumping between dates
+    const nightShiftPage = CalendarDetailPage.verifyOnPage('Sunday 22 March 2020')
+    nightShiftPage.previousDay().should('contain.text', 'Saturday 21 March 2020').click()
+
+    CalendarDetailPage.verifyOnPage('Sunday 1 March 2020')
   })
 })
