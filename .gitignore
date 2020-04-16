@@ -25,3 +25,5 @@ yarn-error.log
 !helm_deploy/check-my-diary/templates/secrets.yaml
 !helm_deploy/secrets-example.yaml
 test-results
+integration-tests/videos
+integration-tests/screenshots

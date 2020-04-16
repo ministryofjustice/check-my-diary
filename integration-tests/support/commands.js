@@ -1,4 +1,4 @@
 Cypress.Commands.add('login', () => {
   cy.request('/')
-  cy.task('getLognUrl').then(cy.visit)
+  cy.task('getLoginUrl').then(cy.visit)
 })

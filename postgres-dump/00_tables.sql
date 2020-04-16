@@ -19,18 +19,20 @@ create table "Prison"
 
 create table "UserAuthentication"
 (
-    "QuantumId"         varchar(50)  not null
+    "QuantumId"                   varchar(50)  not null
         constraint "UserAuthentication_QuantumId_PKey"
             primary key,
-    "EmailAddress"      varchar(100),
-    "Sms"               varchar(50),
-    "UseEmailAddress"   boolean      not null,
-    "UseSms"            boolean      not null,
-    "LastLoginDateTime" timestamp with time zone,
-    "ApiUrl"            varchar(256) not null,
-    "PrisonId"          integer
+    "EmailAddress"                varchar(100),
+    "Sms"                         varchar(50),
+    "UseEmailAddress"             boolean      not null,
+    "UseSms"                      boolean      not null,
+    "LastLoginDateTime"           timestamp with time zone,
+    "ApiUrl"                      varchar(256) not null,
+    "PrisonId"                    integer
         constraint "UserAuthentication_PrisonId_Prison_Id"
-            references "Prison"
+            references "Prison",
+    "TwoFactorAuthenticationHash" varchar(100),
+    "SessionExpiryDateTime"       timestamp
 );
 
 
