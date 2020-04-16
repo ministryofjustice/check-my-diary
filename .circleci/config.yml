@@ -6,11 +6,11 @@ orbs:
 executors:
   validator:
     docker:
-      - image: circleci/node:12-buster-browsers
+      - image: circleci/node:12-browsers
     working_directory: ~/app
   integration-tests:
     docker:
-      - image: circleci/openjdk:11-jdk-node-browsers
+      - image: circleci/node:12-browsers
       - image: circleci/postgres:10.6-alpine-ram
         environment:
           POSTGRES_PASSWORD: check-my-diary
