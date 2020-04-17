@@ -186,7 +186,10 @@ module.exports = () => (router) => {
           req.user.token,
         )
 
-        await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(req.user.username, new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000))
+        await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(
+          req.user.username,
+          new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000),
+        )
 
         res.redirect(`/calendar/${utilities.getStartMonth()}`)
       }

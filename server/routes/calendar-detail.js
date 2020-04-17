@@ -15,8 +15,9 @@ module.exports = (logger, calendarService, userAuthenticationService) => (router
     asyncMiddleware(async (req, res) => {
       logger.info('GET calendar details')
       try {
-
-        const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
+        const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(
+          req.user.username,
+        )
 
         const apiResponse = await calendarService.getCalendarDetails(
           userAuthenticationDetails[0].ApiUrl,

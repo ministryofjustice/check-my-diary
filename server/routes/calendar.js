@@ -17,18 +17,19 @@ module.exports = (logger, calendarService, notificationService, userAuthenticati
     asyncMiddleware(async (req, res) => {
       logger.info('GET calendar view')
       try {
-
-        const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)       
+        const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(
+          req.user.username,
+        )
 
         const shiftNotifications = await notificationService.getShiftNotifications(req.user.username)
-     
+
         const apiResponse = await calendarService.getCalendarData(
           userAuthenticationDetails[0].ApiUrl,
           req.user.username,
           req.params.date,
           req.user.token,
         )
-        
+
         res.render('pages/calendar', {
           shiftNotifications,
           tab: 'Calendar',

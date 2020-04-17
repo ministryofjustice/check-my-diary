@@ -78,7 +78,7 @@ const fakeCalendarDetailData2 = {
 }
 
 const fakeUserAuthenticationDetails = [
-  {    
+  {
     ApiUrl: 'https://localhost:80',
   },
 ]
@@ -102,7 +102,7 @@ const calendarRoute = standardRoute(createRouter(logger, calendarService, userAu
 let app
 
 beforeEach(() => {
-  app = appSetup(calendarRoute)  
+  app = appSetup(calendarRoute)
   userAuthenticationService.getUserAuthenticationDetails.mockReturnValue(fakeUserAuthenticationDetails)
 })
 
@@ -158,7 +158,7 @@ describe('GET and POST for /:details', () => {
         expect(res.text).toContain('19:30')
         expect(res.text).toContain('End of shift')
 
-        expect(calendarService.getCalendarDetails).toHaveBeenCalledTimes(1)        
+        expect(calendarService.getCalendarDetails).toHaveBeenCalledTimes(1)
         expect(userAuthenticationService.getUserAuthenticationDetails).toHaveBeenCalledTimes(1)
         expect(logger.info).toHaveBeenCalledTimes(1)
       })
