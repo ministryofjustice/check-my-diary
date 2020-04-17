@@ -616,7 +616,7 @@ const fakeCalendarData2 = {
 }
 
 const fakeUserAuthenticationDetails = [
-  {    
+  {
     ApiUrl: 'https://localhost:80',
   },
 ]
@@ -639,7 +639,9 @@ const logger = {
 }
 
 const standardRoute = standardRouter({ authenticationMiddleware })
-const calendarRoute = standardRoute(createRouter(logger, calendarService, notificationService, userAuthenticationService))
+const calendarRoute = standardRoute(
+  createRouter(logger, calendarService, notificationService, userAuthenticationService),
+)
 
 let app
 
