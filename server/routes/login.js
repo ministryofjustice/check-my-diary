@@ -112,7 +112,7 @@ module.exports = () => (router) => {
       // Add Api health check
       healthRes = await health.healthResult([
         `${userAuthentication.ApiUrl}health`,
-        `${userAuthentication.ApiUrl}health/invsion`,
+        `${userAuthentication.ApiUrl}health/invision`,
         `${config.notifyHealthCheckUrl}`,
       ])
       isApiUp = healthRes.status === 200
