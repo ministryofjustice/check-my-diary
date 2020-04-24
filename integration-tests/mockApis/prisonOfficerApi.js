@@ -525,11 +525,28 @@ const stubHealthInvision = async () =>
       },
       body: 'Healthy',
     },
+  })  
+
+  const stubNotifyStatus = async () =>
+  stubFor({
+    request: {
+      method: 'GET',
+      url: '/_status',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      jsonBody: {
+        status: 'ok',
+      },
+    },
   })
 
 module.exports = {
   stubStaffLookup,
   stubTasks: () => Promise.all([stubDayShift(), stubNightShift(), stubSecondment(), stubRestDay()]),
   stubShifts,
-  stubHealthCalls: () => Promise.all([stubHealth(), stubHealthInvision()]),
+  stubHealthCalls: () => Promise.all([stubHealth(), stubHealthInvision(), stubNotifyStatus()]),
 }
