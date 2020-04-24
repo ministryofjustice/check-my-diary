@@ -35,15 +35,38 @@
               <h2 class="govuk-error-summary__title" id="error-summary-title">
                 There is a problem
               </h2>
+              
+              <% if (showUserNotSignedUpMessage) { %>
+                <div class="govuk-error-summary__body">
+                  You have not been setup on Check My Diary. If you are interested in signing up then please email <a href="mailto:checkmydiary@digital.justice.gov.uk" target="_top">Check My Diary team</a> with your following details:
+                  <ul class="govuk-list govuk-error-summary__list" style="margin-left: 40px;list-style-type: disc;">
+                    <li class="gov-l">
+                      QuantumID
+                    </li>
+                    <li>
+                      Justice email address
+                    </li>
+                    <li>
+                      Establishment
+                    </li>
+                    <li>
+                      Personal mobile number, or personal email address (or both) – we will then use these to send you notifications
+                    </li>
+                  </ul>
+                </div>
+              <% } else { %>
+              
               <div class="govuk-error-summary__body">
                 <ul class="govuk-list govuk-error-summary__list">
                   <li>
                     <% if (apiUp || authError) { %>
                     <b><%= authErrorText %></b>
-                    <% } else { %> Service temporarily unavailable. Please try again later. <% } %>
+                    <% } else { %> Service temporarily unavailable. Please try again later. If this issue persists, please contact the Helpdesk on 0203 788 4636. <% } %>
                   </li>
                 </ul>
               </div>
+              <% } %>
+            
             </div>
 
             <% } %>

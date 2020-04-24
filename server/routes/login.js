@@ -91,10 +91,13 @@ module.exports = () => (router) => {
     let healthRes
     let isApiUp
 
+    let userNotSignedUpMessage = false
+
     try {
       const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
 
       if (userAuthenticationDetails === null || userAuthenticationDetails.length === 0) {
+        userNotSignedUpMessage = true
         throw new Error(`Error : No Sms or Email address returned for QuantumId : ${req.user.username}`)
       }
 
@@ -103,7 +106,8 @@ module.exports = () => (router) => {
       // Add Api health check
       healthRes = await health.healthResult([
         `${userAuthentication.ApiUrl}health`,
-        `${userAuthentication.ApiUrl}health/invision`,
+        `${userAuthentication.ApiUrl}health/invsion`,
+        `${config.notifyHealthCheckUrl}`,
       ])
       isApiUp = healthRes.status === 200
       log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`)
@@ -111,6 +115,7 @@ module.exports = () => (router) => {
 
       if (isApiUp === false) {
         res.render('pages/index', {
+          showUserNotSignedUpMessage: false,
           authError: false,
           apiUp: isApiUp,
           csrfToken: res.locals.csrfToken,
@@ -120,8 +125,8 @@ module.exports = () => (router) => {
 
       const quantumAddresses = config.quantumAddresses.split(',')
 
-      if (config.twoFactorAuthOn === 'true' && ipRangeCheck(ipAddress, quantumAddresses) === false) {
-        if (userAuthenticationDetails === null || userAuthenticationDetails.length === 0) {
+      if (config.twoFactorAuthOn === 'true' && ipRangeCheck(ipAddress, quantumAddresses) === false) {        
+        if (userAuthenticationDetails === null || userAuthenticationDetails.length === 0) {          
           throw new Error(`Error : No Sms or Email address returned for QuantumId : ${req.user.username}`)
         }
 
@@ -186,6 +191,7 @@ module.exports = () => (router) => {
       const data = {
         id: req.user.username,
         authError: true,
+        showUserNotSignedUpMessage: userNotSignedUpMessage,
         apiUp: isApiUp,
         authErrorText: utilities.getAuthErrorDescription(error),
         csrfToken: res.locals.csrfToken,

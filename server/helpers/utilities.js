@@ -48,7 +48,7 @@ function getAuthErrorDescription(error) {
       error.response && error.response.data && error.response.data.error_description
     }`,
   )
-  let type = 'The username or password you have entered is invalid.'
+  let type = 'Service temporarily unavailable. Please try again later. If this issue persists, please contact the Helpdesk on 0203 788 4636.'
   if (error !== null && error.message !== '') {
     if (error.message.includes('No Sms or Email address returned for QuantumId')) {
       type =
