@@ -11,10 +11,7 @@ function get2faCode() {
 }
 
 function createTwoFactorAuthenticationHash(input) {
-
-  return crypto.createHash('sha256')
-          .update(input.toString())
-          .digest('base64')
+  return crypto.createHash('sha256').update(input.toString()).digest('base64')
 }
 
 function isNullOrEmpty(str) {

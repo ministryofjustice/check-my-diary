@@ -19,7 +19,7 @@ convertSecondsToHms = (d) => {
   var hDisplay = h > 0 ? h + (h == 1 ? "hr " : "hrs ") : "";
   var mDisplay = m > 0 ? m + (m == 1 ? "min " : "mins ") : "";
   var sDisplay = s > 0 ? s + (s == 1 ? "sec" : " secs") : "";
-  return hDisplay + mDisplay; 
+  return hDisplay + mDisplay;
 }
 
 checkIfStartDateTimeBeforeEndDateTime = (startDateTime, endDateTime) => {
@@ -35,7 +35,7 @@ checkIfStartDateTimeBeforeEndDateTime = (startDateTime, endDateTime) => {
 
 checkIfDateTimeIsNull = (dateTime) => {
   if (dateTime == "null"){
-    return true;    
+    return true;
   } else {
     return false;
   }
@@ -52,15 +52,15 @@ checkIfDateTimeIsNullOrUndefined = (dateTime) => {
 getNextDate = (dateTime) => {
   var today = new Date(dateTime);
   var tomorrow = today.setDate(today.getDate()+1);
-  
-  return getDatePartFormatted(tomorrow);  
+
+  return getDatePartFormatted(tomorrow);
 }
 
 getPreviousDate = (dateTime) => {
   var today = new Date(dateTime);
-  var tomorrow = today.setDate(today.getDate()-1);
-  
-  return getDatePartFormatted(tomorrow);  
+  var yesterday = today.setDate(today.getDate()-1);
+
+  return getDatePartFormatted(yesterday);
 }
 
 getTimeFromDate = (dateTime) => {
@@ -73,7 +73,7 @@ getTimeFromDate = (dateTime) => {
 }
 
 getDayOfWeek = (date) => {
-  var dayOfWeek = new Date(date).getDay();    
+  var dayOfWeek = new Date(date).getDay();
   return isNaN(dayOfWeek) ? null : ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayOfWeek];
 }
 
@@ -138,7 +138,7 @@ getNextDay = (day) => {
  */
 getPreviousDay = (day) => {
   const days = getDays();
-  return days[days.indexOf(day) - 1] || days[0];
+  return days[days.indexOf(day) - 1] || days[days.length - 1];
 }
 
 /**
@@ -208,20 +208,20 @@ getConvertedDateTime = (dateTimeInSeconds) => {
 getDateTimeNowUTC = () => {
 
   var now = new Date();
-  var utc_timestamp =  Date.UTC(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate() , 
+  var utc_timestamp =  Date.UTC(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate() ,
       now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds());
   return new Date(utc_timestamp);
 }
 
-getRelativeLastModifiedDateTime = (dateTimeInSeconds) => {  
-               
+getRelativeLastModifiedDateTime = (dateTimeInSeconds) => {
+
   var s = ( +getDateTimeNowUTC() - getConvertedDateTime(dateTimeInSeconds) ) / 1e3,
     m = s / 60,
     h = m / 60,
     d = h / 24,
     y = d / 365.242199,
     tmp;
-  
+
   return ( tmp = Math.round(s) ) === 1 ? 'just now'
        : m < 1.01                      ? tmp + ' seconds ago'
        : ( tmp = Math.round(m) ) === 1 ? 'a minute ago'

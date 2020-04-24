@@ -3,27 +3,24 @@ services:
   check-my-diary-db:
     image: postgres:10.6
     networks:
-      - hmpps
+      - hmpps_int
     container_name: check-my-diary-db
     restart: always
     ports:
-      - '5432:5432'
+      - "5432:5432"
     environment:
       - POSTGRES_PASSWORD=check-my-diary
       - POSTGRES_USER=check-my-diary
       - POSTGRES_DB=check-my-diary
 
-  oauth-server:
-    image: mojdigitalstudio/nomis-oauth2-server:latest
+  check-my-diary-wiremock:
+    image: rodolpheche/wiremock
     networks:
-      - hmpps
-    container_name: oauth-server
+      - hmpps_int
+    container_name: check-my-diary-wiremock
+    restart: always
     ports:
-      - '9090:8080'
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:8080/auth/health']
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
+      - "9191:8080"
 
 networks:
-  hmpps:
+  hmpps_int:
