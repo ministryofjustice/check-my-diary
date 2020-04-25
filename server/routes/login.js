@@ -113,7 +113,7 @@ module.exports = () => (router) => {
       healthRes = await health.healthResult([
         `${userAuthentication.ApiUrl}health`,
         `${userAuthentication.ApiUrl}health/invision`,
-        `https://api.notifications.service.gov.uk/_status`,
+        `${config.notify.healthCheckUrl}`,
       ])
       isApiUp = healthRes.status === 200
       log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`)
