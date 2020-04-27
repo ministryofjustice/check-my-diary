@@ -23,25 +23,7 @@ const stubNotifications = async () =>
     },
   })
 
-const stubStatus = async () =>
-  stubFor({
-    request: {
-      method: 'GET',
-      url: '/_status',
-    },
-    response: {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      jsonBody: {
-        status: 'ok',
-      },
-    },
-  })
-
 module.exports = {
-  stubStatus,
   stubNotifications,
   getNotificationCalls,
 }
