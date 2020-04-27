@@ -1,18 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
   <head>
-    <% include ../partials/head %>
-    <script type="text/javascript">
-      function showHide() {
-        var pwd = document.getElementById('password')
-        var showButton = document.getElementById('show-password')
-        if (pwd.getAttribute('type') === 'password') {
-          pwd.setAttribute('type', 'text')
-        } else {
-          pwd.setAttribute('type', 'password')
-        }
-      }
-    </script>
+    <% include ../partials/head %>    
   </head>
   <body class="govuk-template__body">
     <% include ../partials/header %>
