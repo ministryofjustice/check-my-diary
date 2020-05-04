@@ -45,23 +45,10 @@ module.exports = function CalendarOvertimeService() {
         if (data.shifts[x] !== undefined){
           // newDataArray.splice( new Date(data.shifts[x].startDateTime).getDate()-1, 0, data.shifts[x])
           newDataArray[new Date(data.shifts[x].startDateTime).getDate()-1] = data.shifts[x]
-        }
- 
-        // if (new Date(data.shifts[x].startDateTime).getDate() === x){
-          // newData.splice( x, 0, data.shifts[x-1])
+        }        
       }
-
       
       newData.shifts = newDataArray
-
-      // eslint-disable-next-line no-plusplus
-     /* for(let x = 1; x <= daysInMonth; x++ ){
-        if (new Date(data.shifts[x-1].startDateTime).getDate() !== x){
-          data.shifts.splice( x, 0, {
-            type: 'no-day',
-          } )
-        }
-      } */
 
       // eslint-disable-next-line no-plusplus
       for (let i = 0, len = pad; i < len; i++) {
