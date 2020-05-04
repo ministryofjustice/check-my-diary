@@ -46,6 +46,10 @@ div.tabs-wrapper {
   font-family: "nta", Arial, sans-serif;
   font-size: 19px;
   text-transform: none;
+
+  @include app-breakpoint {
+    font-size: 15px;
+  }
 }
 
 ul.tabs {

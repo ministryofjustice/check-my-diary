@@ -9,6 +9,7 @@ const createApp = require('./app')
 const createSignInService = require('./authentication/signInService')
 const logger = require('../log')
 const calendarService = require('./services/calendarService')
+const calendarOvertimeService = require('./services/calendarOvertimeService')
 const notificationService = require('./services/notificationService')
 
 // pass in dependencies of service
@@ -18,6 +19,7 @@ const app = createApp(
   },
   logger,
   calendarService(),
+  calendarOvertimeService(),
   notificationService(),
 )
 

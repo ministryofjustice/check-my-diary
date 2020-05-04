@@ -1,0 +1,97 @@
+<% include ../helpers/helpers %>
+
+<!DOCTYPE html>
+<html lang="en" class="govuk-template">
+<head>
+  <% include ../partials/head %>
+</head>
+<body class="govuk-template__body">
+
+<% include ../partials/header %>
+
+<div class="govuk-width-container">
+
+  <% include ../partials/beta-banner %>
+
+  <a href="/calendar-overtime/<%=getCurrentMonth(date)%>" class="govuk-back-link">Back</a>
+
+  <main id="main-content" class="govuk-main-wrapper govuk-!-margin-bottom-8" role="main">
+
+    <div class="grid-row">
+      <div class="column-full">
+
+        <h1 class="govuk-heading-l"><%= getDayOfWeek(date) %> <%= parseFullDateFormat(date) %></h1>        
+
+        <% if (data != null && data.tasks.length > 0) { %>         
+                    
+          <ul class="app-shift-detail">
+         
+            <% data.tasks.forEach(function(task, index){ %>
+
+              <% if (task.taskType === 'Absence' || task.taskType === 'Break') { %>
+                    <li class="<% if (index === 0) { %>detail-start<% } %>">
+                      <span class="time"><%= getTimeFromDate(task.startDateTime) %> - <%= getTimeFromDate(task.endDateTime) %></span>
+                      <span class="description">
+                        <% if (index === 0) { %>Start :
+                        <% } %>
+                        <%= task.label %></span>
+                    </li>
+
+                    <% if (index === data.tasks.length - 1) { %>
+                      <li class="detail-finish">
+                        <span class="time"><%= getTimeFromDate(task.endDateTime) %></span>
+                        <span class="description">End</span>
+                      </li>
+                    <% } %>
+                  <% } else { %>
+                    <li class="<% if (index === 0) { %>detail-start<% } %>">
+                      <span class="time"><%= getTimeFromDate(task.startDateTime) %> - <%= getTimeFromDate(task.endDateTime) %></span>
+                      <span class="description">
+                        <% if (index === 0) { %>Start of overtime:
+                        <% } %>
+                        <%= task.label %></span>
+                    </li>
+
+                    <% if (index === data.tasks.length - 1) { %>
+                      <li class="detail-finish">
+                        <span class="time"><%= getTimeFromDate(task.endDateTime) %></span>
+                        <span class="description">End of overtime</span>
+                      </li>
+                    <% } %>
+                  <% }  %>                                  
+            <% } );%>
+          </ul>
+         
+        <% } else { %>
+         
+          <ul class="app-shift-detail">
+
+            <li class="detail-rest-day">
+              <span class="time">
+
+                No Overtime
+              </span>
+              
+            </li>
+          </ul>
+          <% } %>
+          <div class="govuk-clearfix">
+
+            <a id="btnPreviousShiftDetail" href="/overtime-details/<%= getDatePartFormatted(getPreviousDate(date)) %>"
+              class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19">&larr; <%= getPreviousDay(getDayOfWeek(date)) %> <%= parseFullDateFormat(getPreviousDate(date)) %></a>
+
+            <a id="btnNextShiftDetail" href="/overtime-details/<%= getDatePartFormatted(getNextDate(date)) %>"
+              class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 app-link-!-border "><%= getNextDay(getDayOfWeek(date)) %> <%= parseFullDateFormat(getNextDate(date)) %> &rarr;</a>
+
+          </div>
+                  
+		<input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+    </div>
+  </main>
+
+</div>
+
+<% include ../partials/footer %>
+
+</body>
+</html>
