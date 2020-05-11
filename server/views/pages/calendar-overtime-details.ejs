@@ -29,36 +29,36 @@
             <% data.tasks.forEach(function(task, index){ %>
 
               <% if (task.taskType === 'Absence' || task.taskType === 'Break') { %>
-                    <li class="<% if (index === 0) { %>detail-start<% } %>">
-                      <span class="time"><%= getTimeFromDate(task.startDateTime) %> - <%= getTimeFromDate(task.endDateTime) %></span>
-                      <span class="description">
-                        <% if (index === 0) { %>Start :
-                        <% } %>
-                        <%= task.label %></span>
-                    </li>
+                  <li class="<% if (index === 0) { %>detail-start<% } %>">
+                    <span class="time"><%= getTimeFromDate(task.startDateTime) %> - <%= getTimeFromDate(task.endDateTime) %></span>
+                    <span class="description">
+                      <% if (index === 0) { %>Start :
+                      <% } %>
+                      <%= task.label %></span>
+                  </li>
 
-                    <% if (index === data.tasks.length - 1) { %>
-                      <li class="detail-finish">
-                        <span class="time"><%= getTimeFromDate(task.endDateTime) %></span>
-                        <span class="description">End</span>
-                      </li>
-                    <% } %>
-                  <% } else { %>
-                    <li class="<% if (index === 0) { %>detail-start<% } %>">
-                      <span class="time"><%= getTimeFromDate(task.startDateTime) %> - <%= getTimeFromDate(task.endDateTime) %></span>
-                      <span class="description">
-                        <% if (index === 0) { %>Start of overtime:
-                        <% } %>
-                        <%= task.label %></span>
+                  <% if (index === data.tasks.length - 1) { %>
+                    <li class="detail-finish">
+                      <span class="time"><%= getTimeFromDate(task.endDateTime) %></span>
+                      <span class="description">End</span>
                     </li>
+                  <% } %>
+                <% } else { %>
+                  <li class="<% if (index === 0) { %>detail-start<% } %>">
+                    <span class="time"><%= getTimeFromDate(task.startDateTime) %> - <%= getTimeFromDate(task.endDateTime) %></span>
+                    <span class="description">
+                      <% if (index === 0) { %>Start of shift:
+                      <% } %>
+                      <%= task.label %></span>
+                  </li>
 
-                    <% if (index === data.tasks.length - 1) { %>
-                      <li class="detail-finish">
-                        <span class="time"><%= getTimeFromDate(task.endDateTime) %></span>
-                        <span class="description">End of overtime</span>
-                      </li>
-                    <% } %>
-                  <% }  %>                                  
+                  <% if (index === data.tasks.length - 1) { %>
+                    <li class="detail-finish">
+                      <span class="time"><%= getTimeFromDate(task.endDateTime) %></span>
+                      <span class="description">End of shift</span>
+                    </li>
+                  <% } %>
+                <% }  %>
             <% } );%>
           </ul>
          
@@ -69,7 +69,7 @@
             <li class="detail-rest-day">
               <span class="time">
 
-                No Overtime
+                No Shift Data
               </span>
               
             </li>

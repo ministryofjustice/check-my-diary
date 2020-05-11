@@ -68,7 +68,7 @@ ul.tabs li {
 }
 
 ul.tabs li a {
-  padding: 12px 18px;
+  padding: 12px 6px;
   display: block;
   text-decoration: none;
 }
@@ -77,10 +77,5 @@ ul.tabs li a.active {
   border: 1px solid #005ea5;
   background-color: #005ea5;
   color: white;
-  text-decoration: none;
-}
-
-
-ul.tabs li.active {
   text-decoration: none;
 }

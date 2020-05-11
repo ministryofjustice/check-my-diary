@@ -66,12 +66,12 @@ module.exports = function CalendarService() {
           resolve(configureCalendar(response.data))
         })
         .catch((error) => {
-          logger.error(`CalendarService : getCalendarData Error : ${error}`)
           if (error.response) {
             if (error.response.status === 404) {
               resolve(null)
             }
           } else {
+            logger.error(`CalendarService : getCalendarData Error : ${error}`)
             reject(error)
           }
         })
@@ -96,12 +96,12 @@ module.exports = function CalendarService() {
           resolve(response.data)
         })
         .catch((error) => {
-          logger.error(`CalendarService : getCalendarData Error : ${error}`)
           if (error.response) {
             if (error.response.status === 404) {
               resolve(null)
             }
           } else {
+            logger.error(`CalendarService : getCalendarData Error : ${error}`)
             reject(error)
           }
         })

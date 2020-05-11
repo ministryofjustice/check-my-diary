@@ -37,13 +37,11 @@ module.exports = function CalendarOvertimeService() {
         newDataArray.push({
           type: 'no-day',
           startDateTime: new Date(startDate.getFullYear(), startDate.getMonth(), x+1)
-        })
-      
+        })      
       }
 
       for(let x = 0; x <= data.shifts.length; x++ ){      
-        if (data.shifts[x] !== undefined){
-          // newDataArray.splice( new Date(data.shifts[x].startDateTime).getDate()-1, 0, data.shifts[x])
+        if (data.shifts[x] !== undefined){          
           newDataArray[new Date(data.shifts[x].startDateTime).getDate()-1] = data.shifts[x]
         }        
       }
@@ -102,13 +100,13 @@ module.exports = function CalendarOvertimeService() {
         .then((response) => {
           resolve(configureCalendar(response.data))
         })
-        .catch((error) => {
-          logger.error(`CalendarService : getCalendarData Error : ${error}`)
+        .catch((error) => {          
           if (error.response) {
             if (error.response.status === 404) {
               resolve(null)
             }
           } else {
+            logger.error(`CalendarService : getCalendarOvertimeData Error : ${error}`)
             reject(error)
           }
         })
@@ -132,13 +130,13 @@ module.exports = function CalendarOvertimeService() {
         .then((response) => {
           resolve(response.data)
         })
-        .catch((error) => {
-          logger.error(`CalendarService : getCalendarData Error : ${error}`)
+        .catch((error) => {          
           if (error.response) {
             if (error.response.status === 404) {
               resolve(null)
             }
           } else {
+            logger.error(`CalendarService : getCalendarOvertimeData Error : ${error}`)
             reject(error)
           }
         })
