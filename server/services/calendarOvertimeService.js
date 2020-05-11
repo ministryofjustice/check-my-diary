@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 const axios = require('axios')
 const logger = require('../../log')
 
@@ -36,7 +37,7 @@ module.exports = function CalendarOvertimeService() {
       for(let x = 0; x <= daysInMonth-1; x++ ){        
         newDataArray.push({
           type: 'no-day',
-          startDateTime: new Date(startDate.getFullYear(), startDate.getMonth(), x+1)
+          startDateTime: new Date(startDate.getFullYear(), startDate.getMonth(), x+1),
         })      
       }
 
