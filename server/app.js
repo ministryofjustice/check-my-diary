@@ -17,6 +17,8 @@ const createCalendarRouter = require('./routes/calendar')
 const createCalendarDetailRouter = require('./routes/calendar-detail')
 const createMaintenanceRouter = require('./routes/maintenance')
 const createNotificationRouter = require('./routes/notification')
+const createCalendarOvertimeRouter = require('./routes/calendar-overtime')
+const createCalendarOvertimeDetailRouter = require('./routes/calendar-overtime-detail')
 const standardRouter = require('./routes/standardRouter')
 const logger = require('../log.js')
 const auth = require('./authentication/auth')
@@ -34,7 +36,7 @@ if (config.rejectUnauthorized) {
 }
 
 // eslint-disable-next-line no-shadow
-module.exports = function createApp({ signInService }, logger, calendarService, notificationService) {
+module.exports = function createApp({ signInService }, logger, calendarService, calendarOvertimeService, notificationService) {
   const app = express()
 
   auth.init(signInService)
@@ -235,6 +237,16 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
     '/details',
     authHandler,
     standardRoute(createCalendarDetailRouter(logger, calendarService, userAuthenticationService)),
+  )
+  app.use(
+    '/calendar-overtime',
+    authHandler,
+    standardRoute(createCalendarOvertimeRouter(logger, calendarOvertimeService, notificationService, userAuthenticationService)),
+  )
+  app.use(
+    '/overtime-details',
+    authHandler,
+    standardRoute(createCalendarOvertimeDetailRouter(logger, calendarOvertimeService, userAuthenticationService)),
   )
   app.use('/notifications', authHandler, standardRoute(createNotificationRouter(logger, notificationService)))
   app.use(

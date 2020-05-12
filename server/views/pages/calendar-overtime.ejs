@@ -1,0 +1,108 @@
+<% include ../helpers/helpers %>
+
+<!DOCTYPE html>
+<html lang="en" class="govuk-template">
+  <head>
+    <% include ../partials/head %>
+  </head>
+  <body class="govuk-template__body">
+    <% include ../partials/header %>
+
+    <div class="govuk-width-container">
+      <% include ../partials/beta-banner %>
+
+      <main id="main-content" role="main">
+        <div class="tabs-wrapper">         
+          <ul class="tabs">
+            <li ><a href="/calendar/<%= getStartMonth() %>">Calendar</a></li>
+            <li><a class="active" href="">PP/Time Rec</a></li>
+            <li>
+              <a href="/notifications/1"
+                >Notifications <% if (shiftNotifications != null && shiftNotifications.length > 0) { %> <% if
+                (shiftNotifications.filter(function(x){return x.Read==false}).length > 0) { %>
+
+                <span class="loud font-xsmall" style="background-color: #df3034;padding: 0 5px;color: white;"
+                  ><%= shiftNotifications.filter(function(x){return x.Read==false}).length %> new</span
+                >
+                <% } %> <% } %>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="calendar-controls center-align govuk-!-margin-bottom-8">
+          <h1 class="govuk-heading-m govuk-!-margin-bottom-0"><%= getMonthAndYear(startDate) %></h1>
+          <a
+            class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19"
+            href="/calendar-overtime/<%=getPreviousMonth(startDate)%>"
+            >Last month</a
+          >
+          <a
+            class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 app-link-!-border"
+            href="/calendar-overtime/<%=getNextMonth(startDate)%>"
+            >Next month</a
+          >
+        </div>
+
+        <% if (data == null || data.shifts.length == 0) { %>
+        <h1 class="govuk-heading-m center-align">No data available</h1>
+        <% } %>
+        <ul class="calendar">
+          <% if (data != null && data.shifts.length > 0) { %> <% getDays().forEach(function(day){ %>
+
+          <li class="calendar-item calendar-header"><%= day %></li>
+
+          <% }); %> <% } %> <% if (data != null && data.shifts.length > 0) { %> <% data.shifts.forEach(function(day){ %>
+
+          <li
+            class="calendar-item <% if (day.type === 'no-day') { %>no-day<% } else if (day.type === 'Overtime') { %>shift <% } %>"
+          >
+            
+            <% if (day.type === 'Shift') { %>
+              <a href="/overtime-details/<%= getDatePartFormatted(day.startDateTime) %>">
+                <div class="hide-1024-up">
+                  <span class="day govuk-!-font-weight-bold"
+                    ><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime))
+                    %></span
+                  >
+                </div>
+                <div class="hide-0-to-1024">
+                  <span class="day govuk-!-font-weight-bold"
+                    ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
+                  >
+                </div>
+               
+                <span class="detail detail-start">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
+                <span class="detail detail-finish">Finish <%= getTimeFromDate(day.dailyEndDateTime) %></span>
+                <span class="detail-duration"><%= convertSecondsToHms(day.durationInSeconds) %></span>
+         
+              </a>
+              
+              <% } else if (day.type === 'no-day' && day.startDateTime !== undefined) { %>
+                
+                  <div class="hide-1024-up">
+                    <span class="day govuk-!-font-weight-bold"
+                      ><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime))
+                      %></span
+                    >
+                  </div>
+                  <div class="hide-0-to-1024">
+                    <span class="day govuk-!-font-weight-bold"
+                      ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
+                    >
+                  </div>
+
+                <% } %> 
+                        
+          </li>
+
+          <% }); %> <% } %>
+        </ul>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <div class="govuk-clearfix"></div>
+      </main>
+    </div>
+
+    <% include ../partials/footer %>
+  </body>
+</html>
