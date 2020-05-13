@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node server.js",
     "start:dev": "npm build && DEBUG=gov-starter-server* nodemon server.js | bunyan -o short",
-    "start-feature": "SET NODE_ENV=development node server.js",
+    "start-feature": "NODE_ENV=development node server.js | bunyan -o short",
     "build": "npm run css-build",
     "css-build": "./bin/build-css",
     "clean": "rm -rf assets/* .port.tmp *.log build/* uploads/* test-results.xml",
