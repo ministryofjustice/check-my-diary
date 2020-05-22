@@ -14,7 +14,7 @@ const service = (name, url) => {
 }
 
 module.exports = function healthcheckFactory(authUrl) {
-  const regionsUrls = process.env.REGIONS || []
+  const regionsUrls = process.env.REGIONS || ''
   const regions = regionsUrls.split(',').map((region) => service(region, region))
   const checks = [db, service('auth', `${authUrl}/health/ping`), ...regions]
 
