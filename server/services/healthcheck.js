@@ -19,7 +19,6 @@ module.exports = function healthcheckFactory(authUrl) {
     .split(',')
     .filter((region) => region !== '')
     .map((region) => service(region, region))
-  console.log(`${regionChecks.length}`)
   const checks = [db, service('auth', `${authUrl}/health/ping`), ...regionChecks]
 
   return (callback) =>
