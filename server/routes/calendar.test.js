@@ -243,6 +243,7 @@ const fakeCalendarData1 = {
       startDateTime: '2020-02-21T20:45:00',
       endDateTime: '2020-02-22T07:30:00',
       durationInSeconds: 38700,
+      overtime: true,
     },
     {
       date: '2020-02-22',
@@ -279,6 +280,7 @@ const fakeCalendarData1 = {
       startDateTime: '2020-02-25T07:15:00',
       endDateTime: '2020-02-25T12:30:00',
       durationInSeconds: 18900,
+      overtime: true,
     },
     {
       date: '2020-02-26',
@@ -297,6 +299,7 @@ const fakeCalendarData1 = {
       startDateTime: '2020-02-27T00:00:00',
       endDateTime: '2020-02-27T23:59:59',
       durationInSeconds: 86399,
+      overtime: true,
     },
     {
       date: '2020-02-28',
@@ -633,6 +636,10 @@ const calendarService = {
   getCalendarData: jest.fn(),
 }
 
+const calendarOvertimeService = {
+  getCalendarOvertimeData: jest.fn(),
+}
+
 const logger = {
   info: jest.fn(),
   error: jest.fn(),
@@ -640,7 +647,7 @@ const logger = {
 
 const standardRoute = standardRouter({ authenticationMiddleware })
 const calendarRoute = standardRoute(
-  createRouter(logger, calendarService, notificationService, userAuthenticationService),
+  createRouter(logger, calendarService, calendarOvertimeService, notificationService, userAuthenticationService),
 )
 
 let app
@@ -657,7 +664,7 @@ afterEach(() => {
 
 describe('GET and POST for /:date', () => {
   it('returns calendar page for February 2020', async () => {
-    await calendarService.getCalendarData.mockReturnValue(fakeCalendarData1)
+    await calendarService.getCalendarData.mockReturnValue(fakeCalendarData1)    
 
     await request(app)
       .get('/2020-02-01')
@@ -676,8 +683,10 @@ describe('GET and POST for /:date', () => {
         expect(res.text).toContain('details/2020-02-02')
         expect(res.text).toContain('Secondment')
         expect(res.text).toContain('details/2020-02-04')
+        expect(res.text).toContain('Overtime')
 
         expect(calendarService.getCalendarData).toHaveBeenCalledTimes(1)
+        expect(calendarOvertimeService.getCalendarOvertimeData).toHaveBeenCalledTimes(1)
         expect(notificationService.getShiftNotifications).toHaveBeenCalledTimes(1)
         expect(userAuthenticationService.getUserAuthenticationDetails).toHaveBeenCalledTimes(1)
         expect(logger.info).toHaveBeenCalledTimes(1)
@@ -706,6 +715,7 @@ describe('GET and POST for /:date', () => {
         expect(res.text).toContain('details/2020-03-03')
 
         expect(calendarService.getCalendarData).toHaveBeenCalledTimes(1)
+        expect(calendarOvertimeService.getCalendarOvertimeData).toHaveBeenCalledTimes(1)
         expect(notificationService.getShiftNotifications).toHaveBeenCalledTimes(1)
         expect(userAuthenticationService.getUserAuthenticationDetails).toHaveBeenCalledTimes(1)
         expect(logger.info).toHaveBeenCalledTimes(1)

@@ -15,7 +15,7 @@ module.exports = function CalendarOvertimeService() {
           },
         )
         .then((response) => {
-          resolve(utilities.configureOvertimeCalendar(response.data, startDate))
+          resolve(response.data, startDate)
         })
         .catch((error) => {
           if (error.response) {

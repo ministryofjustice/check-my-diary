@@ -57,6 +57,7 @@ const stubShifts = () =>
             startDateTime: '2020-03-05T08:30:00',
             endDateTime: '2020-03-05T19:15:00',
             durationInSeconds: 34980,
+            overtime: true,
           },
           {
             date: '2020-03-06',
@@ -84,6 +85,7 @@ const stubShifts = () =>
             startDateTime: '2020-03-08T07:30:00',
             endDateTime: '2020-03-08T17:15:00',
             durationInSeconds: 31500,
+            overtime: true,
           },
           {
             date: '2020-03-09',
@@ -93,6 +95,7 @@ const stubShifts = () =>
             startDateTime: '2020-03-09T00:00:00',
             endDateTime: '2020-03-09T23:59:59',
             durationInSeconds: 86399,
+            overtime: true,
           },
           {
             date: '2020-03-10',
@@ -120,6 +123,7 @@ const stubShifts = () =>
             startDateTime: '2020-03-12T07:15:00',
             endDateTime: '2020-03-12T12:30:00',
             durationInSeconds: 18900,
+            overtime: true,
           },
           {
             date: '2020-03-13',
@@ -138,6 +142,7 @@ const stubShifts = () =>
             startDateTime: '2020-03-14T07:30:00',
             endDateTime: '2020-03-14T17:30:00',
             durationInSeconds: 32400,
+            overtime: true,
           },
           {
             date: '2020-03-15',
@@ -156,6 +161,7 @@ const stubShifts = () =>
             startDateTime: '2020-03-16T00:00:00',
             endDateTime: '2020-03-16T23:59:59',
             durationInSeconds: 86399,
+            overtime: true,
           },
           {
             date: '2020-03-17',
@@ -165,6 +171,7 @@ const stubShifts = () =>
             startDateTime: '2020-03-17T07:15:00',
             endDateTime: '2020-03-17T13:30:00',
             durationInSeconds: 18000,
+            overtime: true,
           },
           {
             date: '2020-03-18',
@@ -205,11 +212,12 @@ const stubShifts = () =>
           {
             date: '2020-03-22',
             dailyStartDateTime: '2020-03-22T20:45:00',
-            dailyEndDateTime: '2020-03-21T12:30:00',
+            dailyEndDateTime: 'null',
             type: 'Shift',
             startDateTime: '2020-03-22T20:45:00',
             endDateTime: '2020-03-23T07:45:00',
             durationInSeconds: 39600,
+            overtime: true,
           },
           {
             date: '2020-03-23',
@@ -228,6 +236,7 @@ const stubShifts = () =>
             startDateTime: '2020-03-24T20:45:00',
             endDateTime: '2020-03-25T07:45:00',
             durationInSeconds: 39600,
+            overtime: true,
           },
           {
             date: '2020-03-25',
@@ -240,12 +249,13 @@ const stubShifts = () =>
           },
           {
             date: '2020-03-26',
-            dailyStartDateTime: '2020-03-26T20:45:00',
+            dailyStartDateTime: 'null',
             dailyEndDateTime: '2020-03-26T07:45:00',
             type: 'Shift',
             startDateTime: '2020-03-26T20:45:00',
             endDateTime: '2020-03-27T07:15:00',
             durationInSeconds: 37800,
+            overtime: true,
           },
           {
             date: '2020-03-27',
@@ -260,10 +270,11 @@ const stubShifts = () =>
             date: '2020-03-28',
             dailyStartDateTime: '2020-03-28T07:45:00',
             dailyEndDateTime: '2020-03-28T23:59:59',
-            type: 'Rest Day',
+            type: 'Holiday',
             startDateTime: '2020-03-28T07:45:00',
             endDateTime: '2020-03-28T23:59:59',
             durationInSeconds: 58499,
+            overtime: true,
           },
           {
             date: '2020-03-29',
@@ -295,59 +306,15 @@ const stubShifts = () =>
         ],
       },
     },
-  })
+  }) 
 
-const stubOvertimeShifts = () =>
-  stubFor({
-    request: {
-      method: 'GET',
-      urlPathPattern: '/api/shifts/overtime/quantum/([a-zA-Z0-9_]*)',
-    },
-    response: {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      jsonBody: {
-        shifts: [
-          {
-            date: '2020-02-10',
-            dailyStartDateTime: '2020-02-10T07:30:00',
-            dailyEndDateTime: '2020-02-10T18:30:00',
-            type: 'Shift',
-            startDateTime: '2020-02-10T07:30:00',
-            endDateTime: '2020-02-10T18:30:00',
-            durationInSeconds: 32400,
-          },
-          {
-            date: '2020-02-17',
-            dailyStartDateTime: '2020-02-17T07:30:00',
-            dailyEndDateTime: '2020-02-17T17:30:00',
-            type: 'Shift',
-            startDateTime: '2020-02-17T07:30:00',
-            endDateTime: '2020-02-17T17:30:00',
-            durationInSeconds: 32400,
-          },
-          {
-            date: '2020-02-19',
-            dailyStartDateTime: '2020-02-19T07:30:00',
-            dailyEndDateTime: '2020-02-19T17:15:00',
-            type: 'Shift',
-            startDateTime: '2020-02-19T07:30:00',
-            endDateTime: '2020-02-19T17:15:00',
-            durationInSeconds: 31500,
-          },
-        ],
-      },
-    },
-  })
 
 const stubRestDay = () =>
   stubFor({
-    priority: '5',
+    priority: '1',
     request: {
       method: 'GET',
-      urlPathPattern: '/api/shifts/quantum/([a-zA-Z0-9_]*)/tasks',
+      urlPattern: '/api/shifts/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-09',
     },
     response: {
       status: 200,
@@ -357,25 +324,25 @@ const stubRestDay = () =>
       jsonBody: {
         tasks: [
           {
-            date: '2020-03-01',
+            date: '2020-03-09',
             dailyStartDateTime: 'null',
             dailyEndDateTime: 'null',
             label: 'Rest Day',
             taskType: 'Absence',
-            startDateTime: '2020-03-01T00:00:00',
-            endDateTime: '2020-03-01T23:59:59',
+            startDateTime: '2020-03-09T00:00:00',
+            endDateTime: '2020-03-09T23:59:59',
           },
         ],
       },
     },
   })
 
-const stubSecondment = () =>
+const stubHoliday = () =>
   stubFor({
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-05',
+      urlPattern: '/api/shifts/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-28',
     },
     response: {
       status: 200,
@@ -385,70 +352,212 @@ const stubSecondment = () =>
       jsonBody: {
         tasks: [
           {
-            date: '2020-03-05',
+            date: '2020-03-28',
             dailyStartDateTime: 'null',
             dailyEndDateTime: 'null',
-            label: 'Secondment',
+            label: 'Holiday',
             taskType: 'Absence',
-            startDateTime: '2020-03-05T08:30:00',
-            endDateTime: '2020-03-05T12:30:00',
-          },
-          {
-            date: '2020-03-05',
-            dailyStartDateTime: 'null',
-            dailyEndDateTime: 'null',
-            label: 'Break (Unpaid)',
-            taskType: 'Break',
-            startDateTime: '2020-03-05T12:30:00',
-            endDateTime: '2020-03-05T13:30:00',
-          },
-          {
-            date: '2020-03-05',
-            dailyStartDateTime: 'null',
-            dailyEndDateTime: 'null',
-            label: 'Security Manager',
-            taskType: 'Unspecific',
-            startDateTime: '2020-03-05T13:30:00',
-            endDateTime: '2020-03-05T15:15:00',
-          },
-          {
-            date: '2020-03-05',
-            dailyStartDateTime: 'null',
-            dailyEndDateTime: 'null',
-            label: 'Visits Manager',
-            taskType: 'Unspecific',
-            startDateTime: '2020-03-05T15:15:00',
-            endDateTime: '2020-03-05T17:15:00',
-          },
-          {
-            date: '2020-03-05',
-            dailyStartDateTime: 'null',
-            dailyEndDateTime: 'null',
-            label: 'Training - Internal',
-            taskType: 'Unspecific',
-            startDateTime: '2020-03-05T17:17:00',
-            endDateTime: '2020-03-05T18:15:00',
-          },
-          {
-            date: '2020-03-05',
-            dailyStartDateTime: 'null',
-            dailyEndDateTime: 'null',
-            label: 'Union Duties (Grievance)',
-            taskType: 'Unspecific',
-            startDateTime: '2020-03-05T18:15:00',
-            endDateTime: '2020-03-05T19:15:00',
+            startDateTime: '2020-03-28T00:00:00',
+            endDateTime: '2020-03-28T23:59:59',
           },
         ],
       },
     },
   })
 
-const stubDayShift = () =>
+const stubOvertimeDayShift1 = () =>
   stubFor({
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-04',
+      urlPattern: '/api/shifts/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-08',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      jsonBody: {
+        tasks: [
+          {
+            date: '2020-03-08',
+            dailyStartDateTime: 'null',
+            dailyEndDateTime: 'null',
+            label: 'Visits Manager',
+            taskType: 'Absence',
+            startDateTime: '2020-03-08T07:30:00',
+            endDateTime: '2020-03-08T12:30:00',
+          },
+          {
+            date: '2020-03-08',
+            dailyStartDateTime: 'null',
+            dailyEndDateTime: 'null',
+            label: 'Break (Unpaid)',
+            taskType: 'Break',
+            startDateTime: '2020-03-08T12:30:00',
+            endDateTime: '2020-03-08T13:30:00',
+          },
+          {
+            date: '2020-03-08',
+            dailyStartDateTime: 'null',
+            dailyEndDateTime: 'null',
+            label: 'Security Manager',
+            taskType: 'Unspecific',
+            startDateTime: '2020-03-08T13:30:00',
+            endDateTime: '2020-03-08T17:15:00',
+          }, 
+        ],
+      },
+    },
+  })
+
+  const stubOvertimeDayShift2 = () =>
+  stubFor({
+    priority: '1',
+    request: {
+      method: 'GET',
+      urlPattern: '/api/shifts/overtime/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-08',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      jsonBody: {
+        tasks: [
+          {
+            date: '2020-03-08',
+            dailyStartDateTime: 'null',
+            dailyEndDateTime: 'null',
+            label: 'Visits Manager',
+            taskType: 'Absence',
+            startDateTime: '2020-03-08T17:30:00',
+            endDateTime: '2020-03-08T20:30:00',
+          },
+        ],
+      },
+    },
+  })  
+
+  const stubOvertimeDayShift3 = () =>
+  stubFor({
+    priority: '1',
+    request: {
+      method: 'GET',
+      urlPattern: '/api/shifts/overtime/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-09',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      jsonBody: {
+        tasks: [
+          {
+            date: '2020-03-09',
+            dailyStartDateTime: 'null',
+            dailyEndDateTime: 'null',
+            label: 'Visits Manager',
+            taskType: 'Absence',
+            startDateTime: '2020-03-09T17:30:00',
+            endDateTime: '2020-03-09T20:30:00',
+          },
+        ],
+      },
+    },
+  })  
+
+  const stubOvertimeDayShift4 = () =>
+  stubFor({
+    priority: '1',
+    request: {
+      method: 'GET',
+      urlPattern: '/api/shifts/overtime/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-28',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      jsonBody: {
+        tasks: [
+          {
+            date: '2020-03-28',
+            dailyStartDateTime: 'null',
+            dailyEndDateTime: 'null',
+            label: 'Visits Manager',
+            taskType: 'Absence',
+            startDateTime: '2020-03-28T17:30:00',
+            endDateTime: '2020-03-28T20:30:00',
+          },
+        ],
+      },
+    },
+  })  
+
+  const stubOvertimeDayShift5 = () =>
+  stubFor({
+    priority: '1',
+    request: {
+      method: 'GET',
+      urlPattern: '/api/shifts/overtime/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-22',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      jsonBody: {
+        tasks: [
+          {
+            date: '2020-03-22',
+            dailyStartDateTime: 'null',
+            dailyEndDateTime: 'null',
+            label: 'Visits Manager',
+            taskType: 'Absence',
+            startDateTime: '2020-03-22T16:30:00',
+            endDateTime: '2020-03-22T19:30:00',
+          },
+        ],
+      },
+    },
+  }) 
+
+  const stubOvertimeDayShift6 = () =>
+  stubFor({
+    priority: '1',
+    request: {
+      method: 'GET',
+      urlPattern: '/api/shifts/overtime/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-26',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      jsonBody: {
+        tasks: [
+          {
+            date: '2020-03-26',
+            dailyStartDateTime: 'null',
+            dailyEndDateTime: 'null',
+            label: 'Visits Manager',
+            taskType: 'Absence',
+            startDateTime: '2020-03-26T08:00:00',
+            endDateTime: '2020-03-26T12:30:00',
+          },
+        ],
+      },
+    },
+  })  
+
+
+const stubDayShift1 = () =>
+  stubFor({
+    priority: '1',
+    request: {
+      method: 'GET',
+      urlPattern: '/api/shifts/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-06',
     },
     response: {
       status: 200,
@@ -498,53 +607,7 @@ const stubDayShift = () =>
     },
   })
 
-const stubOvertimeDayShift = () =>
-  stubFor({
-    priority: '1',
-    request: {
-      method: 'GET',
-      urlPattern: '/api/shifts/overtime/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-02-10',
-    },
-    response: {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      jsonBody: {
-        tasks: [
-          {
-            date: '2020-02-10',
-            dailyStartDateTime: 'null',
-            dailyEndDateTime: 'null',
-            label: 'Training - Internal',
-            taskType: 'Unspecific',
-            startDateTime: '2020-02-10T07:30:00',
-            endDateTime: '2020-02-10T12:30:00',
-          },
-          {
-            date: '2020-02-10',
-            dailyStartDateTime: 'null',
-            dailyEndDateTime: 'null',
-            label: 'Break (Unpaid)',
-            taskType: 'Break',
-            startDateTime: '2020-02-10T12:30:00',
-            endDateTime: '2020-02-10T13:30:00',
-          },
-          {
-            date: '2020-02-10',
-            dailyStartDateTime: 'null',
-            dailyEndDateTime: 'null',
-            label: 'Duty Manager',
-            taskType: 'Unspecific',
-            startDateTime: '2020-02-10T13:30:00',
-            endDateTime: '2020-02-10T17:30:00',
-          },
-        ],
-      },
-    },
-  })
-
-const stubNightShift = () =>
+  const stubDayShift2 = () =>
   stubFor({
     priority: '1',
     request: {
@@ -559,9 +622,83 @@ const stubNightShift = () =>
       jsonBody: {
         tasks: [
           {
+            date: '2020-03-07',
+            dailyStartDateTime: 'null',
+            dailyEndDateTime: 'null',
+            label: 'Training - Internal',
+            taskType: 'Unspecific',
+            startDateTime: '2020-03-07T07:30:00',
+            endDateTime: '2020-03-07T12:15:00',
+          },
+          {
+            date: '2020-03-07',
+            dailyStartDateTime: 'null',
+            dailyEndDateTime: 'null',
+            label: 'Break (Unpaid)',
+            taskType: 'Break',
+            startDateTime: '2020-03-07T12:15:00',
+            endDateTime: '2020-03-07T13:15:00',
+          },
+          {
+            date: '2020-03-07',
+            dailyStartDateTime: 'null',
+            dailyEndDateTime: 'null',
+            label: 'Duty Manager',
+            taskType: 'Unspecific',
+            startDateTime: '2020-03-07T13:15:00',
+            endDateTime: '2020-03-07T17:15:00',
+          },
+        ],
+      },
+    },
+  })
+
+const stubNightShift1 = () =>
+  stubFor({
+    priority: '1',
+    request: {
+      method: 'GET',
+      urlPattern: '/api/shifts/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-23',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      jsonBody: {
+        tasks: [
+          {
+            date: '2020-03-23',
+            dailyStartDateTime: '2020-03-23T20:45:00',
+            dailyEndDateTime: '2020-03-23T19:30:00',
+            label: 'Night Duties',
+            taskType: 'Unspecific',
+            startDateTime: '2020-03-23T20:45:00',
+            endDateTime: '2020-03-24T07:45:00',
+          },
+        ],
+      },
+    },
+  })
+
+const stubNightShift2 = () =>
+  stubFor({
+    priority: '1',
+    request: {
+      method: 'GET',
+      urlPattern: '/api/shifts/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-22',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      jsonBody: {
+        tasks: [
+          {
             date: '2020-03-22',
             dailyStartDateTime: '2020-03-22T20:45:00',
-            dailyEndDateTime: '2020-03-21T19:30:00',
+            dailyEndDateTime: 'null',
             label: 'Night Duties',
             taskType: 'Unspecific',
             startDateTime: '2020-03-22T20:45:00',
@@ -571,6 +708,35 @@ const stubNightShift = () =>
       },
     },
   })
+
+  const stubNightShift3 = () =>
+  stubFor({
+    priority: '1',
+    request: {
+      method: 'GET',
+      urlPattern: '/api/shifts/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-26',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      jsonBody: {
+        tasks: [
+          {
+            date: '2020-03-26',
+            dailyStartDateTime: 'null',
+            dailyEndDateTime: '2020-03-26T07:45:00',
+            label: 'Night Duties',
+            taskType: 'Unspecific',
+            startDateTime: 'null',
+            endDateTime: '2020-03-26T07:45:00',
+          },
+        ],
+      },
+    },
+  })
+
 
 const stubStaffLookup = () =>
   stubFor({
@@ -647,8 +813,8 @@ const stubNotifyStatus = async () =>
 module.exports = {
   stubStaffLookup,
   stubTasks: () =>
-    Promise.all([stubDayShift(), stubOvertimeDayShift(), stubNightShift(), stubSecondment(), stubRestDay()]),
-  stubShifts,
-  stubOvertimeShifts,
+    Promise.all([stubDayShift1(), stubDayShift2(), stubOvertimeDayShift1(), stubOvertimeDayShift2(), stubOvertimeDayShift3(), stubOvertimeDayShift4(), stubOvertimeDayShift5(), 
+      stubOvertimeDayShift6(), stubNightShift1(), stubNightShift2(), stubNightShift3(), stubRestDay(), stubHoliday()]),
+  stubShifts, 
   stubHealthCalls: () => Promise.all([stubHealth(), stubHealthInvision(), stubNotifyStatus()]),
 }

@@ -147,6 +147,30 @@ function configureOvertimeCalendar(data, startDate) {
   return { shifts: [...prePad, ...newDataArray, ...postPad] }
 }
 
+function processOvertimeShifts(shiftsData, overtimeShiftsData){
+  
+  if (shiftsData != null && shiftsData.shifts.length > 0) {
+    if (overtimeShiftsData != null && overtimeShiftsData.shifts.length > 0) {
+
+      overtimeShiftsData.shifts.forEach(overtimeShift => {
+
+          for (let i = 0; i < shiftsData.shifts.length; i += 1) {
+            const shift = shiftsData.shifts[i]          
+            if (shift.type !== 'no-day'){            
+              if (overtimeShift.date === shift.date){
+                shift.overtime = true
+              } else {
+                shift.overtime = shift.overtime || false
+              }
+            }
+          }
+      })
+    }
+  }
+
+  return shiftsData
+}
+
 module.exports = {
   getStartMonth,
   getEndDate,
@@ -158,4 +182,5 @@ module.exports = {
   createTwoFactorAuthenticationHash,
   configureCalendar,
   configureOvertimeCalendar,
+  processOvertimeShifts,
 }

@@ -17,8 +17,6 @@ const createCalendarRouter = require('./routes/calendar')
 const createCalendarDetailRouter = require('./routes/calendar-detail')
 const createMaintenanceRouter = require('./routes/maintenance')
 const createNotificationRouter = require('./routes/notification')
-const createCalendarOvertimeRouter = require('./routes/calendar-overtime')
-const createCalendarOvertimeDetailRouter = require('./routes/calendar-overtime-detail')
 const standardRouter = require('./routes/standardRouter')
 const logger = require('../log.js')
 const auth = require('./authentication/auth')
@@ -231,23 +229,13 @@ module.exports = function createApp({ signInService }, logger, calendarService, 
   app.use(
     '/calendar',
     authHandler,
-    standardRoute(createCalendarRouter(logger, calendarService, notificationService, userAuthenticationService)),
+    standardRoute(createCalendarRouter(logger, calendarService, calendarOvertimeService, notificationService, userAuthenticationService)),
   )
   app.use(
     '/details',
     authHandler,
-    standardRoute(createCalendarDetailRouter(logger, calendarService, userAuthenticationService)),
-  )
-  app.use(
-    '/calendar-overtime',
-    authHandler,
-    standardRoute(createCalendarOvertimeRouter(logger, calendarOvertimeService, notificationService, userAuthenticationService)),
-  )
-  app.use(
-    '/overtime-details',
-    authHandler,
-    standardRoute(createCalendarOvertimeDetailRouter(logger, calendarOvertimeService, userAuthenticationService)),
-  )
+    standardRoute(createCalendarDetailRouter(logger, calendarService, calendarOvertimeService, userAuthenticationService)),
+  ) 
   app.use('/notifications', authHandler, standardRoute(createNotificationRouter(logger, notificationService)))
   app.use(
     '/maintenance',

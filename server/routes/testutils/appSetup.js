@@ -1,6 +1,5 @@
 /* eslint-disable */
 
-const nunjucks = require('nunjucks')
 const express = require('express')
 const bodyParser = require('body-parser')
 const cookieSession = require('cookie-session')
