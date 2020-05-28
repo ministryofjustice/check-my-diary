@@ -1,7 +1,7 @@
 const utilities = require('../helpers/utilities')
 const asyncMiddleware = require('../middleware/asyncMiddleware')
 
-module.exports = (logger, calendarService, notificationService, userAuthenticationService) => (router) => {
+module.exports = (logger, calendarService, calendarOvertimeService, notificationService, userAuthenticationService) => (router) => {
   function serviceUnavailable(req, res) {
     logger.error('Service unavailable')
 
@@ -23,18 +23,27 @@ module.exports = (logger, calendarService, notificationService, userAuthenticati
 
         const shiftNotifications = await notificationService.getShiftNotifications(req.user.username)
 
-        const apiResponse = await calendarService.getCalendarData(
+        const apiShiftsResponse = await calendarService.getCalendarData(
           userAuthenticationDetails[0].ApiUrl,
           req.user.username,
           req.params.date,
           req.user.token,
         )
 
+        const apiOvertimeShiftsResponse = await calendarOvertimeService.getCalendarOvertimeData(
+          userAuthenticationDetails[0].ApiUrl,
+          req.user.username,
+          req.params.date,
+          req.user.token,
+        )
+
+        const results = utilities.processOvertimeShifts(apiShiftsResponse, apiOvertimeShiftsResponse)
+
         res.render('pages/calendar', {
           shiftNotifications,
           tab: 'Calendar',
           startDate: req.params.date,
-          data: apiResponse,
+          data: results,
           uid: req.user.username,
           employeeName: req.user.employeeName,
           csrfToken: res.locals.csrfToken,

@@ -36,6 +36,20 @@ const fakeCalendarDetailData1 = {
   ],
 }
 
+const fakeCalendarOvertimeDetailData1 = {
+  tasks: [
+    {
+      date: '2020-04-01',
+      dailyStartDateTime: 'null',
+      dailyEndDateTime: 'null',
+      label: 'Present',
+      taskType: 'Unspecific',
+      startDateTime: '2020-04-01T17:30:00',
+      endDateTime: '2020-04-01T20:30:00',
+    },    
+  ],
+}
+
 const fakeCalendarDetailData2 = {
   tasks: [
     {
@@ -91,13 +105,17 @@ const calendarService = {
   getCalendarDetails: jest.fn(),
 }
 
+const calendarOvertimeService = {
+  getCalendarOvertimeDetails: jest.fn(),
+}
+
 const logger = {
   info: jest.fn(),
   error: jest.fn(),
 }
 
 const standardRoute = standardRouter({ authenticationMiddleware })
-const calendarRoute = standardRoute(createRouter(logger, calendarService, userAuthenticationService))
+const calendarRoute = standardRoute(createRouter(logger, calendarService, calendarOvertimeService, userAuthenticationService))
 
 let app
 
@@ -113,6 +131,8 @@ afterEach(() => {
 describe('GET and POST for /:details', () => {
   it('returns calendar detail page for 1st April 2020', async () => {
     await calendarService.getCalendarDetails.mockReturnValue(fakeCalendarDetailData1)
+
+    await calendarOvertimeService.getCalendarOvertimeDetails.mockReturnValue(fakeCalendarOvertimeDetailData1)
 
     await request(app)
       .get('/2020-04-01')
@@ -131,6 +151,12 @@ describe('GET and POST for /:details', () => {
         expect(res.text).toContain('17:30')
         expect(res.text).toContain('End of shift')
 
+        expect(res.text).toContain('Overtime')
+        expect(res.text).toContain('17:30 - 20:30')
+        expect(res.text).toContain('Present')
+        expect(res.text).toContain('20:30')
+        expect(res.text).toContain('End of shift')
+
         expect(calendarService.getCalendarDetails).toHaveBeenCalledTimes(1)
         expect(userAuthenticationService.getUserAuthenticationDetails).toHaveBeenCalledTimes(1)
         expect(logger.info).toHaveBeenCalledTimes(1)
@@ -138,6 +164,8 @@ describe('GET and POST for /:details', () => {
   })
   it('returns calendar detail page for 3rd April 2020', async () => {
     await calendarService.getCalendarDetails.mockReturnValue(fakeCalendarDetailData2)
+
+    await calendarOvertimeService.getCalendarOvertimeDetails.mockReturnValue(null)
 
     await request(app)
       .get('/2020-04-03')
