@@ -13,7 +13,7 @@ ingress:
   enabled: true
   enable_whitelist: false
   host: checkmydiary.service.justice.gov.uk
-  cert_secret: tls-certificate 
+  cert_secret: tls-certificate
   path: /
 
 env:
@@ -25,3 +25,4 @@ env:
   MAINTENANCE_START: "2020-01-18T18:00:00"
   MAINTENANCE_END: "2020-01-18T22:00:00"
   QUANTUM_ADDRESS: "212.137.36.230/32,62.25.109.197/32,195.92.38.16/28,35.177.125.252,35.177.137.160,195.59.75.0/24,194.33.192.0/25,194.33.193.0/25,194.33.196.0/25,194.33.197.0/25"
+  REGIONS: "https://region1-api.check-my-diary-prod.hmpps.dsd.io/api/health,https://region2-api.check-my-diary-prod.hmpps.dsd.io/api/health,https://region3-api.check-my-diary-prod.hmpps.dsd.io/api/health,https://region4-api.check-my-diary-prod.hmpps.dsd.io/api/health,https://region5-api.check-my-diary-prod.hmpps.dsd.io/api/health,https://region6-api.check-my-diary-prod.hmpps.dsd.io/api/health"
