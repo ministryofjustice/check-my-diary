@@ -90,10 +90,6 @@ function calculateMaintenanceDates(maintenanceStartDateTime, maintenanceEndDateT
   return showMaintenancePage
 }
 
-function getDaysInMonth(date) {
-  return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
-}
-
 function configureCalendar(data, startDate) {
   if (data === null || data.shifts.length === 0) return { shifts: null }
 
@@ -109,42 +105,6 @@ function configureCalendar(data, startDate) {
   const postPad = new Array(postPadSize - data.shifts.length - pad).fill(noDay)
 
   return { shifts: [...prePad, ...data.shifts, ...postPad] }
-}
-
-function configureOvertimeCalendar(data, startDate) {
-  if (data === null || data.shifts.length === 0) return { shifts: null }
-
-  const convertedStartDateTime = new Date(startDate)
-  const daysInMonth = getDaysInMonth(convertedStartDateTime)
-
-  const newStartDate = new Date(convertedStartDateTime.getFullYear(), convertedStartDateTime.getMonth(), 1)
-
-  // Insert blank days before the first date where necessary
-  const pad = newStartDate.getDay()
-
-  const newDataArray = []
-
-  for (let x = 1; x <= daysInMonth; x += 1) {
-    newDataArray.push({
-      type: 'no-day',
-      startDateTime: new Date(newStartDate.getFullYear(), newStartDate.getMonth(), x),
-    })
-  }
-
-  for (let x = 0; x <= data.shifts.length; x += 1) {
-    const shift = data.shifts[x]
-
-    if (shift !== undefined) {
-      newDataArray[new Date(shift.startDateTime).getDate() - 1] = shift
-    }
-  }
-
-  const noDay = { type: 'no-day' }
-  const prePad = new Array(pad).fill(noDay)
-  const postPadSize = Math.ceil((daysInMonth + pad) / 7) * 7
-  const postPad = new Array(postPadSize - daysInMonth - pad).fill(noDay)
-
-  return { shifts: [...prePad, ...newDataArray, ...postPad] }
 }
 
 function processOvertimeShifts(shiftsData, overtimeShiftsData){
@@ -181,6 +141,5 @@ module.exports = {
   calculateMaintenanceDates,
   createTwoFactorAuthenticationHash,
   configureCalendar,
-  configureOvertimeCalendar,
   processOvertimeShifts,
 }
