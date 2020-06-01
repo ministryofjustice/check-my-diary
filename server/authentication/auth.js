@@ -37,7 +37,7 @@ function init(signInService) {
       customHeaders: { Authorization: generateOauthClientToken() },
     },
     (accessToken, refreshToken, params, profile, done) => {
-      const user = signInService.getUser(accessToken, refreshToken, params.expires_in, params.user_name)
+      const user = signInService.getUser(accessToken, refreshToken, params.expires_in, params.sub)
 
       return done(null, user)
     },
