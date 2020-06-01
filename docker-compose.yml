@@ -14,7 +14,7 @@ services:
       - POSTGRES_DB=check-my-diary
 
   oauth-server:
-    image: mojdigitalstudio/nomis-oauth2-server:latest
+    image: quay.io/hmpps/hmpps-auth:latest
     networks:
       - hmpps
     container_name: oauth-server
