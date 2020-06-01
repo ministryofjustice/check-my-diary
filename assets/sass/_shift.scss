@@ -3,6 +3,7 @@
   width: 100%;
   padding: 0;
   margin: 0 0 20px 0;
+  @include govuk-font(24);
 
   li {
     @include govuk-font(24);
@@ -46,8 +47,10 @@
       }
 
       &.detail-start,
+      &.detail-start-overtime,
       &.detail-start-night,
       &.detail-finish,
+      &.detail-finish-overtime,
       &.detail-rest-day,
       &.detail-illness,
       &.detail-absence,
@@ -65,20 +68,26 @@
       &.detail-start-night {
         background-color: govuk-colour('black');
       }
+      &.detail-start-overtime {
+        background-color: govuk-colour('purple');
+      }
       &.detail-finish {
         background-color: govuk-colour('red');
       }
+      &.detail-finish-overtime {
+        background-color: govuk-colour('light-purple');
+      }
 
       &.detail-holiday {
-        background-color: govuk-colour('orange');
+        background-color: govuk-colour('yellow');
       }
       
       &.detail-rest-day {
-        background-color: govuk-colour('light-blue');
+        background-color: govuk-colour('orange');
       }
 
       &.detail-holiday {
-        background-color: govuk-colour('orange');
+        background-color: govuk-colour('yellow');
       }
   
       &.detail-illness {
@@ -99,8 +108,10 @@
     }
 
     &.detail-start span.time,
+    &.detail-start-overtime span.time,
     &.detail-start-night span.time,
     &.detail-finish span.time,
+    &.detail-finish-overtime span.time,
     &.detail-holiday span.time,
     &.detail-illness span.time,
     &.detail-absence span.time,
@@ -121,15 +132,15 @@
     }
 
     &.detail-holiday span.time {
-      background-color: govuk-colour('orange');
+      background-color: govuk-colour('yellow');
     }
 
     &.detail-rest-day span.time {
-      background-color: govuk-colour('light-blue');
+      background-color: govuk-colour('orange');
     }
 
     &.detail-holiday span.time {
-      background-color: govuk-colour('orange');
+      background-color: govuk-colour('yellow');
     }
 
     &.detail-illness span.time {
@@ -146,6 +157,12 @@
 
     &.detail-tu-official span.time {
       background-color: govuk-colour('pink');
+    }
+    &.detail-start-overtime span.time {
+      background-color: govuk-colour('purple');
+    }
+    &.detail-finish-overtime span.time {
+      background-color: govuk-colour('light-purple');
     }
   }
 }

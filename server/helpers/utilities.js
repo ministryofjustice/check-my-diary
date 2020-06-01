@@ -6,6 +6,11 @@ function getStartMonth() {
   return [now.getFullYear(), `0${now.getMonth() + 1}`.slice(-2), '01'].join('-')
 }
 
+function getEndDate(startDate) {
+  const splitDate = startDate.split('-')
+  return `${splitDate[0]}-${splitDate[1]}-${new Date(splitDate[0], splitDate[1], 0).getDate()}`
+}
+
 function get2faCode() {
   return Math.floor(Math.random() * 899999 + 100000)
 }
@@ -45,7 +50,8 @@ function getAuthErrorDescription(error) {
       error.response && error.response.data && error.response.data.error_description
     }`,
   )
-  let type = 'Service temporarily unavailable. Please try again later. If this issue persists, please contact the Helpdesk on 0203 788 4636.'
+  let type =
+    'Service temporarily unavailable. Please try again later. If this issue persists, please contact the Helpdesk on 0203 788 4636.'
   if (error !== null && error.message !== '') {
     if (error.message.includes('No Sms or Email address returned for QuantumId')) {
       type =
@@ -84,12 +90,56 @@ function calculateMaintenanceDates(maintenanceStartDateTime, maintenanceEndDateT
   return showMaintenancePage
 }
 
+function configureCalendar(data, startDate) {
+  if (data === null || data.shifts.length === 0) return { shifts: null }
+
+  const convertedStartDate = new Date(startDate)
+
+  const daysInMonth = new Date(convertedStartDate.getFullYear(), convertedStartDate.getMonth() + 1, 0).getDate()
+
+  const pad = convertedStartDate.getDay()
+
+  const noDay = { type: 'no-day' }
+  const prePad = new Array(pad).fill(noDay)
+  const postPadSize = Math.ceil((daysInMonth + pad) / 7) * 7
+  const postPad = new Array(postPadSize - data.shifts.length - pad).fill(noDay)
+
+  return { shifts: [...prePad, ...data.shifts, ...postPad] }
+}
+
+function processOvertimeShifts(shiftsData, overtimeShiftsData){
+  
+  if (shiftsData != null && shiftsData.shifts.length > 0) {
+    if (overtimeShiftsData != null && overtimeShiftsData.shifts.length > 0) {
+
+      overtimeShiftsData.shifts.forEach(overtimeShift => {
+
+          for (let i = 0; i < shiftsData.shifts.length; i += 1) {
+            const shift = shiftsData.shifts[i]          
+            if (shift.type !== 'no-day'){            
+              if (overtimeShift.date === shift.date){
+                shift.overtime = true
+              } else {
+                shift.overtime = shift.overtime || false
+              }
+            }
+          }
+      })
+    }
+  }
+
+  return shiftsData
+}
+
 module.exports = {
   getStartMonth,
+  getEndDate,
   get2faCode,
   isNullOrEmpty,
   areDatesTheSame,
   getAuthErrorDescription,
   calculateMaintenanceDates,
   createTwoFactorAuthenticationHash,
+  configureCalendar,
+  processOvertimeShifts,
 }

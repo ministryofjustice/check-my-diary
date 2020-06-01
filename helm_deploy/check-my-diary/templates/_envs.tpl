@@ -91,6 +91,9 @@ env:
   - name: DB_SSL_ENABLED
     value: "true"
 
+  - name: REGIONS
+    value: {{ .Values.env.REGIONS | quote }}
+
   - name: QUANTUM_ADDRESS
     value: {{ .Values.env.QUANTUM_ADDRESS | quote }}
 
