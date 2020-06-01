@@ -1,16 +1,18 @@
 require('dotenv').config()
 
-const production = process.env.NODE_ENV === 'production'
+const generateGet = (env) => (name, fallback, { requireInProduction, noFallbackInProduction } = {}) => {
+  if (env === 'test') return fallback
 
-const get = (name, fallback, { requireInProduction, noFallbackInProduction } = {}) => {
   if (process.env[name]) return process.env[name]
 
-  if (production && noFallbackInProduction) return undefined
+  if (env === 'production' && noFallbackInProduction) return undefined
 
-  if (fallback !== undefined && !(production && requireInProduction)) return fallback
+  if (fallback !== undefined && !(env === 'production' && requireInProduction)) return fallback
 
   throw new Error(`Missing env var ${name}`)
 }
+
+const get = generateGet(process.env.NODE_ENV)
 
 const requiredInProduction = { requireInProduction: true }
 const noFallbackInProduction = { noFallbackInProduction: true }
@@ -40,7 +42,7 @@ module.exports = {
     apiClientSecret: get('API_CLIENT_SECRET', 'clientsecret', requiredInProduction),
   },
   app: {
-    production,
+    production: process.env.NODE_ENV === 'production',
     mailTo: process.env.MAIL_TO || 'feedback@digital.justice.gov.uk',
     url: process.env.CHECK_MY_DIARY_URL || `http://localhost:${process.env.PORT || 3005}`,
   },
@@ -66,6 +68,6 @@ module.exports = {
   quantumAddresses: get('QUANTUM_ADDRESS', '127.0.0.1', requiredInProduction),
   rejectUnauthorized: process.env.REJECT_UNAUTHORIZED,
   twoFactorAuthOn: process.env.TWO_FACT_AUTH_ON,
-  https: production,
+  https: process.env.NODE_ENV === 'production',
   regions: get('REGIONS', '', requiredInProduction),
 }
