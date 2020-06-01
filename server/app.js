@@ -18,7 +18,7 @@ const createCalendarDetailRouter = require('./routes/calendar-detail')
 const createMaintenanceRouter = require('./routes/maintenance')
 const createNotificationRouter = require('./routes/notification')
 const standardRouter = require('./routes/standardRouter')
-const logger = require('../log.js')
+const log = require('../log.js')
 const auth = require('./authentication/auth')
 const config = require('../config')
 const userAuthenticationService = require('./services/userAuthenticationService')
@@ -48,7 +48,7 @@ module.exports = function createApp({ signInService }, calendarService, calendar
   // View Engine Configuration
   app.set('views', path.join(__dirname, '../server/views'))
   app.set('view engine', 'ejs') // TODO: remove when changeover complete
-  app.set('view engine', 'nunjucks') 
+  app.set('view engine', 'nunjucks')
 
   // Server Configuration
   app.set('port', config.port || 3005)
@@ -267,7 +267,7 @@ module.exports = function createApp({ signInService }, calendarService, calendar
 
 // eslint-disable-next-line no-unused-vars
 function renderErrors(error, req, res, next) {
-  logger.error(error)
+  log.error(error)
   res.locals.error = error
   res.locals.stack = production ? null : error.stack
   res.locals.message = production ? 'Something went wrong. The error has been logged. Please try again' : error.message
