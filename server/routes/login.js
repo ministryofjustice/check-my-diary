@@ -50,7 +50,7 @@ module.exports = () => (router) => {
         res.redirect(`/calendar/${utilities.getStartMonth()}`)
       } else {
         logError(req.url, '2FA failure')
-        res.render('pages/two-factor-auth', { authError: true, csrfToken: res.locals.csrfToken })
+        res.render('pages/two-factor-auth.ejs', { authError: true, csrfToken: res.locals.csrfToken })
       }
     }),
   )
@@ -68,7 +68,7 @@ module.exports = () => (router) => {
         const maintenanceEndDateTime = Date.parse(config.maintenance.end) ? new Date(config.maintenance.end) : null
 
         if (utilities.calculateMaintenanceDates(maintenanceStartDateTime, maintenanceEndDateTime)) {
-          res.render('pages/maintenance', {
+          res.render('pages/maintenance.ejs', {
             startDateTime: maintenanceStartDateTime,
             endDateTime: maintenanceEndDateTime,
           })
@@ -115,7 +115,7 @@ module.exports = () => (router) => {
 
       if (isApiUp === false) {
         log.error(healthRes.appInfo)
-        res.render('pages/index', {
+        res.render('pages/index.ejs', {
           showUserNotSignedUpMessage: false,
           authError: false,
           apiUp: isApiUp,
@@ -180,7 +180,7 @@ module.exports = () => (router) => {
             })
         }
 
-        res.render('pages/two-factor-auth', { authError: false, csrfToken: res.locals.csrfToken })
+        res.render('pages/two-factor-auth.ejs', { authError: false, csrfToken: res.locals.csrfToken })
       } else {
         req.user.employeeName = jwtDecode(req.user.token).name
 
@@ -203,7 +203,7 @@ module.exports = () => (router) => {
 
       logError(req.url, data, 'Login failure')
 
-      res.render('pages/index', data)
+      res.render('pages/index.ejs', data)
     }
   })
 

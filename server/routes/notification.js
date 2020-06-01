@@ -9,7 +9,7 @@ module.exports = (logger, notificationService) => (router) => {
    */
   function serviceUnavailable(req, res) {
     logger.error('Service unavailable')
-    res.render('pages/index', {
+    res.render('pages/index.ejs', {
       authError: false,
       apiUp: false,
       csrfToken: res.locals.csrfToken,
@@ -26,7 +26,7 @@ module.exports = (logger, notificationService) => (router) => {
       const userNotificationSettings = await notificationService.getUserNotificationSettings(req.user.username)
 
       if (userNotificationSettings === null || userNotificationSettings.length === 0) {
-        res.render('pages/notification-settings', {
+        res.render('pages/notification-settings.ejs', {
           errors: null,
           userNotificationSettings: null,
           uid: req.user.username,
@@ -36,7 +36,7 @@ module.exports = (logger, notificationService) => (router) => {
           authUrl: req.authUrl,
         })
       } else {
-        res.render('pages/notification-settings', {
+        res.render('pages/notification-settings.ejs', {
           errors: null,
           userNotificationSettings: userNotificationSettings[0],
           uid: req.user.username,
@@ -71,7 +71,7 @@ module.exports = (logger, notificationService) => (router) => {
           optionMobile: req.body.optionMobile,
         }
 
-        res.render('pages/notification-settings', {
+        res.render('pages/notification-settings.ejs', {
           errors: errors.array(),
           notificationSettings: data,
           userNotificationSettings: null,
@@ -124,7 +124,7 @@ module.exports = (logger, notificationService) => (router) => {
           pagination.from = offset
           pagination.data = rows
 
-          res.render('pages/notifications', {
+          res.render('pages/notifications.ejs', {
             data: pagination,
             shiftNotifications: rows,
             tab: 'Notifications',

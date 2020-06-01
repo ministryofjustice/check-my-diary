@@ -5,7 +5,7 @@ module.exports = (logger, calService, calOvertimeService, notificationService, u
   function serviceUnavailable(req, res) {
     logger.error('Service unavailable')
 
-    res.render('pages/index', {
+    res.render('pages/index.ejs', {
       authError: false,
       apiUp: false,
       csrfToken: res.locals.csrfToken,
@@ -35,7 +35,7 @@ module.exports = (logger, calService, calOvertimeService, notificationService, u
 
         const results = utilities.processOvertimeShifts(apiShiftsResponse, apiOvertimeShiftsResponse)
 
-        res.render('pages/calendar', {
+        res.render('pages/calendar.ejs', {
           shiftNotifications,
           tab: 'Calendar',
           startDate: req.params.date,

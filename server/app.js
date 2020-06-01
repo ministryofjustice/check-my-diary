@@ -47,7 +47,8 @@ module.exports = function createApp({ signInService }, calendarService, calendar
 
   // View Engine Configuration
   app.set('views', path.join(__dirname, '../server/views'))
-  app.set('view engine', 'ejs')
+  app.set('view engine', 'ejs') // TODO: remove when changeover complete
+  app.set('view engine', 'nunjucks') 
 
   // Server Configuration
   app.set('port', config.port || 3005)
@@ -201,7 +202,7 @@ module.exports = function createApp({ signInService }, calendarService, calendar
 
   app.get('/autherror', (req, res) => {
     res.status(401)
-    return res.render('autherror', {
+    return res.render('autherror.ejs', {
       authURL: authLogoutUrl,
     })
   })
@@ -273,7 +274,7 @@ function renderErrors(error, req, res, next) {
 
   res.status(error.status || 500)
 
-  res.render('pages/error', { csrfToken: res.locals.csrfToken })
+  res.render('pages/error.ejs', { csrfToken: res.locals.csrfToken })
 }
 
 async function authHandler(req, res, next) {
