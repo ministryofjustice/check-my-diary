@@ -4,7 +4,7 @@ const stubShifts = () =>
   stubFor({
     request: {
       method: 'GET',
-      urlPathPattern: '/api/shifts/quantum/([a-zA-Z0-9_]*)',
+      urlPathPattern: '/api/shifts',
     },
     response: {
       status: 200,
@@ -306,15 +306,14 @@ const stubShifts = () =>
         ],
       },
     },
-  }) 
-
+  })
 
 const stubRestDay = () =>
   stubFor({
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-09',
+      urlPattern: '/api/shifts/tasks\\?date=2020-03-09',
     },
     response: {
       status: 200,
@@ -342,7 +341,7 @@ const stubHoliday = () =>
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-28',
+      urlPattern: '/api/shifts/tasks\\?date=2020-03-28',
     },
     response: {
       status: 200,
@@ -370,7 +369,7 @@ const stubOvertimeDayShift1 = () =>
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-08',
+      urlPattern: '/api/shifts/tasks\\?date=2020-03-08',
     },
     response: {
       status: 200,
@@ -405,18 +404,18 @@ const stubOvertimeDayShift1 = () =>
             taskType: 'Unspecific',
             startDateTime: '2020-03-08T13:30:00',
             endDateTime: '2020-03-08T17:15:00',
-          }, 
+          },
         ],
       },
     },
   })
 
-  const stubOvertimeDayShift2 = () =>
+const stubOvertimeDayShift2 = () =>
   stubFor({
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/overtime/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-08',
+      urlPattern: '/api/shifts/overtime/tasks\\?date=2020-03-08',
     },
     response: {
       status: 200,
@@ -437,14 +436,14 @@ const stubOvertimeDayShift1 = () =>
         ],
       },
     },
-  })  
+  })
 
-  const stubOvertimeDayShift3 = () =>
+const stubOvertimeDayShift3 = () =>
   stubFor({
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/overtime/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-09',
+      urlPattern: '/api/shifts/overtime/tasks\\?date=2020-03-09',
     },
     response: {
       status: 200,
@@ -465,14 +464,14 @@ const stubOvertimeDayShift1 = () =>
         ],
       },
     },
-  })  
+  })
 
-  const stubOvertimeDayShift4 = () =>
+const stubOvertimeDayShift4 = () =>
   stubFor({
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/overtime/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-28',
+      urlPattern: '/api/shifts/overtime/tasks\\?date=2020-03-28',
     },
     response: {
       status: 200,
@@ -493,14 +492,14 @@ const stubOvertimeDayShift1 = () =>
         ],
       },
     },
-  })  
+  })
 
-  const stubOvertimeDayShift5 = () =>
+const stubOvertimeDayShift5 = () =>
   stubFor({
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/overtime/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-22',
+      urlPattern: '/api/shifts/overtime/tasks\\?date=2020-03-22',
     },
     response: {
       status: 200,
@@ -521,14 +520,14 @@ const stubOvertimeDayShift1 = () =>
         ],
       },
     },
-  }) 
+  })
 
-  const stubOvertimeDayShift6 = () =>
+const stubOvertimeDayShift6 = () =>
   stubFor({
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/overtime/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-26',
+      urlPattern: '/api/shifts/overtime/tasks\\?date=2020-03-26',
     },
     response: {
       status: 200,
@@ -549,15 +548,14 @@ const stubOvertimeDayShift1 = () =>
         ],
       },
     },
-  })  
-
+  })
 
 const stubDayShift1 = () =>
   stubFor({
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-06',
+      urlPattern: '/api/shifts/tasks\\?date=2020-03-06',
     },
     response: {
       status: 200,
@@ -607,12 +605,12 @@ const stubDayShift1 = () =>
     },
   })
 
-  const stubDayShift2 = () =>
+const stubDayShift2 = () =>
   stubFor({
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-07',
+      urlPattern: '/api/shifts/tasks\\?date=2020-03-07',
     },
     response: {
       status: 200,
@@ -658,7 +656,7 @@ const stubNightShift1 = () =>
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-23',
+      urlPattern: '/api/shifts/tasks\\?date=2020-03-23',
     },
     response: {
       status: 200,
@@ -686,7 +684,7 @@ const stubNightShift2 = () =>
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-22',
+      urlPattern: '/api/shifts/tasks\\?date=2020-03-22',
     },
     response: {
       status: 200,
@@ -709,12 +707,12 @@ const stubNightShift2 = () =>
     },
   })
 
-  const stubNightShift3 = () =>
+const stubNightShift3 = () =>
   stubFor({
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/quantum/([a-zA-Z0-9_]*)/tasks\\?date=2020-03-26',
+      urlPattern: '/api/shifts/tasks\\?date=2020-03-26',
     },
     response: {
       status: 200,
@@ -737,12 +735,11 @@ const stubNightShift2 = () =>
     },
   })
 
-
 const stubStaffLookup = () =>
   stubFor({
     request: {
       method: 'GET',
-      urlPathPattern: '/api/staff-members/quantum/([a-zA-Z0-9_]*)',
+      urlPathPattern: '/api/staff-members',
     },
     response: {
       status: 200,
@@ -813,8 +810,21 @@ const stubNotifyStatus = async () =>
 module.exports = {
   stubStaffLookup,
   stubTasks: () =>
-    Promise.all([stubDayShift1(), stubDayShift2(), stubOvertimeDayShift1(), stubOvertimeDayShift2(), stubOvertimeDayShift3(), stubOvertimeDayShift4(), stubOvertimeDayShift5(), 
-      stubOvertimeDayShift6(), stubNightShift1(), stubNightShift2(), stubNightShift3(), stubRestDay(), stubHoliday()]),
-  stubShifts, 
+    Promise.all([
+      stubDayShift1(),
+      stubDayShift2(),
+      stubOvertimeDayShift1(),
+      stubOvertimeDayShift2(),
+      stubOvertimeDayShift3(),
+      stubOvertimeDayShift4(),
+      stubOvertimeDayShift5(),
+      stubOvertimeDayShift6(),
+      stubNightShift1(),
+      stubNightShift2(),
+      stubNightShift3(),
+      stubRestDay(),
+      stubHoliday(),
+    ]),
+  stubShifts,
   stubHealthCalls: () => Promise.all([stubHealth(), stubHealthInvision(), stubNotifyStatus()]),
 }
