@@ -306,8 +306,7 @@ const stubShifts = () =>
         ],
       },
     },
-  }) 
-
+  })
 
 const stubRestDay = () =>
   stubFor({
@@ -405,13 +404,13 @@ const stubOvertimeDayShift1 = () =>
             taskType: 'Unspecific',
             startDateTime: '2020-03-08T13:30:00',
             endDateTime: '2020-03-08T17:15:00',
-          }, 
+          },
         ],
       },
     },
   })
 
-  const stubOvertimeDayShift2 = () =>
+const stubOvertimeDayShift2 = () =>
   stubFor({
     priority: '1',
     request: {
@@ -437,9 +436,9 @@ const stubOvertimeDayShift1 = () =>
         ],
       },
     },
-  })  
+  })
 
-  const stubOvertimeDayShift3 = () =>
+const stubOvertimeDayShift3 = () =>
   stubFor({
     priority: '1',
     request: {
@@ -465,9 +464,9 @@ const stubOvertimeDayShift1 = () =>
         ],
       },
     },
-  })  
+  })
 
-  const stubOvertimeDayShift4 = () =>
+const stubOvertimeDayShift4 = () =>
   stubFor({
     priority: '1',
     request: {
@@ -493,9 +492,9 @@ const stubOvertimeDayShift1 = () =>
         ],
       },
     },
-  })  
+  })
 
-  const stubOvertimeDayShift5 = () =>
+const stubOvertimeDayShift5 = () =>
   stubFor({
     priority: '1',
     request: {
@@ -521,9 +520,9 @@ const stubOvertimeDayShift1 = () =>
         ],
       },
     },
-  }) 
+  })
 
-  const stubOvertimeDayShift6 = () =>
+const stubOvertimeDayShift6 = () =>
   stubFor({
     priority: '1',
     request: {
@@ -549,8 +548,7 @@ const stubOvertimeDayShift1 = () =>
         ],
       },
     },
-  })  
-
+  })
 
 const stubDayShift1 = () =>
   stubFor({
@@ -607,7 +605,7 @@ const stubDayShift1 = () =>
     },
   })
 
-  const stubDayShift2 = () =>
+const stubDayShift2 = () =>
   stubFor({
     priority: '1',
     request: {
@@ -709,7 +707,7 @@ const stubNightShift2 = () =>
     },
   })
 
-  const stubNightShift3 = () =>
+const stubNightShift3 = () =>
   stubFor({
     priority: '1',
     request: {
@@ -731,32 +729,6 @@ const stubNightShift2 = () =>
             taskType: 'Unspecific',
             startDateTime: 'null',
             endDateTime: '2020-03-26T07:45:00',
-          },
-        ],
-      },
-    },
-  })
-
-
-const stubStaffLookup = () =>
-  stubFor({
-    request: {
-      method: 'GET',
-      urlPathPattern: '/api/staff-members/quantum/([a-zA-Z0-9_]*)',
-    },
-    response: {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      jsonBody: {
-        staffMembers: [
-          {
-            id: 2118,
-            planUnitId: 1326,
-            planUnitName: 'Manchester Band 5',
-            employeeName: 'Smith, Joe',
-            personnelNumber: 'R2_ID2118',
           },
         ],
       },
@@ -811,10 +783,22 @@ const stubNotifyStatus = async () =>
   })
 
 module.exports = {
-  stubStaffLookup,
   stubTasks: () =>
-    Promise.all([stubDayShift1(), stubDayShift2(), stubOvertimeDayShift1(), stubOvertimeDayShift2(), stubOvertimeDayShift3(), stubOvertimeDayShift4(), stubOvertimeDayShift5(), 
-      stubOvertimeDayShift6(), stubNightShift1(), stubNightShift2(), stubNightShift3(), stubRestDay(), stubHoliday()]),
-  stubShifts, 
+    Promise.all([
+      stubDayShift1(),
+      stubDayShift2(),
+      stubOvertimeDayShift1(),
+      stubOvertimeDayShift2(),
+      stubOvertimeDayShift3(),
+      stubOvertimeDayShift4(),
+      stubOvertimeDayShift5(),
+      stubOvertimeDayShift6(),
+      stubNightShift1(),
+      stubNightShift2(),
+      stubNightShift3(),
+      stubRestDay(),
+      stubHoliday(),
+    ]),
+  stubShifts,
   stubHealthCalls: () => Promise.all([stubHealth(), stubHealthInvision(), stubNotifyStatus()]),
 }
