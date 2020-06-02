@@ -4,7 +4,7 @@ const stubStaffLookup = () =>
   stubFor({
     request: {
       method: 'GET',
-      urlPathPattern: '/users/me',
+      urlPathPattern: '/api/users/me',
     },
     response: {
       status: 200,

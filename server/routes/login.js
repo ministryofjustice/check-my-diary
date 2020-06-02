@@ -179,7 +179,7 @@ module.exports = () => (router) => {
 
         res.render('pages/two-factor-auth', { authError: false, csrfToken: res.locals.csrfToken })
       } else {
-        req.user.employeeName = await getStaffMemberEmployeeName(config.nomis.eliteUrl, req.user.token)
+        req.user.employeeName = await getStaffMemberEmployeeName(config.eliteUrl, req.user.token)
 
         await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(
           req.user.username,

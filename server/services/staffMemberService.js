@@ -9,7 +9,7 @@ const axios = require('axios')
 const getStaffMemberData = async (eliteApi, accessToken) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`${eliteApi}/users/me`, {
+      .get(`${eliteApi}/api/users/me`, {
         headers: {
           authorization: `Bearer ${accessToken}`,
         },
