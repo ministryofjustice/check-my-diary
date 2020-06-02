@@ -91,6 +91,9 @@ env:
   - name: DB_SSL_ENABLED
     value: "true"
 
+  - name: ELITE2_ENDPOINT_URL
+    value: {{ .Values.env.ELITE2_ENDPOINT_URL | quote }}
+
   - name: REGIONS
     value: {{ .Values.env.REGIONS | quote }}
 

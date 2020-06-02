@@ -40,12 +40,7 @@ module.exports = () => (router) => {
       const inputTwoFactorCode = utilities.createTwoFactorAuthenticationHash(req.body.code)
 
       if (inputTwoFactorCode === userAuthenticationDetails[0].TwoFactorAuthenticationHash) {
-        req.user.employeeName = await getStaffMemberEmployeeName(
-          userAuthenticationDetails[0].ApiUrl,
-          req.user.username,
-          utilities.getStartMonth(),
-          req.user.token,
-        )
+        req.user.employeeName = await getStaffMemberEmployeeName(config.eliteUrl, req.user.token)
 
         await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(
           req.user.username,
@@ -131,8 +126,8 @@ module.exports = () => (router) => {
 
       const quantumAddresses = config.quantumAddresses.split(',')
 
-      if (config.twoFactorAuthOn === 'true' && ipRangeCheck(ipAddress, quantumAddresses) === false) {        
-        if (userAuthenticationDetails === null || userAuthenticationDetails.length === 0) {          
+      if (config.twoFactorAuthOn === 'true' && ipRangeCheck(ipAddress, quantumAddresses) === false) {
+        if (userAuthenticationDetails === null || userAuthenticationDetails.length === 0) {
           throw new Error(`Error : No Sms or Email address returned for QuantumId : ${req.user.username}`)
         }
 
@@ -184,12 +179,7 @@ module.exports = () => (router) => {
 
         res.render('pages/two-factor-auth', { authError: false, csrfToken: res.locals.csrfToken })
       } else {
-        req.user.employeeName = await getStaffMemberEmployeeName(
-          userAuthentication.ApiUrl,
-          req.user.username,
-          utilities.getStartMonth(),
-          req.user.token,
-        )
+        req.user.employeeName = await getStaffMemberEmployeeName(config.nomis.eliteUrl, req.user.token)
 
         await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(
           req.user.username,
@@ -217,11 +207,11 @@ module.exports = () => (router) => {
   return router
 }
 
-async function getStaffMemberEmployeeName(apiUrl, uid, startMonth, accessToken) {
-  const staffMemberResponse = await staffMemberService.getStaffMemberData(apiUrl, uid, startMonth, accessToken)
+async function getStaffMemberEmployeeName(eliteApi, accessToken) {
+  const staffMemberResponse = await staffMemberService.getStaffMemberData(eliteApi, accessToken)
 
   if (staffMemberResponse !== null) {
-    return staffMemberResponse.staffMembers[0].employeeName
+    return staffMemberResponse.lastName.concat(', ', staffMemberResponse.firstName)
   }
   return null
 }

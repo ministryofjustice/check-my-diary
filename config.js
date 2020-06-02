@@ -68,4 +68,5 @@ module.exports = {
   twoFactorAuthOn: process.env.TWO_FACT_AUTH_ON,
   https: production,
   regions: get('REGIONS', '', requiredInProduction),
+  eliteUrl: get('ELITE2_ENDPOINT_URL', 'https://localhost:9292/api', requiredInProduction),
 }
