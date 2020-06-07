@@ -6,7 +6,6 @@ replicaCount: 2
 image:
   repository: quay.io/hmpps/check-my-diary
   tag: latest
-  pullPolicy: Always
   port: 3000
 
 ingress:
