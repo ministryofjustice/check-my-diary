@@ -36,8 +36,9 @@ function init(signInService) {
       state: true,
       customHeaders: { Authorization: generateOauthClientToken() },
     },
-    (accessToken, refreshToken, params, profile, done) => {
-      const user = signInService.getUser(accessToken, refreshToken, params.expires_in, params.sub)
+    // eslint-disable-next-line camelcase
+    (accessToken, refreshToken, { expires_in, sub }, profile, done) => {
+      const user = signInService.getUser(accessToken, refreshToken, expires_in, sub)
 
       return done(null, user)
     },
