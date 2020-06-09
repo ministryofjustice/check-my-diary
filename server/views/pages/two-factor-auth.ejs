@@ -25,13 +25,14 @@
               There is a problem
             </h2>
             <div class="govuk-error-summary__body">
-              <ul class="govuk-list govuk-error-summary__list">
-                <li><b>The access code entered is invalid</b></li>
-              </ul>
+              <p>You have not entered a valid access code.</p>
+              <p>Check the most recent access code we have sent you and try again.</p>
+              <p>You can also <a href="/auth/login" class="govuk-link">request a new access code.</a></p>
             </div>
           </div>
         <% } %>
 
+        <p class="govuk-body">Your access code has been sent to your chosen email address.</p>
         <form action="/auth/2fa" method="POST">
           <div class="govuk-form-group">
             <label for="code" class="govuk-label">Access code</label>
