@@ -44,7 +44,7 @@
         </div>
 
         <% if (data == null || data.shifts.length == 0) { %>
-        <h1 class="govuk-heading-m center-align">No data available</h1>
+          <%- include('../partials/error-summary', {message: 'There is no detail information to show for this account.'}); %>
         <% } %>
         <ul class="calendar">
           <% if (data != null && data.shifts.length > 0) { %> <% getDays().forEach(function(day){ %>
