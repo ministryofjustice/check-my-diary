@@ -63,15 +63,14 @@ function getAuthErrorDescription(error) {
       type =
         'Your email address or mobile number has not been enabled. Please contact us via: checkmydiary@digital.justice.gov.uk.'
     } else if (error.message.includes('email_address Not a valid email address')) {
-      type =
-        'Your email address stored with Check My Diary is not valid. Please contact us via: checkmydiary@digital.justice.gov.uk.'
+      type = '<p>We do not have a valid email address for you.</p><p>Please call the Service Desk on 0203 788 4636</p>'
     } else if (
       error.message.includes('phone_number Not enough digits') ||
       error.message.includes('phone_number Must not contain letters or symbols') ||
       error.message.includes('phone_number Too many digits')
     ) {
       type =
-        'Your mobile number stored with Check My Diary is not valid. Please contact us via: checkmydiary@digital.justice.gov.uk.'
+        '<p>We do not have a valid mobile phone number for you.</p><p>Please call the Service Desk on 0203 788 4636</p>'
     }
   }
   return type
@@ -107,23 +106,20 @@ function configureCalendar(data, startDate) {
   return { shifts: [...prePad, ...data.shifts, ...postPad] }
 }
 
-function processOvertimeShifts(shiftsData, overtimeShiftsData){
-  
+function processOvertimeShifts(shiftsData, overtimeShiftsData) {
   if (shiftsData != null && shiftsData.shifts.length > 0) {
     if (overtimeShiftsData != null && overtimeShiftsData.shifts.length > 0) {
-
-      overtimeShiftsData.shifts.forEach(overtimeShift => {
-
-          for (let i = 0; i < shiftsData.shifts.length; i += 1) {
-            const shift = shiftsData.shifts[i]          
-            if (shift.type !== 'no-day'){            
-              if (overtimeShift.date === shift.date){
-                shift.overtime = true
-              } else {
-                shift.overtime = shift.overtime || false
-              }
+      overtimeShiftsData.shifts.forEach((overtimeShift) => {
+        for (let i = 0; i < shiftsData.shifts.length; i += 1) {
+          const shift = shiftsData.shifts[i]
+          if (shift.type !== 'no-day') {
+            if (overtimeShift.date === shift.date) {
+              shift.overtime = true
+            } else {
+              shift.overtime = shift.overtime || false
             }
           }
+        }
       })
     }
   }
