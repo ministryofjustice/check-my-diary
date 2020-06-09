@@ -49,7 +49,7 @@
                 <ul class="govuk-list govuk-error-summary__list">
                   <li>
                     <% if (apiUp || authError) { %>
-                    <b><%= authErrorText %></b>
+                    <b><%- authErrorText %></b>
                     <% } else { %> Service temporarily unavailable. Please try again later. If this issue persists, please contact the Helpdesk on 0203 788 4636. <% } %>
                   </li>
                 </ul>
