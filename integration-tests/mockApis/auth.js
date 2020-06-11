@@ -3,7 +3,8 @@ const { stubFor, getRequests } = require('./wiremock')
 
 const createToken = () => {
   const payload = {
-    user_name: 'ITAG_USER',
+    sub: 'ITAG_USER',
+    user_name: 'ITAG_USER_USE_SUB',
     scope: ['read', 'write'],
     auth_source: 'nomis',
     authorities: [],
@@ -80,7 +81,8 @@ const token = () =>
         access_token: createToken(),
         token_type: 'bearer',
         refresh_token: 'refresh',
-        user_name: 'TEST_USER',
+        sub: 'TEST_USER',
+        user_name: 'TEST_USER_USE_SUB',
         expires_in: 600,
         scope: 'read write',
         internalUser: true,

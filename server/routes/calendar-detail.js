@@ -21,18 +21,16 @@ module.exports = (logger, calendarService, calendarOvertimeService, userAuthenti
 
         const apiShiftDetailsResponse = await calendarService.getCalendarDetails(
           userAuthenticationDetails[0].ApiUrl,
-          req.user.username,
           req.params.date,
           req.user.token,
         )
 
         const apiOvertimeShiftDetailsResponse = await calendarOvertimeService.getCalendarOvertimeDetails(
           userAuthenticationDetails[0].ApiUrl,
-          req.user.username,
           req.params.date,
           req.user.token,
         )
-       
+
         res.render('pages/calendar-details', {
           data: apiShiftDetailsResponse,
           overtimeShiftDetailsData: apiOvertimeShiftDetailsResponse,
