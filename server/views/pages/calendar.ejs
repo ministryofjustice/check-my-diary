@@ -221,7 +221,18 @@
         </ul>
         <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
         <div class="govuk-clearfix"></div>
-        <div class="govuk-!-margin-bottom-8"></div>
+        <% if (data != null && data.shifts.length > 0) { %>
+          <details class="govuk-details govuk-!-padding-top-6" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+              <span class="govuk-details__summary-text">
+                These details are not correct
+              </span>
+            </summary>
+            <div class="govuk-details__text">
+              Please call the Service Desk on 0203 788 4636.
+            </div>
+          </details>
+        <% } %>
       </main>
     </div>
 
