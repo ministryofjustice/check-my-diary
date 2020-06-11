@@ -1,5 +1,7 @@
 const { NotifyClient } = require('notifications-node-client')
 const ipRangeCheck = require('ip-range-check')
+const passport = require('passport')
+const log = require('../../log')
 const asyncMiddleware = require('../middleware/asyncMiddleware')
 const logError = require('../logError')
 const config = require('../../config')
@@ -16,19 +18,13 @@ const notifySmsTemplate = smsTemplateId || ''
 const notifyEmailTemplate = emailTemplateId || ''
 
 module.exports = () => (router) => {
-  router.get(
-    '/',
-    asyncMiddleware(async (req, res) => {
-      postLogin(req, res)
-    }),
-  )
+  router.get('/', passport.authenticate('oauth2'), async (req, res) => {
+    postLogin(req, res)
+  })
 
-  router.get(
-    '/auth/login',
-    asyncMiddleware(async (req, res) => {
-      postLogin(req, res)
-    }),
-  )
+  router.get('/auth/login', passport.authenticate('oauth2'), async (req, res) => {
+    postLogin(req, res)
+  })
 
   router.post(
     '/auth/2fa',
@@ -47,7 +43,19 @@ module.exports = () => (router) => {
 
   const postLogin = asyncMiddleware(async (req, res) => {
     const userAuthentication = getUserDetails(req, res)
+
+    // Can we use Passport?
+    // let token
+    // if(req.user.token) {
+    //  token = jwt.verify(req.user.token);
+    // }
+
+    // const token = passport.deserializeUser(req.user)
+
+    log.info(req.user)
     if (
+      // Users with ROLE_MFA have gone through the HMPPS auth MFA process
+      req.user.token.authorities.includes('ROLE_MFA') === false &&
       config.twoFactorAuthOn === 'true' &&
       ipRangeCheck(getIpAddress(req), config.quantumAddresses.split(',')) === false
     ) {
