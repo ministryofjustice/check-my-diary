@@ -2,12 +2,12 @@ const axios = require('axios')
 
 /**
  * Get the staff member data for the given month (YYYY-MM-DD)
- * @param uid
+ * @param apiUrl
  * @param startDate
  * @param accessToken
  * @returns {Promise<any>}
  */
-const getStaffMemberData = async (apiUrl, uid, startDate, accessToken) => {
+const getStaffMemberData = async (apiUrl, startDate, accessToken) => {
   // @TODO: This is here to support the API call but is this really needed?
   // Get the end date by retrieving the last date of the current month
   function getEndDate() {
@@ -17,7 +17,7 @@ const getStaffMemberData = async (apiUrl, uid, startDate, accessToken) => {
 
   return new Promise((resolve, reject) => {
     axios
-      .get(`${apiUrl}staff-members/quantum/${uid}?startdate=${startDate}&enddate=${getEndDate()}`, {
+      .get(`${apiUrl}staff-members/?startdate=${startDate}&enddate=${getEndDate()}`, {
         headers: {
           authorization: `Bearer ${accessToken}`,
         },

@@ -3,17 +3,14 @@ const logger = require('../../log')
 const utilities = require('../helpers/utilities')
 
 module.exports = function CalendarOvertimeService() {
-  function getCalendarOvertimeData(apiUrl, uid, startDate, accessToken) {
+  function getCalendarOvertimeData(apiUrl, startDate, accessToken) {
     return new Promise((resolve, reject) => {
       axios
-        .get(
-          `${apiUrl}shifts/overtime/quantum/${uid}?startdate=${startDate}&enddate=${utilities.getEndDate(startDate)}`,
-          {
-            headers: {
-              authorization: `Bearer ${accessToken}`,
-            },
+        .get(`${apiUrl}shifts/overtime?startdate=${startDate}&enddate=${utilities.getEndDate(startDate)}`, {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
           },
-        )
+        })
         .then((response) => {
           resolve(response.data, startDate)
         })
@@ -30,10 +27,10 @@ module.exports = function CalendarOvertimeService() {
     })
   }
 
-  function getCalendarOvertimeDetails(apiUrl, uid, date, accessToken) {
+  function getCalendarOvertimeDetails(apiUrl, date, accessToken) {
     return new Promise((resolve, reject) => {
       axios
-        .get(`${apiUrl}shifts/overtime/quantum/${uid}/tasks?date=${date}`, {
+        .get(`${apiUrl}shifts/overtime/tasks?date=${date}`, {
           headers: {
             authorization: `Bearer ${accessToken}`,
           },
