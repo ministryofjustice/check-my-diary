@@ -3,10 +3,10 @@ const logger = require('../../log')
 const utilities = require('../helpers/utilities')
 
 module.exports = function CalendarService() {
-  function getCalendarData(apiUrl, uid, startDate, accessToken) {
+  function getCalendarData(apiUrl, startDate, accessToken) {
     return new Promise((resolve, reject) => {
       axios
-        .get(`${apiUrl}shifts/quantum/${uid}?startdate=${startDate}&enddate=${utilities.getEndDate(startDate)}`, {
+        .get(`${apiUrl}shifts?startdate=${startDate}&enddate=${utilities.getEndDate(startDate)}`, {
           headers: {
             authorization: `Bearer ${accessToken}`,
           },
@@ -27,10 +27,10 @@ module.exports = function CalendarService() {
     })
   }
 
-  function getCalendarDetails(apiUrl, uid, date, accessToken) {
+  function getCalendarDetails(apiUrl, date, accessToken) {
     return new Promise((resolve, reject) => {
       axios
-        .get(`${apiUrl}shifts/quantum/${uid}/tasks?date=${date}`, {
+        .get(`${apiUrl}shifts/tasks?date=${date}`, {
           headers: {
             authorization: `Bearer ${accessToken}`,
           },
