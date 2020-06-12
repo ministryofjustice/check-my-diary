@@ -82,7 +82,6 @@ const token = () =>
         token_type: 'bearer',
         refresh_token: 'refresh',
         sub: 'TEST_USER',
-        user_name: 'TEST_USER_USE_SUB',
         expires_in: 600,
         scope: 'read write',
         internalUser: true,
