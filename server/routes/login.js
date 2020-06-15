@@ -119,6 +119,7 @@ module.exports = () => (router) => {
       log.info(`${userAuthentication.ApiUrl}health - health check with status ${healthRes.status}`)
 
       if (isApiUp === false) {
+        log.error(healthRes.appInfo)
         res.render('pages/index', {
           showUserNotSignedUpMessage: false,
           authError: false,

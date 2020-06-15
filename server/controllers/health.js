@@ -31,6 +31,7 @@ const healthResult = async (serviceUris) => {
     const results = await Promise.all(serviceUris.map(getHealth).map(reflect))
     // eslint-disable-next-line no-shadow
     status = results.reduce((status, health) => Math.max(status, health.status), 200)
+    appInfo.api = results
   } catch (error) {
     appInfo.api = error.message
     status = (error.response && error.response.status) || 500
