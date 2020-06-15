@@ -53,7 +53,6 @@ module.exports = {
     clientKey: get('NOTIFY_CLIENT_KEY', 'some_invalid_key', requiredInProduction),
     smsTemplateId: get('NOTIFY_SMS_TEMPLATE', 'not_sms', requiredInProduction),
     emailTemplateId: get('NOTIFY_EMAIL_TEMPLATE', 'not_email', requiredInProduction),
-    healthCheckUrl: process.env.NOTIFY_HEALTH_CHECK_URL || 'https://api.notifications.service.gov.uk/_status',
   },
   hmppsCookie: {
     name: process.env.HMPPS_COOKIE_NAME || 'hmpps-session-dev',
