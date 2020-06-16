@@ -44,16 +44,11 @@ module.exports = {
     mailTo: process.env.MAIL_TO || 'feedback@digital.justice.gov.uk',
     url: process.env.CHECK_MY_DIARY_URL || `http://localhost:${process.env.PORT || 3005}`,
   },
-  maintenance: {
-    start: process.env.MAINTENANCE_START,
-    end: process.env.MAINTENANCE_END,
-  },
   notify: {
     url: get('NOTIFY_URL', 'http://localhost:9191', noFallbackInProduction),
     clientKey: get('NOTIFY_CLIENT_KEY', 'some_invalid_key', requiredInProduction),
     smsTemplateId: get('NOTIFY_SMS_TEMPLATE', 'not_sms', requiredInProduction),
     emailTemplateId: get('NOTIFY_EMAIL_TEMPLATE', 'not_email', requiredInProduction),
-    healthCheckUrl: process.env.NOTIFY_HEALTH_CHECK_URL || 'https://api.notifications.service.gov.uk/_status',
   },
   hmppsCookie: {
     name: process.env.HMPPS_COOKIE_NAME || 'hmpps-session-dev',
