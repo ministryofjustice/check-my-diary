@@ -4,7 +4,7 @@ const { stubFor, getRequests } = require('./wiremock')
 const createToken = () => {
   const payload = {
     sub: 'ITAG_USER',
-    name: 'Mr ITAG',
+    name: 'SARAH ITAG',
     scope: ['read', 'write'],
     auth_source: 'nomis',
     authorities: [],
