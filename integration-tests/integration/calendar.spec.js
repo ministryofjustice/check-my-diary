@@ -12,7 +12,6 @@ context('A staff member can view their calendar', () => {
 
     cy.task('stubLogin')
     cy.task('stubHealthCalls')
-    cy.task('stubStaffLookup')
     cy.task('stubShifts')
     cy.login()
 
@@ -20,7 +19,7 @@ context('A staff member can view their calendar', () => {
   })
 
   it('A staff member can view their calendar', () => {
-    const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))    
+    const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
 
     // day shift
     const dayShift = calendarPage.day('2020-03-06')
@@ -33,7 +32,7 @@ context('A staff member can view their calendar', () => {
   it('A staff member can drill into a day shift', () => {
     cy.task('stubTasks')
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
-    
+
     const dayShift = calendarPage.day('2020-03-06')
     dayShift.click()
 
@@ -45,7 +44,7 @@ context('A staff member can view their calendar', () => {
   it('A staff member can drill into a night shift', () => {
     cy.task('stubTasks')
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
-    
+
     const nightShift = calendarPage.day('2020-03-23')
     nightShift.click()
 

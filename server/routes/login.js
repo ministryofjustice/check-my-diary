@@ -1,12 +1,12 @@
 const { NotifyClient } = require('notifications-node-client')
 const ipRangeCheck = require('ip-range-check')
+const jwtDecode = require('jwt-decode')
 const asyncMiddleware = require('../middleware/asyncMiddleware')
 const logError = require('../logError')
 const config = require('../../config')
 const health = require('../controllers/health')
 const log = require('../../log')
 const utilities = require('../helpers/utilities')
-const staffMemberService = require('../services/staffMemberService')
 const userAuthenticationService = require('../services/userAuthenticationService')
 
 const {
@@ -40,11 +40,7 @@ module.exports = () => (router) => {
       const inputTwoFactorCode = utilities.createTwoFactorAuthenticationHash(req.body.code)
 
       if (inputTwoFactorCode === userAuthenticationDetails[0].TwoFactorAuthenticationHash) {
-        req.user.employeeName = await getStaffMemberEmployeeName(
-          userAuthenticationDetails[0].ApiUrl,
-          utilities.getStartMonth(),
-          req.user.token,
-        )
+        req.user.employeeName = jwtDecode(req.user.token).name
 
         await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(
           req.user.username,
@@ -183,11 +179,7 @@ module.exports = () => (router) => {
 
         res.render('pages/two-factor-auth', { authError: false, csrfToken: res.locals.csrfToken })
       } else {
-        req.user.employeeName = await getStaffMemberEmployeeName(
-          userAuthentication.ApiUrl,
-          utilities.getStartMonth(),
-          req.user.token,
-        )
+        req.user.employeeName = jwtDecode(req.user.token).name
 
         await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(
           req.user.username,
@@ -213,13 +205,4 @@ module.exports = () => (router) => {
   })
 
   return router
-}
-
-async function getStaffMemberEmployeeName(apiUrl, startMonth, accessToken) {
-  const staffMemberResponse = await staffMemberService.getStaffMemberData(apiUrl, startMonth, accessToken)
-
-  if (staffMemberResponse !== null) {
-    return staffMemberResponse.staffMembers[0].employeeName
-  }
-  return null
 }

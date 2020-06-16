@@ -735,31 +735,6 @@ const stubNightShift3 = () =>
     },
   })
 
-const stubStaffLookup = () =>
-  stubFor({
-    request: {
-      method: 'GET',
-      urlPathPattern: '/api/staff-members',
-    },
-    response: {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      jsonBody: {
-        staffMembers: [
-          {
-            id: 2118,
-            planUnitId: 1326,
-            planUnitName: 'Manchester Band 5',
-            employeeName: 'Smith, Joe',
-            personnelNumber: 'R2_ID2118',
-          },
-        ],
-      },
-    },
-  })
-
 const stubHealth = async () =>
   stubFor({
     request: {
@@ -808,7 +783,6 @@ const stubNotifyStatus = async () =>
   })
 
 module.exports = {
-  stubStaffLookup,
   stubTasks: () =>
     Promise.all([
       stubDayShift1(),
