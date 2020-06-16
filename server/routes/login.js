@@ -85,20 +85,6 @@ function getIpAddress(req) {
 }
 
 function sendMFA(userName, userAuthentication) {
-  if (
-    (userAuthentication.EmailAddress === null || userAuthentication.EmailAddress === '') &&
-    (userAuthentication.Sms === null || userAuthentication.Sms === '')
-  ) {
-    throw new Error(`Error : Sms or Email address null or empty for QuantumId : ${userName}`)
-  }
-
-  const emailEnabled = userAuthentication.UseEmailAddress
-  const smsEnabled = userAuthentication.UseSms
-
-  if (!emailEnabled && !smsEnabled) {
-    throw new Error(`Error : Sms or Email address both set to false for QuantumId : ${userName}`)
-  }
-
   const twofactorCode = utilities.get2faCode()
 
   userAuthenticationService.updateTwoFactorAuthenticationHash(
@@ -111,26 +97,25 @@ function sendMFA(userName, userAuthentication) {
   } = config
   const notify = url ? new NotifyClient(url, clientKey) : new NotifyClient(clientKey)
 
-  const notifySmsTemplate = smsTemplateId || ''
-  const notifyEmailTemplate = emailTemplateId || ''
-
-  if (emailEnabled) {
-    // For email
-    notify
-      .sendEmail(notifyEmailTemplate, userAuthentication.EmailAddress || '', {
-        personalisation: { '2fa_code': twofactorCode },
-      })
-      .catch((err) => {
-        throw new Error(err)
-      })
-  } else if (smsEnabled) {
+  if (userAuthentication.UseSms) {
     // For SMS
     notify
-      .sendSms(notifySmsTemplate, userAuthentication.Sms || '', {
+      .sendSms(smsTemplateId, userAuthentication.Sms || '', {
         personalisation: { '2fa_code': twofactorCode },
       })
       .catch((err) => {
         throw new Error(err)
       })
+  } else if (userAuthentication.UseEmailAddress) {
+    // For email
+    notify
+      .sendEmail(emailTemplateId, userAuthentication.EmailAddress || '', {
+        personalisation: { '2fa_code': twofactorCode },
+      })
+      .catch((err) => {
+        throw new Error(err)
+      })
+  } else {
+    throw new Error(`Error : Sms or Email address both set to false for QuantumId : ${userName}`)
   }
 }
