@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
   <head>
-    <% include ../partials/head %>    
+    <% include ../partials/head %>
   </head>
   <body class="govuk-template__body">
     <% include ../partials/header %>
@@ -12,7 +12,7 @@
       <main id="main-content" class="govuk-main-wrapper" role="main">
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-two-thirds">
-            <% if (!apiUp || authError) { %>
+            <% if (authError) { %>
 
             <div
               class="govuk-error-summary"
@@ -24,7 +24,7 @@
               <h2 class="govuk-error-summary__title" id="error-summary-title">
                 There is a problem
               </h2>
-              
+
               <% if (showUserNotSignedUpMessage) { %>
                 <div class="govuk-error-summary__body">
                   You have not been setup on Check My Diary. If you are interested in signing up then please email <a href="mailto:checkmydiary@digital.justice.gov.uk" target="_top">Check My Diary team</a> with the following details:
@@ -44,18 +44,18 @@
                   </ul>
                 </div>
               <% } else { %>
-              
+
               <div class="govuk-error-summary__body">
                 <ul class="govuk-list govuk-error-summary__list">
                   <li>
-                    <% if (apiUp || authError) { %>
+                    <% if (authError) { %>
                     <b><%- authErrorText %></b>
                     <% } else { %> Service temporarily unavailable. Please try again later. If this issue persists, please contact the Helpdesk on 0203 788 4636. <% } %>
                   </li>
                 </ul>
               </div>
               <% } %>
-            
+
             </div>
 
             <% } %>
