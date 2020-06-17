@@ -60,7 +60,7 @@ async function checkUserIsRegistered(req, res, userAuthenticationDetails) {
   return userAuthenticationDetails
 }
 
-async function isExternalIpAddress(req) {
+async function isQuantumIpAddress(req) {
   const ipAddress =
     req.headers['x-forwarded-for'] ||
     req.connection.remoteAddress ||
@@ -75,10 +75,10 @@ const postLogin = asyncMiddleware(async (req, res) => {
 
   await checkUserIsRegistered(req, res, userAuthenticationDetails)
 
-  const hmppsAuthMFAUser = jwtDecode(req.user.token).authorities.includes('ROLE_MFA')
-  const isExternalIp = await isExternalIpAddress(req)
+  const isHmppsAuthMFAUser = jwtDecode(req.user.token).authorities.includes('ROLE_MFA')
+  const isQuantumIp = await isQuantumIpAddress(req)
 
-  if (config.twoFactorAuthOn === 'true' && hmppsAuthMFAUser === false && isExternalIp === false) {
+  if (config.twoFactorAuthOn === 'true' && isHmppsAuthMFAUser === false && isQuantumIp === false) {
     await sendMFA(req, userAuthenticationDetails[0])
 
     res.render('pages/two-factor-auth', { authError: false, csrfToken: res.locals.csrfToken })
