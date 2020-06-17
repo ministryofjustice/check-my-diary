@@ -70,6 +70,15 @@ async function isQuantumIpAddress(req) {
   return ipRangeCheck(ipAddress, quantumAddresses)
 }
 
+async function processLogin(req) {
+  req.user.employeeName = jwtDecode(req.user.token).name
+
+  await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(
+    req.user.username,
+    new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000),
+  )
+}
+
 const postLogin = asyncMiddleware(async (req, res) => {
   const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
 
@@ -80,16 +89,9 @@ const postLogin = asyncMiddleware(async (req, res) => {
 
   if (config.twoFactorAuthOn === 'true' && isHmppsAuthMFAUser === false && isQuantumIp === false) {
     await sendMFA(req, userAuthenticationDetails[0])
-
     res.render('pages/two-factor-auth', { authError: false, csrfToken: res.locals.csrfToken })
   } else {
-    req.user.employeeName = jwtDecode(req.user.token).name
-
-    await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(
-      req.user.username,
-      new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000),
-    )
-
+    await processLogin(req)
     res.redirect(`/calendar/${utilities.getStartMonth()}`)
   }
 })
@@ -112,18 +114,11 @@ module.exports = () => (router) => {
   router.post(
     '/auth/2fa',
     asyncMiddleware(async (req, res) => {
+      const inputTwoFactorCode = utilities.createTwoFactorAuthenticationHash(req.body.code)
       const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
 
-      const inputTwoFactorCode = utilities.createTwoFactorAuthenticationHash(req.body.code)
-
       if (inputTwoFactorCode === userAuthenticationDetails[0].TwoFactorAuthenticationHash) {
-        req.user.employeeName = jwtDecode(req.user.token).name
-
-        await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(
-          req.user.username,
-          new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000),
-        )
-
+        await processLogin(req)
         res.redirect(`/calendar/${utilities.getStartMonth()}`)
       } else {
         logError(req.url, '2FA failure')
