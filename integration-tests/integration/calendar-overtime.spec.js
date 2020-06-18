@@ -12,20 +12,19 @@ context('A staff member can view their overtime calendar', () => {
 
     cy.task('stubLogin')
     cy.task('stubHealthCalls')
-    cy.task('stubStaffLookup')
-    cy.task('stubShifts')    
+    cy.task('stubShifts')
     cy.login()
 
     utilities.gotoPreviousCalendarDate('2020-03-01')
   })
 
   it('A staff member can view their overtime calendar', () => {
-    const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))    
+    const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
 
     const dayShift = calendarPage.day('2020-03-08')
     dayShift.children().should((spans) => {
       const allText = spans.map((i, el) => Cypress.$(el).text().trim())
-      expect(allText.get()).to.deep.eq(['Sunday, 8', '8', 'Start 07:30', 'Finish 17:15', '8hrs 45mins', 'Overtime'])      
+      expect(allText.get()).to.deep.eq(['Sunday, 8', '8', 'Start 07:30', 'Finish 17:15', '8hrs 45mins', 'Overtime'])
     })
 
     const restDay = calendarPage.day('2020-03-09')
@@ -56,7 +55,7 @@ context('A staff member can view their overtime calendar', () => {
   it('A staff member can drill into a day shift with overtime', () => {
     cy.task('stubTasks')
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
-   
+
     const dayShift = calendarPage.day('2020-03-08')
     dayShift.click()
 
@@ -70,14 +69,14 @@ context('A staff member can view their overtime calendar', () => {
 
   it('A staff member can drill into a rest day with overtime', () => {
     cy.task('stubTasks')
-    
+
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
-   
+
     const dayShift = calendarPage.day('2020-03-09')
     dayShift.click()
 
     const calendarDetailPage = CalendarDetailPage.verifyOnPage('Monday 9 March 2020')
-    calendarDetailPage.detailRestDay().should('contain', 'Rest Day')    
+    calendarDetailPage.detailRestDay().should('contain', 'Rest Day')
 
     calendarDetailPage.detailStartOvertime().should('contain', 'Start').should('contain', 'Visits Manager')
     calendarDetailPage.detailFinishOvertime().should('contain.text', 'End')
@@ -85,14 +84,14 @@ context('A staff member can view their overtime calendar', () => {
 
   it('A staff member can drill into a holiday with overtime', () => {
     cy.task('stubTasks')
-    
+
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
-   
+
     const dayShift = calendarPage.day('2020-03-28')
     dayShift.click()
 
     const calendarDetailPage = CalendarDetailPage.verifyOnPage('Saturday 28 March 2020')
-    calendarDetailPage.detailAbsence().should('contain', 'Holiday')    
+    calendarDetailPage.detailAbsence().should('contain', 'Holiday')
 
     calendarDetailPage.detailStartOvertime().should('contain', 'Start').should('contain', 'Visits Manager')
     calendarDetailPage.detailFinishOvertime().should('contain.text', 'End')
@@ -100,9 +99,9 @@ context('A staff member can view their overtime calendar', () => {
 
   it('A staff member can drill into a night shift start with overtime', () => {
     cy.task('stubTasks')
-    
+
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
-   
+
     const dayShift = calendarPage.day('2020-03-22')
     dayShift.click()
 
@@ -115,9 +114,9 @@ context('A staff member can view their overtime calendar', () => {
 
   it('A staff member can drill into a night shift end with overtime', () => {
     cy.task('stubTasks')
-    
+
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
-   
+
     const dayShift = calendarPage.day('2020-03-26')
     dayShift.click()
 
@@ -126,5 +125,5 @@ context('A staff member can view their overtime calendar', () => {
 
     calendarDetailPage.detailStartOvertime().should('contain', 'Start').should('contain', 'Visits Manager')
     calendarDetailPage.detailFinishOvertime().should('contain.text', 'End')
-  })  
+  })
 })
