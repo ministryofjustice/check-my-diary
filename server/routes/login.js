@@ -125,8 +125,12 @@ module.exports = () => (router) => {
       }
 
       const quantumAddresses = config.quantumAddresses.split(',')
-
-      if (config.twoFactorAuthOn === 'true' && ipRangeCheck(ipAddress, quantumAddresses) === false) {
+      const hmppsAuthMFAUser = jwtDecode(req.user.token).authorities.includes('ROLE_MFA')
+      if (
+        hmppsAuthMFAUser === false &&
+        config.twoFactorAuthOn === 'true' &&
+        ipRangeCheck(ipAddress, quantumAddresses) === false
+      ) {
         if (userAuthenticationDetails === null || userAuthenticationDetails.length === 0) {
           throw new Error(`Error : No Sms or Email address returned for QuantumId : ${req.user.username}`)
         }
