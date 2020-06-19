@@ -6,20 +6,19 @@
   "license": "MIT",
   "scripts": {
     "start": "node server.js",
-    "start:dev": "npm build && DEBUG=gov-starter-server* nodemon server.js | bunyan -o short",
-    "start-feature": "NODE_ENV=development node server.js | bunyan -o short",
+    "start:dev": "NODE_ENV=development npm build && DEBUG=gov-starter-server* nodemon server.js | bunyan -o short",
+    "start:int": "NODE_ENV=test node server.js | bunyan -o short",
     "build": "npm run css-build",
     "css-build": "./bin/build-css",
     "clean": "rm -rf assets/* .port.tmp *.log build/* uploads/* test-results.xml",
     "lint": "eslint . --cache --max-warnings 0",
-    "test": "jest",
+    "test": "NODE_ENV=test jest",
     "int-test": "cypress run",
     "int-test-ui": "cypress open",
     "migrate": "knex migrate:latest",
     "record-build-info": "node ./bin/record-build-info",
     "security_audit": "npx audit-ci --config audit-ci.json",
-    "docker-compose:int": "docker-compose -f docker-compose-test.yml pull && docker-compose -f docker-compose-test.yml up",
-    "start:int": "NODE_ENV=test node server.js | bunyan -o short"
+    "docker-compose:int": "docker-compose -f docker-compose-test.yml pull && docker-compose -f docker-compose-test.yml up"
   },
   "engines": {
     "node": ">=10.15.3",
