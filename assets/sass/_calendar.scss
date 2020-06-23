@@ -1,5 +1,5 @@
 .app-link-\!-border {
-  border-left: 1px solid govuk-colour('grey-2');
+  border-left: 1px solid govuk-colour('mid-grey');
   padding-left: 5px;
 }
 
@@ -7,7 +7,7 @@ ul.calendar .calendar-item {
   float: left;
   width: 14.1%;
   list-style: none;
-  border: 1px solid govuk-colour('grey-2');
+  border: 1px solid govuk-colour('mid-grey');
   margin-left: -1px;
   margin-top: -1px;
 
@@ -15,8 +15,8 @@ ul.calendar .calendar-item {
     clear: left;
     width: 100%;
     margin-bottom: 20px;
-    border-right: 1px solid govuk-colour('grey-2');
-    border-bottom: 1px solid govuk-colour('grey-2');
+    border-right: 1px solid govuk-colour('mid-grey');
+    border-bottom: 1px solid govuk-colour('mid-grey');
   }
 }
 
@@ -87,7 +87,7 @@ ul.calendar {
   }
 
   .no-day {
-    background-color: govuk-colour('grey-4');
+    background-color: govuk-colour('light-grey');
 
     @include app-breakpoint {
       display: none;

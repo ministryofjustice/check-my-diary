@@ -38,6 +38,8 @@ module.exports = (logger, calendarService, calendarOvertimeService, userAuthenti
           uid: req.user.username,
           employeeName: req.user.employeeName,
           csrfToken: res.locals.csrfToken,
+          hmppsAuthMFAUser: req.hmppsAuthMFAUser,
+          authUrl: req.authUrl,
         })
       } catch (error) {
         serviceUnavailable(req, res)

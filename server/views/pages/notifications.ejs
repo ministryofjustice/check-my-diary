@@ -60,6 +60,7 @@
         <% } %>
 
       </div>
+      <% if (!hmppsAuthMFAUser){%>
       <div class="govuk-grid-column-one-third">
 
         <div class="moj-card">
@@ -75,6 +76,7 @@
         <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
 
       </div>
+      <% } %>
     </div>
 
   </main>
