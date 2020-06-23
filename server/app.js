@@ -98,7 +98,7 @@ module.exports = function createApp({ signInService }, calendarService, calendar
 
   if (!production) {
     app.use(
-      '/public',
+      '/assets',
       sassMiddleware({
         src: path.join(__dirname, '../assets/sass'),
         dest: path.join(__dirname, '../assets/stylesheets'),
@@ -124,10 +124,10 @@ module.exports = function createApp({ signInService }, calendarService, calendar
     app.use('/assets', express.static(path.join(process.cwd(), dir), cacheControl))
   })
   ;['../node_modules/govuk_frontend_toolkit/images'].forEach((dir) => {
-    app.use('/public/images/icons', express.static(path.join(__dirname, dir), cacheControl))
+    app.use('/assets/images/icons', express.static(path.join(__dirname, dir), cacheControl))
   })
 
-  app.use('/public', express.static(path.join(__dirname, '../assets'), cacheControl))
+  app.use('/assets', express.static(path.join(__dirname, '../assets'), cacheControl))
   app.use('*/images', express.static(path.join(__dirname, '../assets/images'), cacheControl))
 
   const healthcheck = healthcheckFactory(config.nomis.authUrl)
@@ -148,7 +148,7 @@ module.exports = function createApp({ signInService }, calendarService, calendar
   app.get('/ping', (req, res) => res.send('pong'))
 
   // GovUK Template Configuration
-  app.locals.asset_path = '/assets/'
+  app.locals.assetPath = '/assets/'
 
   function addTemplateVariables(req, res, next) {
     res.locals.user = req.user

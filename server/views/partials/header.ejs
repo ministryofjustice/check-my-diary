@@ -13,17 +13,17 @@
         <nav class="moj-header__navigation" aria-label="Account navigation">
       
           <ul class="moj-header__navigation-list">
-          <% if (typeof employeeName != 'undefined') { %>
-          <% if (!hmppsAuthMFAUser){%>
-            <li class="moj-header__navigation-item moj-header__centre">
-              You are logged in as <%= employeeName %>.
-            </li>
-          <% } else { %>
-            <li class="moj-header__navigation-item moj-header__centre">
-              <div class="govuk-!-font-weight-bold"><%= employeeName %></div><a class="moj-header__navigation-link" href="<%= authUrl %>/account-details">Manage your details</a>
-            </li>
-          <% } %>
-          <% } %>
+            <% if (typeof employeeName != 'undefined') { %>
+              <% if (!hmppsAuthMFAUser){%>
+                <li class="moj-header__navigation-item moj-header__centre">
+                  You are logged in as <%= employeeName %>
+                </li>
+              <% } else { %>
+                <li class="moj-header__navigation-item moj-header__centre">
+                  <div class="govuk-!-font-weight-bold"><%= employeeName %></div><a class="moj-header__navigation-link" href="<%= authUrl %>/account-details">Manage your details</a>
+                </li>
+              <% } %>
+            <% } %>
             <li class="moj-header__navigation-item moj-header__centre">
               <a class="moj-header__navigation-link" href="/logout">Log out</a>
             </li>
