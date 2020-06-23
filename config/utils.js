@@ -5,12 +5,7 @@ const envOrThrow = (value) => {
   return setValue
 }
 
-const envOr = (value, fallback) => {
-  const setValue = process.env[value]
-  if (!setValue) return fallback
-
-  return setValue
-}
+const envOr = (value, fallback) => process.env[value] || fallback
 
 const envListOr = (values, fallback) => {
   const foundValue = values.find((val) => {
