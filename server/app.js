@@ -114,13 +114,14 @@ module.exports = function createApp({ signInService }, calendarService, calendar
   const cacheControl = { maxAge: config.staticResourceCacheDuration * 1000 }
 
   ;[
-    '../assets',
-    '../assets/stylesheets',
-    '../node_modules/govuk-frontend/assets',
-    '../node_modules/govuk-frontend',
-    '../node_modules/@ministryofjustice/frontend',
+    '/assets',
+    '/assets/stylesheets',
+    '/assets/js',
+    `/node_modules/govuk-frontend/govuk/assets`,
+    `/node_modules/govuk-frontend`,
+    `/node_modules/@ministryofjustice/frontend/`,
   ].forEach((dir) => {
-    app.use('/public', express.static(path.join(__dirname, dir), cacheControl))
+    app.use('/assets', express.static(path.join(process.cwd(), dir), cacheControl))
   })
   ;['../node_modules/govuk_frontend_toolkit/images'].forEach((dir) => {
     app.use('/public/images/icons', express.static(path.join(__dirname, dir), cacheControl))
