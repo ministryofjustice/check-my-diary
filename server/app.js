@@ -124,10 +124,10 @@ module.exports = function createApp({ signInService }, calendarService, calendar
     app.use('/assets', express.static(path.join(process.cwd(), dir), cacheControl))
   })
   ;['../node_modules/govuk_frontend_toolkit/images'].forEach((dir) => {
-    app.use('/public/images/icons', express.static(path.join(__dirname, dir), cacheControl))
+    app.use('/assets/images/icons', express.static(path.join(__dirname, dir), cacheControl))
   })
 
-  app.use('/public', express.static(path.join(__dirname, '../assets'), cacheControl))
+  app.use('/assets', express.static(path.join(__dirname, '../assets'), cacheControl))
   app.use('*/images', express.static(path.join(__dirname, '../assets/images'), cacheControl))
 
   const healthcheck = healthcheckFactory(config.nomis.authUrl)
