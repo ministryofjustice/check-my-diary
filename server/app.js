@@ -34,7 +34,7 @@ if (config.rejectUnauthorized) {
 }
 
 // eslint-disable-next-line no-shadow
-module.exports = function createApp({ signInService }, calendarService, calendarOvertimeService, notificationService) {
+module.exports = function createApp({ signInService }, logger, calendarService, calendarOvertimeService, notificationService) {
   const app = express()
 
   auth.init(signInService)
@@ -105,7 +105,7 @@ module.exports = function createApp({ signInService }, calendarService, calendar
         debug: true,
         outputStyle: 'compressed',
         prefix: '/stylesheets/',
-        includePaths: ['node_modules/govuk-frontend', 'node_modules/@ministryofjustice/frontend'],
+        includePaths: ['node_modules/govuk-frontend'],
       }),
     )
   }
@@ -114,14 +114,12 @@ module.exports = function createApp({ signInService }, calendarService, calendar
   const cacheControl = { maxAge: config.staticResourceCacheDuration * 1000 }
 
   ;[
-    '/assets',
-    '/assets/stylesheets',
-    '/assets/js',
-    `/node_modules/govuk-frontend/govuk/assets`,
-    `/node_modules/govuk-frontend`,
-    `/node_modules/@ministryofjustice/frontend/`,
+    '../assets',
+    '../assets/stylesheets',
+    '../node_modules/govuk-frontend/assets',
+    '../node_modules/govuk-frontend',
   ].forEach((dir) => {
-    app.use('/assets', express.static(path.join(process.cwd(), dir), cacheControl))
+    app.use('/public', express.static(path.join(__dirname, dir), cacheControl))
   })
   ;['../node_modules/govuk_frontend_toolkit/images'].forEach((dir) => {
     app.use('/public/images/icons', express.static(path.join(__dirname, dir), cacheControl))
@@ -231,23 +229,13 @@ module.exports = function createApp({ signInService }, calendarService, calendar
   app.use(
     '/calendar',
     authHandler,
-    standardRoute(
-      createCalendarRouter(
-        logger,
-        calendarService,
-        calendarOvertimeService,
-        notificationService,
-        userAuthenticationService,
-      ),
-    ),
+    standardRoute(createCalendarRouter(logger, calendarService, calendarOvertimeService, notificationService, userAuthenticationService)),
   )
   app.use(
     '/details',
     authHandler,
-    standardRoute(
-      createCalendarDetailRouter(logger, calendarService, calendarOvertimeService, userAuthenticationService),
-    ),
-  )
+    standardRoute(createCalendarDetailRouter(logger, calendarService, calendarOvertimeService, userAuthenticationService)),
+  ) 
   app.use('/notifications', authHandler, standardRoute(createNotificationRouter(logger, notificationService)))
   app.use(
     '/maintenance',

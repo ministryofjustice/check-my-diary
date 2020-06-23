@@ -21,8 +21,6 @@ module.exports = (logger, notificationService) => (router) => {
     asyncMiddleware(async (req, res) => {
       logger.info('GET notifications settings')
 
-      if (req.hmppsAuthMFAUser) res.render('pages/error.ejs', { error: new Error('Not found'), message: 'Not found' })
-
       const userNotificationSettings = await notificationService.getUserNotificationSettings(req.user.username)
 
       if (userNotificationSettings === null || userNotificationSettings.length === 0) {
@@ -32,8 +30,6 @@ module.exports = (logger, notificationService) => (router) => {
           uid: req.user.username,
           employeeName: req.user.employeeName,
           csrfToken: res.locals.csrfToken,
-          hmppsAuthMFAUser: req.hmppsAuthMFAUser,
-          authUrl: req.authUrl,
         })
       } else {
         res.render('pages/notification-settings', {
@@ -42,8 +38,6 @@ module.exports = (logger, notificationService) => (router) => {
           uid: req.user.username,
           employeeName: req.user.employeeName,
           csrfToken: res.locals.csrfToken,
-          hmppsAuthMFAUser: req.hmppsAuthMFAUser,
-          authUrl: req.authUrl,
         })
       }
     }),
@@ -78,8 +72,6 @@ module.exports = (logger, notificationService) => (router) => {
           uid: req.user.username,
           employeeName: req.user.employeeName,
           csrfToken: res.locals.csrfToken,
-          hmppsAuthMFAUser: req.hmppsAuthMFAUser,
-          authUrl: req.authUrl,
         })
       } else {
         await notificationService.updateUserNotificationSettings(
@@ -131,8 +123,6 @@ module.exports = (logger, notificationService) => (router) => {
             uid: req.user.username,
             employeeName: req.user.employeeName,
             csrfToken: res.locals.csrfToken,
-            hmppsAuthMFAUser: req.hmppsAuthMFAUser,
-            authUrl: req.authUrl,
           })
         })
 

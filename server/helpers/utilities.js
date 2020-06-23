@@ -1,5 +1,4 @@
 const crypto = require('crypto')
-const jwtDecode = require('jwt-decode')
 const log = require('../../log')
 
 function getStartMonth() {
@@ -128,8 +127,6 @@ function processOvertimeShifts(shiftsData, overtimeShiftsData) {
   return shiftsData
 }
 
-const hmppsAuthMFAUser = (token) => jwtDecode(token).authorities.includes('ROLE_MFA')
-
 module.exports = {
   getStartMonth,
   getEndDate,
@@ -141,5 +138,4 @@ module.exports = {
   createTwoFactorAuthenticationHash,
   configureCalendar,
   processOvertimeShifts,
-  hmppsAuthMFAUser,
 }

@@ -7,6 +7,7 @@ require('./azure-appinsights')
 
 const createApp = require('./app')
 const createSignInService = require('./authentication/signInService')
+const logger = require('../log')
 const calendarService = require('./services/calendarService')
 const calendarOvertimeService = require('./services/calendarOvertimeService')
 const notificationService = require('./services/notificationService')
@@ -16,6 +17,7 @@ const app = createApp(
   {
     signInService: createSignInService(),
   },
+  logger,
   calendarService(),
   calendarOvertimeService(),
   notificationService(),

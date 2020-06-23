@@ -14,7 +14,7 @@
       display: block;
 
       &.time {
-        border: 1px solid govuk-colour('mid-grey');
+        border: 1px solid govuk-colour('grey-2');
         width: 220px;
         border-radius: 3px;
         margin-right: 15px;
@@ -33,7 +33,7 @@
     }
 
     @include app-breakpoint {
-      border-top: 1px solid govuk-colour('mid-grey');
+      border-top: 1px solid govuk-colour('grey-2');
       padding: 15px 0 10px 0;
       margin-bottom: 10px;
 

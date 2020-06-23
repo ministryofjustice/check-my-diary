@@ -1,6 +1,5 @@
 const passport = require('passport')
 const { Strategy } = require('passport-oauth2')
-const { hmppsAuthMFAUser } = require('../helpers/utilities')
 const config = require('../../config')
 const { generateOauthClientToken } = require('./oauth')
 
@@ -8,8 +7,6 @@ function authenticationMiddleware() {
   // eslint-disable-next-line
   return (req, res, next) => {
     if (req.isAuthenticated()) {
-      req.hmppsAuthMFAUser = hmppsAuthMFAUser(req.user.token)
-      req.authUrl = config.nomis.authUrl
       return next()
     }
 
