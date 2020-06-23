@@ -30,7 +30,7 @@ module.exports = () => ({
   app: {
     production: false,
     mailTo: envOr('MAIL_TO', 'feedback@digital.justice.gov.uk'),
-    url: envOr('CHECK_MY_DIARY_URL', `http://localhost:${process.env.PORT || 3005}`),
+    url: envOr('CHECK_MY_DIARY_URL', `http://localhost:${process.env.PORT || 3000}`),
   },
   maintenance: {
     start: process.env.MAINTENANCE_START,

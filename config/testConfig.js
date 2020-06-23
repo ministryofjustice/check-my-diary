@@ -25,7 +25,7 @@ module.exports = () => ({
   app: {
     production: false,
     mailTo: 'feedback@digital.justice.gov.uk',
-    url: `http://localhost:${process.env.PORT || 3005}`,
+    url: `http://localhost:3005`,
   },
   maintenance: {
     start: process.env.MAINTENANCE_START,
