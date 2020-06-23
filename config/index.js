@@ -1,13 +1,13 @@
-const testConfig = require('./testConfig')
-const prodConfig = require('./prodConfig')
-const devConfig = require('./devConfig')
+const generateTestConfig = require('./generateTestConfig')
+const generateProdConfig = require('./generateProdConfig')
+const generateDevConfig = require('./generateDevConfig')
 
 require('dotenv').config()
 
 const getConfig = (env) => {
-  if (env === 'test') return testConfig()
-  if (env === 'production') return prodConfig()
-  if (env === 'development') return devConfig()
+  if (env === 'test') return generateTestConfig()
+  if (env === 'production') return generateProdConfig()
+  if (env === 'development') return generateDevConfig()
 
   throw new Error('Set NODE_ENV to either production | development | test')
 }

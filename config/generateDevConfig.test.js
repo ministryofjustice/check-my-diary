@@ -1,18 +1,18 @@
-const testConfig = require('./testConfig')
+const generateDevConfig = require('./generateDevConfig')
 
-describe('testConfig', () => {
+describe('generateDevConfig', () => {
   let config
 
   beforeAll(() => {
-    config = testConfig()
+    config = generateDevConfig()
   })
 
   test('production value is false', () => {
     expect(config.app.production).toBe(false)
   })
 
-  test('port defaults to 3005', () => {
-    expect(config.port).toBe(3005)
+  test('port defaults to 3000', () => {
+    expect(config.port).toBe(3000)
   })
 
   test('auth url is set to default', () => {

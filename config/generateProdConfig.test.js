@@ -1,9 +1,9 @@
-const prodConfig = require('./prodConfig')
+const generateProdConfig = require('./generateProdConfig')
 
-describe('prodConfig', () => {
+describe('generateProdConfig', () => {
   test('expect profConfig to throw', () => {
     try {
-      prodConfig()
+      generateProdConfig()
     } catch (error) {
       expect(error).toBeTruthy()
     }
