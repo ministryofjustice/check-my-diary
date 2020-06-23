@@ -95,7 +95,8 @@
     "testMatch": [
       "<rootDir>/server/**/?(*.)(spec|test).{ts,js,jsx,mjs}",
       "<rootDir>/server/**/*.(test).{js,jsx,ts,tsx}",
-      "<rootDir>/server/**/?(*.)(spec|test).{js,jsx,ts,tsx}"
+      "<rootDir>/server/**/?(*.)(spec|test).{js,jsx,ts,tsx}",
+      "<rootDir>/config/**/?(*.)(spec|test).{js,jsx,ts,tsx}"
     ],
     "testEnvironment": "node",
     "reporters": [
