@@ -3,7 +3,7 @@
 ./node_modules/node-sass/bin/node-sass \
     --include-path 'node_modules/govuk-frontend' \
     --include-path 'node_modules/@ministryofjustice/frontend' \
-    assets/sass/application.sass \
+    assets/sass/application.scss \
     assets/stylesheets/application.css
 
 ./node_modules/node-sass/bin/node-sass \
