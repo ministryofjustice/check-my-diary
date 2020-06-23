@@ -1,0 +1,9 @@
+.moj-header__navigation-list li {
+  height: 100%;
+  vertical-align: middle;
+  padding-left: govuk-spacing(4);
+  border-left: 4px solid govuk-colour("white");
+}
+.moj-header__navigation-list li:first-child {
+  border-left: 0;
+}

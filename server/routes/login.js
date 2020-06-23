@@ -125,9 +125,8 @@ module.exports = () => (router) => {
       }
 
       const quantumAddresses = config.quantumAddresses.split(',')
-      const hmppsAuthMFAUser = jwtDecode(req.user.token).authorities.includes('ROLE_MFA')
       if (
-        hmppsAuthMFAUser === false &&
+        !utilities.hmppsAuthMFAUser(req.user.token) &&
         config.twoFactorAuthOn === 'true' &&
         ipRangeCheck(ipAddress, quantumAddresses) === false
       ) {
