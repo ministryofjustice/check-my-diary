@@ -2,7 +2,6 @@
 .DS_Store
 .start.pid
 .port.tmp
-public
 assets/stylesheets/*.css
 lib/govuk_template.html
 govuk_modules

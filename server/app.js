@@ -98,7 +98,7 @@ module.exports = function createApp({ signInService }, calendarService, calendar
 
   if (!production) {
     app.use(
-      '/public',
+      '/assets',
       sassMiddleware({
         src: path.join(__dirname, '../assets/sass'),
         dest: path.join(__dirname, '../assets/stylesheets'),
@@ -148,7 +148,7 @@ module.exports = function createApp({ signInService }, calendarService, calendar
   app.get('/ping', (req, res) => res.send('pong'))
 
   // GovUK Template Configuration
-  app.locals.asset_path = '/assets/'
+  app.locals.assetPath = '/assets/'
 
   function addTemplateVariables(req, res, next) {
     res.locals.user = req.user
