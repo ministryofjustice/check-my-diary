@@ -1,4 +1,4 @@
-const config = require('../../config')
+const config = require('../../config.js')
 
 // eslint-disable-next-line import/order
 const knex = require('knex')({
