@@ -46,7 +46,7 @@ a [wiremock](http://wiremock.org/) instance.
 To start the docker images for the tests:
 
 ```bash
-docker-compose -f docker-compose-test.yml pull && docker-compose -f docker-compose-test.yml up
+npm run docker-compose:int
 ```
 
 This will start an database instance on port 5432 and a wiremock instance on port 9191 to mock out the prison officer and notify
@@ -56,7 +56,7 @@ The tests are written using [cypress](https://www.cypress.io/) and will test aga
 To start up the application for running the feature tests:
 
 ```bash
-npm run start-feature
+npm run start:int
 ```
 
 To run the tests from the command line:
