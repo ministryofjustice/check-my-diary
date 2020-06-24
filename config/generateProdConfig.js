@@ -34,6 +34,7 @@ module.exports = () => ({
     end: process.env.MAINTENANCE_END,
   },
   notify: {
+    url: envOrThrow('NOTIFY_URL'),
     clientKey: envOrThrow('NOTIFY_CLIENT_KEY'),
     smsTemplateId: envOrThrow('NOTIFY_SMS_TEMPLATE'),
     emailTemplateId: envOrThrow('NOTIFY_EMAIL_TEMPLATE'),
