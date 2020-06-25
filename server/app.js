@@ -9,6 +9,8 @@ const passport = require('passport')
 const bodyParser = require('body-parser')
 const cookieSession = require('cookie-session')
 const sassMiddleware = require('node-sass-middleware')
+const { configure } = require('nunjucks')
+// Node.js core dependencies
 
 const cookieParser = require('cookie-parser')
 const healthcheckFactory = require('./services/healthcheck')
@@ -18,16 +20,18 @@ const createCalendarDetailRouter = require('./routes/calendar-detail')
 const createMaintenanceRouter = require('./routes/maintenance')
 const createNotificationRouter = require('./routes/notification')
 const standardRouter = require('./routes/standardRouter')
-const log = require('../log.js')
+const logger = require('../log.js')
 const auth = require('./authentication/auth')
 const config = require('../config')
 const userAuthenticationService = require('./services/userAuthenticationService')
 
+const { NODE_ENV } = process.env
+
 const { authenticationMiddleware } = auth
 
 const version = moment.now().toString()
-const production = process.env.NODE_ENV === 'production'
-const testMode = process.env.NODE_ENV === 'test'
+const production = NODE_ENV === 'production'
+const testMode = NODE_ENV === 'test'
 
 if (config.rejectUnauthorized) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = config.rejectUnauthorized
@@ -45,10 +49,25 @@ module.exports = function createApp({ signInService }, calendarService, calendar
   // https://expressjs.com/en/guide/behind-proxies.html
   app.set('trust proxy', true)
 
+  const APP_VIEWS = [
+    'node_modules/govuk-frontend/',
+    'node_modules/@ministryofjustice/frontend/',
+    path.join(__dirname, 'views/nunjucks/'),
+  ]
+  const nunjucksConfiguration = {
+    express: app, // The express app that nunjucks should install to
+    autoescape: true, // Controls if output with dangerous characters are escaped automatically
+    throwOnUndefined: false, // Throw errors when outputting a null/undefined value
+    trimBlocks: true, // Automatically remove trailing newlines from a block/tag
+    lstripBlocks: true, // Automatically remove leading whitespace from a block/tag
+    noCache: NODE_ENV !== 'production', // Never use a cache and recompile templates each time (server-side)
+  }
+  // Initialise nunjucks environment
+  configure(APP_VIEWS, nunjucksConfiguration)
   // View Engine Configuration
   app.set('views', path.join(__dirname, '../server/views'))
+  // app.set('view engine', 'njk')
   app.set('view engine', 'ejs') // TODO: remove when changeover complete
-  app.set('view engine', 'nunjucks')
 
   // Server Configuration
   app.set('port', config.port || 3005)
@@ -250,6 +269,9 @@ module.exports = function createApp({ signInService }, calendarService, calendar
     ),
   )
   app.use('/notifications', authHandler, standardRoute(createNotificationRouter(logger, notificationService)))
+  app.use('/contact-us', ({ user: { employeeName }, path: backUrl = '/' }, res) =>
+    res.render('contactUs.njk', { employeeName, backUrl }),
+  )
   app.use(
     '/maintenance',
     authHandler,
@@ -267,7 +289,7 @@ module.exports = function createApp({ signInService }, calendarService, calendar
 
 // eslint-disable-next-line no-unused-vars
 function renderErrors(error, req, res, next) {
-  log.error(error)
+  logger.error(error)
   res.locals.error = error
   res.locals.stack = production ? null : error.stack
   res.locals.message = production ? 'Something went wrong. The error has been logged. Please try again' : error.message
