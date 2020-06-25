@@ -1,6 +1,6 @@
 const db = require('../database')
 
-const notificationService = () => {
+const DEPRECATEnotificationService = () => {
   const getShiftNotifications = async (quantumId) => {
     return db
       .select('DateTime', 'Description', 'LastModifiedDateTime', 'LastModifiedDateTimeInSeconds', 'Read')
@@ -124,4 +124,4 @@ const notificationService = () => {
   }
 }
 
-module.exports = notificationService
+module.exports = DEPRECATEnotificationService
