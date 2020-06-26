@@ -12,12 +12,13 @@
     "css-build": "./bin/build-css",
     "clean": "rm -rf assets/* .port.tmp *.log build/* uploads/* test-results.xml",
     "lint": "eslint . --cache --max-warnings 0",
-    "test": "jest",
+    "test": "jest --config=jest.config.json",
     "int-test": "cypress run",
     "int-test-ui": "cypress open",
     "migrate": "knex migrate:latest",
     "record-build-info": "node ./bin/record-build-info",
-    "security_audit": "npx audit-ci --config audit-ci.json"
+    "security_audit": "npx audit-ci --config audit-ci.json",
+    "test-mocks": "jest --config=jest.config.integration.json"
   },
   "engines": {
     "node": ">=10.15.3",
@@ -89,29 +90,6 @@
     "nock": "^10.0.6",
     "prettier": "^2.0.2",
     "supertest": "^3.4.2"
-  },
-  "jest": {
-    "testMatch": [
-      "<rootDir>/server/**/?(*.)(spec|test).{ts,js,jsx,mjs}",
-      "<rootDir>/server/**/*.(test).{js,jsx,ts,tsx}",
-      "<rootDir>/server/**/?(*.)(spec|test).{js,jsx,ts,tsx}"
-    ],
-    "testEnvironment": "node",
-    "reporters": [
-      "default",
-      [
-        "jest-junit",
-        {
-          "outputDirectory": "test-results/jest/"
-        }
-      ],
-      [
-        "./node_modules/jest-html-reporter",
-        {
-          "outputPath": "test-results/unit-test-reports.html"
-        }
-      ]
-    ]
   },
   "husky": {
     "hooks": {
