@@ -71,6 +71,7 @@ module.exports = () => (router) => {
           res.render('pages/maintenance', {
             startDateTime: maintenanceStartDateTime,
             endDateTime: maintenanceEndDateTime,
+            csrfToken: res.locals.csrfToken,
           })
           return
         }
