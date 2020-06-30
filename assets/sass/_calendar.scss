@@ -152,6 +152,11 @@ ul.calendar {
       background-size: auto;
       background-position: bottom right;
     }
+
+    &.detail-overtime-night {
+      background-color: govuk-colour('black');
+      margin-bottom: 1px;
+    }
     
     &.detail-finish-night {
       background-color: govuk-colour('black');

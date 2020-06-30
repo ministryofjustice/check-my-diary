@@ -83,13 +83,19 @@
                 <% if (day.overtime) { %>
                   <span class="detail-overtime-before">Overtime</span>
                   <span class="detail detail-start-night-full-overtime">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
-                <% } else {%>
-                <span class="detail detail-start-night-full">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
+                <% } else { %>
+                  <span class="detail detail-start-night-full">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
                 <% } %>
               <% } else if (checkIfStartDateTimeBeforeEndDateTime(day.dailyStartDateTime, day.dailyEndDateTime)) { %>
-              <span class="detail detail-finish-night">Finish <%= getTimeFromDate(day.dailyEndDateTime) %></span>
-              <span class="detail-duration"><%= convertSecondsToHms(day.durationInSeconds) %></span>
-              <span class="detail detail-start-night-half">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
+                <% if (day.overtime) { %>
+                  <span class="detail detail-overtime-night">Finish <%= getTimeFromDate(day.dailyEndDateTime) %></span>
+                  <span class="detail-overtime-before">Overtime</span>
+                  <span class="detail detail-start-night-half">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
+                <% } else { %>
+                  <span class="detail detail-finish-night">Finish <%= getTimeFromDate(day.dailyEndDateTime) %></span>
+                  <span class="detail-duration"><%= convertSecondsToHms(day.durationInSeconds) %></span>
+                  <span class="detail detail-start-night-half">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
+                <% } %>              
               <% } else { %>
               <span class="detail detail-start">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
               <span class="detail detail-finish">Finish <%= getTimeFromDate(day.dailyEndDateTime) %></span>
