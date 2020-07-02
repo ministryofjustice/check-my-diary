@@ -1,20 +1,28 @@
-const stubNotificationService = require('../mockApis/notificationService')
+const {stubNotificationGet, stubNotificationUpdate} = require('../mockApis/notificationService')
 const { resetStubs } = require('../mockApis/wiremock')
-const config = require('../../config')
 const notifcationService = require('../../server/services/notificationService')
 
 describe('Wiremock setup for notification service', () => {
   beforeAll(async () => {
     await resetStubs()
-    await stubNotificationService()
+    await stubNotificationGet()
+    await stubNotificationUpdate()
   })
 
-  test('Notifcation service is stubbed', async () => {
+  test('notifcationService.get is stubbed', async () => {
     try {
-      expect(config.notifcationService.url).toEqual('http://localhost:9191/notifications-service')
-      const response = await notifcationService().get(config.notifcationService.url)
+      const response = await notifcationService.get()
       expect(response.status).toBe(200)
-      expect(response.data).toEqual({ testEndpoint: true })
+      expect(response.data).toEqual({ snoozeUntil: "2020-08-27" })
+    } catch (error) {
+      expect(error).toBeFalsy()
+    }
+  })
+
+  test('notifcationService.updateSnooze is stubbed', async () => {
+    try {
+      const response = await notifcationService.updateSnooze()
+      expect(response.status).toBe(200)
     } catch (error) {
       expect(error).toBeFalsy()
     }

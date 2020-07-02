@@ -1,10 +1,10 @@
 const { stubFor } = require('./wiremock')
 
-const stubNotificationService = async () =>
+const stubNotificationGet = async () =>
   stubFor({
     request: {
       method: 'GET',
-      urlPattern: '/notifications-service',
+      urlPattern: '/preferences/notifications',
     },
     response: {
       status: 200,
@@ -12,9 +12,26 @@ const stubNotificationService = async () =>
         'Content-Type': 'application/json',
       },
       jsonBody: {
-        testEndpoint: true,
+        snoozeUntil: '2020-08-27',
       },
     },
   })
 
-module.exports = stubNotificationService
+const stubNotificationUpdate = async () =>
+  stubFor({
+    request: {
+      method: 'PUT',
+      urlPattern: '/preferences/notifications/snooze',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  })
+
+module.exports = {
+  stubNotificationGet,
+  stubNotificationUpdate,
+}
