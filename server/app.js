@@ -34,7 +34,12 @@ if (config.rejectUnauthorized) {
 }
 
 // eslint-disable-next-line no-shadow
-module.exports = function createApp({ signInService }, calendarService, calendarOvertimeService, notificationService) {
+module.exports = function createApp(
+  { signInService },
+  calendarService,
+  calendarOvertimeService,
+  DEPRECATEnotificationService,
+) {
   const app = express()
 
   auth.init(signInService)
@@ -236,7 +241,7 @@ module.exports = function createApp({ signInService }, calendarService, calendar
         logger,
         calendarService,
         calendarOvertimeService,
-        notificationService,
+        DEPRECATEnotificationService,
         userAuthenticationService,
       ),
     ),
@@ -248,11 +253,11 @@ module.exports = function createApp({ signInService }, calendarService, calendar
       createCalendarDetailRouter(logger, calendarService, calendarOvertimeService, userAuthenticationService),
     ),
   )
-  app.use('/notifications', authHandler, standardRoute(createNotificationRouter(logger, notificationService)))
+  app.use('/notifications', authHandler, standardRoute(createNotificationRouter(logger, DEPRECATEnotificationService)))
   app.use(
     '/maintenance',
     authHandler,
-    standardRoute(createMaintenanceRouter(logger, calendarService, notificationService)),
+    standardRoute(createMaintenanceRouter(logger, calendarService, DEPRECATEnotificationService)),
   )
 
   app.use((req, res, next) => {
