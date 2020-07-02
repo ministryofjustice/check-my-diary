@@ -1,7 +1,7 @@
 const { check, validationResult } = require('express-validator')
 const asyncMiddleware = require('../middleware/asyncMiddleware')
 
-module.exports = (logger, notificationService) => (router) => {
+module.exports = (logger, DEPRECATEnotificationService) => (router) => {
   /**
    * Service unavailable
    * @param req
@@ -23,7 +23,7 @@ module.exports = (logger, notificationService) => (router) => {
 
       if (req.hmppsAuthMFAUser) res.render('pages/error.ejs', { error: new Error('Not found'), message: 'Not found' })
 
-      const userNotificationSettings = await notificationService.getUserNotificationSettings(req.user.username)
+      const userNotificationSettings = await DEPRECATEnotificationService.getUserNotificationSettings(req.user.username)
 
       if (userNotificationSettings === null || userNotificationSettings.length === 0) {
         res.render('pages/notification-settings', {
@@ -82,7 +82,7 @@ module.exports = (logger, notificationService) => (router) => {
           authUrl: req.authUrl,
         })
       } else {
-        await notificationService.updateUserNotificationSettings(
+        await DEPRECATEnotificationService.updateUserNotificationSettings(
           req.user.username,
           req.body.inputEmail === '' ? null : req.body.inputEmail,
           req.body.inputMobile === '' ? null : req.body.inputMobile,
@@ -107,9 +107,9 @@ module.exports = (logger, notificationService) => (router) => {
         const offset = (page - 1) * perPage
 
         Promise.all([
-          notificationService.getShiftNotificationsCount(req.user.username),
-          notificationService.getShiftTaskNotificationsCount(req.user.username),
-          notificationService.getShiftNotificationsPaged(req.user.username, offset, perPage),
+          DEPRECATEnotificationService.getShiftNotificationsCount(req.user.username),
+          DEPRECATEnotificationService.getShiftTaskNotificationsCount(req.user.username),
+          DEPRECATEnotificationService.getShiftNotificationsPaged(req.user.username, offset, perPage),
         ]).then(([totalShiftNotifications, totalShiftTaskNotifications, rows]) => {
           // eslint-disable-next-line radix
           const count = parseInt(totalShiftNotifications.count) + parseInt(totalShiftTaskNotifications.count)
@@ -138,8 +138,8 @@ module.exports = (logger, notificationService) => (router) => {
 
         logger.info('GET notifications view')
 
-        await notificationService.updateShiftNotificationsToRead(req.user.username)
-        await notificationService.updateShiftTaskNotificationsToRead(req.user.username)
+        await DEPRECATEnotificationService.updateShiftNotificationsToRead(req.user.username)
+        await DEPRECATEnotificationService.updateShiftTaskNotificationsToRead(req.user.username)
       } catch (error) {
         serviceUnavailable(req, res)
       }
