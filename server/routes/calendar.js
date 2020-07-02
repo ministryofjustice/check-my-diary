@@ -1,7 +1,9 @@
 const utilities = require('../helpers/utilities')
 const asyncMiddleware = require('../middleware/asyncMiddleware')
 
-module.exports = (logger, calService, calOvertimeService, notificationService, userAuthService) => (router) => {
+module.exports = (logger, calService, calOvertimeService, DEPRECATEnotificationService, userAuthService) => (
+  router,
+) => {
   function serviceUnavailable(req, res) {
     logger.error('Service unavailable')
 
@@ -19,7 +21,7 @@ module.exports = (logger, calService, calOvertimeService, notificationService, u
       try {
         const userAuthenticationDetails = await userAuthService.getUserAuthenticationDetails(req.user.username)
 
-        const shiftNotifications = await notificationService.getShiftNotifications(req.user.username)
+        const shiftNotifications = await DEPRECATEnotificationService.getShiftNotifications(req.user.username)
 
         const apiShiftsResponse = await calService.getCalendarData(
           userAuthenticationDetails[0].ApiUrl,
