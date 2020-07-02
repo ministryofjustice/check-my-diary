@@ -550,6 +550,34 @@ const stubOvertimeDayShift6 = () =>
     },
   })
 
+  const stubOvertimeDayShift7 = () =>
+  stubFor({
+    priority: '1',
+    request: {
+      method: 'GET',
+      urlPattern: '/api/shifts/overtime/tasks\\?date=2020-03-24',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      jsonBody: {
+        tasks: [
+          {
+            date: '2020-03-24',
+            dailyStartDateTime: 'null',
+            dailyEndDateTime: 'null',
+            label: 'Duty Manager',
+            taskType: 'Unspecific',
+            startDateTime: '2020-03-24T08:30:00',
+            endDateTime: '2020-03-24T12:30:00',
+          },
+        ],
+      },
+    },
+  })
+
 const stubDayShift1 = () =>
   stubFor({
     priority: '1',
@@ -735,6 +763,34 @@ const stubNightShift3 = () =>
     },
   })
 
+  const stubNightShift4 = () =>
+  stubFor({
+    priority: '1',
+    request: {
+      method: 'GET',
+      urlPattern: '/api/shifts/tasks\\?date=2020-03-24',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      jsonBody: {
+        tasks: [
+          {
+            date: '2020-03-24',
+            dailyStartDateTime: '2020-03-24T20:45:00',
+            dailyEndDateTime: '2020-03-24T07:30:00',
+            label: 'Night Duties',
+            taskType: 'Unspecific',
+            startDateTime: '2020-03-24T20:45:00',
+            endDateTime: '2020-03-24T07:30:00',
+          },
+        ],
+      },
+    },
+  })
+
 const stubHealth = async () =>
   stubFor({
     request: {
@@ -793,9 +849,11 @@ module.exports = {
       stubOvertimeDayShift4(),
       stubOvertimeDayShift5(),
       stubOvertimeDayShift6(),
+      stubOvertimeDayShift7(),
       stubNightShift1(),
       stubNightShift2(),
       stubNightShift3(),
+      stubNightShift4(),
       stubRestDay(),
       stubHoliday(),
     ]),
