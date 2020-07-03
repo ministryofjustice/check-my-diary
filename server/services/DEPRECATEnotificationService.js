@@ -3,16 +3,16 @@ const db = require('../database')
 const DEPRECATEnotificationService = () => {
   const getShiftNotifications = async (quantumId) => {
     return db
-      .select('DateTime', 'Description', 'LastModifiedDateTime', 'LastModifiedDateTimeInSeconds', 'Read')
-      .from('ShiftNotification')
-      .where('QuantumId', '=', quantumId.toLowerCase())
+      .select('DATE_TIME', 'DESCRIPTION', 'LAST_MODIFIED_DATE_TIME', 'LAST_MODIFIED_DATE_TIME_IN_SECONDS', 'READ')
+      .from('SHIFT_NOTIFICATION')
+      .where('QUANTUM_ID', '=', quantumId.toLowerCase())
       .union(
         db
-          .select('DateTime', 'Description', 'LastModifiedDateTime', 'LastModifiedDateTimeInSeconds', 'Read')
-          .from('ShiftTaskNotification')
-          .where('QuantumId', '=', quantumId.toLowerCase()),
+          .select('DATE_TIME', 'DESCRIPTION', 'LAST_MODIFIED_DATE_TIME', 'LAST_MODIFIED_DATE_TIME_IN_SECONDS', 'READ')
+          .from('SHIFT_TASK_NOTIFICATION')
+          .where('QUANTUM_ID', '=', quantumId.toLowerCase()),
       )
-      .orderBy('LastModifiedDateTimeInSeconds', 'desc')
+      .orderBy('LAST_MODIFIED_DATE_TIME_IN_SECONDS', 'desc')
       .catch((err) => {
         throw err
       })
@@ -20,18 +20,18 @@ const DEPRECATEnotificationService = () => {
 
   const getShiftNotificationsPaged = (quantumId, offset, perPage) => {
     return db
-      .select('DateTime', 'Description', 'LastModifiedDateTime', 'LastModifiedDateTimeInSeconds', 'Read')
-      .from('ShiftNotification')
-      .where('QuantumId', '=', quantumId.toLowerCase())
+      .select('DATE_TIME', 'DESCRIPTION', 'LAST_MODIFIED_DATE_TIME', 'LAST_MODIFIED_DATE_TIME_IN_SECONDS', 'READ')
+      .from('SHIFT_TASK_NOTIFICATION')
+      .where('QUANTUM_ID', '=', quantumId.toLowerCase())
       .union(
         db
-          .select('DateTime', 'Description', 'LastModifiedDateTime', 'LastModifiedDateTimeInSeconds', 'Read')
-          .from('ShiftTaskNotification')
-          .where('QuantumId', '=', quantumId.toLowerCase()),
+          .select('DATE_TIME', 'DESCRIPTION', 'LAST_MODIFIED_DATE_TIME', 'LAST_MODIFIED_DATE_TIME_IN_SECONDS', 'Read')
+          .from('SHIFT_TASK_NOTIFICATION')
+          .where('QUANTUM_ID', '=', quantumId.toLowerCase()),
       )
       .offset(offset)
       .limit(perPage)
-      .orderBy('LastModifiedDateTimeInSeconds', 'desc')
+      .orderBy('LAST_MODIFIED_DATE_TIME_IN_SECONDS', 'desc')
       .catch((err) => {
         throw err
       })
@@ -39,9 +39,9 @@ const DEPRECATEnotificationService = () => {
 
   const getShiftNotificationsCount = (quantumId) => {
     return db
-      .count('QuantumId')
-      .from('ShiftNotification')
-      .where('QuantumId', '=', quantumId.toLowerCase())
+      .count('QUANTUM_ID')
+      .from('SHIFT_NOTIFICATION')
+      .where('QUANTUM_ID', '=', quantumId.toLowerCase())
       .first()
       .catch((err) => {
         throw err
@@ -50,9 +50,9 @@ const DEPRECATEnotificationService = () => {
 
   const getShiftTaskNotificationsCount = (quantumId) => {
     return db
-      .count('QuantumId')
-      .from('ShiftTaskNotification')
-      .where('QuantumId', '=', quantumId.toLowerCase())
+      .count('QUANTUM_ID')
+      .from('SHIFT_TASK_NOTIFICATION')
+      .where('QUANTUM_ID', '=', quantumId.toLowerCase())
       .first()
       .catch((err) => {
         throw err
@@ -60,18 +60,18 @@ const DEPRECATEnotificationService = () => {
   }
 
   const updateShiftNotificationsToRead = async (quantumId) => {
-    db('ShiftNotification')
-      .where({ QuantumId: `${quantumId.toLowerCase()}`, Read: false })
-      .update({ Read: true })
+    db('SHIFT_NOTIFICATION')
+      .where({ QUANTUM_ID: `${quantumId.toLowerCase()}`, READ: false })
+      .update({ READ: true })
       .catch((err) => {
         throw err
       })
   }
 
   const updateShiftTaskNotificationsToRead = async (quantumId) => {
-    db('ShiftTaskNotification')
-      .where({ QuantumId: `${quantumId.toLowerCase()}`, Read: false })
-      .update({ Read: true })
+    db('SHIFT_TASK_NOTIFICATION')
+      .where({ QUANTUM_ID: `${quantumId.toLowerCase()}`, READ: false })
+      .update({ READ: true })
       .catch((err) => {
         throw err
       })
