@@ -1,7 +1,7 @@
 drop table if exists "NotificationConfiguration";
 drop table if exists "UserNotificationSetting";
-drop table if exists "ShiftTaskNotification";
-drop table if exists "ShiftNotification";
+drop table if exists "SHIFT_TASK_NOTIFICATION";
+drop table if exists "SHIFT_NOTIFICATION";
 drop table if exists "UserAuthentication";
 drop table if exists "Prison";
 
