@@ -1,16 +1,26 @@
+const knex = require('knex')
+
 const db = require('../database')
 
 const DEPRECATEnotificationService = () => {
   const getShiftNotifications = async (quantumId) => {
     return db
-      .select('DateTime', 'Description', 'LastModifiedDateTime', 'LastModifiedDateTimeInSeconds', 'Read')
-      .from('ShiftNotification')
-      .where('QuantumId', '=', quantumId.toLowerCase())
+      .select(
+        knex.raw(
+          `"DATE_TIME" as "Datetime", "DESCRIPTION" as "Description", "LAST_MODIFIED_DATE_TIME" as "LastModifiedDateTime", "LAST_MODIFIED_DATE_TIME_IN_SECONDS" as "LastModifiedDateTimeInSeconds", "READ" as "Read"`,
+        ),
+      )
+      .from('SHIFT_NOTIFICATION')
+      .where('QUANTUM_ID', '=', quantumId.toLowerCase())
       .union(
         db
-          .select('DateTime', 'Description', 'LastModifiedDateTime', 'LastModifiedDateTimeInSeconds', 'Read')
-          .from('ShiftTaskNotification')
-          .where('QuantumId', '=', quantumId.toLowerCase()),
+          .select(
+            knex.raw(
+              `"DATE_TIME" as "Datetime", "DESCRIPTION" as "Description", "LAST_MODIFIED_DATE_TIME" as "LastModifiedDateTime", "LAST_MODIFIED_DATE_TIME_IN_SECONDS" as "LastModifiedDateTimeInSeconds", "READ" as "Read"`,
+            ),
+          )
+          .from('SHIFT_TASK_NOTIFICATION')
+          .where('QUANTUM_ID', '=', quantumId.toLowerCase()),
       )
       .orderBy('LastModifiedDateTimeInSeconds', 'desc')
       .catch((err) => {
@@ -20,14 +30,22 @@ const DEPRECATEnotificationService = () => {
 
   const getShiftNotificationsPaged = (quantumId, offset, perPage) => {
     return db
-      .select('DateTime', 'Description', 'LastModifiedDateTime', 'LastModifiedDateTimeInSeconds', 'Read')
-      .from('ShiftNotification')
-      .where('QuantumId', '=', quantumId.toLowerCase())
+      .select(
+        knex.raw(
+          `"DATE_TIME" as "Datetime", "DESCRIPTION" as "Description", "LAST_MODIFIED_DATE_TIME" as "LastModifiedDateTime", "LAST_MODIFIED_DATE_TIME_IN_SECONDS" as "LastModifiedDateTimeInSeconds", "READ" as "Read"`,
+        ),
+      )
+      .from('SHIFT_NOTIFICATION')
+      .where('QUANTUM_ID', '=', quantumId.toLowerCase())
       .union(
         db
-          .select('DateTime', 'Description', 'LastModifiedDateTime', 'LastModifiedDateTimeInSeconds', 'Read')
-          .from('ShiftTaskNotification')
-          .where('QuantumId', '=', quantumId.toLowerCase()),
+          .select(
+            knex.raw(
+              `"DATE_TIME" as "Datetime", "DESCRIPTION" as "Description", "LAST_MODIFIED_DATE_TIME" as "LastModifiedDateTime", "LAST_MODIFIED_DATE_TIME_IN_SECONDS" as "LastModifiedDateTimeInSeconds", "READ" as "Read"`,
+            ),
+          )
+          .from('SHIFT_TASK_NOTIFICATION')
+          .where('QUANTUM_ID', '=', quantumId.toLowerCase()),
       )
       .offset(offset)
       .limit(perPage)
@@ -39,9 +57,9 @@ const DEPRECATEnotificationService = () => {
 
   const getShiftNotificationsCount = (quantumId) => {
     return db
-      .count('QuantumId')
-      .from('ShiftNotification')
-      .where('QuantumId', '=', quantumId.toLowerCase())
+      .count('QUANTUM_ID')
+      .from('SHIFT_NOTIFICATION')
+      .where('QUANTUM_ID', '=', quantumId.toLowerCase())
       .first()
       .catch((err) => {
         throw err
@@ -50,9 +68,9 @@ const DEPRECATEnotificationService = () => {
 
   const getShiftTaskNotificationsCount = (quantumId) => {
     return db
-      .count('QuantumId')
-      .from('ShiftTaskNotification')
-      .where('QuantumId', '=', quantumId.toLowerCase())
+      .count('QUANTUM_ID')
+      .from('SHIFT_TASK_NOTIFICATION')
+      .where('QUANTUM_ID', '=', quantumId.toLowerCase())
       .first()
       .catch((err) => {
         throw err
@@ -60,18 +78,18 @@ const DEPRECATEnotificationService = () => {
   }
 
   const updateShiftNotificationsToRead = async (quantumId) => {
-    db('ShiftNotification')
-      .where({ QuantumId: `${quantumId.toLowerCase()}`, Read: false })
-      .update({ Read: true })
+    db('SHIFT_NOTIFICATION')
+      .where({ QUANTUM_ID: `${quantumId.toLowerCase()}`, READ: false })
+      .update({ READ: true })
       .catch((err) => {
         throw err
       })
   }
 
   const updateShiftTaskNotificationsToRead = async (quantumId) => {
-    db('ShiftTaskNotification')
-      .where({ QuantumId: `${quantumId.toLowerCase()}`, Read: false })
-      .update({ Read: true })
+    db('SHIFT_TASK_NOTIFICATION')
+      .where({ QUANTUM_ID: `${quantumId.toLowerCase()}`, READ: false })
+      .update({ READ: true })
       .catch((err) => {
         throw err
       })

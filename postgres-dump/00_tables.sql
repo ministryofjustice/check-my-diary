@@ -1,7 +1,7 @@
 drop table if exists "NotificationConfiguration";
 drop table if exists "UserNotificationSetting";
-drop table if exists "ShiftTaskNotification";
-drop table if exists "ShiftNotification";
+drop table if exists "SHIFT_TASK_NOTIFICATION";
+drop table if exists "SHIFT_NOTIFICATION";
 drop table if exists "UserAuthentication";
 drop table if exists "Prison";
 
@@ -36,43 +36,34 @@ create table "UserAuthentication"
 );
 
 
-create table "ShiftNotification"
-(
-    "QuantumId"                     varchar(50)              not null
-        constraint "ShiftNotification_QuantumId_UserAuthentication_QuantumId"
-            references "UserAuthentication",
-    "DateTime"                      timestamp with time zone not null,
-    "Description"                   varchar(500),
-    "ShiftDate"                     timestamp with time zone not null,
-    "LastModifiedDateTime"          timestamp with time zone not null,
-    "Read"                          boolean default false    not null,
-    "SentSms"                       boolean default false    not null,
-    "SentEmail"                     boolean default false    not null,
-    "LastModifiedDateTimeInSeconds" bigint                   not null,
-    constraint "ShiftNotification_QuantumId_LastModifiedDateTime_ShiftDate"
-        primary key ("QuantumId", "LastModifiedDateTime", "ShiftDate")
-);
+create table "SHIFT_NOTIFICATION"
+(   "ID"                                 serial                   primary key ,
+    "QUANTUM_ID"                         varchar(50)              not null,
+    "DATE_TIME"                          timestamp with time zone not null,
+    "DESCRIPTION"                        varchar(500),
+    "SHIFT_DATE"                         timestamp with time zone not null,
+    "LAST_MODIFIED_DATE_TIME"            timestamp with time zone not null,
+    "READ"                               boolean default false    not null,
+    "SENT_SMS"                           boolean default false    not null,
+    "SENT_EMAIL"                         boolean default false    not null,
+    "LAST_MODIFIED_DATE_TIME_IN_SECONDS" bigint                   not null,
+    "NOTIFICATION_TYPE"                  smallint);
 
 
-create table "ShiftTaskNotification"
-(
-    "QuantumId"                     varchar(50)              not null
-        constraint "ShiftNotification_QuantumId_UserAuthentication_QuantumId"
-            references "UserAuthentication",
-    "DateTime"                      timestamp with time zone not null,
-    "Description"                   varchar(500),
-    "TaskDate"                      timestamp with time zone not null,
-    "TaskStartTimeInSeconds"        integer                  not null,
-    "TaskEndTimeInSeconds"          integer                  not null,
-    "Activity"                      varchar(500),
-    "LastModifiedDateTime"          timestamp with time zone not null,
-    "Read"                          boolean default false    not null,
-    "SentSms"                       boolean default false    not null,
-    "SentEmail"                     boolean default false    not null,
-    "LastModifiedDateTimeInSeconds" bigint                   not null,
-    constraint "ShiftNotification_QuantumId_LastModifiedDateTime_TaskDate_TaskS"
-        primary key ("QuantumId", "LastModifiedDateTime", "TaskDate", "TaskStartTimeInSeconds")
-);
+create table "SHIFT_TASK_NOTIFICATION"
+(   "ID"                                 serial                   primary key ,
+    "QUANTUM_ID"                         varchar(50)              not null,
+    "DATE_TIME"                          timestamp with time zone not null,
+    "DESCRIPTION"                        varchar(500),
+    "TASK_DATE"                          timestamp with time zone not null,
+    "TASK_START_TIME_IN_SECONDS"         integer                  not null,
+    "TASK_END_TIME_IN_SECONDS"           integer                  not null,
+    "ACTIVITY"                           varchar(500),
+    "LAST_MODIFIED_DATE_TIME"            timestamp with time zone not null,
+    "READ"                               boolean default false    not null,
+    "SENT_SMS"                           boolean default false    not null,
+    "SENT_EMAIL"                         boolean default false    not null,
+    "LAST_MODIFIED_DATE_TIME_IN_SECONDS" bigint                   not null);
 
 
 create table "UserNotificationSetting"
