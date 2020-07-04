@@ -5,7 +5,6 @@ module.exports = (logger, calendarService, calendarOvertimeService, userAuthenti
     logger.error('Service unavailable')
     res.render('pages/index', {
       authError: false,
-      apiUp: false,
       csrfToken: res.locals.csrfToken,
     })
   }

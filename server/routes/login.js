@@ -4,8 +4,6 @@ const jwtDecode = require('jwt-decode')
 const asyncMiddleware = require('../middleware/asyncMiddleware')
 const logError = require('../logError')
 const config = require('../../config')
-const health = require('../controllers/health')
-const log = require('../../log')
 const utilities = require('../helpers/utilities')
 const userAuthenticationService = require('../services/userAuthenticationService')
 
@@ -87,12 +85,6 @@ module.exports = () => (router) => {
       req.socket.remoteAddress ||
       (req.connection.socket ? req.connection.socket.remoteAddress : null)
 
-    log.info(`Ip Address : ${ipAddress}`)
-    log.info(`Quantum Address : ${config.quantumAddresses}`)
-
-    let healthRes
-    let isApiUp
-
     let userNotSignedUpMessage = false
 
     try {
@@ -101,28 +93,6 @@ module.exports = () => (router) => {
       if (userAuthenticationDetails === null || userAuthenticationDetails.length === 0) {
         userNotSignedUpMessage = true
         throw new Error(`Error : No Sms or Email address returned for QuantumId : ${req.user.username}`)
-      }
-
-      const userAuthentication = userAuthenticationDetails[0]
-
-      // Add Api health check
-      healthRes = await health.healthResult([
-        `${userAuthentication.ApiUrl}health`,
-        `${userAuthentication.ApiUrl}health/invision`,
-      ])
-      isApiUp = healthRes.status === 200
-      log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`)
-      log.info(`${userAuthentication.ApiUrl}health - health check with status ${healthRes.status}`)
-
-      if (isApiUp === false) {
-        log.error(healthRes.appInfo)
-        res.render('pages/index', {
-          showUserNotSignedUpMessage: false,
-          authError: false,
-          apiUp: isApiUp,
-          csrfToken: res.locals.csrfToken,
-        })
-        return
       }
 
       const quantumAddresses = config.quantumAddresses.split(',')
@@ -197,7 +167,6 @@ module.exports = () => (router) => {
         id: req.user.username,
         authError: true,
         showUserNotSignedUpMessage: userNotSignedUpMessage,
-        apiUp: isApiUp,
         authErrorText: utilities.getAuthErrorDescription(error),
         csrfToken: res.locals.csrfToken,
       }

@@ -9,7 +9,6 @@ module.exports = (logger, calService, calOvertimeService, DEPRECATEnotificationS
 
     res.render('pages/index', {
       authError: false,
-      apiUp: false,
       csrfToken: res.locals.csrfToken,
     })
   }
