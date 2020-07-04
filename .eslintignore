@@ -4,3 +4,5 @@ package-lock.json
 package.json
 cypress.json
 cypress-reporter-config.json
+jest.config.json
+jest.config.integration.json
