@@ -1,29 +1,29 @@
 const utilities = require('../helpers/utilities')
 const asyncMiddleware = require('../middleware/asyncMiddleware')
 
-module.exports = (logger, calService, calOvertimeService, DEPRECATEnotificationService, userAuthService) => (
-  router,
-) => {
-  function serviceUnavailable(req, res) {
-    logger.error('Service unavailable')
+function serviceUnavailable(logger, req, res) {
+  logger.error('Service unavailable')
 
-    res.render('pages/index', {
-      authError: false,
-      apiUp: false,
-      csrfToken: res.locals.csrfToken,
-    })
-  }
+  res.render('pages/index', {
+    authError: false,
+    apiUp: false,
+    csrfToken: res.locals.csrfToken,
+  })
+}
 
+module.exports = (logger, calOvertimeService, DEPRECATEnotificationService, userAuthService) => (router) => {
   router.get(
     '/:date',
     asyncMiddleware(async (req, res) => {
       logger.info('GET calendar view')
+      const { calendarService } = req.app.get('DataServices')
+
       try {
         const userAuthenticationDetails = await userAuthService.getUserAuthenticationDetails(req.user.username)
 
         const shiftNotifications = await DEPRECATEnotificationService.getShiftNotifications(req.user.username)
 
-        const apiShiftsResponse = await calService.getCalendarData(
+        const apiShiftsResponse = await calendarService.getCalendarData(
           userAuthenticationDetails[0].ApiUrl,
           req.params.date,
           req.user.token,
