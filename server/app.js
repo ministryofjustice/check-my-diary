@@ -137,9 +137,7 @@ module.exports = function createApp({ signInService }, calendarOvertimeService, 
 
   // Add services to server
 
-  const DataServices = { calendarService }
-
-  app.set('DataServices', DataServices)
+  app.set('DataServices', { calendarService })
 
   // Express Routing Configuration
   app.get('/health', (req, res, next) => {
