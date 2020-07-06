@@ -221,8 +221,8 @@ module.exports = function createApp({ signInService }) {
   app.use('/', standardRoute(createLoginRouter()))
   app.use('/calendar', authHandler, standardRoute(createCalendarRouter(logger, userAuthenticationService)))
   app.use('/details', authHandler, standardRoute(createCalendarDetailRouter(logger, userAuthenticationService)))
-  app.use('/notifications', authHandler, standardRoute(createNotificationRouter(logger, DEPRECATEnotificationService)))
-  app.use('/maintenance', authHandler, standardRoute(createMaintenanceRouter(logger, DEPRECATEnotificationService)))
+  app.use('/notifications', authHandler, standardRoute(createNotificationRouter(logger)))
+  app.use('/maintenance', authHandler, standardRoute(createMaintenanceRouter(logger)))
 
   app.use((req, res, next) => {
     next(new Error('Not found'))
