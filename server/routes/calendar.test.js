@@ -1,8 +1,6 @@
 const request = require('supertest')
-const createRouter = require('./calendar')
-const standardRouter = require('./standardRouter')
-const { authenticationMiddleware } = require('./testutils/mockAuthentication')
 const appSetup = require('./testutils/appSetup')
+const createCalendarRoutes = require('./calendar')
 
 const fakeShiftNotifications = [
   {
@@ -640,19 +638,11 @@ const calendarOvertimeService = {
   getCalendarOvertimeData: jest.fn(),
 }
 
-const logger = {
-  info: jest.fn(),
-  error: jest.fn(),
-}
-
-const standardRoute = standardRouter({ authenticationMiddleware })
-const calendarRoute = standardRoute(createRouter(logger, userAuthenticationService))
-
 let app
 
 beforeEach(() => {
-  const service = { calendarService, calendarOvertimeService, notificationService }
-  app = appSetup(calendarRoute, service)
+  const services = { calendarService, calendarOvertimeService, notificationService, userAuthenticationService }
+  app = appSetup(createCalendarRoutes, services)
 
   notificationService.getShiftNotifications.mockReturnValue(fakeShiftNotifications)
   userAuthenticationService.getUserAuthenticationDetails.mockReturnValue(fakeUserAuthenticationDetails)
@@ -689,7 +679,6 @@ describe('GET and POST for /:date', () => {
         expect(calendarOvertimeService.getCalendarOvertimeData).toHaveBeenCalledTimes(1)
         expect(notificationService.getShiftNotifications).toHaveBeenCalledTimes(1)
         expect(userAuthenticationService.getUserAuthenticationDetails).toHaveBeenCalledTimes(1)
-        expect(logger.info).toHaveBeenCalledTimes(1)
       })
   })
 
@@ -718,7 +707,6 @@ describe('GET and POST for /:date', () => {
         expect(calendarOvertimeService.getCalendarOvertimeData).toHaveBeenCalledTimes(1)
         expect(notificationService.getShiftNotifications).toHaveBeenCalledTimes(1)
         expect(userAuthenticationService.getUserAuthenticationDetails).toHaveBeenCalledTimes(1)
-        expect(logger.info).toHaveBeenCalledTimes(1)
       })
   })
 })

@@ -1,8 +1,6 @@
 const request = require('supertest')
-const createRouter = require('./calendar-detail')
-const standardRouter = require('./standardRouter')
-const { authenticationMiddleware } = require('./testutils/mockAuthentication')
 const appSetup = require('./testutils/appSetup')
+const createCalendarDetailRoutes = require('./calendar-detail')
 
 const fakeCalendarDetailData1 = {
   tasks: [
@@ -109,19 +107,12 @@ const calendarOvertimeService = {
   getCalendarOvertimeDetails: jest.fn(),
 }
 
-const logger = {
-  info: jest.fn(),
-  error: jest.fn(),
-}
-
-const standardRoute = standardRouter({ authenticationMiddleware })
-const calendarRoute = standardRoute(createRouter(logger, userAuthenticationService))
-
 let app
 
 beforeEach(() => {
-  const service = { calendarService, calendarOvertimeService }
-  app = appSetup(calendarRoute, service)
+  const services = { calendarService, calendarOvertimeService, userAuthenticationService }
+  // const calendarRoute = createRoute
+  app = appSetup(createCalendarDetailRoutes, services)
   userAuthenticationService.getUserAuthenticationDetails.mockReturnValue(fakeUserAuthenticationDetails)
 })
 
@@ -160,7 +151,6 @@ describe('GET and POST for /:details', () => {
 
         expect(calendarService.getCalendarDetails).toHaveBeenCalledTimes(1)
         expect(userAuthenticationService.getUserAuthenticationDetails).toHaveBeenCalledTimes(1)
-        expect(logger.info).toHaveBeenCalledTimes(1)
       })
   })
   it('returns calendar detail page for 3rd April 2020', async () => {
@@ -189,7 +179,6 @@ describe('GET and POST for /:details', () => {
 
         expect(calendarService.getCalendarDetails).toHaveBeenCalledTimes(1)
         expect(userAuthenticationService.getUserAuthenticationDetails).toHaveBeenCalledTimes(1)
-        expect(logger.info).toHaveBeenCalledTimes(1)
       })
   })
 })

@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 const cookieSession = require('cookie-session')
 const path = require('path')
 
-module.exports = (route, service) => {
+module.exports = (generateRouter, service) => {
   const app = express()
 
   app.set('views', path.join(__dirname, '../../views'))
@@ -26,7 +26,10 @@ module.exports = (route, service) => {
   app.use(cookieSession({ keys: [''] }))
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: false }))
-  app.use('/', route)
+
+  const router = express.Router()
+
+  app.use('/', generateRouter(router))
   app.use((error, req, res, next) => {
     console.log(error)
   })
