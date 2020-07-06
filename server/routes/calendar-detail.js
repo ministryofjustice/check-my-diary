@@ -4,7 +4,6 @@ function serviceUnavailable(logger, req, res) {
   logger.error('Service unavailable')
   res.render('pages/index', {
     authError: false,
-    apiUp: false,
     csrfToken: res.locals.csrfToken,
   })
 }
