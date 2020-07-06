@@ -647,19 +647,15 @@ const logger = {
 
 const standardRoute = standardRouter({ authenticationMiddleware })
 const calendarRoute = standardRoute(
-  createRouter(
-    logger,
-    calendarService,
-    calendarOvertimeService,
-    DEPRECATEnotificationService,
-    userAuthenticationService,
-  ),
+  createRouter(logger, calendarOvertimeService, DEPRECATEnotificationService, userAuthenticationService),
 )
 
 let app
 
 beforeEach(() => {
-  app = appSetup(calendarRoute)
+  const service = { calendarService }
+  app = appSetup(calendarRoute, service)
+
   DEPRECATEnotificationService.getShiftNotifications.mockReturnValue(fakeShiftNotifications)
   userAuthenticationService.getUserAuthenticationDetails.mockReturnValue(fakeUserAuthenticationDetails)
 })
