@@ -138,9 +138,7 @@ module.exports = () => (router) => {
             .catch((err) => {
               throw new Error(err)
             })
-        }
-
-        if (emailEnabled) {
+        } else if (emailEnabled) {
           // For email
           await notify
             .sendEmail(notifyEmailTemplate, userAuthentication.EmailAddress || '', {
