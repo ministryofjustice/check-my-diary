@@ -11,7 +11,6 @@ module.exports = (logger) => (router) => {
     logger.error('Service unavailable')
     res.render('pages/index', {
       authError: false,
-      apiUp: false,
       csrfToken: res.locals.csrfToken,
     })
   }
