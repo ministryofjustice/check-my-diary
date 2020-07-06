@@ -5,9 +5,8 @@ const asyncMiddleware = require('../middleware/asyncMiddleware')
 const logError = require('../logError')
 const config = require('../../config')
 const health = require('../controllers/health')
-const log = require('../../log')
+const logger = require('../../log')
 const utilities = require('../helpers/utilities')
-const userAuthenticationService = require('../services/userAuthenticationService')
 
 const {
   notify: { url, clientKey, smsTemplateId, emailTemplateId },
@@ -17,7 +16,7 @@ const notify = url ? new NotifyClient(url, clientKey) : new NotifyClient(clientK
 const notifySmsTemplate = smsTemplateId || ''
 const notifyEmailTemplate = emailTemplateId || ''
 
-module.exports = () => (router) => {
+module.exports = (router) => {
   router.get(
     '/',
     asyncMiddleware(async (req, res) => {
@@ -35,6 +34,7 @@ module.exports = () => (router) => {
   router.post(
     '/auth/2fa',
     asyncMiddleware(async (req, res) => {
+      const { userAuthenticationService } = req.app.get('DataServices')
       const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
 
       const inputTwoFactorCode = utilities.createTwoFactorAuthenticationHash(req.body.code)
@@ -59,6 +59,9 @@ module.exports = () => (router) => {
     // if maintenance start/end dates exist then dcheck whether to display maintenance page
     // otherwise just ignore the following, it will become effective as soon as those environment
     // variables are created.  13DEC19.
+
+    const { userAuthenticationService } = req.app.get('DataServices')
+
     try {
       if (!utilities.isNullOrEmpty(config.maintenance.start) && !utilities.isNullOrEmpty(config.maintenance.end)) {
         // eslint-disable-next-line vars-on-top
@@ -87,8 +90,8 @@ module.exports = () => (router) => {
       req.socket.remoteAddress ||
       (req.connection.socket ? req.connection.socket.remoteAddress : null)
 
-    log.info(`Ip Address : ${ipAddress}`)
-    log.info(`Quantum Address : ${config.quantumAddresses}`)
+    logger.info(`Ip Address : ${ipAddress}`)
+    logger.info(`Quantum Address : ${config.quantumAddresses}`)
 
     let healthRes
     let isApiUp
@@ -111,11 +114,11 @@ module.exports = () => (router) => {
         `${userAuthentication.ApiUrl}health/invision`,
       ])
       isApiUp = healthRes.status === 200
-      log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`)
-      log.info(`${userAuthentication.ApiUrl}health - health check with status ${healthRes.status}`)
+      logger.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`)
+      logger.info(`${userAuthentication.ApiUrl}health - health check with status ${healthRes.status}`)
 
       if (isApiUp === false) {
-        log.error(healthRes.appInfo)
+        logger.error(healthRes.appInfo)
         res.render('pages/index', {
           showUserNotSignedUpMessage: false,
           authError: false,

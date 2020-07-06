@@ -1,7 +1,8 @@
 const { check, validationResult } = require('express-validator')
 const asyncMiddleware = require('../middleware/asyncMiddleware')
+const logger = require('../../log')
 
-module.exports = (logger) => (router) => {
+module.exports = (router) => {
   /**
    * Service unavailable
    * @param req
