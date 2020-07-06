@@ -9,13 +9,13 @@ function serviceUnavailable(logger, req, res) {
   })
 }
 
-module.exports = (logger, calendarOvertimeService, userAuthenticationService) => (router) => {
+module.exports = (logger, userAuthenticationService) => (router) => {
   router.get(
     '/:date',
     asyncMiddleware(async (req, res) => {
       logger.info('GET calendar details')
 
-      const { calendarService } = req.app.get('DataServices')
+      const { calendarService, calendarOvertimeService } = req.app.get('DataServices')
 
       try {
         const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(

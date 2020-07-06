@@ -11,17 +11,17 @@ function serviceUnavailable(logger, req, res) {
   })
 }
 
-module.exports = (logger, calOvertimeService, DEPRECATEnotificationService, userAuthService) => (router) => {
+module.exports = (logger, userAuthService) => (router) => {
   router.get(
     '/:date',
     asyncMiddleware(async (req, res) => {
       logger.info('GET calendar view')
-      const { calendarService } = req.app.get('DataServices')
+      const { calendarService, calendarOvertimeService, notificationService } = req.app.get('DataServices')
 
       try {
         const userAuthenticationDetails = await userAuthService.getUserAuthenticationDetails(req.user.username)
 
-        const shiftNotifications = await DEPRECATEnotificationService.getShiftNotifications(req.user.username)
+        const shiftNotifications = await notificationService.getShiftNotifications(req.user.username)
 
         const apiShiftsResponse = await calendarService.getCalendarData(
           userAuthenticationDetails[0].ApiUrl,
@@ -29,7 +29,7 @@ module.exports = (logger, calOvertimeService, DEPRECATEnotificationService, user
           req.user.token,
         )
 
-        const apiOvertimeShiftsResponse = await calOvertimeService.getCalendarOvertimeData(
+        const apiOvertimeShiftsResponse = await calendarOvertimeService.getCalendarOvertimeData(
           userAuthenticationDetails[0].ApiUrl,
           req.params.date,
           req.user.token,
