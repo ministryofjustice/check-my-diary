@@ -4,12 +4,11 @@ const asyncMiddleware = require('../middleware/asyncMiddleware')
 function serviceUnavailable(logger, req, res) {
   logger.error('Service unavailable')
 
-  res.render('pages/index', {
-    authError: false,
-    apiUp: false,
-    csrfToken: res.locals.csrfToken,
-  })
-}
+    res.render('pages/index', {
+      authError: false,
+      csrfToken: res.locals.csrfToken,
+    })
+  }
 
 module.exports = (logger, calOvertimeService, DEPRECATEnotificationService, userAuthService) => (router) => {
   router.get(

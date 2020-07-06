@@ -11,7 +11,6 @@ module.exports = (logger, DEPRECATEnotificationService) => (router) => {
     logger.error('Service unavailable')
     res.render('pages/index', {
       authError: false,
-      apiUp: false,
       csrfToken: res.locals.csrfToken,
     })
   }
