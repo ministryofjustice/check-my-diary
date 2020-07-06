@@ -46,7 +46,7 @@ const fakeCalendarOvertimeDetailData1 = {
       taskType: 'Unspecific',
       startDateTime: '2020-04-01T17:30:00',
       endDateTime: '2020-04-01T20:30:00',
-    },    
+    },
   ],
 }
 
@@ -115,12 +115,13 @@ const logger = {
 }
 
 const standardRoute = standardRouter({ authenticationMiddleware })
-const calendarRoute = standardRoute(createRouter(logger, calendarService, calendarOvertimeService, userAuthenticationService))
+const calendarRoute = standardRoute(createRouter(logger, calendarOvertimeService, userAuthenticationService))
 
 let app
 
 beforeEach(() => {
-  app = appSetup(calendarRoute)
+  const service = { calendarService }
+  app = appSetup(calendarRoute, service)
   userAuthenticationService.getUserAuthenticationDetails.mockReturnValue(fakeUserAuthenticationDetails)
 })
 

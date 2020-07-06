@@ -2,8 +2,8 @@ const axios = require('axios')
 const logger = require('../../log')
 const utilities = require('../helpers/utilities')
 
-module.exports = function CalendarService() {
-  function getCalendarData(apiUrl, startDate, accessToken) {
+module.exports = {
+  getCalendarData(apiUrl, startDate, accessToken) {
     return new Promise((resolve, reject) => {
       axios
         .get(`${apiUrl}shifts?startdate=${startDate}&enddate=${utilities.getEndDate(startDate)}`, {
@@ -25,9 +25,9 @@ module.exports = function CalendarService() {
           }
         })
     })
-  }
+  },
 
-  function getCalendarDetails(apiUrl, date, accessToken) {
+  getCalendarDetails(apiUrl, date, accessToken) {
     return new Promise((resolve, reject) => {
       axios
         .get(`${apiUrl}shifts/tasks?date=${date}`, {
@@ -49,10 +49,5 @@ module.exports = function CalendarService() {
           }
         })
     })
-  }
-
-  return {
-    getCalendarData,
-    getCalendarDetails,
-  }
+  },
 }

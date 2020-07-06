@@ -24,6 +24,8 @@ const config = require('../config')
 const userAuthenticationService = require('./services/userAuthenticationService')
 const tokenRefresh = require('./middleware/tokenRefresh')
 
+const calendarService = require('./services/calendarService')
+
 const { authenticationMiddleware } = auth
 
 const version = moment.now().toString()
@@ -35,12 +37,7 @@ if (config.rejectUnauthorized) {
 }
 
 // eslint-disable-next-line no-shadow
-module.exports = function createApp(
-  { signInService },
-  calendarService,
-  calendarOvertimeService,
-  DEPRECATEnotificationService,
-) {
+module.exports = function createApp({ signInService }, calendarOvertimeService, DEPRECATEnotificationService) {
   const app = express()
 
   auth.init(signInService)
@@ -138,6 +135,10 @@ module.exports = function createApp(
 
   const healthcheck = healthcheckFactory(config.nomis.authUrl)
 
+  // Add services to server
+
+  app.set('DataServices', { calendarService })
+
   // Express Routing Configuration
   app.get('/health', (req, res, next) => {
     healthcheck((err, result) => {
@@ -216,28 +217,16 @@ module.exports = function createApp(
     '/calendar',
     authHandler,
     standardRoute(
-      createCalendarRouter(
-        logger,
-        calendarService,
-        calendarOvertimeService,
-        DEPRECATEnotificationService,
-        userAuthenticationService,
-      ),
+      createCalendarRouter(logger, calendarOvertimeService, DEPRECATEnotificationService, userAuthenticationService),
     ),
   )
   app.use(
     '/details',
     authHandler,
-    standardRoute(
-      createCalendarDetailRouter(logger, calendarService, calendarOvertimeService, userAuthenticationService),
-    ),
+    standardRoute(createCalendarDetailRouter(logger, calendarOvertimeService, userAuthenticationService)),
   )
   app.use('/notifications', authHandler, standardRoute(createNotificationRouter(logger, DEPRECATEnotificationService)))
-  app.use(
-    '/maintenance',
-    authHandler,
-    standardRoute(createMaintenanceRouter(logger, calendarService, DEPRECATEnotificationService)),
-  )
+  app.use('/maintenance', authHandler, standardRoute(createMaintenanceRouter(logger, DEPRECATEnotificationService)))
 
   app.use((req, res, next) => {
     next(new Error('Not found'))
