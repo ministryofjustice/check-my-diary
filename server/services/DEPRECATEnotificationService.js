@@ -2,8 +2,8 @@ const knex = require('knex')
 
 const db = require('../database')
 
-const DEPRECATEnotificationService = () => {
-  const getShiftNotifications = async (quantumId) => {
+const DEPRECATEnotificationService = {
+  async getShiftNotifications(quantumId) {
     return db
       .select(
         knex.raw(
@@ -26,9 +26,9 @@ const DEPRECATEnotificationService = () => {
       .catch((err) => {
         throw err
       })
-  }
+  },
 
-  const getShiftNotificationsPaged = (quantumId, offset, perPage) => {
+  getShiftNotificationsPaged(quantumId, offset, perPage) {
     return db
       .select(
         knex.raw(
@@ -53,9 +53,9 @@ const DEPRECATEnotificationService = () => {
       .catch((err) => {
         throw err
       })
-  }
+  },
 
-  const getShiftNotificationsCount = (quantumId) => {
+  getShiftNotificationsCount(quantumId) {
     return db
       .count('QUANTUM_ID')
       .from('SHIFT_NOTIFICATION')
@@ -64,9 +64,9 @@ const DEPRECATEnotificationService = () => {
       .catch((err) => {
         throw err
       })
-  }
+  },
 
-  const getShiftTaskNotificationsCount = (quantumId) => {
+  getShiftTaskNotificationsCount(quantumId) {
     return db
       .count('QUANTUM_ID')
       .from('SHIFT_TASK_NOTIFICATION')
@@ -75,27 +75,27 @@ const DEPRECATEnotificationService = () => {
       .catch((err) => {
         throw err
       })
-  }
+  },
 
-  const updateShiftNotificationsToRead = async (quantumId) => {
+  updateShiftNotificationsToRead(quantumId) {
     db('SHIFT_NOTIFICATION')
       .where({ QUANTUM_ID: `${quantumId.toLowerCase()}`, READ: false })
       .update({ READ: true })
       .catch((err) => {
         throw err
       })
-  }
+  },
 
-  const updateShiftTaskNotificationsToRead = async (quantumId) => {
+  updateShiftTaskNotificationsToRead(quantumId) {
     db('SHIFT_TASK_NOTIFICATION')
       .where({ QUANTUM_ID: `${quantumId.toLowerCase()}`, READ: false })
       .update({ READ: true })
       .catch((err) => {
         throw err
       })
-  }
+  },
 
-  const getUserNotificationSettings = async (quantumId) => {
+  getUserNotificationSettings(quantumId) {
     return db
       .select('EmailAddress', 'Sms', 'UseEmailAddress', 'UseSms')
       .from('UserNotificationSetting')
@@ -103,10 +103,10 @@ const DEPRECATEnotificationService = () => {
       .catch((err) => {
         throw err
       })
-  }
+  },
 
-  const updateUserNotificationSettings = async (quantumId, emailAddress, sms, useEmailAddress, useSms) => {
-    const userNotificationSetting = await getUserNotificationSettings(quantumId)
+  async updateUserNotificationSettings(quantumId, emailAddress, sms, useEmailAddress, useSms) {
+    const userNotificationSetting = await DEPRECATEnotificationService.getUserNotificationSettings(quantumId)
 
     if (userNotificationSetting !== null && userNotificationSetting.length > 0) {
       db('UserNotificationSetting')
@@ -128,18 +128,7 @@ const DEPRECATEnotificationService = () => {
           throw err
         })
     }
-  }
-
-  return {
-    getShiftNotifications,
-    getShiftNotificationsPaged,
-    getShiftNotificationsCount,
-    getShiftTaskNotificationsCount,
-    updateShiftNotificationsToRead,
-    updateShiftTaskNotificationsToRead,
-    getUserNotificationSettings,
-    updateUserNotificationSettings,
-  }
+  },
 }
 
 module.exports = DEPRECATEnotificationService

@@ -115,12 +115,12 @@ const logger = {
 }
 
 const standardRoute = standardRouter({ authenticationMiddleware })
-const calendarRoute = standardRoute(createRouter(logger, calendarOvertimeService, userAuthenticationService))
+const calendarRoute = standardRoute(createRouter(logger, userAuthenticationService))
 
 let app
 
 beforeEach(() => {
-  const service = { calendarService }
+  const service = { calendarService, calendarOvertimeService }
   app = appSetup(calendarRoute, service)
   userAuthenticationService.getUserAuthenticationDetails.mockReturnValue(fakeUserAuthenticationDetails)
 })

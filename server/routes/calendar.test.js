@@ -624,7 +624,7 @@ const fakeUserAuthenticationDetails = [
   },
 ]
 
-const DEPRECATEnotificationService = {
+const notificationService = {
   getShiftNotifications: jest.fn(),
 }
 
@@ -646,17 +646,15 @@ const logger = {
 }
 
 const standardRoute = standardRouter({ authenticationMiddleware })
-const calendarRoute = standardRoute(
-  createRouter(logger, calendarOvertimeService, DEPRECATEnotificationService, userAuthenticationService),
-)
+const calendarRoute = standardRoute(createRouter(logger, userAuthenticationService))
 
 let app
 
 beforeEach(() => {
-  const service = { calendarService }
+  const service = { calendarService, calendarOvertimeService, notificationService }
   app = appSetup(calendarRoute, service)
 
-  DEPRECATEnotificationService.getShiftNotifications.mockReturnValue(fakeShiftNotifications)
+  notificationService.getShiftNotifications.mockReturnValue(fakeShiftNotifications)
   userAuthenticationService.getUserAuthenticationDetails.mockReturnValue(fakeUserAuthenticationDetails)
 })
 
@@ -689,7 +687,7 @@ describe('GET and POST for /:date', () => {
 
         expect(calendarService.getCalendarData).toHaveBeenCalledTimes(1)
         expect(calendarOvertimeService.getCalendarOvertimeData).toHaveBeenCalledTimes(1)
-        expect(DEPRECATEnotificationService.getShiftNotifications).toHaveBeenCalledTimes(1)
+        expect(notificationService.getShiftNotifications).toHaveBeenCalledTimes(1)
         expect(userAuthenticationService.getUserAuthenticationDetails).toHaveBeenCalledTimes(1)
         expect(logger.info).toHaveBeenCalledTimes(1)
       })
@@ -718,7 +716,7 @@ describe('GET and POST for /:date', () => {
 
         expect(calendarService.getCalendarData).toHaveBeenCalledTimes(1)
         expect(calendarOvertimeService.getCalendarOvertimeData).toHaveBeenCalledTimes(1)
-        expect(DEPRECATEnotificationService.getShiftNotifications).toHaveBeenCalledTimes(1)
+        expect(notificationService.getShiftNotifications).toHaveBeenCalledTimes(1)
         expect(userAuthenticationService.getUserAuthenticationDetails).toHaveBeenCalledTimes(1)
         expect(logger.info).toHaveBeenCalledTimes(1)
       })
