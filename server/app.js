@@ -22,13 +22,13 @@ const logger = require('../log.js')
 const auth = require('./authentication/auth')
 const config = require('../config')
 const userAuthenticationService = require('./services/userAuthenticationService')
+
 const tokenRefresh = require('./middleware/tokenRefresh')
+const authenticationMiddleware = require('./middleware/authenticationMiddleware')
 
 const calendarService = require('./services/calendarService')
 const calendarOvertimeService = require('./services/calendarOvertimeService')
 const DEPRECATEnotificationService = require('./services/DEPRECATEnotificationService')
-
-const { authenticationMiddleware } = auth
 
 const version = moment.now().toString()
 const production = process.env.NODE_ENV === 'production'
