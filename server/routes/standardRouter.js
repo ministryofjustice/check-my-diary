@@ -5,7 +5,7 @@ module.exports = ({ authenticationMiddleware }) => {
   return (routes) => {
     const router = express.Router()
 
-    router.use(authenticationMiddleware())
+    router.use(authenticationMiddleware)
     router.use(csrfTokenMiddleware)
 
     return routes(router)
