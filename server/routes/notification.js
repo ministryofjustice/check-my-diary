@@ -111,12 +111,12 @@ module.exports = (logger) => (router) => {
         const offset = (page - 1) * perPage
 
         Promise.all([
-          notificationService.getShiftNotificationsCount(req.user.username),
-          notificationService.getShiftTaskNotificationsCount(req.user.username),
+          // This should be replaced with a non-paged call that shows only recent notifications.
+          // This isn't an audit!!
+          notificationService.getShiftNotifications(req.user.username),
           notificationService.getShiftNotificationsPaged(req.user.username, offset, perPage),
-        ]).then(([totalShiftNotifications, totalShiftTaskNotifications, rows]) => {
+        ]).then(([count, rows]) => {
           // eslint-disable-next-line radix
-          const count = parseInt(totalShiftNotifications.count) + parseInt(totalShiftTaskNotifications.count)
           pagination.total = count
           pagination.per_page = perPage
           pagination.offset = offset

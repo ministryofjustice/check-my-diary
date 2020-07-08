@@ -10,28 +10,28 @@ const fakeShiftNotifications = [
     Description: 'Your activity on Wednesday 29 May 2019 at 17:00 - 17:30 has changed to [Paternity Leave].',
     LastModifiedDateTime: '2019-05-29T13:53:01.000Z',
     LastModifiedDateTimeInSeconds: '1559137981',
-    Read: true,
+    Processed: true,
   },
   {
     DateTime: '2019-05-29T13:46:27.000Z',
     Description: 'Your activity on Wednesday 29 May 2019 at 15:00 - 17:00 has changed to [FMI Training].',
     LastModifiedDateTime: '2019-05-29T13:46:19.000Z',
     LastModifiedDateTimeInSeconds: '1559137579',
-    Read: true,
+    Processed: true,
   },
   {
     DateTime: '2019-05-29T13:43:46.000Z',
     Description: 'Your activity on Wednesday 29 May 2019 at 17:00 - 17:30 has changed to [Late Roll (OSG)].',
     LastModifiedDateTime: '2019-05-29T13:43:37.000Z',
     LastModifiedDateTimeInSeconds: '1559137417',
-    Read: true,
+    Processed: true,
   },
   {
     DateTime: '2019-05-29T13:38:23.000Z',
     Description: 'Your activity on Wednesday 29 May 2019 at 15:00 - 17:00 has changed to [FMI Training].',
     LastModifiedDateTime: '2019-05-29T13:36:43.000Z',
     LastModifiedDateTimeInSeconds: '1559137003',
-    Read: true,
+    Processed: true,
   },
 ]
 

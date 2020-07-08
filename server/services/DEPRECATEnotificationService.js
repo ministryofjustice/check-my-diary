@@ -3,11 +3,12 @@ const knex = require('knex')
 const db = require('../database')
 
 const DEPRECATEnotificationService = {
+  // this is only used to count the number of notifications in calendar.ejs, and we have two other methods in this class that do the same thing.
   async getShiftNotifications(quantumId) {
     return db
       .select(
         knex.raw(
-          `"DATE_TIME" as "Datetime", "DESCRIPTION" as "Description", "LAST_MODIFIED_DATE_TIME" as "LastModifiedDateTime", "LAST_MODIFIED_DATE_TIME_IN_SECONDS" as "LastModifiedDateTimeInSeconds", "READ" as "Read"`,
+          `"DESCRIPTION" as "Description", "LAST_MODIFIED_DATE_TIME" as "LastModifiedDateTime", "PROCESSED" as "Processed"`,
         ),
       )
       .from('SHIFT_NOTIFICATION')
@@ -16,13 +17,13 @@ const DEPRECATEnotificationService = {
         db
           .select(
             knex.raw(
-              `"DATE_TIME" as "Datetime", "DESCRIPTION" as "Description", "LAST_MODIFIED_DATE_TIME" as "LastModifiedDateTime", "LAST_MODIFIED_DATE_TIME_IN_SECONDS" as "LastModifiedDateTimeInSeconds", "READ" as "Read"`,
+              `"DESCRIPTION" as "Description", "LAST_MODIFIED_DATE_TIME" as "LastModifiedDateTime", "PROCESSED" as "Processed"`,
             ),
           )
           .from('SHIFT_TASK_NOTIFICATION')
           .where('QUANTUM_ID', '=', quantumId.toLowerCase()),
       )
-      .orderBy('LastModifiedDateTimeInSeconds', 'desc')
+      .orderBy('LastModifiedDateTime', 'desc')
       .catch((err) => {
         throw err
       })
@@ -32,7 +33,7 @@ const DEPRECATEnotificationService = {
     return db
       .select(
         knex.raw(
-          `"DATE_TIME" as "Datetime", "DESCRIPTION" as "Description", "LAST_MODIFIED_DATE_TIME" as "LastModifiedDateTime", "LAST_MODIFIED_DATE_TIME_IN_SECONDS" as "LastModifiedDateTimeInSeconds", "READ" as "Read"`,
+          `"DESCRIPTION" as "Description", "LAST_MODIFIED_DATE_TIME" as "LastModifiedDateTime", "PROCESSED" as "Processed"`,
         ),
       )
       .from('SHIFT_NOTIFICATION')
@@ -41,7 +42,7 @@ const DEPRECATEnotificationService = {
         db
           .select(
             knex.raw(
-              `"DATE_TIME" as "Datetime", "DESCRIPTION" as "Description", "LAST_MODIFIED_DATE_TIME" as "LastModifiedDateTime", "LAST_MODIFIED_DATE_TIME_IN_SECONDS" as "LastModifiedDateTimeInSeconds", "READ" as "Read"`,
+              `"DESCRIPTION" as "Description", "LAST_MODIFIED_DATE_TIME" as "LastModifiedDateTime", "PROCESSED" as "Processed"`,
             ),
           )
           .from('SHIFT_TASK_NOTIFICATION')
@@ -49,29 +50,7 @@ const DEPRECATEnotificationService = {
       )
       .offset(offset)
       .limit(perPage)
-      .orderBy('LastModifiedDateTimeInSeconds', 'desc')
-      .catch((err) => {
-        throw err
-      })
-  },
-
-  getShiftNotificationsCount(quantumId) {
-    return db
-      .count('QUANTUM_ID')
-      .from('SHIFT_NOTIFICATION')
-      .where('QUANTUM_ID', '=', quantumId.toLowerCase())
-      .first()
-      .catch((err) => {
-        throw err
-      })
-  },
-
-  getShiftTaskNotificationsCount(quantumId) {
-    return db
-      .count('QUANTUM_ID')
-      .from('SHIFT_TASK_NOTIFICATION')
-      .where('QUANTUM_ID', '=', quantumId.toLowerCase())
-      .first()
+      .orderBy('LastModifiedDateTime', 'desc')
       .catch((err) => {
         throw err
       })
