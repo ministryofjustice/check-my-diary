@@ -17,7 +17,6 @@ const createCalendarRouter = require('./routes/calendar')
 const createCalendarDetailRouter = require('./routes/calendar-detail')
 const createMaintenanceRouter = require('./routes/maintenance')
 const createNotificationRouter = require('./routes/notification')
-const standardRouter = require('./routes/standardRouter')
 const logger = require('../log.js')
 const auth = require('./authentication/auth')
 const config = require('../config')
@@ -30,6 +29,7 @@ const calendarService = require('./services/calendarService')
 const calendarOvertimeService = require('./services/calendarOvertimeService')
 const DEPRECATEnotificationService = require('./services/DEPRECATEnotificationService')
 const authHandlerMiddleware = require('./middleware/authHandlerMiddleware')
+const csrfTokenMiddleware = require('./middleware/csrfTokenMiddleware')
 
 const version = moment.now().toString()
 const production = process.env.NODE_ENV === 'production'
@@ -144,6 +144,7 @@ module.exports = function createApp({ signInService }) {
     calendarService,
     calendarOvertimeService,
     notificationService: DEPRECATEnotificationService,
+    userAuthenticationService,
   })
 
   // Express Routing Configuration
@@ -216,18 +217,14 @@ module.exports = function createApp({ signInService }) {
     res.redirect(authLogoutUrl)
   })
 
-  const standardRoute = standardRouter({ authenticationMiddleware })
-
   // Routing
-  app.use('/', standardRoute(createLoginRouter()))
-  app.use('/calendar', authHandlerMiddleware, standardRoute(createCalendarRouter(logger, userAuthenticationService)))
-  app.use(
-    '/details',
-    authHandlerMiddleware,
-    standardRoute(createCalendarDetailRouter(logger, userAuthenticationService)),
-  )
-  app.use('/notifications', authHandlerMiddleware, standardRoute(createNotificationRouter(logger)))
-  app.use('/maintenance', authHandlerMiddleware, standardRoute(createMaintenanceRouter(logger)))
+  app.use(authenticationMiddleware, csrfTokenMiddleware)
+  app.use('/', createLoginRouter)
+  app.use(authHandlerMiddleware)
+  app.use('/calendar', createCalendarRouter)
+  app.use('/details', createCalendarDetailRouter)
+  app.use('/notifications', createNotificationRouter)
+  app.use('/maintenance', createMaintenanceRouter)
 
   app.use((req, res, next) => {
     next(new Error('Not found'))

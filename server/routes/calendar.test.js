@@ -1,8 +1,7 @@
 const request = require('supertest')
-const createRouter = require('./calendar')
-const standardRouter = require('./standardRouter')
-const { authenticationMiddleware } = require('./testutils/mockAuthentication')
+const calendarRoute = require('./calendar')
 const appSetup = require('./testutils/appSetup')
+const logger = require('../../log')
 
 const fakeShiftNotifications = [
   {
@@ -640,18 +639,15 @@ const calendarOvertimeService = {
   getCalendarOvertimeData: jest.fn(),
 }
 
-const logger = {
+jest.mock('../../log', () => ({
   info: jest.fn(),
   error: jest.fn(),
-}
-
-const standardRoute = standardRouter({ authenticationMiddleware })
-const calendarRoute = standardRoute(createRouter(logger, userAuthenticationService))
+}))
 
 let app
 
 beforeEach(() => {
-  const service = { calendarService, calendarOvertimeService, notificationService }
+  const service = { calendarService, calendarOvertimeService, notificationService, userAuthenticationService }
   app = appSetup(calendarRoute, service)
 
   notificationService.getShiftNotifications.mockReturnValue(fakeShiftNotifications)
