@@ -25,13 +25,12 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
 
   cmd-api:
-    #image: quay.io/hmpps/cmd-api:latest
-    build: ../../IdeaProjects/moj-cmd-api/
+    image: quay.io/hmpps/cmd-api:latest
     networks:
       - hmpps
     container_name: cmd-api
     ports:
-      - '8081:8080'
+      - '8080:8080'
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8080/health']
     environment:
@@ -40,9 +39,6 @@ services:
       - DATABASE_USERNAME=check-my-diary
       - DATABASE_PASSWORD=check-my-diary
       - DATABASE_NAME=check-my-diary
-    depends_on:
-      - postgres
-      - oauth-server
 
 networks:
   hmpps:
