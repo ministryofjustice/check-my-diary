@@ -1,7 +1,7 @@
 const { check, validationResult } = require('express-validator')
 const asyncMiddleware = require('../middleware/asyncMiddleware')
 
-module.exports = (logger, DEPRECATEnotificationService) => (router) => {
+module.exports = (logger) => (router) => {
   /**
    * Service unavailable
    * @param req
@@ -11,7 +11,6 @@ module.exports = (logger, DEPRECATEnotificationService) => (router) => {
     logger.error('Service unavailable')
     res.render('pages/index', {
       authError: false,
-      apiUp: false,
       csrfToken: res.locals.csrfToken,
     })
   }
@@ -21,9 +20,11 @@ module.exports = (logger, DEPRECATEnotificationService) => (router) => {
     asyncMiddleware(async (req, res) => {
       logger.info('GET notifications settings')
 
+      const { notificationService } = req.app.get('DataServices')
+
       if (req.hmppsAuthMFAUser) res.render('pages/error.ejs', { error: new Error('Not found'), message: 'Not found' })
 
-      const userNotificationSettings = await DEPRECATEnotificationService.getUserNotificationSettings(req.user.username)
+      const userNotificationSettings = await notificationService.getUserNotificationSettings(req.user.username)
 
       if (userNotificationSettings === null || userNotificationSettings.length === 0) {
         res.render('pages/notification-settings', {
@@ -63,6 +64,8 @@ module.exports = (logger, DEPRECATEnotificationService) => (router) => {
       // Finds the validation errors in this request and wraps them in an object with handy functions
       const errors = validationResult(req)
 
+      const { notificationService } = req.app.get('DataServices')
+
       if (!errors.isEmpty()) {
         const data = {
           email: req.body.inputEmail,
@@ -82,7 +85,7 @@ module.exports = (logger, DEPRECATEnotificationService) => (router) => {
           authUrl: req.authUrl,
         })
       } else {
-        await DEPRECATEnotificationService.updateUserNotificationSettings(
+        await notificationService.updateUserNotificationSettings(
           req.user.username,
           req.body.inputEmail === '' ? null : req.body.inputEmail,
           req.body.inputMobile === '' ? null : req.body.inputMobile,
@@ -97,6 +100,7 @@ module.exports = (logger, DEPRECATEnotificationService) => (router) => {
   router.get(
     '/:page',
     asyncMiddleware(async (req, res) => {
+      const { notificationService } = req.app.get('DataServices')
       try {
         const reqData = req.query
         const pagination = {}
@@ -107,9 +111,9 @@ module.exports = (logger, DEPRECATEnotificationService) => (router) => {
         const offset = (page - 1) * perPage
 
         Promise.all([
-          DEPRECATEnotificationService.getShiftNotificationsCount(req.user.username),
-          DEPRECATEnotificationService.getShiftTaskNotificationsCount(req.user.username),
-          DEPRECATEnotificationService.getShiftNotificationsPaged(req.user.username, offset, perPage),
+          notificationService.getShiftNotificationsCount(req.user.username),
+          notificationService.getShiftTaskNotificationsCount(req.user.username),
+          notificationService.getShiftNotificationsPaged(req.user.username, offset, perPage),
         ]).then(([totalShiftNotifications, totalShiftTaskNotifications, rows]) => {
           // eslint-disable-next-line radix
           const count = parseInt(totalShiftNotifications.count) + parseInt(totalShiftTaskNotifications.count)
@@ -138,8 +142,8 @@ module.exports = (logger, DEPRECATEnotificationService) => (router) => {
 
         logger.info('GET notifications view')
 
-        await DEPRECATEnotificationService.updateShiftNotificationsToRead(req.user.username)
-        await DEPRECATEnotificationService.updateShiftTaskNotificationsToRead(req.user.username)
+        await notificationService.updateShiftNotificationsToRead(req.user.username)
+        await notificationService.updateShiftTaskNotificationsToRead(req.user.username)
       } catch (error) {
         serviceUnavailable(req, res)
       }

@@ -2,8 +2,8 @@ const axios = require('axios')
 const logger = require('../../log')
 const utilities = require('../helpers/utilities')
 
-module.exports = function CalendarOvertimeService() {
-  function getCalendarOvertimeData(apiUrl, startDate, accessToken) {
+module.exports = {
+  getCalendarOvertimeData(apiUrl, startDate, accessToken) {
     return new Promise((resolve, reject) => {
       axios
         .get(`${apiUrl}shifts/overtime?startdate=${startDate}&enddate=${utilities.getEndDate(startDate)}`, {
@@ -25,9 +25,9 @@ module.exports = function CalendarOvertimeService() {
           }
         })
     })
-  }
+  },
 
-  function getCalendarOvertimeDetails(apiUrl, date, accessToken) {
+  getCalendarOvertimeDetails(apiUrl, date, accessToken) {
     return new Promise((resolve, reject) => {
       axios
         .get(`${apiUrl}shifts/overtime/tasks?date=${date}`, {
@@ -49,10 +49,5 @@ module.exports = function CalendarOvertimeService() {
           }
         })
     })
-  }
-
-  return {
-    getCalendarOvertimeData,
-    getCalendarOvertimeDetails,
-  }
+  },
 }

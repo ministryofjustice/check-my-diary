@@ -1,19 +1,21 @@
 const asyncMiddleware = require('../middleware/asyncMiddleware')
 
-module.exports = (logger, calendarService, calendarOvertimeService, userAuthenticationService) => (router) => {
-  function serviceUnavailable(req, res) {
-    logger.error('Service unavailable')
-    res.render('pages/index', {
-      authError: false,
-      apiUp: false,
-      csrfToken: res.locals.csrfToken,
-    })
-  }
+function serviceUnavailable(logger, req, res) {
+  logger.error('Service unavailable')
+  res.render('pages/index', {
+    authError: false,
+    csrfToken: res.locals.csrfToken,
+  })
+}
 
+module.exports = (logger, userAuthenticationService) => (router) => {
   router.get(
     '/:date',
     asyncMiddleware(async (req, res) => {
       logger.info('GET calendar details')
+
+      const { calendarService, calendarOvertimeService } = req.app.get('DataServices')
+
       try {
         const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(
           req.user.username,
@@ -42,7 +44,7 @@ module.exports = (logger, calendarService, calendarOvertimeService, userAuthenti
           authUrl: req.authUrl,
         })
       } catch (error) {
-        serviceUnavailable(req, res)
+        serviceUnavailable(logger, req, res)
       }
     }),
   )
