@@ -16,33 +16,33 @@
   <main id="main-content" role="main">
     <div class="tabs-wrapper">
       <ul class="tabs">
-        <li ><a href="/calendar/<%= getStartMonth() %>">Calendar</a></li>       
+        <li ><a href="/calendar/<%= getStartMonth() %>">Calendar</a></li>
         <li><a class="active" href="">Notifications
 
             <% if (shiftNotifications != null && shiftNotifications.length > 0) { %>
-              <% if (shiftNotifications.filter(function(x){return x.Read==false}).length > 0) { %>               
-                  <span class="govuk-notifications-indicator"><%= shiftNotifications.filter(function(x){return x.Read==false}).length %> new</span>
+              <% if (shiftNotifications.filter(function(x){return x.Processed==false}).length > 0) { %>
+                  <span class="govuk-notifications-indicator"><%= shiftNotifications.filter(function(x){return x.Processed==false}).length %> new</span>
               <% } %>
             <% } %>
-            
+
         </a></li>
       </ul>
     </div>
     <div id="notifications" class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
         <div class="govuk-notifications">
-          <ul>        
+          <ul>
             <% if (shiftNotifications != null && shiftNotifications.length > 0) { %>
-              <% shiftNotifications.forEach(function(notification){ %>                
+              <% shiftNotifications.forEach(function(notification){ %>
                 <li>
-                  <span class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0"> <%= getRelativeLastModifiedDateTime(notification.LastModifiedDateTimeInSeconds) %> 
-                  
-                    <% if (notification.Read == false) { %>
+                  <span class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0"> <%= getRelativeLastModifiedDateTime(notification.LastModifiedDateTimeInSeconds) %>
+
+                    <% if (notification.Processed == false) { %>
                       <span class="bold-xsmall">(new)</span>
                     <% } %>
-                  
+
                   </p>
-                  <p class="govuk-body govuk-!-font-size-16"><%= notification.Description %></p>	
+                  <p class="govuk-body govuk-!-font-size-16"><%= notification.Description %></p>
                 </li>
               <% }) %>
             <% } %>
@@ -50,13 +50,13 @@
         </div>
         <% if (data.total === 0) { %>
           <%- include('../partials/error-summary', {message: 'There is no detail information to show for this account.'}); %>
-        <% } else if (data.per_page > data.total) { %> 
+        <% } else if (data.per_page > data.total) { %>
         <% } else if (data.current_page < 2) { %>
-          <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.next_page%>">Load older notifications</a>         
+          <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.next_page%>">Load older notifications</a>
         <% } else if (data.last_page === data.next_page-1) { %>
-          <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.previous_page%>">Load newer notifications</a>                        
-        <% } else { %>         
-          <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.previous_page%>">Load newer notifications</a> | <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.next_page%>">Load older notifications</a>          
+          <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.previous_page%>">Load newer notifications</a>
+        <% } else { %>
+          <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.previous_page%>">Load newer notifications</a> | <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.next_page%>">Load older notifications</a>
         <% } %>
 
       </div>
