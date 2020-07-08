@@ -22,13 +22,14 @@ const logger = require('../log.js')
 const auth = require('./authentication/auth')
 const config = require('../config')
 const userAuthenticationService = require('./services/userAuthenticationService')
+
 const tokenRefresh = require('./middleware/tokenRefresh')
+const authenticationMiddleware = require('./middleware/authenticationMiddleware')
 
 const calendarService = require('./services/calendarService')
 const calendarOvertimeService = require('./services/calendarOvertimeService')
 const DEPRECATEnotificationService = require('./services/DEPRECATEnotificationService')
-
-const { authenticationMiddleware } = auth
+const authHandlerMiddleware = require('./middleware/authHandlerMiddleware')
 
 const version = moment.now().toString()
 const production = process.env.NODE_ENV === 'production'
@@ -219,10 +220,14 @@ module.exports = function createApp({ signInService }) {
 
   // Routing
   app.use('/', standardRoute(createLoginRouter()))
-  app.use('/calendar', authHandler, standardRoute(createCalendarRouter(logger, userAuthenticationService)))
-  app.use('/details', authHandler, standardRoute(createCalendarDetailRouter(logger, userAuthenticationService)))
-  app.use('/notifications', authHandler, standardRoute(createNotificationRouter(logger)))
-  app.use('/maintenance', authHandler, standardRoute(createMaintenanceRouter(logger)))
+  app.use('/calendar', authHandlerMiddleware, standardRoute(createCalendarRouter(logger, userAuthenticationService)))
+  app.use(
+    '/details',
+    authHandlerMiddleware,
+    standardRoute(createCalendarDetailRouter(logger, userAuthenticationService)),
+  )
+  app.use('/notifications', authHandlerMiddleware, standardRoute(createNotificationRouter(logger)))
+  app.use('/maintenance', authHandlerMiddleware, standardRoute(createMaintenanceRouter(logger)))
 
   app.use((req, res, next) => {
     next(new Error('Not found'))
@@ -243,16 +248,4 @@ function renderErrors(error, req, res, next) {
   res.status(error.status || 500)
 
   res.render('pages/error', { csrfToken: res.locals.csrfToken })
-}
-
-async function authHandler(req, res, next) {
-  const userSessionExpiryDateTime = await userAuthenticationService.getSessionExpiryDateTime(req.user.username)
-
-  if (userSessionExpiryDateTime !== null && userSessionExpiryDateTime[0] != null) {
-    if (new Date() > new Date(userSessionExpiryDateTime[0].SessionExpiryDateTime)) {
-      res.redirect('/logout')
-    } else {
-      next()
-    }
-  }
 }
