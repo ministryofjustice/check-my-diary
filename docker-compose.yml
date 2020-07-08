@@ -4,6 +4,7 @@ services:
     image: postgres
     networks:
       - hmpps
+    container_name: postgres
     restart: always
     ports:
       - '5432:5432'
@@ -37,12 +38,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - DATABASE_ENDPOINT=postgres:5432
-      - DATABASE_USERNAME=check-my-diary
-      - DATABASE_PASSWORD=check-my-diary
-      - DATABASE_NAME=check-my-diary
-    depends_on:
-      - postgres
-      - oauth-server
+      - LOGGING_LEVEL_ROOT=DEBUG
 
 networks:
   hmpps:
