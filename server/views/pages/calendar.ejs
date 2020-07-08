@@ -14,14 +14,14 @@
       <main id="main-content" role="main">
         <div class="tabs-wrapper">
           <ul class="tabs">
-            <li><a class="active" href="">Calendar</a></li>            
+            <li><a class="active" href="">Calendar</a></li>
             <li>
               <a href="/notifications/1"
                 >Notifications <% if (shiftNotifications != null && shiftNotifications.length > 0) { %> <% if
-                (shiftNotifications.filter(function(x){return x.Read==false}).length > 0) { %>
+                (shiftNotifications.filter(function(x){return x.Processed==false}).length > 0) { %>
 
                 <span class="loud font-xsmall" style="background-color: #df3034;padding: 0 5px;color: white;"
-                  ><%= shiftNotifications.filter(function(x){return x.Read==false}).length %> new</span
+                  ><%= shiftNotifications.filter(function(x){return x.Processed==false}).length %> new</span
                 >
                 <% } %> <% } %>
               </a>
@@ -60,7 +60,7 @@
             <a href="/details/<%=getDatePartFormatted(day.startDateTime)%>">
           <% } %>
             <% if (day.type === 'Shift') { %>
-            
+
               <div class="hide-1024-up">
                 <span class="day govuk-!-font-weight-bold"
                   ><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime))
@@ -95,7 +95,7 @@
                   <span class="detail detail-finish-night">Finish <%= getTimeFromDate(day.dailyEndDateTime) %></span>
                   <span class="detail-duration"><%= convertSecondsToHms(day.durationInSeconds) %></span>
                   <span class="detail detail-start-night-half">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
-                <% } %>              
+                <% } %>
               <% } else { %>
               <span class="detail detail-start">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
               <span class="detail detail-finish">Finish <%= getTimeFromDate(day.dailyEndDateTime) %></span>
@@ -104,7 +104,7 @@
                   <span class="detail-overtime-normal">Overtime</span>
                 <% } %>
               <% } %>
-            
+
             <% } %> <% if (day.type === 'Rest Day') { %>
             <div class="hide-1024-up">
               <span class="day govuk-!-font-weight-bold"
@@ -175,7 +175,7 @@
                 ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
               ><span class="event event-tu-official govuk-!-font-size-19" style="display:inline;"><%= day.type %></span>
             </div>
-            
+
             <% if (day.overtime) { %>
               <span class="detail-overtime">Overtime</span>
             <% } %>
@@ -191,8 +191,8 @@
               <span class="day govuk-!-font-weight-bold"
                 ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
               >
-            </div>            
-            
+            </div>
+
             <span class="detail detail-start">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
             <span class="detail detail-finish">Finish <%= getTimeFromDate(day.dailyEndDateTime) %></span>
             <span class="detail-duration"><%= convertSecondsToHms(day.durationInSeconds) %></span>
@@ -212,15 +212,15 @@
               >
               <span class="event event-absence govuk-!-font-size-19" style="display:inline;">  <%= day.type %></span>
             </div>
-            
+
             <% if (day.overtime) { %>
               <span class="detail-overtime-normal">Overtime</span>
             <% } %>
-            
-            <% } %> 
+
+            <% } %>
             <% if (day.type !== 'no-day' || day.overtime) { %>
               </a>
-            <% } %>    
+            <% } %>
           </li>
 
           <% }); %> <% } %>
