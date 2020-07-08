@@ -55,8 +55,7 @@ create table "SHIFT_TASK_NOTIFICATION"
     "TASK_END_TIME_IN_SECONDS"           integer                  not null,
     "ACTIVITY"                           varchar(500),
     "LAST_MODIFIED_DATE_TIME"            timestamp with time zone not null,
-    "PROCESSED"                          boolean default false    not null,
-    "SENT_SMS"                           boolean default false    not null);
+    "PROCESSED"                          boolean default false    not null);
 
 
 create table "UserNotificationSetting"
