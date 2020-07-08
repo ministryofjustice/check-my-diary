@@ -128,16 +128,7 @@ function processOvertimeShifts(shiftsData, overtimeShiftsData) {
   return shiftsData
 }
 
-const hmppsAuthMFAUser = (token) => {
-  const {authorities} = jwtDecode(token)
-  return (
-    authorities.includes('ROLE_MFA') ||
-    authorities.includes('ROLE_MAINTAIN_ACCESS_ROLES') ||
-    authorities.includes('ROLE_MAINTAIN_ACCESS_ROLES_ADMIN') ||
-    authorities.includes('ROLE_MAINTAIN_OAUTH_USERS') ||
-    authorities.includes('ROLE_AUTH_GROUP_MANAGER')
-  )
-}
+const hmppsAuthMFAUser = (token) => jwtDecode(token).authorities.includes('ROLE_MFA')
 
 module.exports = {
   getStartMonth,

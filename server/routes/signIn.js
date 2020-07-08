@@ -1,16 +1,12 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const passport = require('passport')
+const csrfTokenMiddleware = require('../middleware/csrfTokenMiddleware')
 
 module.exports = function createRouter() {
   const router = express.Router()
 
-  router.use((req, res, next) => {
-    if (typeof req.csrfToken === 'function') {
-      res.locals.csrfToken = req.csrfToken()
-    }
-    next()
-  })
+  router.use(csrfTokenMiddleware)
 
   router.get('/', (req, res) => {
     const errors = req.flash('error')
