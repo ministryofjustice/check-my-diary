@@ -647,8 +647,12 @@ jest.mock('../../log', () => ({
 let app
 
 beforeEach(() => {
-  const service = { calendarService, calendarOvertimeService, notificationService, userAuthenticationService }
-  app = appSetup(calendarRoute, service)
+  app = appSetup(calendarRoute, {
+    calendarService,
+    calendarOvertimeService,
+    notificationService,
+    userAuthenticationService,
+  })
 
   notificationService.getShiftNotifications.mockReturnValue(fakeShiftNotifications)
   userAuthenticationService.getUserAuthenticationDetails.mockReturnValue(fakeUserAuthenticationDetails)

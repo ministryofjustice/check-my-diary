@@ -35,7 +35,7 @@
             <% if (shiftNotifications != null && shiftNotifications.length > 0) { %>
               <% shiftNotifications.forEach(function(notification){ %>
                 <li>
-                  <span class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0"> <%= getRelativeLastModifiedDateTime(notification.LastModifiedDateTimeInSeconds) %>
+                  <span class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0"> <%= getRelativeLastModifiedDateTime(notification.LastModifiedDateTime) %>
 
                     <% if (notification.Processed == false) { %>
                       <span class="bold-xsmall">(new)</span>
