@@ -56,7 +56,7 @@ module.exports = {
     healthCheckUrl: process.env.NOTIFY_HEALTH_CHECK_URL || 'https://api.notifications.service.gov.uk/_status',
   },
   cmdApi: {
-    url: get('CMD_API_URL', 'http://localhost:9191'),
+    url: get('CMD_API_URL', 'http://localhost:8080'),
   },
   hmppsCookie: {
     name: process.env.HMPPS_COOKIE_NAME || 'hmpps-session-dev',
