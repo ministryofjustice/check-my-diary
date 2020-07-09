@@ -143,7 +143,7 @@ module.exports = function createApp({ signInService }) {
   app.set('DataServices', {
     calendarService,
     calendarOvertimeService,
-    notificationService: DEPRECATEnotificationService,
+    DEPRECATEnotificationService,
     userAuthenticationService,
   })
 

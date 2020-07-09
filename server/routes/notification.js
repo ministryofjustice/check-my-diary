@@ -21,11 +21,11 @@ router.get(
   asyncMiddleware(async (req, res) => {
     logger.info('GET notifications settings')
 
-    const { notificationService } = req.app.get('DataServices')
+    const { DEPRECATEnotificationService } = req.app.get('DataServices')
 
     if (req.hmppsAuthMFAUser) res.render('pages/error.ejs', { error: new Error('Not found'), message: 'Not found' })
 
-    const userNotificationSettings = await notificationService.getUserNotificationSettings(req.user.username)
+    const userNotificationSettings = await DEPRECATEnotificationService.getUserNotificationSettings(req.user.username)
 
     if (userNotificationSettings === null || userNotificationSettings.length === 0) {
       res.render('pages/notification-settings', {
@@ -65,7 +65,7 @@ router.post(
     // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req)
 
-    const { notificationService } = req.app.get('DataServices')
+    const { DEPRECATEnotificationService } = req.app.get('DataServices')
 
     if (!errors.isEmpty()) {
       const data = {
@@ -86,7 +86,7 @@ router.post(
         authUrl: req.authUrl,
       })
     } else {
-      await notificationService.updateUserNotificationSettings(
+      await DEPRECATEnotificationService.updateUserNotificationSettings(
         req.user.username,
         req.body.inputEmail === '' ? null : req.body.inputEmail,
         req.body.inputMobile === '' ? null : req.body.inputMobile,
@@ -101,7 +101,7 @@ router.post(
 router.get(
   '/:page',
   asyncMiddleware(async (req, res) => {
-    const { notificationService } = req.app.get('DataServices')
+    const { DEPRECATEnotificationService } = req.app.get('DataServices')
     try {
       const reqData = req.query
       const pagination = {}
@@ -114,8 +114,8 @@ router.get(
       Promise.all([
         // This should be replaced with a non-paged call that shows only recent notifications.
         // This isn't an audit!!
-        notificationService.getShiftNotifications(req.user.username),
-        notificationService.getShiftNotificationsPaged(req.user.username, offset, perPage),
+        DEPRECATEnotificationService.getShiftNotifications(req.user.username),
+        DEPRECATEnotificationService.getShiftNotificationsPaged(req.user.username, offset, perPage),
       ]).then(([count, rows]) => {
         // eslint-disable-next-line radix
         pagination.total = count.length
@@ -143,8 +143,8 @@ router.get(
 
       logger.info('GET notifications view')
 
-      await notificationService.updateShiftNotificationsToRead(req.user.username)
-      await notificationService.updateShiftTaskNotificationsToRead(req.user.username)
+      await DEPRECATEnotificationService.updateShiftNotificationsToRead(req.user.username)
+      await DEPRECATEnotificationService.updateShiftTaskNotificationsToRead(req.user.username)
     } catch (error) {
       serviceUnavailable(req, res)
     }
