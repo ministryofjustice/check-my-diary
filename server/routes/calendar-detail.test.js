@@ -1,8 +1,7 @@
 const request = require('supertest')
-const createRouter = require('./calendar-detail')
-const standardRouter = require('./standardRouter')
-const { authenticationMiddleware } = require('./testutils/mockAuthentication')
+const calendarRoute = require('./calendar-detail')
 const appSetup = require('./testutils/appSetup')
+const logger = require('../../log')
 
 const fakeCalendarDetailData1 = {
   tasks: [
@@ -109,19 +108,15 @@ const calendarOvertimeService = {
   getCalendarOvertimeDetails: jest.fn(),
 }
 
-const logger = {
+jest.mock('../../log', () => ({
   info: jest.fn(),
   error: jest.fn(),
-}
-
-const standardRoute = standardRouter({ authenticationMiddleware })
-const calendarRoute = standardRoute(createRouter(logger, userAuthenticationService))
+}))
 
 let app
 
 beforeEach(() => {
-  const service = { calendarService, calendarOvertimeService }
-  app = appSetup(calendarRoute, service)
+  app = appSetup(calendarRoute, { calendarService, calendarOvertimeService, userAuthenticationService })
   userAuthenticationService.getUserAuthenticationDetails.mockReturnValue(fakeUserAuthenticationDetails)
 })
 
