@@ -3,27 +3,18 @@ const knex = require('knex')
 const db = require('../database')
 
 const DEPRECATEnotificationService = {
-  // this is only used to count the number of notifications in calendar.ejs, and we have two other methods in this class that do the same thing.
+  // this is only used to count the number of notifications in calendar.ejs
   async getShiftNotifications(quantumId) {
     return db
-      .select(
-        knex.raw(
-          `"DESCRIPTION" as "Description", "LAST_MODIFIED_DATE_TIME" as "LastModifiedDateTime", "PROCESSED" as "Processed"`,
-        ),
-      )
-      .from('SHIFT_NOTIFICATION')
-      .where('QUANTUM_ID', '=', quantumId.toLowerCase())
+      .select('quantum_id', 'last_modified')
+      .from('shift_notification')
+      .where('quantum_id', '=', quantumId.toLowerCase())
       .union(
         db
-          .select(
-            knex.raw(
-              `"DESCRIPTION" as "Description", "LAST_MODIFIED_DATE_TIME" as "LastModifiedDateTime", "PROCESSED" as "Processed"`,
-            ),
-          )
-          .from('SHIFT_TASK_NOTIFICATION')
-          .where('QUANTUM_ID', '=', quantumId.toLowerCase()),
+          .select('quantum_id', 'last_modified')
+          .from('shift_task_notification')
+          .where('quantum_id', '=', quantumId.toLowerCase()),
       )
-      .orderBy('LastModifiedDateTime', 'desc')
       .catch((err) => {
         throw err
       })
@@ -31,44 +22,36 @@ const DEPRECATEnotificationService = {
 
   getShiftNotificationsPaged(quantumId, offset, perPage) {
     return db
-      .select(
-        knex.raw(
-          `"DESCRIPTION" as "Description", "LAST_MODIFIED_DATE_TIME" as "LastModifiedDateTime", "PROCESSED" as "Processed"`,
-        ),
-      )
-      .from('SHIFT_NOTIFICATION')
-      .where('QUANTUM_ID', '=', quantumId.toLowerCase())
+      .select(knex.raw(`description AS "Description", last_modified AS "LastModifiedDateTime"`))
+      .from('shift_notification')
+      .where('quantum_id', '=', quantumId.toLowerCase())
       .union(
         db
-          .select(
-            knex.raw(
-              `"DESCRIPTION" as "Description", "LAST_MODIFIED_DATE_TIME" as "LastModifiedDateTime", "PROCESSED" as "Processed"`,
-            ),
-          )
-          .from('SHIFT_TASK_NOTIFICATION')
-          .where('QUANTUM_ID', '=', quantumId.toLowerCase()),
+          .select(knex.raw(`description AS "Description", last_modified AS "LastModifiedDateTime"`))
+          .from('shift_task_notification')
+          .where('quantum_id', '=', quantumId.toLowerCase()),
       )
       .offset(offset)
       .limit(perPage)
-      .orderBy('LastModifiedDateTime', 'desc')
+      .orderBy('LastModifiedDateTime', 'DESC')
       .catch((err) => {
         throw err
       })
   },
 
   updateShiftNotificationsToRead(quantumId) {
-    db('SHIFT_NOTIFICATION')
-      .where({ QUANTUM_ID: `${quantumId.toLowerCase()}`, READ: false })
-      .update({ READ: true })
+    db('shift_notification')
+      .where({ quantum_id: `${quantumId.toLowerCase()}`, processed: false })
+      .update({ processed: true })
       .catch((err) => {
         throw err
       })
   },
 
   updateShiftTaskNotificationsToRead(quantumId) {
-    db('SHIFT_TASK_NOTIFICATION')
-      .where({ QUANTUM_ID: `${quantumId.toLowerCase()}`, READ: false })
-      .update({ READ: true })
+    db('shift_task_notification')
+      .where({ quantum_id: `${quantumId.toLowerCase()}`, processed: false })
+      .update({ processed: true })
       .catch((err) => {
         throw err
       })

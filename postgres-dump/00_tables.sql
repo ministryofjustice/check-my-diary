@@ -1,7 +1,7 @@
 drop table if exists "NotificationConfiguration";
 drop table if exists "UserNotificationSetting";
-drop table if exists "SHIFT_TASK_NOTIFICATION";
-drop table if exists "SHIFT_NOTIFICATION";
+drop table if exists shift_task_notification;
+drop table if exists shift_notification;
 drop table if exists "UserAuthentication";
 drop table if exists "Prison";
 
@@ -36,26 +36,26 @@ create table "UserAuthentication"
 );
 
 
-create table "SHIFT_NOTIFICATION"
-(   "ID"                                 serial                   primary key ,
-    "QUANTUM_ID"                         varchar(50)              not null,
-    "DESCRIPTION"                        varchar(500),
-    "SHIFT_DATE"                         timestamp with time zone not null,
-    "LAST_MODIFIED_DATE_TIME"            timestamp with time zone not null,
-    "PROCESSED"                          boolean default false    not null,
-    "NOTIFICATION_TYPE"                  smallint);
+create table shift_notification
+(   id                                 serial                   primary key ,
+    quantum_id                         varchar(50)              not null,
+    description                        varchar(500),
+    shift_date                         timestamp with time zone not null,
+    last_modified                       timestamp with time zone not null,
+    processed                          boolean default false    not null,
+    notification_type                  smallint);
 
 
-create table "SHIFT_TASK_NOTIFICATION"
-(   "ID"                                 serial                   primary key ,
-    "QUANTUM_ID"                         varchar(50)              not null,
-    "DESCRIPTION"                        varchar(500),
-    "TASK_DATE"                          timestamp with time zone not null,
-    "TASK_START_TIME_IN_SECONDS"         integer                  not null,
-    "TASK_END_TIME_IN_SECONDS"           integer                  not null,
-    "ACTIVITY"                           varchar(500),
-    "LAST_MODIFIED_DATE_TIME"            timestamp with time zone not null,
-    "PROCESSED"                          boolean default false    not null);
+create table shift_task_notification
+(   id                                 serial                   primary key ,
+    quantum_id                        varchar(50)              not null,
+    description                       varchar(500),
+    task_date                          timestamp with time zone not null,
+    task_start_time_in_seconds         integer                  not null,
+    task_end_time_in_seconds           integer                  not null,
+    activity                           varchar(500),
+    last_modified                       timestamp with time zone not null,
+    processed                          boolean default false    not null);
 
 
 create table "UserNotificationSetting"
