@@ -139,7 +139,7 @@ router.get(
           hmppsAuthMFAUser: req.hmppsAuthMFAUser,
           authUrl: req.authUrl,
           isSnoozed: moment(snoozeUntil).isAfter(moment()),
-          snoozeUntil,
+          snoozeUntil: moment(snoozeUntil).format('DD MMMM YYYY'),
         })
       })
 
