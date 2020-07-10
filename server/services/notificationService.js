@@ -3,7 +3,7 @@ const logger = require('../../log')
 const baseUrl = require('../../config').cmdApi.url
 
 module.exports = {
-  get(accessToken) {
+  getPreferences(accessToken) {
     return axios
       .get(`${baseUrl}/preferences/notifications`, {
         headers: {

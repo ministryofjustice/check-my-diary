@@ -1,4 +1,6 @@
 const router = require('express').Router()
+const moment = require('moment')
+
 const { check, validationResult } = require('express-validator')
 const asyncMiddleware = require('../middleware/asyncMiddleware')
 const logger = require('../../log')
@@ -101,7 +103,7 @@ router.post(
 router.get(
   '/:page',
   asyncMiddleware(async (req, res) => {
-    const { DEPRECATEnotificationService } = req.app.get('DataServices')
+    const { DEPRECATEnotificationService, notificationService } = req.app.get('DataServices')
     try {
       const reqData = req.query
       const pagination = {}
@@ -116,7 +118,8 @@ router.get(
         // This isn't an audit!!
         DEPRECATEnotificationService.getShiftNotifications(req.user.username),
         DEPRECATEnotificationService.getShiftNotificationsPaged(req.user.username, offset, perPage),
-      ]).then(([count, rows]) => {
+        notificationService.getPreferences(),
+      ]).then(([count, rows, { snoozeUntil }]) => {
         // eslint-disable-next-line radix
         pagination.total = count.length
         pagination.per_page = perPage
@@ -138,6 +141,8 @@ router.get(
           csrfToken: res.locals.csrfToken,
           hmppsAuthMFAUser: req.hmppsAuthMFAUser,
           authUrl: req.authUrl,
+          isSnoozed: moment(snoozeUntil).isAfter(moment()),
+          snoozeUntil,
         })
       })
 

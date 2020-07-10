@@ -28,6 +28,7 @@ const authenticationMiddleware = require('./middleware/authenticationMiddleware'
 const calendarService = require('./services/calendarService')
 const calendarOvertimeService = require('./services/calendarOvertimeService')
 const DEPRECATEnotificationService = require('./services/DEPRECATEnotificationService')
+const notificationService = require('./services/notificationService')
 const authHandlerMiddleware = require('./middleware/authHandlerMiddleware')
 const csrfTokenMiddleware = require('./middleware/csrfTokenMiddleware')
 
@@ -144,6 +145,7 @@ module.exports = function createApp({ signInService }) {
     calendarService,
     calendarOvertimeService,
     DEPRECATEnotificationService,
+    notificationService,
     userAuthenticationService,
   })
 
