@@ -1,10 +1,10 @@
 version: '3.1'
 services:
-  postgres:
-    image: postgres
+  check-my-diary-db:
+    image: postgres:10.6
     networks:
       - hmpps
-    container_name: postgres
+    container_name: check-my-diary-db
     restart: always
     ports:
       - '5432:5432'
@@ -26,19 +26,20 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
 
   cmd-api:
-    #image: quay.io/hmpps/cmd-api:latest
-    build: ../../IdeaProjects/moj-cmd-api/
+    image: quay.io/hmpps/cmd-api:latest
     networks:
       - hmpps
     container_name: cmd-api
     ports:
-      - '8081:8080'
+      - '8080:8080'
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8080/health']
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - DATABASE_ENDPOINT=postgres:5432
-      - LOGGING_LEVEL_ROOT=DEBUG
+      - DATABASE_USERNAME=check-my-diary
+      - DATABASE_PASSWORD=check-my-diary
+      - DATABASE_NAME=check-my-diary
 
 networks:
   hmpps:

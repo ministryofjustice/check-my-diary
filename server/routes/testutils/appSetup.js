@@ -5,13 +5,13 @@ const bodyParser = require('body-parser')
 const cookieSession = require('cookie-session')
 const path = require('path')
 
-module.exports = (route, service) => {
+module.exports = (route, services) => {
   const app = express()
 
   app.set('views', path.join(__dirname, '../../views'))
   app.set('view engine', 'ejs')
 
-  app.set('DataServices', service)
+  app.set('DataServices', services)
 
   app.use((req, res, next) => {
     ;(req.user = {
