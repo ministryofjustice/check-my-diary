@@ -10,6 +10,7 @@ module.exports = {
           authorization: `Bearer ${accessToken}`,
         },
       })
+      .then((response) => response.data)
       .catch((error) => {
         logger.error(`notificationService : ${error}`)
         return error

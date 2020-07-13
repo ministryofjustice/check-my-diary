@@ -118,8 +118,8 @@ router.get(
         // This isn't an audit!!
         DEPRECATEnotificationService.getShiftNotifications(req.user.username),
         DEPRECATEnotificationService.getShiftNotificationsPaged(req.user.username, offset, perPage),
-        notificationService.getPreferences(),
-      ]).then(([count, rows, { snoozeUntil }]) => {
+        notificationService.getPreferences(req.user.token),
+      ]).then(([count, rows, preferences]) => {
         // eslint-disable-next-line radix
         pagination.total = count.length
         pagination.per_page = perPage
@@ -141,8 +141,8 @@ router.get(
           csrfToken: res.locals.csrfToken,
           hmppsAuthMFAUser: req.hmppsAuthMFAUser,
           authUrl: req.authUrl,
-          isSnoozed: moment(snoozeUntil).isAfter(moment()),
-          snoozeUntil: moment(snoozeUntil).format('DD MMMM YYYY'),
+          isSnoozed: moment(preferences.snoozeUntil).isAfter(moment()),
+          snoozeUntil: moment(preferences.snoozeUntil).format('DD MMMM YYYY'),
         })
       })
 
