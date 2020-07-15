@@ -97,6 +97,16 @@ router.post(
   }),
 )
 
+router.post(
+  '/snooze',
+  asyncMiddleware(async (req, res) => {
+    const { notificationService } = req.app.get('DataServices')
+    // console.log({token: req.user.token});
+    await notificationService.resumeNotifications(req.user.token)
+    res.redirect('/notifications/1')
+  }),
+)
+
 router.get(
   '/:page',
   asyncMiddleware(async (req, res) => {
