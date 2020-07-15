@@ -3,6 +3,17 @@ const knex = require('knex')
 const db = require('../database')
 
 const DEPRECATEnotificationService = {
+  // this is only used to count the number of notifications in calendar.ejs
+  async getShiftNotifications(quantumId) {
+    return db
+      .select('quantum_id', 'last_modified')
+      .from('shift_notification')
+      .where('quantum_id', '=', quantumId.toLowerCase())
+      .catch((err) => {
+        throw err
+      })
+  },
+
   getShiftNotificationsPaged(quantumId, offset, perPage) {
     return db
       .select(knex.raw(`description AS "Description", shift_modified AS "LastModifiedDateTime"`))
