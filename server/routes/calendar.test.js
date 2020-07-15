@@ -623,7 +623,7 @@ const fakeUserAuthenticationDetails = [
   },
 ]
 
-const notificationService = {
+const DEPRECATEnotificationService = {
   getShiftNotifications: jest.fn(),
 }
 
@@ -650,11 +650,11 @@ beforeEach(() => {
   app = appSetup(calendarRoute, {
     calendarService,
     calendarOvertimeService,
-    notificationService,
+    DEPRECATEnotificationService,
     userAuthenticationService,
   })
 
-  notificationService.getShiftNotifications.mockReturnValue(fakeShiftNotifications)
+  DEPRECATEnotificationService.getShiftNotifications.mockReturnValue(fakeShiftNotifications)
   userAuthenticationService.getUserAuthenticationDetails.mockReturnValue(fakeUserAuthenticationDetails)
 })
 
@@ -687,7 +687,7 @@ describe('GET and POST for /:date', () => {
 
         expect(calendarService.getCalendarData).toHaveBeenCalledTimes(1)
         expect(calendarOvertimeService.getCalendarOvertimeData).toHaveBeenCalledTimes(1)
-        expect(notificationService.getShiftNotifications).toHaveBeenCalledTimes(1)
+        expect(DEPRECATEnotificationService.getShiftNotifications).toHaveBeenCalledTimes(1)
         expect(userAuthenticationService.getUserAuthenticationDetails).toHaveBeenCalledTimes(1)
         expect(logger.info).toHaveBeenCalledTimes(1)
       })
@@ -716,7 +716,7 @@ describe('GET and POST for /:date', () => {
 
         expect(calendarService.getCalendarData).toHaveBeenCalledTimes(1)
         expect(calendarOvertimeService.getCalendarOvertimeData).toHaveBeenCalledTimes(1)
-        expect(notificationService.getShiftNotifications).toHaveBeenCalledTimes(1)
+        expect(DEPRECATEnotificationService.getShiftNotifications).toHaveBeenCalledTimes(1)
         expect(userAuthenticationService.getUserAuthenticationDetails).toHaveBeenCalledTimes(1)
         expect(logger.info).toHaveBeenCalledTimes(1)
       })

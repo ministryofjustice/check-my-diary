@@ -15,7 +15,8 @@ const healthcheckFactory = require('./services/healthcheck')
 const loginRouter = require('./routes/login')
 const calendarRouter = require('./routes/calendar')
 const calendarDetailRouter = require('./routes/calendar-detail')
-const maintenanceRouter = require('./routes/maintenance')
+const maintenance = require('./middleware/maintenance')
+const contactUs = require('./middleware/contact-us')
 const notificationRouter = require('./routes/notification')
 const logger = require('../log.js')
 const auth = require('./authentication/auth')
@@ -28,6 +29,7 @@ const authenticationMiddleware = require('./middleware/authenticationMiddleware'
 const calendarService = require('./services/calendarService')
 const calendarOvertimeService = require('./services/calendarOvertimeService')
 const DEPRECATEnotificationService = require('./services/DEPRECATEnotificationService')
+const notificationService = require('./services/notificationService')
 const authHandlerMiddleware = require('./middleware/authHandlerMiddleware')
 const csrfTokenMiddleware = require('./middleware/csrfTokenMiddleware')
 
@@ -143,7 +145,8 @@ module.exports = function createApp({ signInService }) {
   app.set('DataServices', {
     calendarService,
     calendarOvertimeService,
-    notificationService: DEPRECATEnotificationService,
+    DEPRECATEnotificationService,
+    notificationService,
     userAuthenticationService,
   })
 
@@ -221,10 +224,11 @@ module.exports = function createApp({ signInService }) {
   app.use(authenticationMiddleware, csrfTokenMiddleware)
   app.use('/', loginRouter)
   app.use(authHandlerMiddleware)
+  app.use('/contact-us', contactUs)
   app.use('/calendar', calendarRouter)
   app.use('/details', calendarDetailRouter)
   app.use('/notifications', notificationRouter)
-  app.use('/maintenance', maintenanceRouter)
+  app.use('/maintenance', maintenance)
 
   app.use((req, res, next) => {
     next(new Error('Not found'))

@@ -5,7 +5,6 @@ const deleteRows = (table) => db(table).del()
 
 const clearNotificationTables = async () => {
   await deleteRows('shift_notification')
-  await deleteRows('shift_task_notification')
 }
 
 const destroy = async (done) => {
