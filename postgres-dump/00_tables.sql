@@ -36,14 +36,19 @@ create table "UserAuthentication"
 );
 
 
-create table shift_notification
-(   id                                 serial                   primary key ,
-    quantum_id                         varchar(50)              not null,
-    description                        varchar(500),
-    shift_date                         timestamp with time zone not null,
-    shift_modified                       timestamp with time zone not null,
-    processed                          boolean default false    not null,
-    notification_type                  smallint);
+CREATE TABLE shift_notification
+(
+    id             SERIAL PRIMARY KEY,
+    quantum_id     VARCHAR               NOT NULL,
+    shift_date     DATE                  NOT NULL,
+    shift_modified TIMESTAMP             NOT NULL,
+    task_start     INT,
+    task_end       INT,
+    task           VARCHAR,
+    shift_type     VARCHAR               NOT NULL,
+    action_type    VARCHAR               NOT NULL,
+    processed      BOOLEAN DEFAULT FALSE NOT NULL
+);
 
 create table "UserNotificationSetting"
 (
