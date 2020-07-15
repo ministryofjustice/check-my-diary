@@ -1,4 +1,6 @@
 const router = require('express').Router()
+const moment = require('moment')
+
 const { check, validationResult } = require('express-validator')
 const asyncMiddleware = require('../middleware/asyncMiddleware')
 const logger = require('../../log')
@@ -21,9 +23,8 @@ router.get(
   asyncMiddleware(async (req, res) => {
     logger.info('GET notifications settings')
 
-    const { notificationService } = req.app.get('DataServices')
-
-    const userNotificationSettings = await notificationService.getUserNotificationSettings(req.user.username)
+    const { DEPRECATEnotificationService } = req.app.get('DataServices')
+    const userNotificationSettings = await DEPRECATEnotificationService.getUserNotificationSettings(req.user.username)
 
     if (userNotificationSettings === null || userNotificationSettings.length === 0) {
       res.render('pages/notification-settings', {
@@ -63,7 +64,7 @@ router.post(
     // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req)
 
-    const { notificationService } = req.app.get('DataServices')
+    const { DEPRECATEnotificationService } = req.app.get('DataServices')
 
     if (!errors.isEmpty()) {
       const data = {
@@ -84,7 +85,7 @@ router.post(
         authUrl: req.authUrl,
       })
     } else {
-      await notificationService.updateUserNotificationSettings(
+      await DEPRECATEnotificationService.updateUserNotificationSettings(
         req.user.username,
         req.body.inputEmail === '' ? null : req.body.inputEmail,
         req.body.inputMobile === '' ? null : req.body.inputMobile,
@@ -99,7 +100,7 @@ router.post(
 router.get(
   '/:page',
   asyncMiddleware(async (req, res) => {
-    const { notificationService } = req.app.get('DataServices')
+    const { DEPRECATEnotificationService, notificationService } = req.app.get('DataServices')
     try {
       const reqData = req.query
       const pagination = {}
@@ -112,9 +113,10 @@ router.get(
       Promise.all([
         // This should be replaced with a non-paged call that shows only recent notifications.
         // This isn't an audit!!
-        notificationService.getShiftNotifications(req.user.username),
-        notificationService.getShiftNotificationsPaged(req.user.username, offset, perPage),
-      ]).then(([count, rows]) => {
+        DEPRECATEnotificationService.getShiftNotifications(req.user.username),
+        DEPRECATEnotificationService.getShiftNotificationsPaged(req.user.username, offset, perPage),
+        notificationService.getPreferences(req.user.token),
+      ]).then(([count, rows, preferences]) => {
         // eslint-disable-next-line radix
         pagination.total = count.length
         pagination.per_page = perPage
@@ -136,12 +138,14 @@ router.get(
           csrfToken: res.locals.csrfToken,
           hmppsAuthMFAUser: req.hmppsAuthMFAUser,
           authUrl: req.authUrl,
+          isSnoozed: moment(preferences.snoozeUntil).isAfter(moment()),
+          snoozeUntil: moment(preferences.snoozeUntil).format('dddd, Do MMMM, YYYY'),
         })
       })
 
       logger.info('GET notifications view')
 
-      await notificationService.updateShiftNotificationsToRead(req.user.username)
+      await DEPRECATEnotificationService.updateShiftNotificationsToRead(req.user.username)
     } catch (error) {
       serviceUnavailable(req, res)
     }

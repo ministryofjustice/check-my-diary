@@ -3,13 +3,14 @@ const logger = require('../../log')
 const baseUrl = require('../../config').cmdApi.url
 
 module.exports = {
-  get(accessToken) {
+  getPreferences(accessToken) {
     return axios
       .get(`${baseUrl}/preferences/notifications`, {
         headers: {
           authorization: `Bearer ${accessToken}`,
         },
       })
+      .then((response) => response.data)
       .catch((error) => {
         logger.error(`notificationService : ${error}`)
         return error
