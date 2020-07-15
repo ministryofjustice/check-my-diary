@@ -16,7 +16,7 @@ const DEPRECATEnotificationService = {
 
   getShiftNotificationsPaged(quantumId, offset, perPage) {
     return db
-      .select(knex.raw(`'' AS "Description", shift_modified AS "LastModifiedDateTime"`))
+      .select(knex.raw(`shift_modified AS "Description", shift_modified AS "LastModifiedDateTime"`))
       .from('shift_notification')
       .where('quantum_id', '=', quantumId.toLowerCase())
       .offset(offset)
