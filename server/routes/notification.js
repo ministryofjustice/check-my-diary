@@ -146,7 +146,6 @@ router.get(
       logger.info('GET notifications view')
 
       await DEPRECATEnotificationService.updateShiftNotificationsToRead(req.user.username)
-      await DEPRECATEnotificationService.updateShiftTaskNotificationsToRead(req.user.username)
     } catch (error) {
       serviceUnavailable(req, res)
     }
