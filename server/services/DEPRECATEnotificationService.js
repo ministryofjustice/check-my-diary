@@ -6,7 +6,7 @@ const DEPRECATEnotificationService = {
   // this is only used to count the number of notifications in calendar.ejs
   async getShiftNotifications(quantumId) {
     return db
-      .select('quantum_id', 'last_modified')
+      .select('quantum_id', 'shift_modified')
       .from('shift_notification')
       .where('quantum_id', '=', quantumId.toLowerCase())
       .catch((err) => {
@@ -16,7 +16,7 @@ const DEPRECATEnotificationService = {
 
   getShiftNotificationsPaged(quantumId, offset, perPage) {
     return db
-      .select(knex.raw(`description AS "Description", shift_modified AS "LastModifiedDateTime"`))
+      .select(knex.raw(`'' AS "Description", shift_modified AS "LastModifiedDateTime"`))
       .from('shift_notification')
       .where('quantum_id', '=', quantumId.toLowerCase())
       .offset(offset)
