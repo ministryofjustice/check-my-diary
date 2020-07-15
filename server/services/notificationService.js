@@ -2,7 +2,7 @@ const axios = require('axios')
 const logger = require('../../log')
 const baseUrl = require('../../config').cmdApi.url
 
-module.exports = {
+const notificationService = {
   getPreferences(accessToken) {
     return axios
       .get(`${baseUrl}/preferences/notifications`, {
@@ -30,4 +30,11 @@ module.exports = {
         return error
       })
   },
+
+  resumeNotifications(accessToken) {
+    console.log('in resume')
+    return notificationService.updateSnooze(accessToken, new Date())
+  },
 }
+
+module.exports = notificationService
