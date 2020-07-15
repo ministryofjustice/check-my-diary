@@ -24,9 +24,6 @@ router.get(
     logger.info('GET notifications settings')
 
     const { DEPRECATEnotificationService } = req.app.get('DataServices')
-
-    if (req.hmppsAuthMFAUser) res.render('pages/error.ejs', { error: new Error('Not found'), message: 'Not found' })
-
     const userNotificationSettings = await DEPRECATEnotificationService.getUserNotificationSettings(req.user.username)
 
     if (userNotificationSettings === null || userNotificationSettings.length === 0) {
