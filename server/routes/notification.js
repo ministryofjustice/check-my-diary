@@ -142,7 +142,6 @@ router.get(
       logger.info('GET notifications view')
 
       await notificationService.updateShiftNotificationsToRead(req.user.username)
-      await notificationService.updateShiftTaskNotificationsToRead(req.user.username)
     } catch (error) {
       serviceUnavailable(req, res)
     }
