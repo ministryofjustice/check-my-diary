@@ -40,6 +40,12 @@ env:
         name: {{ template "app.name" . }}
         key: NOTIFY_CLIENT_KEY
 
+  - name: CMD_API_URL
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "app.name" . }}
+        key: CMD_API_URL
+
   - name: NOTIFY_SMS_TEMPLATE
     value: {{ .Values.env.NOTIFY_SMS_TEMPLATE | quote }}
 
