@@ -34,32 +34,17 @@ env:
   - name: REJECT_UNAUTHORIZED
     value: {{ .Values.env.REJECT_UNAUTHORIZED | quote }}
 
-  - name: NOTIFY_CLIENT_KEY
-    valueFrom:
-      secretKeyRef:
-        name: {{ template "app.name" . }}
-        key: NOTIFY_CLIENT_KEY
-
   - name: CMD_API_URL
     valueFrom:
       secretKeyRef:
         name: {{ template "app.name" . }}
         key: CMD_API_URL
 
-  - name: NOTIFY_SMS_TEMPLATE
-    value: {{ .Values.env.NOTIFY_SMS_TEMPLATE | quote }}
-
-  - name: NOTIFY_EMAIL_TEMPLATE
-    value: {{ .Values.env.NOTIFY_EMAIL_TEMPLATE | quote }}
-
   - name: GOOGLE_ANALYTICS_ID
     valueFrom:
       secretKeyRef:
         name: {{ template "app.name" . }}
         key: GOOGLE_ANALYTICS_ID
-
-  - name: WEB_SESSION_TIMEOUT_IN_MINUTES
-    value: {{ .Values.env.WEB_SESSION_TIMEOUT_IN_MINUTES | quote }}
 
   - name: "HMPPS_COOKIE_NAME"
     value: {{ template "app.name" . }}
@@ -99,9 +84,6 @@ env:
 
   - name: REGIONS
     value: {{ .Values.env.REGIONS | quote }}
-
-  - name: QUANTUM_ADDRESS
-    value: {{ .Values.env.QUANTUM_ADDRESS | quote }}
 
   - name: MAINTENANCE_START
     value: {{ .Values.env.MAINTENANCE_START | quote }}

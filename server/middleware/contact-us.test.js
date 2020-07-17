@@ -5,11 +5,10 @@ describe('contact-us middleware', () => {
   const username = 'sausages'
   const employeeName = 'Bacon Eggs'
   const csrfToken = 'tomato'
-  const hmppsAuthMFAUser = 'a cup of tea'
   const authUrl = 'cooked-breakfast.nom'
   beforeEach(() => {
     const res = { render: renderMock, locals: { csrfToken } }
-    const req = { user: { username, employeeName }, hmppsAuthMFAUser, authUrl }
+    const req = { user: { username, employeeName }, authUrl }
     contactUs(req, res)
   })
   it('should call the render function once', () => {
@@ -18,6 +17,6 @@ describe('contact-us middleware', () => {
   })
   it('should call the render function with the correct parameters', () => {
     expect(renderMock.mock.calls[0][0]).toBe('pages/contact-us')
-    expect(renderMock.mock.calls[0][1]).toEqual({ uid: username, employeeName, csrfToken, hmppsAuthMFAUser, authUrl })
+    expect(renderMock.mock.calls[0][1]).toEqual({ uid: username, employeeName, csrfToken, authUrl })
   })
 })

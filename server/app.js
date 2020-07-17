@@ -30,7 +30,6 @@ const calendarService = require('./services/calendarService')
 const calendarOvertimeService = require('./services/calendarOvertimeService')
 const DEPRECATEnotificationService = require('./services/DEPRECATEnotificationService')
 const notificationService = require('./services/notificationService')
-const authHandlerMiddleware = require('./middleware/authHandlerMiddleware')
 const csrfTokenMiddleware = require('./middleware/csrfTokenMiddleware')
 
 const version = moment.now().toString()
@@ -60,10 +59,8 @@ module.exports = function createApp({ signInService }) {
   // Server Configuration
   app.set('port', config.port || 3005)
 
-  // Secure code best practice - see:
-  // 1. https://expressjs.com/en/advanced/best-practice-security.html,
-  // 2. https://www.npmjs.com/package/helmet
-  app.use(helmet())
+  // Don't cache dynamic resources
+  app.use(helmet.noCache())
 
   app.use(addRequestId)
 
@@ -175,9 +172,6 @@ module.exports = function createApp({ signInService }) {
 
   app.use(addTemplateVariables)
 
-  // Don't cache dynamic resources
-  app.use(helmet.noCache())
-
   // CSRF protection
   if (!testMode) {
     app.use(csurf())
@@ -213,8 +207,6 @@ module.exports = function createApp({ signInService }) {
 
   app.use('/logout', async (req, res) => {
     if (req.user) {
-      await userAuthenticationService.updateSessionExpiryDateTime(req.user.username)
-
       req.logout()
     }
     res.redirect(authLogoutUrl)
@@ -223,7 +215,6 @@ module.exports = function createApp({ signInService }) {
   // Routing
   app.use(authenticationMiddleware, csrfTokenMiddleware)
   app.use('/', loginRouter)
-  app.use(authHandlerMiddleware)
   app.use('/contact-us', contactUs)
   app.use('/calendar', calendarRouter)
   app.use('/details', calendarDetailRouter)

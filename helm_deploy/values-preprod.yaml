@@ -1,7 +1,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 4
+replicaCount: 2
 
 image:
   repository: quay.io/hmpps/check-my-diary
@@ -18,10 +18,7 @@ ingress:
 env:
   TWO_FACT_AUTH_ON: "true"
   REJECT_UNAUTHORIZED: "0"
-  NOTIFY_SMS_TEMPLATE: "0e9efabf-f4f8-4077-aa71-41b7b288740b"
-  NOTIFY_EMAIL_TEMPLATE: "48a98f49-189f-42f2-a97a-be9d65bcce9f"
   WEB_SESSION_TIMEOUT_IN_MINUTES: "20"
   MAINTENANCE_START: "2019-12-20T14:00:00"
   MAINTENANCE_END: "2019-12-20T15:00:00"
-  QUANTUM_ADDRESS: "212.137.36.230/32,62.25.109.197/32,195.92.38.16/28,35.177.125.252,35.177.137.160,195.59.75.0/24,194.33.192.0/25,194.33.193.0/25,194.33.196.0/25,194.33.197.0/25"
   REGIONS: "https://api.check-my-diary-preprod.hmpps.dsd.io/api/health"
