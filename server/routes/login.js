@@ -2,6 +2,7 @@ const router = require('express').Router()
 const { NotifyClient } = require('notifications-node-client')
 const ipRangeCheck = require('ip-range-check')
 const jwtDecode = require('jwt-decode')
+const moment = require('moment')
 const asyncMiddleware = require('../middleware/asyncMiddleware')
 const logError = require('../logError')
 const config = require('../../config')
@@ -54,19 +55,19 @@ router.post(
 )
 
 const postLogin = asyncMiddleware(async (req, res) => {
-  // if maintenance start/end dates exist then dcheck whether to display maintenance page
-  // otherwise just ignore the following, it will become effective as soon as those environment
-  // variables are created.  13DEC19.
   try {
     if (!utilities.isNullOrEmpty(config.maintenance.start) && !utilities.isNullOrEmpty(config.maintenance.end)) {
       // eslint-disable-next-line vars-on-top
-      const maintenanceStartDateTime = Date.parse(config.maintenance.start) ? new Date(config.maintenance.start) : null
-      const maintenanceEndDateTime = Date.parse(config.maintenance.end) ? new Date(config.maintenance.end) : null
-
-      if (utilities.calculateMaintenanceDates(maintenanceStartDateTime, maintenanceEndDateTime)) {
+      const maintenanceStartDateTime = moment(config.maintenance.start)
+      const maintenanceEndDateTime = moment(config.maintenance.end)
+      const currentDateTime = moment()
+      if (
+        currentDateTime.isSameOrAfter(maintenanceStartDateTime) &&
+        currentDateTime.isSameOrBefore(maintenanceEndDateTime)
+      ) {
         res.render('pages/maintenance', {
-          startDateTime: maintenanceStartDateTime,
-          endDateTime: maintenanceEndDateTime,
+          startDateTime: maintenanceStartDateTime.format('hh:mm on dddd Do MMMM YYYY'),
+          endDateTime: maintenanceEndDateTime.format('hh:mm on dddd Do MMMM YYYY'),
           csrfToken: res.locals.csrfToken,
         })
         return
