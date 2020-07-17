@@ -2,101 +2,89 @@
 
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
-<head>
-  <% include ../partials/head %>
-</head>
-<body class="govuk-template__body">
+  <head>
+    <% include ../partials/head %>
+  </head>
+  <body class="govuk-template__body">
 
-<% include ../partials/header %>
+  <% include ../partials/header %>
 
-<div class="govuk-width-container">
+  <div class="govuk-width-container">
 
-  <% include ../partials/beta-banner %>
+    <% include ../partials/beta-banner %>
+  
+    <main id="main-content" role="main">
+      <div class="tabs-wrapper">
+        <ul class="tabs">
+          <li ><a href="/calendar/<%= getStartMonth() %>">Calendar</a></li>
+          <li><a class="active" href="">Notifications
 
-  <main id="main-content" role="main">
-    <div class="tabs-wrapper">
-      <ul class="tabs">
-        <li ><a href="/calendar/<%= getStartMonth() %>">Calendar</a></li>
-        <li><a class="active" href="">Notifications
+                <% if (shiftNotifications != null && shiftNotifications.length > 0) { %>
+                  <% if (shiftNotifications.filter(function(x){return x.Processed==false}).length > 0) { %>
+                      <span class="govuk-notifications-indicator"><%= shiftNotifications.filter(function(x){return x.Processed==false}).length %> new</span>
+                  <% } %>
+                <% } %>
 
-            <% if (shiftNotifications != null && shiftNotifications.length > 0) { %>
-              <% if (shiftNotifications.filter(function(x){return x.Processed==false}).length > 0) { %>
-                  <span class="govuk-notifications-indicator"><%= shiftNotifications.filter(function(x){return x.Processed==false}).length %> new</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div id="notifications" class="govuk-grid-row">
+        <% if (snoozeUntil) { %>
+          <% include ../partials/snooze-banner %>
+        <% } %>
+        <div class="govuk-grid-column-two-thirds">
+          <div class="govuk-notifications">
+            <ul>
+              <% if (shiftNotifications != null && shiftNotifications.length > 0) { %>
+                <% shiftNotifications.forEach(function(notification){ %>
+                  <li>
+                    <span class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0"> <%= getRelativeLastModifiedDateTime(notification.LastModifiedDateTime) %>
+
+                      <% if (notification.Processed == false) { %>
+                        <span class="bold-xsmall">(new)</span>
+                      <% } %>
+
+                    </p>
+                    <p class="govuk-body govuk-!-font-size-16"><%= notification.Description %></p>
+                  </li>
+                <% }) %>
               <% } %>
-            <% } %>
-
-        </a></li>
-      </ul>
-    </div>
-
-    <div id="notifications" class="govuk-grid-row">
-        <% if (isSnoozed) { %>
-          <div class="moj-banner">
-
-            <svg class="moj-banner__icon" fill="currentColor" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
-            <path d="M13.7,18.5h-2.4v-2.4h2.4V18.5z M12.5,13.7c-0.7,0-1.2-0.5-1.2-1.2V7.7c0-0.7,0.5-1.2,1.2-1.2s1.2,0.5,1.2,1.2v4.8
-            C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.4,12-12S19.1,0.5,12.5,0.5z" /></svg>
-
-            <div class="moj-banner__message">
-
-            <h2 class="govuk-heading-s">Notifications paused until <%= snoozeUntil %></h2>
-            </div>
-
-            </div>
-        <% } %>
-      <div class="govuk-grid-column-two-thirds">
-        <div class="govuk-notifications">
-          <ul>
-            <% if (shiftNotifications != null && shiftNotifications.length > 0) { %>
-              <% shiftNotifications.forEach(function(notification){ %>
-                <li>
-                  <span class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0"> <%= getRelativeLastModifiedDateTime(notification.LastModifiedDateTime) %>
-
-                    <% if (notification.Processed == false) { %>
-                      <span class="bold-xsmall">(new)</span>
-                    <% } %>
-
-                  </p>
-                  <p class="govuk-body govuk-!-font-size-16"><%= notification.Description %></p>
-                </li>
-              <% }) %>
-            <% } %>
-          </ul>
-        </div>
-        <% if (data.total === 0) { %>
-          <%- include('../partials/summary', {message: 'There are no notifications to show for this account.'}); %>
-        <% } else if (data.per_page > data.total) { %>
-        <% } else if (data.current_page < 2) { %>
-          <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.next_page%>">Load older notifications</a>
-        <% } else if (data.last_page === data.next_page-1) { %>
-          <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.previous_page%>">Load newer notifications</a>
-        <% } else { %>
-          <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.previous_page%>">Load newer notifications</a> | <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.next_page%>">Load older notifications</a>
-        <% } %>
-
-      </div>
-      <div class="govuk-grid-column-one-third">
-
-        <div class="moj-card">
-
-          <div class="moj-card__body govuk-!-padding-4">
-
-            <p class="govuk-body">Get notifications to your email or phone</p>
-            <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/settings">Notification settings</a>
-
+            </ul>
           </div>
+          <% if (data.total === 0) { %>
+          	<%- include('../partials/summary', {message: 'There are no notifications to show for this account.'}); %>
+          <% } else if (data.per_page > data.total) { %>
+          <% } else if (data.current_page < 2) { %>
+            <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.next_page%>">Load older notifications</a>
+          <% } else if (data.last_page === data.next_page-1) { %>
+            <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.previous_page%>">Load newer notifications</a>
+          <% } else { %>
+            <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.previous_page%>">Load newer notifications</a> | <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.next_page%>">Load older notifications</a>
+          <% } %>
 
         </div>
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
+        <div class="govuk-grid-column-one-third">
+
+            <section class="govuk-!-padding-2 govuk-!-padding-bottom-6">
+
+              <p class="govuk-body">Get notifications to your email or phone</p>
+              <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/settings">Notification settings</a>
+
+            </section>
+
+          <% include ../partials/pause-notifcations %>
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
+
+        </div>
 
       </div>
-    </div>
 
-  </main>
+    </main>
 
-</div>
+  </div>
 
-<% include ../partials/footer %>
+  <% include ../partials/footer %>
 
-</body>
+  </body>
 </html>

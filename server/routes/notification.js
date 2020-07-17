@@ -1,9 +1,10 @@
 const router = require('express').Router()
-const moment = require('moment')
-
 const { check, validationResult } = require('express-validator')
-const asyncMiddleware = require('../middleware/asyncMiddleware')
+
+const getNotificationMiddleware = require('../middleware/getNotificationMiddleware')
 const logger = require('../../log')
+const postNotificationMiddleware = require('../middleware/postNotificationMiddleware')
+const validate = require('../middleware/validate')
 
 /**
  * Service unavailable
@@ -18,37 +19,25 @@ function serviceUnavailable(req, res) {
   })
 }
 
-router.get(
-  '/settings',
-  asyncMiddleware(async (req, res) => {
-    logger.info('GET notifications settings')
-
-    const { DEPRECATEnotificationService } = req.app.get('DataServices')
-    const userNotificationSettings = await DEPRECATEnotificationService.getUserNotificationSettings(req.user.username)
-
-    if (userNotificationSettings === null || userNotificationSettings.length === 0) {
-      res.render('pages/notification-settings', {
-        errors: null,
-        userNotificationSettings: null,
-        uid: req.user.username,
-        employeeName: req.user.employeeName,
-        csrfToken: res.locals.csrfToken,
-        hmppsAuthMFAUser: req.hmppsAuthMFAUser,
-        authUrl: req.authUrl,
-      })
-    } else {
-      res.render('pages/notification-settings', {
-        errors: null,
-        userNotificationSettings: userNotificationSettings[0],
-        uid: req.user.username,
-        employeeName: req.user.employeeName,
-        csrfToken: res.locals.csrfToken,
-        hmppsAuthMFAUser: req.hmppsAuthMFAUser,
-        authUrl: req.authUrl,
-      })
-    }
-  }),
-)
+router.get('/settings', async (req, res) => {
+  logger.info('GET notifications settings')
+  const {
+    user: { username, employeeName },
+    hmppsAuthMFAUser,
+    app,
+  } = req
+  const { DEPRECATEnotificationService } = app.get('DataServices')
+  const userNotificationSettings = await DEPRECATEnotificationService.getUserNotificationSettings(username)
+  res.render('pages/notification-settings', {
+    errors: null,
+    userNotificationSettings: userNotificationSettings[0] || null,
+    uid: username,
+    employeeName,
+    csrfToken: res.locals.csrfToken,
+    hmppsAuthMFAUser,
+    authUrl: req.authUrl,
+  })
+})
 
 router.post(
   '/settings',
@@ -58,7 +47,7 @@ router.post(
     // mobile number
     check('inputMobile', 'Must be a valid mobile number').optional({ checkFalsy: true }).isMobilePhone('en-GB'),
   ],
-  asyncMiddleware(async (req, res) => {
+  async (req, res) => {
     logger.info('POST notifications settings')
 
     // Finds the validation errors in this request and wraps them in an object with handy functions
@@ -94,62 +83,36 @@ router.post(
       )
       res.redirect('/notifications/1')
     }
-  }),
+  },
 )
 
-router.get(
-  '/:page',
-  asyncMiddleware(async (req, res) => {
-    const { DEPRECATEnotificationService, notificationService } = req.app.get('DataServices')
-    try {
-      const reqData = req.query
-      const pagination = {}
-      const perPage = reqData.perPage || 10
-      // eslint-disable-next-line radix
-      let page = parseInt(req.params.page) || 2
-      if (page < 1) page = 1
-      const offset = (page - 1) * perPage
+router.post('/resume', async (req, res) => {
+  try {
+    const {
+      user: { token },
+      app,
+    } = req
+    const {
+      notificationService: { resumeNotifications },
+    } = app.get('DataServices')
+    await resumeNotifications(token)
+    res.redirect('back')
+  } catch (error) {
+    serviceUnavailable(req, res)
+  }
+})
 
-      Promise.all([
-        // This should be replaced with a non-paged call that shows only recent notifications.
-        // This isn't an audit!!
-        DEPRECATEnotificationService.getShiftNotifications(req.user.username),
-        DEPRECATEnotificationService.getShiftNotificationsPaged(req.user.username, offset, perPage),
-        notificationService.getPreferences(req.user.token),
-      ]).then(([count, rows, preferences]) => {
-        // eslint-disable-next-line radix
-        pagination.total = count.length
-        pagination.per_page = perPage
-        pagination.offset = offset
-        pagination.to = offset + rows.length
-        pagination.last_page = Math.ceil(count.length / perPage)
-        pagination.current_page = page
-        pagination.previous_page = page - 1
-        pagination.next_page = page + 1
-        pagination.from = offset
-        pagination.data = rows
-
-        res.render('pages/notifications', {
-          data: pagination,
-          shiftNotifications: rows,
-          tab: 'Notifications',
-          uid: req.user.username,
-          employeeName: req.user.employeeName,
-          csrfToken: res.locals.csrfToken,
-          hmppsAuthMFAUser: req.hmppsAuthMFAUser,
-          authUrl: req.authUrl,
-          isSnoozed: moment(preferences.snoozeUntil).isAfter(moment()),
-          snoozeUntil: moment(preferences.snoozeUntil).format('dddd, Do MMMM, YYYY'),
-        })
-      })
-
-      logger.info('GET notifications view')
-
-      await DEPRECATEnotificationService.updateShiftNotificationsToRead(req.user.username)
-    } catch (error) {
-      serviceUnavailable(req, res)
-    }
-  }),
-)
+router
+  .route('/:page')
+  .get(getNotificationMiddleware)
+  .post(
+    [
+      check('pauseValue', 'Must be a number under 100').exists({ checkFalsy: true }).isInt({ min: 1, max: 99 }),
+      check('pauseUnit', 'Must be selected').exists({ checkFalsy: true }).isIn(['days', 'weeks', 'months']),
+    ],
+    validate,
+    postNotificationMiddleware,
+    getNotificationMiddleware,
+  )
 
 module.exports = router

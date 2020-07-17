@@ -1,8 +1,10 @@
 const axios = require('axios')
+const moment = require('moment')
+
 const logger = require('../../log')
 const baseUrl = require('../../config').cmdApi.url
 
-module.exports = {
+const notificationService = {
   getPreferences(accessToken) {
     return axios
       .get(`${baseUrl}/preferences/notifications`, {
@@ -18,16 +20,27 @@ module.exports = {
   },
 
   updateSnooze(accessToken, snoozeUntil) {
+    logger.info(`updateSnooze until ${snoozeUntil}`)
     return axios
-      .put(`${baseUrl}/preferences/notifications/snooze`, {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
+      .put(
+        `${baseUrl}/preferences/notifications/snooze`,
+        { snoozeUntil },
+        {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
         },
-        data: { snoozeUntil },
-      })
+      )
       .catch((error) => {
         logger.error(`notificationService : ${error}`)
         return error
       })
   },
+
+  resumeNotifications(accessToken) {
+    logger.info('resume notification')
+    return notificationService.updateSnooze(accessToken, moment().format('YYYY-MM-DD'))
+  },
 }
+
+module.exports = notificationService
