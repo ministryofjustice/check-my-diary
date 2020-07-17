@@ -200,33 +200,4 @@ getMonthAndYear = (currentDate) => {
   return months[parseInt(splitDate[1] - 1, 10)] + ' ' + splitDate[0];
 }
 
-getDateTimeNowUTC = () => {
-
-  var now = new Date();
-  var utc_timestamp =  Date.UTC(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate() ,
-      now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds());
-  return new Date(utc_timestamp);
-}
-
-getRelativeLastModifiedDateTime = (dateTime) => {
-
-  var s = ( +getDateTimeNowUTC() - dateTime ) / 1e3,
-    m = s / 60,
-    h = m / 60,
-    d = h / 24,
-    y = d / 365.242199,
-    tmp;
-
-  return ( tmp = Math.round(s) ) === 1 ? 'just now'
-       : m < 1.01                      ? tmp + ' seconds ago'
-       : ( tmp = Math.round(m) ) === 1 ? 'a minute ago'
-       : h < 1.01                      ? tmp + ' minutes ago'
-       : ( tmp = Math.round(h) ) === 1 ? 'an hour ago'
-       : d < 1.01                      ? tmp + ' hours ago'
-       : ( tmp = Math.round(d) ) === 1 ? 'yesterday'
-       : y < 1.01                      ? tmp + ' days ago'
-       : ( tmp = Math.round(y) ) === 1 ? 'a year ago'
-       : tmp + ' years ago';
-}
-
 %>

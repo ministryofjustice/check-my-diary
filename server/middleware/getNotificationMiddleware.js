@@ -1,3 +1,4 @@
+const moment = require('moment')
 const logger = require('../../log')
 const { getSnoozeUntil } = require('../helpers/utilities')
 
@@ -59,6 +60,7 @@ const getNotificationMiddleware = async (req, res, next) => {
       hmppsAuthMFAUser,
       authUrl,
       snoozeUntil: getSnoozeUntil(snoozeUntil),
+      moment,
     })
   } catch (error) {
     res.local.error = error
