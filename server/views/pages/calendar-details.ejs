@@ -30,7 +30,7 @@
 
                 <% if (task.startDateTime !== task.date + 'T00:00:00' && task.endDateTime !== task.date + 'T23:59:59') { %>
 
-                  <% if (task.dailyStartDateTime == "null" && task.dailyEndDateTime == "null") { %>
+                  <% if (checkIfDateTimeIsNull(task.dailyStartDateTime) && checkIfDateTimeIsNull(task.dailyEndDateTime)) { %>
 
                     <% if (task.taskType === 'Absence' || task.taskType === 'Break') { %>
                       <li class="<% if (index === 0) { %>detail-start<% } %>">
@@ -64,7 +64,7 @@
                       <% } %>
                     <% }  %>
 
-                  <% } else if (task.dailyEndDateTime == "null" && !task.dailyStartDateTime == "null") { %>
+                  <% } else if (checkIfDateTimeIsNull(task.dailyEndDateTime) && !checkIfDateTimeIsNull(task.dailyStartDateTime)) { %>
                     <li class="<% if (index === 0) { %>detail-start-night<% } %>">
                       <span class="time"><%= getTimeFromDate(task.dailyStartDateTime) %> </span>
                       <span class="description">
@@ -72,7 +72,7 @@
                         <% } %>
                         <%= task.label %></span>
                     </li>
-                  <% } else if (!task.dailyEndDateTime == "null" && task.dailyStartDateTime == "null") { %>
+                  <% } else if (!checkIfDateTimeIsNull(task.dailyEndDateTime) && checkIfDateTimeIsNull(task.dailyStartDateTime)) { %>
                     <% if (index === data.tasks.length - 1) { %>
                       <li class="detail-finish">
                         <span class="time"><%= getTimeFromDate(task.dailyEndDateTime) %></span>

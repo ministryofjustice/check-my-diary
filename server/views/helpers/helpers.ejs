@@ -33,6 +33,14 @@ checkIfStartDateTimeBeforeEndDateTime = (startDateTime, endDateTime) => {
   }
 }
 
+checkIfDateTimeIsNull = (dateTime) => {
+  if (dateTime == "null"){
+    return true;
+  } else {
+    return false;
+  }
+}
+
 getNextDate = (dateTime) => {
   var today = new Date(dateTime);
   var tomorrow = today.setDate(today.getDate()+1);
