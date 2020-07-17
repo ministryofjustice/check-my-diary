@@ -1,3 +1,4 @@
+const moment = require('moment')
 const crypto = require('crypto')
 const jwtDecode = require('jwt-decode')
 const log = require('../../log')
@@ -130,6 +131,11 @@ function processOvertimeShifts(shiftsData, overtimeShiftsData) {
 
 const hmppsAuthMFAUser = (token) => jwtDecode(token).authorities.includes('ROLE_MFA')
 
+const getSnoozeUntil = (rawSnoozeUntil) => {
+  const snoozeUntil = moment(rawSnoozeUntil)
+  return snoozeUntil.isAfter(moment()) ? snoozeUntil.format('dddd, Do MMMM, YYYY') : ''
+}
+
 module.exports = {
   getStartMonth,
   getEndDate,
@@ -142,4 +148,5 @@ module.exports = {
   configureCalendar,
   processOvertimeShifts,
   hmppsAuthMFAUser,
+  getSnoozeUntil,
 }

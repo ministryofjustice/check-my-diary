@@ -1,0 +1,42 @@
+<section class="govuk-!-padding-2">
+  <% if(errors && errors.length > 0){ %>
+    <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+      <h2 class="govuk-error-summary__title" id="error-summary-title">
+        Pause notifications failed
+      </h2>
+      <div class="govuk-error-summary__body">
+        <ul class="govuk-list govuk-error-summary__list">
+          <% errors.forEach((error) => { %>
+            <li>
+              <%= error %>
+            </li>
+          <% }) %>
+        </ul>
+      </div>
+    </div>
+  <% } %>
+  <h2 class="govuk-heading-m">Pause notifications</h2>
+  <p class="govuk-body">
+    You can stop receiving notifications for a period of time.
+  </p>
+  <p class="govuk-body">
+    How long do you want to pause notifications for?
+  </p>
+  <form method="post" novalidate>
+    <div class="govuk-form-group">
+      <input class="govuk-input govuk-input--width-2 govuk-!-margin-right-2" type="number" id="pauseValue" name="pauseValue" min="1" max="99">
+      <select class="govuk-select" id="pauseUnit" name="pauseUnit">
+        <option value="days" selected>Days</option>
+        <option value="weeks">Weeks</option>
+        <option value="months">Months</option>
+      </select>
+    </div>
+    <button class="govuk-button govuk-!-margin-right-2" data-module="govuk-button" type="submit">
+      Confirm
+    </button>
+    <button class="govuk-button govuk-button--secondary" data-module="govuk-button" id='snoozeClear' type="reset"> 
+      Clear
+    </button>
+  </form>
+
+</section>
