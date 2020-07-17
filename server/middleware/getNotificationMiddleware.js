@@ -4,13 +4,15 @@ const { getSnoozeUntil } = require('../helpers/utilities')
 const getNotificationMiddleware = async (req, res, next) => {
   try {
     const {
-      user: { username, token },
+      user: { username, employeeName, token },
       query: reqData,
       params: { page: rawPage },
       app,
+      hmppsAuthMFAUser,
+      authUrl,
     } = req
     const {
-      locals: { errors = null },
+      locals: { errors = null, csrfToken },
     } = res
 
     const {
@@ -51,11 +53,11 @@ const getNotificationMiddleware = async (req, res, next) => {
       data: pagination,
       shiftNotifications: rows,
       tab: 'Notifications',
-      uid: req.user.username,
-      employeeName: req.user.employeeName,
-      csrfToken: res.locals.csrfToken,
-      hmppsAuthMFAUser: req.hmppsAuthMFAUser,
-      authUrl: req.authUrl,
+      uid: username,
+      employeeName,
+      csrfToken,
+      hmppsAuthMFAUser,
+      authUrl,
       snoozeUntil: getSnoozeUntil(snoozeUntil),
     })
   } catch (error) {
