@@ -13,7 +13,7 @@
 
   <% include ../partials/beta-banner %>
 
-  <a href="/calendar/<%=getCurrentMonth(date)%>" class="govuk-back-link">Back</a>
+  <a href="/calendar" class="govuk-back-link">Back</a>
 
   <main id="main-content" class="govuk-main-wrapper govuk-!-margin-bottom-8" role="main">
 
@@ -139,14 +139,14 @@
 
           </ul>
           <% } %>
-          
-          <% if (overtimeShiftDetailsData != null && overtimeShiftDetailsData.tasks.length > 0) { %>         
+
+          <% if (overtimeShiftDetailsData != null && overtimeShiftDetailsData.tasks.length > 0) { %>
             <span class="app-shift-detail" style="font-weight: bold;">Overtime</span>
 
             <ul class="app-shift-detail">
-           
+
               <% overtimeShiftDetailsData.tasks.forEach(function(task, index){ %>
-  
+
                 <% if (task.taskType === 'Absence' || task.taskType === 'Break') { %>
                     <li class="<% if (index === 0) { %>detail-start-overtime<% } %>">
                       <span class="time"><%= getTimeFromDate(task.startDateTime) %> - <%= getTimeFromDate(task.endDateTime) %></span>
@@ -155,7 +155,7 @@
                         <% } %>
                         <%= task.label %></span>
                     </li>
-  
+
                     <% if (index === overtimeShiftDetailsData.tasks.length - 1) { %>
                       <li class="detail-finish-overtime">
                         <span class="time"><%= getTimeFromDate(task.endDateTime) %></span>
@@ -170,7 +170,7 @@
                         <% } %>
                         <%= task.label %></span>
                     </li>
-  
+
                     <% if (index === overtimeShiftDetailsData.tasks.length - 1) { %>
                       <li class="detail-finish-overtime">
                         <span class="time"><%= getTimeFromDate(task.endDateTime) %></span>
@@ -190,7 +190,7 @@
               class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 app-link-!-border "><%= getNextDay(getDayOfWeek(data.tasks[0].date)) %> <%= parseFullDateFormat(getNextDate(data.tasks[0].date)) %> &rarr;</a>
 
           </div>
-        
+
 		<input type="hidden" name="_csrf" value="<%= csrfToken %>" />
     </div>
   </main>
