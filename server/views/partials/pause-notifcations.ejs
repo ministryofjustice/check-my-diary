@@ -24,6 +24,7 @@
   </p>
   <form method="post" novalidate>
     <div class="govuk-form-group">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
       <input class="govuk-input govuk-input--width-2 govuk-!-margin-right-2" type="number" id="pauseValue" name="pauseValue" min="1" max="99">
       <select class="govuk-select" id="pauseUnit" name="pauseUnit">
         <option value="days" selected>Days</option>
