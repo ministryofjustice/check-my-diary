@@ -66,8 +66,8 @@ const postLogin = asyncMiddleware(async (req, res) => {
         currentDateTime.isSameOrBefore(maintenanceEndDateTime)
       ) {
         res.render('pages/maintenance', {
-          startDateTime: maintenanceStartDateTime.format('hh:mm on dddd Do MMMM YYYY'),
-          endDateTime: maintenanceEndDateTime.format('hh:mm on dddd Do MMMM YYYY'),
+          startDateTime: maintenanceStartDateTime.format('hh:mm on dddd Do MMMM'),
+          endDateTime: maintenanceEndDateTime.format('hh:mm on dddd Do MMMM'),
           csrfToken: res.locals.csrfToken,
         })
         return
