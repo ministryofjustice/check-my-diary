@@ -59,8 +59,7 @@ module.exports = function createApp({ signInService }) {
   // Server Configuration
   app.set('port', config.port || 3005)
 
-  // Don't cache dynamic resources
-  app.use(helmet.noCache())
+  app.use(helmet())
 
   app.use(addRequestId)
 
