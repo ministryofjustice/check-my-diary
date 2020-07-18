@@ -1,6 +1,5 @@
 const router = require('express').Router()
 const utilities = require('../helpers/utilities')
-const asyncMiddleware = require('../middleware/asyncMiddleware')
 const logger = require('../../log')
 
 function serviceUnavailable(req, res) {
@@ -11,52 +10,49 @@ function serviceUnavailable(req, res) {
     csrfToken: res.locals.csrfToken,
   })
 }
-router.get(
-  '/:date',
-  asyncMiddleware(async (req, res) => {
-    logger.info('GET calendar view')
-    const {
-      calendarService,
-      calendarOvertimeService,
-      DEPRECATEnotificationService,
-      userAuthenticationService,
-    } = req.app.get('DataServices')
+router.get('/:date', async (req, res) => {
+  logger.info('GET calendar view')
+  const {
+    calendarService,
+    calendarOvertimeService,
+    DEPRECATEnotificationService,
+    userAuthenticationService,
+  } = req.app.get('DataServices')
 
-    try {
-      const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
+  try {
+    const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
 
-      const shiftNotifications = await DEPRECATEnotificationService.getShiftNotifications(req.user.username)
+    const shiftNotifications = await DEPRECATEnotificationService.getShiftNotifications(req.user.username)
 
-      const apiShiftsResponse = await calendarService.getCalendarData(
-        userAuthenticationDetails[0].ApiUrl,
-        req.params.date,
-        req.user.token,
-      )
+    const apiShiftsResponse = await calendarService.getCalendarData(
+      userAuthenticationDetails[0].ApiUrl,
+      req.params.date,
+      req.user.token,
+    )
 
-      const apiOvertimeShiftsResponse = await calendarOvertimeService.getCalendarOvertimeData(
-        userAuthenticationDetails[0].ApiUrl,
-        req.params.date,
-        req.user.token,
-      )
+    const apiOvertimeShiftsResponse = await calendarOvertimeService.getCalendarOvertimeData(
+      userAuthenticationDetails[0].ApiUrl,
+      req.params.date,
+      req.user.token,
+    )
 
-      const results = utilities.processOvertimeShifts(apiShiftsResponse, apiOvertimeShiftsResponse)
+    const results = utilities.processOvertimeShifts(apiShiftsResponse, apiOvertimeShiftsResponse)
 
-      res.render('pages/calendar', {
-        shiftNotifications,
-        tab: 'Calendar',
-        startDate: req.params.date,
-        data: results,
-        uid: req.user.username,
-        employeeName: req.user.employeeName,
-        csrfToken: res.locals.csrfToken,
-        hmppsAuthMFAUser: req.hmppsAuthMFAUser,
-        authUrl: req.authUrl,
-      })
-    } catch (error) {
-      serviceUnavailable(req, res)
-    }
-  }),
-)
+    res.render('pages/calendar', {
+      shiftNotifications,
+      tab: 'Calendar',
+      startDate: req.params.date,
+      data: results,
+      uid: req.user.username,
+      employeeName: req.user.employeeName,
+      csrfToken: res.locals.csrfToken,
+      hmppsAuthMFAUser: req.hmppsAuthMFAUser,
+      authUrl: req.authUrl,
+    })
+  } catch (error) {
+    serviceUnavailable(req, res)
+  }
+})
 
 // eslint-disable-next-line func-names
 router.get('*', function (req, res) {
