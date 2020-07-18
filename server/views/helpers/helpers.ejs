@@ -41,14 +41,6 @@ checkIfDateTimeIsNull = (dateTime) => {
   }
 }
 
-checkIfDateTimeIsNullOrUndefined = (dateTime) => {
-  if (typeof dateTime == 'undefined' || !dateTime || dateTime.length === 0 || dateTime === ''){
-    return true;
-  } else {
-    return false;
-  }
-}
-
 getNextDate = (dateTime) => {
   var today = new Date(dateTime);
   var tomorrow = today.setDate(today.getDate()+1);
