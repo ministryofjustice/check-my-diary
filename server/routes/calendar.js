@@ -1,4 +1,5 @@
 const router = require('express').Router()
+const moment = require('moment')
 const utilities = require('../helpers/utilities')
 const asyncMiddleware = require('../middleware/asyncMiddleware')
 const logger = require('../../log')
@@ -44,7 +45,7 @@ router.get(
       res.render('pages/calendar', {
         shiftNotifications,
         tab: 'Calendar',
-        startDate: req.params.date,
+        startDate: moment(req.params.date),
         data: results,
         uid: req.user.username,
         employeeName: req.user.employeeName,
