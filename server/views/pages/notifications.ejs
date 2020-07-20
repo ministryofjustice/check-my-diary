@@ -53,8 +53,7 @@
             </ul>
           </div>
           <% if (data.total === 0) { %>
-            <%- include('../partials/error-summary', {message: 'There is no detail information to show for this account.'}); %>
-          <% } else if (data.per_page > data.total) { %>
+            <%- include('../partials/summary', {message: 'There are no notifications to show for this account.'}); %>          <% } else if (data.per_page > data.total) { %>
           <% } else if (data.current_page < 2) { %>
             <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.next_page%>">Load older notifications</a>
           <% } else if (data.last_page === data.next_page-1) { %>
