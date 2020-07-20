@@ -1,12 +1,17 @@
 const router = require('express').Router()
 const moment = require('moment')
 
-const { check, validationResult } = require('express-validator')
+const { check } = require('express-validator')
 
 const { getSnoozeUntil } = require('../helpers/utilities')
 
 const logger = require('../../log')
 const postNotificationMiddleware = require('../middleware/postNotificationMiddleware')
+const notificationSettingsMiddleware = require('../middleware/notificationSettingsMiddleware')
+const {
+  postNotificationSettingsMiddleware,
+  postNotificationSettingsValidationRules,
+} = require('../middleware/postNotificationSettingsMiddleware')
 const validate = require('../middleware/validate')
 
 /**
@@ -22,72 +27,10 @@ function serviceUnavailable(req, res) {
   })
 }
 
-router.get('/settings', async (req, res) => {
-  logger.info('GET notifications settings')
-  const {
-    user: { username, employeeName },
-    hmppsAuthMFAUser,
-    app,
-  } = req
-  const { DEPRECATEnotificationService } = app.get('DataServices')
-  const userNotificationSettings = await DEPRECATEnotificationService.getUserNotificationSettings(username)
-  res.render('pages/notification-settings', {
-    errors: null,
-    userNotificationSettings: userNotificationSettings[0] || null,
-    uid: username,
-    employeeName,
-    csrfToken: res.locals.csrfToken,
-    hmppsAuthMFAUser,
-    authUrl: req.authUrl,
-  })
-})
-
-router.post(
-  '/settings',
-  [
-    // email address
-    check('inputEmail', 'Must be a valid email address').optional({ checkFalsy: true }).isEmail(),
-    // mobile number
-    check('inputMobile', 'Must be a valid mobile number').optional({ checkFalsy: true }).isMobilePhone('en-GB'),
-  ],
-  async (req, res) => {
-    logger.info('POST notifications settings')
-
-    // Finds the validation errors in this request and wraps them in an object with handy functions
-    const errors = validationResult(req)
-
-    const { DEPRECATEnotificationService } = req.app.get('DataServices')
-
-    if (!errors.isEmpty()) {
-      const data = {
-        email: req.body.inputEmail,
-        optionEmail: req.body.optionEmail,
-        mobile: req.body.inputMobile,
-        optionMobile: req.body.optionMobile,
-      }
-
-      res.render('pages/notification-settings', {
-        errors: errors.array(),
-        notificationSettings: data,
-        userNotificationSettings: null,
-        uid: req.user.username,
-        employeeName: req.user.employeeName,
-        csrfToken: res.locals.csrfToken,
-        hmppsAuthMFAUser: req.hmppsAuthMFAUser,
-        authUrl: req.authUrl,
-      })
-    } else {
-      await DEPRECATEnotificationService.updateUserNotificationSettings(
-        req.user.username,
-        req.body.inputEmail === '' ? null : req.body.inputEmail,
-        req.body.inputMobile === '' ? null : req.body.inputMobile,
-        !!(req.body.optionEmail !== undefined && req.body.inputEmail !== ''),
-        !!(req.body.optionMobile !== undefined && req.body.inputMobile !== ''),
-      )
-      res.redirect('/notifications')
-    }
-  },
-)
+router
+  .route('/settings')
+  .get(notificationSettingsMiddleware)
+  .post(postNotificationSettingsValidationRules(), postNotificationSettingsMiddleware)
 
 router.post('/resume', async (req, res) => {
   try {
@@ -107,40 +50,43 @@ router.post('/resume', async (req, res) => {
 
 router
   .route('/')
-  .get(async (req, res) => {
-    const {
-      user: { token },
-      app,
-      hmppsAuthMFAUser,
-    } = req
-
-    const {
-      locals: { csrfToken },
-    } = res
-
-    const { notificationService } = app.get('DataServices')
+  .get(async (req, res, next) => {
     try {
+      const {
+        user: { username, employeeName, token },
+        app,
+        hmppsAuthMFAUser,
+        authUrl,
+      } = req
+
+      const {
+        locals: { csrfToken },
+      } = res
+      let errors
+      const { notificationService } = app.get('DataServices')
       const [{ snoozeUntil }, data] = await Promise.all([
         notificationService.getPreferences(token),
         notificationService.getNotifications(token),
-      ])
+      ]).catch((error) => {
+        errors = error
+      })
 
       logger.info('GET notifications view')
 
       return res.render('pages/notifications', {
-        errors: null,
+        errors,
         data,
         csrfToken,
         hmppsAuthMFAUser,
         snoozeUntil: getSnoozeUntil(snoozeUntil),
         moment,
+        uid: username,
+        employeeName,
+        authUrl,
       })
-    } catch (errors) {
-      return res.render('pages/notifications', {
-        errors,
-        csrfToken,
-        hmppsAuthMFAUser,
-      })
+    } catch (error) {
+      res.locals.error = error
+      return next()
     }
   })
   .post(
