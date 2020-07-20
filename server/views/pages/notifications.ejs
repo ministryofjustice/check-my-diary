@@ -12,11 +12,11 @@
   <div class="govuk-width-container">
 
     <% include ../partials/beta-banner %>
-  
+
     <main id="main-content" role="main">
       <div class="tabs-wrapper">
         <ul class="tabs">
-          <li ><a href="/calendar/<%= getStartMonth() %>">Calendar</a></li>
+          <li ><a href="/calendar">Calendar</a></li>
           <li><a class="active" href="">Notifications
 
                 <% if (shiftNotifications != null && shiftNotifications.length > 0) { %>
@@ -53,8 +53,7 @@
             </ul>
           </div>
           <% if (data.total === 0) { %>
-            <%- include('../partials/error-summary', {message: 'There is no detail information to show for this account.'}); %>
-          <% } else if (data.per_page > data.total) { %>
+            <%- include('../partials/summary', {message: 'There are no notifications to show for this account.'}); %>          <% } else if (data.per_page > data.total) { %>
           <% } else if (data.current_page < 2) { %>
             <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.next_page%>">Load older notifications</a>
           <% } else if (data.last_page === data.next_page-1) { %>
@@ -66,14 +65,12 @@
         </div>
         <div class="govuk-grid-column-one-third">
 
-          <% if (!hmppsAuthMFAUser){%>
             <section class="govuk-!-padding-2 govuk-!-padding-bottom-6">
 
               <p class="govuk-body">Get notifications to your email or phone</p>
               <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/settings">Notification settings</a>
 
             </section>
-          <% } %>
           <% include ../partials/pause-notifcations %>
           <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
 

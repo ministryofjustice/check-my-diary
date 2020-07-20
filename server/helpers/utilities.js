@@ -1,16 +1,15 @@
 const moment = require('moment')
 const crypto = require('crypto')
 const jwtDecode = require('jwt-decode')
+
 const log = require('../../log')
 
 function getStartMonth() {
-  const now = new Date()
-  return [now.getFullYear(), `0${now.getMonth() + 1}`.slice(-2), '01'].join('-')
+  return moment().startOf('month').format('YYYY-MM-DD')
 }
 
 function getEndDate(startDate) {
-  const splitDate = startDate.split('-')
-  return `${splitDate[0]}-${splitDate[1]}-${new Date(splitDate[0], splitDate[1], 0).getDate()}`
+  return moment(startDate).endOf('month').format('YYYY-MM-DD')
 }
 
 function get2faCode() {
@@ -72,11 +71,11 @@ function getAuthErrorDescription(error) {
 function configureCalendar(data, startDate) {
   if (data === null || data.shifts.length === 0) return { shifts: null }
 
-  const convertedStartDate = new Date(startDate)
+  const convertedStartDate = moment(startDate)
 
-  const daysInMonth = new Date(convertedStartDate.getFullYear(), convertedStartDate.getMonth() + 1, 0).getDate()
+  const daysInMonth = convertedStartDate.daysInMonth()
 
-  const pad = convertedStartDate.getDay()
+  const pad = convertedStartDate.day()
 
   const noDay = { type: 'no-day' }
   const prePad = new Array(pad).fill(noDay)
