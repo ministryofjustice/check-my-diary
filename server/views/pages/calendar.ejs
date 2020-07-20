@@ -30,15 +30,15 @@
         </div>
 
         <div class="calendar-controls center-align govuk-!-margin-bottom-8">
-          <h1 class="govuk-heading-m govuk-!-margin-bottom-0"><%= getMonthAndYear(startDate) %></h1>
+          <h1 class="govuk-heading-m govuk-!-margin-bottom-0"><%= startDate.format('MMMM YYYY') %></h1>
           <a
             class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19"
-            href="/calendar/<%=getPreviousMonth(startDate)%>"
+            href="/calendar/<%=startDate.clone().subtract(1, 'M').format('YYYY-MM-DD')%>"
             >Last month</a
           >
           <a
             class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 app-link-!-border"
-            href="/calendar/<%=getNextMonth(startDate)%>"
+            href="/calendar/<%=startDate.clone().add(1, 'M').format('YYYY-MM-DD')%>"
             >Next month</a
           >
         </div>
@@ -226,19 +226,6 @@
           <% }); %> <% } %>
         </ul>
         <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-        <div class="govuk-clearfix"></div>
-        <% if (data != null && data.shifts.length > 0) { %>
-          <details class="govuk-details govuk-!-padding-top-6" data-module="govuk-details">
-            <summary class="govuk-details__summary">
-              <span class="govuk-details__summary-text">
-                These details are not correct
-              </span>
-            </summary>
-            <div class="govuk-details__text">
-              Please call the Service Desk on 0203 788 4636.
-            </div>
-          </details>
-        <% } %>
       </main>
     </div>
 
