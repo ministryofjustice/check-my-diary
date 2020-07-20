@@ -74,7 +74,7 @@ getTimeFromDate = (dateTime) => {
 
 getDayOfWeek = (date) => {
   var dayOfWeek = new Date(date).getDay();
-  return isNaN(dayOfWeek) ? null : ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayOfWeek];
+  return isNaN(dayOfWeek) ? null : getDays()[dayOfWeek];
 }
 
 getDatePartFormatted = (dateTime) => {
@@ -139,65 +139,6 @@ getNextDay = (day) => {
 getPreviousDay = (day) => {
   const days = getDays();
   return days[days.indexOf(day) - 1] || days[days.length - 1];
-}
-
-/**
- * Gets the current month as a date string (YYYY-MM-DD)
- * @returns {string}
- */
-getStartMonth = () => {
-  const now = new Date();
-  return [now.getFullYear(), ('0' + (now.getMonth() + 1)).slice(-2), '01'].join('-');
-}
-
-/**
- * Get the previous month (and year when applicable)
- * @param currentDate
- * @returns {string}
- */
-getPreviousMonth = (currentDate) => {
-  const splitDate = splitString(currentDate, '-'),
-    newMonth = parseInt(splitDate[1], 10) - 1,
-    currentYear = newMonth ? splitDate[0] : parseInt(splitDate[0], 10) - 1;
-
-  return [currentYear, ('0' + (newMonth || 12)).slice(-2), '01'].join('-');
-}
-
-/**
- * Get the current month (and year when applicable)
- * @param currentDate
- * @returns {string}
- */
-getCurrentMonth = (currentDate) => {
-  const splitDate = splitString(currentDate, '-'),
-    currentMonth = parseInt(splitDate[1], 10),
-    currentYear = currentMonth ? splitDate[0] : parseInt(splitDate[0], 10);
-
-  return [currentYear, ('0' + (currentMonth || 12)).slice(-2), '01'].join('-');
-}
-
-/**
- * Get the next month (and year when applicable)
- * @param currentDate
- * @returns {string}
- */
-getNextMonth = (currentDate) => {
-  const splitDate = splitString(currentDate, '-'),
-    newMonth = parseInt(splitDate[1], 10) + 1,
-    currentYear = newMonth < 13 ? splitDate[0] : parseInt(splitDate[0]) + 1;
-
-  return [currentYear, ('0' + (newMonth < 13 ? newMonth : 1)).slice(-2), '01'].join('-');
-}
-
-/**
- * Get the current month name and year
- * @param currentDate
- * @returns {string}
- */
-getMonthAndYear = (currentDate) => {
-  const splitDate = splitString(currentDate, '-'),
-    months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  return months[parseInt(splitDate[1] - 1, 10)] + ' ' + splitDate[0];
 }
 
 getDateTimeNowUTC = () => {
