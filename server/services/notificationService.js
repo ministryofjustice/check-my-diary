@@ -7,7 +7,7 @@ const baseUrl = require('../../config').cmdApi.url
 const notificationService = {
   getNotifications(accessToken) {
     return axios
-      .get(`${baseUrl}/notifications?unreadOnly=true`, {
+      .get(`${baseUrl}/notifications?unprocessedOnly=true`, {
         headers: {
           authorization: `Bearer ${accessToken}`,
         },
