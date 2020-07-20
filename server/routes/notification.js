@@ -1,7 +1,10 @@
 const router = require('express').Router()
+const moment = require('moment')
+
 const { check, validationResult } = require('express-validator')
 
-const getNotificationMiddleware = require('../middleware/getNotificationMiddleware')
+const { getSnoozeUntil } = require('../helpers/utilities')
+
 const logger = require('../../log')
 const postNotificationMiddleware = require('../middleware/postNotificationMiddleware')
 const validate = require('../middleware/validate')
@@ -81,7 +84,7 @@ router.post(
         !!(req.body.optionEmail !== undefined && req.body.inputEmail !== ''),
         !!(req.body.optionMobile !== undefined && req.body.inputMobile !== ''),
       )
-      res.redirect('/notifications/1')
+      res.redirect('/notifications')
     }
   },
 )
@@ -103,8 +106,43 @@ router.post('/resume', async (req, res) => {
 })
 
 router
-  .route('/:page')
-  .get(getNotificationMiddleware)
+  .route('/')
+  .get(async (req, res) => {
+    const {
+      user: { token },
+      app,
+      hmppsAuthMFAUser,
+    } = req
+
+    const {
+      locals: { csrfToken },
+    } = res
+
+    const { notificationService } = app.get('DataServices')
+    try {
+      const [{ snoozeUntil }, data] = await Promise.all([
+        notificationService.getPreferences(token),
+        notificationService.getNotifications(token),
+      ])
+
+      logger.info('GET notifications view')
+
+      return res.render('pages/notifications', {
+        errors: null,
+        data,
+        csrfToken,
+        hmppsAuthMFAUser,
+        snoozeUntil: getSnoozeUntil(snoozeUntil),
+        moment,
+      })
+    } catch (errors) {
+      return res.render('pages/notifications', {
+        errors,
+        csrfToken,
+        hmppsAuthMFAUser,
+      })
+    }
+  })
   .post(
     [
       check('pauseValue', 'Must be a number under 100').exists({ checkFalsy: true }).isInt({ min: 1, max: 99 }),
@@ -112,7 +150,9 @@ router
     ],
     validate,
     postNotificationMiddleware,
-    getNotificationMiddleware,
+    (req, res) => {
+      res.redirect('/notifications')
+    },
   )
 
 module.exports = router
