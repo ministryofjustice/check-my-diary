@@ -5,6 +5,20 @@ const logger = require('../../log')
 const baseUrl = require('../../config').cmdApi.url
 
 const notificationService = {
+  getNotifications(accessToken) {
+    return axios
+      .get(`${baseUrl}/notifications?unreadOnly=true`, {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then((response) => response.data)
+      .catch((error) => {
+        logger.error(`notificationService : ${error}`)
+        return error
+      })
+  },
+
   getPreferences(accessToken) {
     return axios
       .get(`${baseUrl}/preferences/notifications`, {
