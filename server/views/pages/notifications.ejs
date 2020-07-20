@@ -65,14 +65,12 @@
         </div>
         <div class="govuk-grid-column-one-third">
 
-          <% if (!hmppsAuthMFAUser){%>
             <section class="govuk-!-padding-2 govuk-!-padding-bottom-6">
 
               <p class="govuk-body">Get notifications to your email or phone</p>
               <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/settings">Notification settings</a>
 
             </section>
-          <% } %>
           <% include ../partials/pause-notifcations %>
           <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
 
