@@ -1,7 +1,13 @@
 const auth = require('../mockApis/auth')
 const { resetStubs } = require('../mockApis/wiremock')
 const { stubTasks, stubShifts, stubOvertimeShifts } = require('../mockApis/prisonOfficerApi')
-const { stubCount } = require('../mockApis/notificationService')
+const {
+  stubCount,
+  stubNotificationPreferencesGet,
+  stubNotificationUpdate,
+  stubNotificationGet,
+  stubNotificationCount,
+} = require('../mockApis/notificationService')
 const { clearDb, createTablesInsertData } = require('../db/db')
 
 module.exports = (on) => {
@@ -18,5 +24,9 @@ module.exports = (on) => {
     stubCount,
 
     createTablesInsertData,
+    stubNotificationCount,
+
+    stubNotifcations: () =>
+      Promise.all([stubNotificationPreferencesGet(), stubNotificationUpdate(), stubNotificationGet()]),
   })
 }
