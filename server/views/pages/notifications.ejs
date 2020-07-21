@@ -17,15 +17,7 @@
       <div class="tabs-wrapper">
         <ul class="tabs">
           <li ><a href="/calendar">Calendar</a></li>
-          <li><a class="active" href="">Notifications
-
-                <% if (shiftNotifications != null && shiftNotifications.length > 0) { %>
-                  <% if (shiftNotifications.filter(function(x){return x.Processed==false}).length > 0) { %>
-                      <span class="govuk-notifications-indicator"><%= shiftNotifications.filter(function(x){return x.Processed==false}).length %> new</span>
-                  <% } %>
-                <% } %>
-
-            </a>
+          <li><a class="active" href="">Notifications</a>
           </li>
         </ul>
       </div>
@@ -36,30 +28,20 @@
         <div class="govuk-grid-column-two-thirds">
           <div class="govuk-notifications">
             <ul>
-              <% if (shiftNotifications != null && shiftNotifications.length > 0) { %>
-                <% shiftNotifications.forEach(function(notification){ %>
+              <% if (data != null && data.length > 0) { %>
+                <% data.forEach(function(notification){ %>
                   <li>
-                    <span class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0"> <%= getRelativeLastModifiedDateTime(notification.LastModifiedDateTime) %>
-
-                      <% if (notification.Processed == false) { %>
-                        <span class="bold-xsmall">(new)</span>
-                      <% } %>
+                    <span class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0"> <%= getRelativeModifiedDate(moment, notification.shiftModified) %>
 
                     </p>
-                    <p class="govuk-body govuk-!-font-size-16"><%= notification.Description %></p>
+                    <p class="govuk-body govuk-!-font-size-16"><%= notification.description %></p>
                   </li>
                 <% }) %>
               <% } %>
             </ul>
           </div>
-          <% if (data.total === 0) { %>
-            <%- include('../partials/summary', {message: 'There are no notifications to show for this account.'}); %>          <% } else if (data.per_page > data.total) { %>
-          <% } else if (data.current_page < 2) { %>
-            <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.next_page%>">Load older notifications</a>
-          <% } else if (data.last_page === data.next_page-1) { %>
-            <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.previous_page%>">Load newer notifications</a>
-          <% } else { %>
-            <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.previous_page%>">Load newer notifications</a> | <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/<%=data.next_page%>">Load older notifications</a>
+          <% if (data.length === 0) { %>
+            <%- include('../partials/summary', {message: 'There is no detail information to show for this account.'}); %>
           <% } %>
 
         </div>

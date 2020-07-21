@@ -1,5 +1,3 @@
-const knex = require('knex')
-
 const db = require('../database')
 
 const DEPRECATEnotificationService = {
@@ -9,28 +7,6 @@ const DEPRECATEnotificationService = {
       .select('quantum_id', 'shift_modified')
       .from('shift_notification')
       .where('quantum_id', '=', quantumId.toLowerCase())
-      .catch((err) => {
-        throw err
-      })
-  },
-
-  getShiftNotificationsPaged(quantumId, offset, perPage) {
-    return db
-      .select(knex.raw(`shift_modified AS "Description", shift_modified AS "LastModifiedDateTime"`))
-      .from('shift_notification')
-      .where('quantum_id', '=', quantumId.toLowerCase())
-      .offset(offset)
-      .limit(perPage)
-      .orderBy('LastModifiedDateTime', 'DESC')
-      .catch((err) => {
-        throw err
-      })
-  },
-
-  updateShiftNotificationsToRead(quantumId) {
-    db('shift_notification')
-      .where({ quantum_id: `${quantumId.toLowerCase()}`, processed: false })
-      .update({ processed: true })
       .catch((err) => {
         throw err
       })
