@@ -23,7 +23,7 @@ router.get(
     try {
       const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
 
-      const notificationCount = await notificationService.countUnprocessedNotifications(req.user.username)
+      const notificationCount = await notificationService.countUnprocessedNotifications(req.user.token)
 
       const apiShiftsResponse = await calendarService.getCalendarData(
         userAuthenticationDetails[0].ApiUrl,
