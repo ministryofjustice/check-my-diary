@@ -12,6 +12,7 @@ context('A staff member can view their calendar', () => {
 
     cy.task('stubLogin')
     cy.task('stubShifts')
+    cy.task('stubNotificationCount')
     cy.login()
 
     utilities.gotoPreviousCalendarDate('2020-03-01')
