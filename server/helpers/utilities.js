@@ -35,15 +35,6 @@ function isNullOrEmpty(str) {
   return false
 }
 
-function areDatesTheSame(date1, date2) {
-  return (
-    date1.getFullYear() === date2.getFullYear() &&
-    // getMonth is 0-indexed
-    date1.getMonth() === date2.getMonth() &&
-    date1.getDate() === date2.getDate()
-  )
-}
-
 function getAuthErrorDescription(error) {
   log.info(`login error description = ${error}`)
   log.info(
@@ -75,19 +66,6 @@ function getAuthErrorDescription(error) {
     }
   }
   return type
-}
-
-function calculateMaintenanceDates(maintenanceStartDateTime, maintenanceEndDateTime) {
-  let showMaintenancePage = false
-  const currentDateTime = new Date()
-
-  if (maintenanceEndDateTime !== null) {
-    showMaintenancePage = !!(currentDateTime >= maintenanceStartDateTime && currentDateTime <= maintenanceEndDateTime)
-  } else {
-    showMaintenancePage = areDatesTheSame(currentDateTime, maintenanceStartDateTime)
-  }
-
-  return showMaintenancePage
 }
 
 function configureCalendar(data, startDate) {
@@ -140,9 +118,7 @@ module.exports = {
   getEndDate,
   get2faCode,
   isNullOrEmpty,
-  areDatesTheSame,
   getAuthErrorDescription,
-  calculateMaintenanceDates,
   createTwoFactorAuthenticationHash,
   configureCalendar,
   processOvertimeShifts,
