@@ -550,7 +550,7 @@ const stubOvertimeDayShift6 = () =>
     },
   })
 
-  const stubOvertimeDayShift7 = () =>
+const stubOvertimeDayShift7 = () =>
   stubFor({
     priority: '1',
     request: {
@@ -763,7 +763,7 @@ const stubNightShift3 = () =>
     },
   })
 
-  const stubNightShift4 = () =>
+const stubNightShift4 = () =>
   stubFor({
     priority: '1',
     request: {
@@ -791,53 +791,6 @@ const stubNightShift3 = () =>
     },
   })
 
-const stubHealth = async () =>
-  stubFor({
-    request: {
-      method: 'GET',
-      url: '/api/health',
-    },
-    response: {
-      status: 200,
-      headers: {
-        'Content-Type': 'text/plain',
-      },
-      body: 'Healthy',
-    },
-  })
-
-const stubHealthInvision = async () =>
-  stubFor({
-    request: {
-      method: 'GET',
-      url: '/api/health/invision',
-    },
-    response: {
-      status: 200,
-      headers: {
-        'Content-Type': 'text/plain',
-      },
-      body: 'Healthy',
-    },
-  })
-
-const stubNotifyStatus = async () =>
-  stubFor({
-    request: {
-      method: 'GET',
-      url: '/_status',
-    },
-    response: {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      jsonBody: {
-        status: 'ok',
-      },
-    },
-  })
-
 module.exports = {
   stubTasks: () =>
     Promise.all([
@@ -858,5 +811,4 @@ module.exports = {
       stubHoliday(),
     ]),
   stubShifts,
-  stubHealthCalls: () => Promise.all([stubHealth(), stubHealthInvision(), stubNotifyStatus()]),
 }

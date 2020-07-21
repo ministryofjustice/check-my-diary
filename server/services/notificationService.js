@@ -5,9 +5,13 @@ const logger = require('../../log')
 const baseUrl = require('../../config').cmdApi.url
 
 const notificationService = {
-  getNotifications(accessToken) {
+  countUnprocessedNotifications(accessToken) {
+    return this.getNotifications(accessToken, false, true).length
+  },
+
+  getNotifications(accessToken, processOnRead = true, unprocessedOnly = false) {
     return axios
-      .get(`${baseUrl}/notifications?unprocessedOnly=true`, {
+      .get(`${baseUrl}/notifications?processOnRead=${processOnRead}&unprocessedOnly=${unprocessedOnly}`, {
         headers: {
           authorization: `Bearer ${accessToken}`,
         },

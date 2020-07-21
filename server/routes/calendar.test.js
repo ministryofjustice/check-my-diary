@@ -5,32 +5,24 @@ const logger = require('../../log')
 
 const fakeShiftNotifications = [
   {
-    DateTime: '2019-05-29T13:56:55.000Z',
-    Description: 'Your activity on Wednesday 29 May 2019 at 17:00 - 17:30 has changed to [Paternity Leave].',
-    LastModifiedDateTime: '2019-05-29T13:53:01.000Z',
-    LastModifiedDateTimeInSeconds: '1559137981',
-    Processed: true,
+    description: 'Your activity on Wednesday 29 May 2019 at 17:00 - 17:30 has changed to [Paternity Leave].',
+    shiftModified: '2019-05-29T13:53:01.000Z',
+    processed: true,
   },
   {
-    DateTime: '2019-05-29T13:46:27.000Z',
-    Description: 'Your activity on Wednesday 29 May 2019 at 15:00 - 17:00 has changed to [FMI Training].',
-    LastModifiedDateTime: '2019-05-29T13:46:19.000Z',
-    LastModifiedDateTimeInSeconds: '1559137579',
-    Processed: true,
+    description: 'Your activity on Wednesday 29 May 2019 at 15:00 - 17:00 has changed to [FMI Training].',
+    shiftModified: '2019-05-29T13:46:19.000Z',
+    processed: true,
   },
   {
-    DateTime: '2019-05-29T13:43:46.000Z',
-    Description: 'Your activity on Wednesday 29 May 2019 at 17:00 - 17:30 has changed to [Late Roll (OSG)].',
-    LastModifiedDateTime: '2019-05-29T13:43:37.000Z',
-    LastModifiedDateTimeInSeconds: '1559137417',
-    Processed: true,
+    description: 'Your activity on Wednesday 29 May 2019 at 17:00 - 17:30 has changed to [Late Roll (OSG)].',
+    shiftModified: '2019-05-29T13:43:37.000Z',
+    processed: true,
   },
   {
-    DateTime: '2019-05-29T13:38:23.000Z',
-    Description: 'Your activity on Wednesday 29 May 2019 at 15:00 - 17:00 has changed to [FMI Training].',
-    LastModifiedDateTime: '2019-05-29T13:36:43.000Z',
-    LastModifiedDateTimeInSeconds: '1559137003',
-    Processed: true,
+    description: 'Your activity on Wednesday 29 May 2019 at 15:00 - 17:00 has changed to [FMI Training].',
+    shiftModified: '2019-05-29T13:36:43.000Z',
+    processed: true,
   },
 ]
 
@@ -623,10 +615,6 @@ const fakeUserAuthenticationDetails = [
   },
 ]
 
-const DEPRECATEnotificationService = {
-  getShiftNotifications: jest.fn(),
-}
-
 const userAuthenticationService = {
   getUserAuthenticationDetails: jest.fn(),
 }
@@ -637,6 +625,11 @@ const calendarService = {
 
 const calendarOvertimeService = {
   getCalendarOvertimeData: jest.fn(),
+}
+
+const notificationService = {
+  countUnprocessedNotifications: jest.fn(),
+  getNotifications: jest.fn(),
 }
 
 jest.mock('../../log', () => ({
@@ -650,11 +643,11 @@ beforeEach(() => {
   app = appSetup(calendarRoute, {
     calendarService,
     calendarOvertimeService,
-    DEPRECATEnotificationService,
+    notificationService,
     userAuthenticationService,
   })
 
-  DEPRECATEnotificationService.getShiftNotifications.mockReturnValue(fakeShiftNotifications)
+  notificationService.countUnprocessedNotifications.mockReturnValue(fakeShiftNotifications.length)
   userAuthenticationService.getUserAuthenticationDetails.mockReturnValue(fakeUserAuthenticationDetails)
 })
 
@@ -687,7 +680,7 @@ describe('GET and POST for /:date', () => {
 
         expect(calendarService.getCalendarData).toHaveBeenCalledTimes(1)
         expect(calendarOvertimeService.getCalendarOvertimeData).toHaveBeenCalledTimes(1)
-        expect(DEPRECATEnotificationService.getShiftNotifications).toHaveBeenCalledTimes(1)
+        expect(notificationService.countUnprocessedNotifications).toHaveBeenCalledTimes(1)
         expect(userAuthenticationService.getUserAuthenticationDetails).toHaveBeenCalledTimes(1)
         expect(logger.info).toHaveBeenCalledTimes(1)
       })
@@ -716,7 +709,7 @@ describe('GET and POST for /:date', () => {
 
         expect(calendarService.getCalendarData).toHaveBeenCalledTimes(1)
         expect(calendarOvertimeService.getCalendarOvertimeData).toHaveBeenCalledTimes(1)
-        expect(DEPRECATEnotificationService.getShiftNotifications).toHaveBeenCalledTimes(1)
+        expect(notificationService.countUnprocessedNotifications).toHaveBeenCalledTimes(1)
         expect(userAuthenticationService.getUserAuthenticationDetails).toHaveBeenCalledTimes(1)
         expect(logger.info).toHaveBeenCalledTimes(1)
       })

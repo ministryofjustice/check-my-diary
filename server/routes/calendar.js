@@ -16,17 +16,14 @@ router.get(
   '/:date',
   asyncMiddleware(async (req, res) => {
     logger.info('GET calendar view')
-    const {
-      calendarService,
-      calendarOvertimeService,
-      DEPRECATEnotificationService,
-      userAuthenticationService,
-    } = req.app.get('DataServices')
+    const { calendarService, calendarOvertimeService, notificationService, userAuthenticationService } = req.app.get(
+      'DataServices',
+    )
 
     try {
       const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
 
-      const shiftNotifications = await DEPRECATEnotificationService.getShiftNotifications(req.user.username)
+      const notificationCount = await notificationService.countUnprocessedNotifications(req.user.username)
 
       const apiShiftsResponse = await calendarService.getCalendarData(
         userAuthenticationDetails[0].ApiUrl,
@@ -43,7 +40,7 @@ router.get(
       const results = utilities.processOvertimeShifts(apiShiftsResponse, apiOvertimeShiftsResponse)
 
       res.render('pages/calendar', {
-        shiftNotifications,
+        notificationCount,
         tab: 'Calendar',
         startDate: moment(req.params.date),
         data: results,

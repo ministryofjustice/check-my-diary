@@ -17,13 +17,11 @@
             <li><a class="active" href="">Calendar</a></li>
             <li>
               <a href="/notifications"
-                >Notifications <% if (shiftNotifications != null && shiftNotifications.length > 0) { %> <% if
-                (shiftNotifications.filter(function(x){return x.Processed==false}).length > 0) { %>
-
+                >Notifications <% if (notificationCount != null && notificationCount > 0) { %>
                 <span class="loud font-xsmall" style="background-color: #df3034;padding: 0 5px;color: white;"
-                  ><%= shiftNotifications.filter(function(x){return x.Processed==false}).length %> new</span
+                  >(<%= notificationCount %> new)</span
                 >
-                <% } %> <% } %>
+                <% } %>
               </a>
             </li>
           </ul>
