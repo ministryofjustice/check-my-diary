@@ -141,9 +141,9 @@ getDateTimeNowUTC = () => {
   return new Date(utc_timestamp);
 }
 
-getRelativeLastModifiedDateTime = (dateTime) => {
+getRelativeModifiedDate = (moment, modifiedDate) => {
 
-  var s = ( +getDateTimeNowUTC() - dateTime ) / 1e3,
+  var s = ( moment().diff(moment(modifiedDate)))/ 1000,
     m = s / 60,
     h = m / 60,
     d = h / 24,
