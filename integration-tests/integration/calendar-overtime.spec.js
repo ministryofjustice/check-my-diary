@@ -11,7 +11,6 @@ context('A staff member can view their overtime calendar', () => {
     cy.task('reset')
 
     cy.task('stubLogin')
-    cy.task('stubHealthCalls')
     cy.task('stubShifts')
     cy.login()
 
