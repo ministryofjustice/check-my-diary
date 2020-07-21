@@ -26,7 +26,7 @@ describe('getSnoozeUntil', () => {
     dateNow.mockRestore()
   })
   it('should return a formatted date string if the date is in the future', () => {
-    expect(getSnoozeUntil(new Date('4/3/1994'))).toEqual('Sunday, 3rd April, 1994')
+    expect(getSnoozeUntil(new Date('4/2/1994'))).toEqual('Sunday, 3rd April 1994')
   })
   it('should return an empty string if the date is in the past', () => {
     expect(getSnoozeUntil(new Date('26/2/1994'))).toEqual('')

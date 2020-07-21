@@ -110,7 +110,7 @@ const hmppsAuthMFAUser = (token) => jwtDecode(token).authorities.includes('ROLE_
 
 const getSnoozeUntil = (rawSnoozeUntil) => {
   const snoozeUntil = moment(rawSnoozeUntil)
-  return snoozeUntil.isAfter(moment()) ? snoozeUntil.format('dddd, Do MMMM, YYYY') : ''
+  return snoozeUntil.isAfter(moment()) ? snoozeUntil.add(1, 'day').format('dddd, Do MMMM YYYY') : ''
 }
 
 module.exports = {
