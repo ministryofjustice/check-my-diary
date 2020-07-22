@@ -1,7 +1,6 @@
 const router = require('express').Router()
 const moment = require('moment')
 const utilities = require('../helpers/utilities')
-const asyncMiddleware = require('../middleware/asyncMiddleware')
 const logger = require('../../log')
 
 function serviceUnavailable(req, res) {
@@ -12,9 +11,10 @@ function serviceUnavailable(req, res) {
     csrfToken: res.locals.csrfToken,
   })
 }
+
 router.get(
   '/:date',
-  asyncMiddleware(async (req, res) => {
+  async (req, res) => {
     logger.info('GET calendar view')
 
     const { app, user, params, hmppsAuthMFAUser, authUrl } = req
@@ -56,7 +56,7 @@ router.get(
     } catch (error) {
       serviceUnavailable(req, res)
     }
-  }),
+  },
 )
 
 // eslint-disable-next-line func-names
