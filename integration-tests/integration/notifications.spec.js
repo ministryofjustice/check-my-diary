@@ -27,7 +27,7 @@ context('A staff member can view their notifications', () => {
   })
 
   it('Notifications banner is visible', () => {
-    cy.get('h2').contains('Notifications paused until ')
+    cy.get('h2').contains('Your notifications are paused until ')
     cy.get('button').contains('Resume notifications')
   })
 })
