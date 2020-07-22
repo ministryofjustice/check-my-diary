@@ -16,7 +16,7 @@ context('A staff member can view their notifications', () => {
   })
 
   it('Notification page is visible', () => {
-    cy.get('p').contains('Get notifications to your email or phone')
+    cy.get('p').contains('Get notified of shift changes')
   })
 
   it('Notifications are visible', () => {
