@@ -16,42 +16,42 @@ router.get(
   '/:date',
   async (req, res) => {
     logger.info('GET calendar view')
-    const {
-      calendarService,
-      calendarOvertimeService,
-      DEPRECATEnotificationService,
-      userAuthenticationService,
-    } = req.app.get('DataServices')
+
+    const { app, user, params, hmppsAuthMFAUser, authUrl } = req
+
+    const { calendarService, calendarOvertimeService, notificationService, userAuthenticationService } = app.get(
+      'DataServices',
+    )
 
     try {
-      const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
+      const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(user.username)
 
-      const shiftNotifications = await DEPRECATEnotificationService.getShiftNotifications(req.user.username)
+      const notificationCount = await notificationService.countUnprocessedNotifications(user.token)
 
       const apiShiftsResponse = await calendarService.getCalendarData(
         userAuthenticationDetails[0].ApiUrl,
-        req.params.date,
-        req.user.token,
+        params.date,
+        user.token,
       )
 
       const apiOvertimeShiftsResponse = await calendarOvertimeService.getCalendarOvertimeData(
         userAuthenticationDetails[0].ApiUrl,
-        req.params.date,
-        req.user.token,
+        params.date,
+        user.token,
       )
 
       const results = utilities.processOvertimeShifts(apiShiftsResponse, apiOvertimeShiftsResponse)
 
       res.render('pages/calendar', {
-        shiftNotifications,
+        notificationCount,
         tab: 'Calendar',
-        startDate: moment(req.params.date),
+        startDate: moment(params.date),
         data: results,
-        uid: req.user.username,
-        employeeName: req.user.employeeName,
+        uid: user.username,
+        employeeName: user.employeeName,
         csrfToken: res.locals.csrfToken,
-        hmppsAuthMFAUser: req.hmppsAuthMFAUser,
-        authUrl: req.authUrl,
+        hmppsAuthMFAUser,
+        authUrl,
       })
     } catch (error) {
       serviceUnavailable(req, res)

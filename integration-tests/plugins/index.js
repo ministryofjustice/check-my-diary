@@ -1,8 +1,8 @@
 const auth = require('../mockApis/auth')
 const { resetStubs } = require('../mockApis/wiremock')
-const { stubTasks, stubShifts, stubOvertimeShifts, stubHealthCalls } = require('../mockApis/prisonOfficerApi')
+const { stubTasks, stubShifts, stubOvertimeShifts } = require('../mockApis/prisonOfficerApi')
+const { stubCount } = require('../mockApis/notificationService')
 const { clearDb, createTablesInsertData } = require('../db/db')
-const { stubNotificationService } = require('../mockApis/notificationService')
 
 module.exports = (on) => {
   on('task', {
@@ -14,8 +14,8 @@ module.exports = (on) => {
     stubTasks,
     stubShifts,
     stubOvertimeShifts,
-    stubHealthCalls,
-    stubNotificationService,
+
+    stubCount,
 
     createTablesInsertData,
   })

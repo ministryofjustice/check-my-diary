@@ -1,17 +1,6 @@
 const db = require('../database')
 
 const DEPRECATEnotificationService = {
-  // this is only used to count the number of notifications in calendar.ejs
-  async getShiftNotifications(quantumId) {
-    return db
-      .select('quantum_id', 'shift_modified')
-      .from('shift_notification')
-      .where('quantum_id', '=', quantumId.toLowerCase())
-      .catch((err) => {
-        throw err
-      })
-  },
-
   getUserNotificationSettings(quantumId) {
     return db
       .select('EmailAddress', 'Sms', 'UseEmailAddress', 'UseSms')
