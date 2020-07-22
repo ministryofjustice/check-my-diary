@@ -34,9 +34,22 @@ const stubNotificationCount = async () =>
       headers: {
         'Content-Type': 'application/json',
       },
-      jsonBody: {
-        fakeShiftNotifications,
+      jsonBody: fakeShiftNotifications,
+    },
+  })
+
+const stubNotificationGet = async () =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: '/notifications\\?processOnRead=true&unprocessedOnly=false',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
       },
+      jsonBody: fakeShiftNotifications,
     },
   })
 
@@ -75,4 +88,5 @@ module.exports = {
   stubNotificationCount,
   stubNotificationPreferencesGet,
   stubNotificationUpdate,
+  stubNotificationGet,
 }
