@@ -57,34 +57,37 @@ router.post(
     const errors = validationResult(req)
 
     const { DEPRECATEnotificationService } = req.app.get('DataServices')
+    try {
+      if (!errors.isEmpty()) {
+        const data = {
+          email: req.body.inputEmail,
+          optionEmail: req.body.optionEmail,
+          mobile: req.body.inputMobile,
+          optionMobile: req.body.optionMobile,
+        }
 
-    if (!errors.isEmpty()) {
-      const data = {
-        email: req.body.inputEmail,
-        optionEmail: req.body.optionEmail,
-        mobile: req.body.inputMobile,
-        optionMobile: req.body.optionMobile,
+        res.render('pages/notification-settings', {
+          errors: errors.array(),
+          notificationSettings: data,
+          userNotificationSettings: null,
+          uid: req.user.username,
+          employeeName: req.user.employeeName,
+          csrfToken: res.locals.csrfToken,
+          hmppsAuthMFAUser: req.hmppsAuthMFAUser,
+          authUrl: req.authUrl,
+        })
+      } else {
+        await DEPRECATEnotificationService.updateUserNotificationSettings(
+          req.user.username,
+          req.body.inputEmail === '' ? null : req.body.inputEmail,
+          req.body.inputMobile === '' ? null : req.body.inputMobile,
+          !!(req.body.optionEmail !== undefined && req.body.inputEmail !== ''),
+          !!(req.body.optionMobile !== undefined && req.body.inputMobile !== ''),
+        )
+        res.redirect('/notifications')
       }
-
-      res.render('pages/notification-settings', {
-        errors: errors.array(),
-        notificationSettings: data,
-        userNotificationSettings: null,
-        uid: req.user.username,
-        employeeName: req.user.employeeName,
-        csrfToken: res.locals.csrfToken,
-        hmppsAuthMFAUser: req.hmppsAuthMFAUser,
-        authUrl: req.authUrl,
-      })
-    } else {
-      await DEPRECATEnotificationService.updateUserNotificationSettings(
-        req.user.username,
-        req.body.inputEmail === '' ? null : req.body.inputEmail,
-        req.body.inputMobile === '' ? null : req.body.inputMobile,
-        !!(req.body.optionEmail !== undefined && req.body.inputEmail !== ''),
-        !!(req.body.optionMobile !== undefined && req.body.inputMobile !== ''),
-      )
-      res.redirect('/notifications')
+    } catch (error) {
+      serviceUnavailable(req, res)
     }
   },
 )
