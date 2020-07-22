@@ -6,18 +6,16 @@
     <% include ../partials/head %>
   </head>
   <body class="govuk-template__body">
-
   <% include ../partials/header %>
 
   <div class="govuk-width-container">
-
     <% include ../partials/beta-banner %>
 
     <main id="main-content" role="main">
       <div class="tabs-wrapper">
         <ul class="tabs">
           <li ><a href="/calendar">Calendar</a></li>
-          <li><a class="active" href="">Notifications</a>
+          <li><a class="active" href="">Shift Changes</a>
           </li>
         </ul>
       </div>
@@ -33,7 +31,7 @@
                   <li>
                     <span class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0"> <%= getRelativeModifiedDate(moment, notification.shiftModified) %>
 
-                    </p>
+                    </span>
                     <p class="govuk-body govuk-!-font-size-16"><%= notification.description %></p>
                   </li>
                 <% }) %>
@@ -41,7 +39,7 @@
             </ul>
           </div>
           <% if (data.length === 0) { %>
-            <%- include('../partials/summary', {message: 'There is no detail information to show for this account.'}); %>
+            <%- include('../partials/summary', {message: 'There are no shift changes to show.'}); %>
           <% } %>
 
         </div>
@@ -49,7 +47,7 @@
 
             <section class="govuk-!-padding-2 govuk-!-padding-bottom-6">
 
-              <p class="govuk-body">Get notifications to your email or phone</p>
+              <p class="govuk-body">Get notified of shift changes</p>
               <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/settings">Notification settings</a>
 
             </section>

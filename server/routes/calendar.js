@@ -47,7 +47,6 @@ router.get(
         tab: 'Calendar',
         startDate: moment(params.date),
         data: results,
-        uid: user.username,
         employeeName: user.employeeName,
         csrfToken: res.locals.csrfToken,
         hmppsAuthMFAUser,

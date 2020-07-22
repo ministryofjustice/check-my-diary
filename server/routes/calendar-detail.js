@@ -1,4 +1,5 @@
 const router = require('express').Router()
+const moment = require('moment')
 const asyncMiddleware = require('../middleware/asyncMiddleware')
 const logger = require('../../log')
 
@@ -36,11 +37,11 @@ router.get(
         data: apiShiftDetailsResponse,
         overtimeShiftDetailsData: apiOvertimeShiftDetailsResponse,
         date: req.params.date,
-        uid: req.user.username,
         employeeName: req.user.employeeName,
         csrfToken: res.locals.csrfToken,
         hmppsAuthMFAUser: req.hmppsAuthMFAUser,
         authUrl: req.authUrl,
+        moment,
       })
     } catch (error) {
       serviceUnavailable(req, res)
