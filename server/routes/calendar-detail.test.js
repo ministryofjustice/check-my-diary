@@ -136,7 +136,7 @@ describe('GET and POST for /:details', () => {
       .expect('Content-Type', 'text/html; charset=utf-8')
       .expect((res) => {
         expect(res.text).toContain('Wednesday 1 April 2020')
-        expect(res.text).toContain('/calendar')
+        expect(res.text).toContain('/calendar/2020-04-01')
         expect(res.text).toContain('07:30 - 12:30')
         expect(res.text).toContain('Start of shift:')
         expect(res.text).toContain('Present')
@@ -169,7 +169,7 @@ describe('GET and POST for /:details', () => {
       .expect('Content-Type', 'text/html; charset=utf-8')
       .expect((res) => {
         expect(res.text).toContain('Friday 3 April 2020')
-        expect(res.text).toContain('/calendar')
+        expect(res.text).toContain('/calendar/2020-04-03')
         expect(res.text).toContain('08:30 - 12:15')
         expect(res.text).toContain('Start of shift:')
         expect(res.text).toContain('Training - Internal')
