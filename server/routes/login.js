@@ -25,20 +25,25 @@ router.get('/auth/login', async (req, res) => {
 })
 
 router.post('/auth/2fa', async (req, res) => {
-  const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
+  try {
+    const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
 
-  const inputTwoFactorCode = utilities.createTwoFactorAuthenticationHash(req.body.code)
+    const inputTwoFactorCode = utilities.createTwoFactorAuthenticationHash(req.body.code)
 
-  if (inputTwoFactorCode === userAuthenticationDetails[0].TwoFactorAuthenticationHash) {
-    req.user.employeeName = jwtDecode(req.user.token).name
+    if (inputTwoFactorCode === userAuthenticationDetails[0].TwoFactorAuthenticationHash) {
+      req.user.employeeName = jwtDecode(req.user.token).name
 
-    await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(
-      req.user.username,
-      new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000),
-    )
+      await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(
+        req.user.username,
+        new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000),
+      )
 
-    res.redirect(`/calendar/${utilities.getStartMonth()}`)
-  } else {
+      res.redirect(`/calendar/${utilities.getStartMonth()}`)
+    } else {
+      logError(req.url, '2FA failure')
+      res.render('pages/two-factor-auth', { authError: true, csrfToken: res.locals.csrfToken })
+    }
+  } catch (error) {
     logError(req.url, '2FA failure')
     res.render('pages/two-factor-auth', { authError: true, csrfToken: res.locals.csrfToken })
   }
