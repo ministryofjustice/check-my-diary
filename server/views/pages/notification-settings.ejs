@@ -19,22 +19,17 @@
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-                
+
         <form action="/notifications/settings" method="POST">
 
           <div class="govuk-form-group">
             <fieldset class="govuk-fieldset">
-              <legend class="govuk-fieldset__legend">
-                <h1 class="govuk-fieldset__heading">
-                  Stay on top of your notifications by sending them to your phone or email address of choice, or both
-                </h1>
-              </legend>
               <div class="govuk-checkboxes" data-module="checkboxes">
                 <% if (errors !== undefined && errors !== null) { %>
                   <% if (errors.find(x => x.param === 'inputEmail') !== undefined ) { %>
-                    <div class="govuk-checkboxes__item">                  
+                    <div class="govuk-checkboxes__item">
                       <input class="govuk-checkboxes__input" id="optionEmail" name="optionEmail" type="checkbox" checked="true" value="email" data-aria-controls="conditional-email">
-                      <label class="govuk-label govuk-checkboxes__label" for="optionEmail">Email</label>                    
+                      <label class="govuk-label govuk-checkboxes__label" for="optionEmail">Email</label>
                     </div>
                     <div class="govuk-checkboxes__conditional" id="conditional-email">
                       <div class="govuk-form-group">
@@ -44,10 +39,10 @@
                       </div>
                     </div>
                   <% } else { %>
-                    <% if (notificationSettings !== null && notificationSettings.optionEmail !== 'email') { %>                  
-                      <div class="govuk-checkboxes__item">                  
+                    <% if (notificationSettings !== null && notificationSettings.optionEmail !== 'email') { %>
+                      <div class="govuk-checkboxes__item">
                           <input class="govuk-checkboxes__input" id="optionEmail" name="optionEmail" type="checkbox" value="email" data-aria-controls="conditional-email">
-                          <label class="govuk-label govuk-checkboxes__label" for="optionEmail">Email</label>                    
+                          <label class="govuk-label govuk-checkboxes__label" for="optionEmail">Email</label>
                       </div>
                       <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-email">
                         <div class="govuk-form-group">
@@ -56,9 +51,9 @@
                         </div>
                       </div>
                     <% } else { %>
-                      <div class="govuk-checkboxes__item">                  
+                      <div class="govuk-checkboxes__item">
                         <input class="govuk-checkboxes__input" id="optionEmail" name="optionEmail" type="checkbox" checked="true" value="email" data-aria-controls="conditional-email">
-                        <label class="govuk-label govuk-checkboxes__label" for="optionEmail">Email</label>                    
+                        <label class="govuk-label govuk-checkboxes__label" for="optionEmail">Email</label>
                       </div>
                       <div class="govuk-checkboxes__conditional" id="conditional-email">
                         <div class="govuk-form-group">
@@ -71,10 +66,10 @@
 
                 <% } else { %>
 
-                  <% if (userNotificationSettings === null || !userNotificationSettings.UseEmailAddress) { %>                  
-                    <div class="govuk-checkboxes__item">                  
+                  <% if (userNotificationSettings === null || !userNotificationSettings.UseEmailAddress) { %>
+                    <div class="govuk-checkboxes__item">
                         <input class="govuk-checkboxes__input" id="optionEmail" name="optionEmail" type="checkbox" value="email" data-aria-controls="conditional-email">
-                        <label class="govuk-label govuk-checkboxes__label" for="optionEmail">Email</label>                    
+                        <label class="govuk-label govuk-checkboxes__label" for="optionEmail">Email</label>
                     </div>
                     <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-email">
                       <div class="govuk-form-group">
@@ -83,9 +78,9 @@
                       </div>
                     </div>
                   <% } else { %>
-                    <div class="govuk-checkboxes__item">                  
+                    <div class="govuk-checkboxes__item">
                       <input class="govuk-checkboxes__input" id="optionEmail" name="optionEmail" type="checkbox" checked="true" value="email" data-aria-controls="conditional-email">
-                      <label class="govuk-label govuk-checkboxes__label" for="optionEmail">Email</label>                    
+                      <label class="govuk-label govuk-checkboxes__label" for="optionEmail">Email</label>
                     </div>
                     <div class="govuk-checkboxes__conditional" id="conditional-email">
                       <div class="govuk-form-group">
@@ -133,10 +128,10 @@
                           <input class="govuk-input govuk-!-width-two-thirds" id="inputMobile" name="inputMobile" type="tel" value="<%= notificationSettings.mobile %>">
                         </div>
                       </div>
-                    <% } %> 
+                    <% } %>
                   <% } %>
 
-                  
+
                 <% } else { %>
 
                   <% if (userNotificationSettings === null || !userNotificationSettings.UseSms) { %>
@@ -161,18 +156,11 @@
                         <input class="govuk-input govuk-!-width-two-thirds" id="inputMobile" name="inputMobile" type="tel" value="<%= userNotificationSettings.Sms %>">
                       </div>
                     </div>
-                  <% } %> 
+                  <% } %>
                 <% } %>
-                
+
               </div>
             </fieldset>
-          </div>
-          <div class="govuk-warning-text">
-            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-            <strong class="govuk-warning-text__text">
-              <span class="govuk-warning-text__assistive">Warning</span>
-              Please contact us via checkmydiary@digital.justice.gov.uk whenever you would like to change your email address or mobile phone number associated with Check My Diary. This is because we use them to send access codes as part of the sign in process.
-            </strong>
           </div>
           <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
 
