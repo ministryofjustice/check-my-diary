@@ -1,4 +1,5 @@
 const router = require('express').Router()
+const moment = require('moment')
 const logger = require('../../log')
 
 function serviceUnavailable(req, res) {
@@ -33,11 +34,11 @@ router.get('/:date', async (req, res) => {
       data: apiShiftDetailsResponse,
       overtimeShiftDetailsData: apiOvertimeShiftDetailsResponse,
       date: req.params.date,
-      uid: req.user.username,
       employeeName: req.user.employeeName,
       csrfToken: res.locals.csrfToken,
       hmppsAuthMFAUser: req.hmppsAuthMFAUser,
       authUrl: req.authUrl,
+      moment,
     })
   } catch (error) {
     serviceUnavailable(req, res)
