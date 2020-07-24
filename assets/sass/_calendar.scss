@@ -129,20 +129,20 @@ ul.calendar {
 
     &.detail-start-night-full {
       background-color: govuk-colour('black');
-      height: 92px;
       background-image: url("../assets/images/night-shift.PNG");
       background-repeat: no-repeat;
       background-size: 25px 20px;
       background-position: top 2px right;
+      margin-top: 76px;
     }
 
     &.detail-start-night-full-overtime {
       background-color: govuk-colour('black');
-      height: 68px;
       background-image: url("../assets/images/night-shift.PNG");
       background-repeat: no-repeat;
       background-size: 25px 20px;
       background-position: top 2px right;
+      margin-top: 76px;
     }
 
     &.detail-start-night-half {
@@ -151,6 +151,7 @@ ul.calendar {
       background-repeat: no-repeat;
       background-size: 25px 20px;
       background-position: top 2px right;
+      margin-top: 28px;
     }
 
     &.detail-overtime-night {
