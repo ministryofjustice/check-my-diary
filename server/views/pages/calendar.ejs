@@ -41,7 +41,7 @@
         </div>
 
         <% if (data == null || data.shifts.length == 0) { %>
-          <%- include('../partials/error-summary', {message: 'There is no detail information to show for this account.'}); %>
+          <%- include('../partials/summary', {message: 'There is no information to show for this account.'}); %>
         <% } %>
         <ul class="calendar">
           <% if (data != null && data.shifts.length > 0) { %> <% getDays().forEach(function(day){ %>
@@ -114,7 +114,7 @@
                 ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
               >
             </div>
-            <span class="event govuk-!-font-size-19">Rest day</span>
+            <span class="event ">Rest day</span>
             <% if (day.overtime) { %>
               <span class="detail-overtime">Overtime</span>
             <% } %>
@@ -130,7 +130,7 @@
                 ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
               >
             </div>
-            <span class="event event-holiday govuk-!-font-size-19">Holiday</span>
+            <span class="event event-holiday">Holiday</span>
             <% if (day.overtime) { %>
               <span class="detail-overtime">Overtime</span>
             <% } %>
@@ -146,7 +146,7 @@
                 ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
               >
             </div>
-            <span class="event event-illness govuk-!-font-size-19">Sick</span>
+            <span class="event event-illness">Sick</span>
             <% } else if (day.type === 'Detached Duty') { %>
             <div class="hide-1024-up">
               <span class="day govuk-!-font-weight-bold"
@@ -159,18 +159,18 @@
                 ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
               >
             </div>
-            <span class="event event-detach-duty govuk-!-font-size-19">Detached Duty</span>
+            <span class="event event-detach-duty">Detached Duty</span>
             <% } else if (day.type === 'TU Officials Leave Days' || day.type === 'TU Officials Leave Hours') { %>
             <div class="hide-1024-up">
               <span class="day govuk-!-font-weight-bold"
                 ><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime))
                 %></span
-              ><span class="event event-tu-official govuk-!-font-size-19"><%= day.type %></span>
+              ><span class="event event-tu-official"><%= day.type %></span>
             </div>
             <div class="hide-0-to-1024">
-              <span class="day govuk-!-font-weight-bold" style="display:inline;"
+              <span class="day govuk-!-font-weight-bold"
                 ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
-              ><span class="event event-tu-official govuk-!-font-size-19" style="display:inline;"><%= day.type %></span>
+              ><span class="event event-tu-official"><%= day.type %></span>
             </div>
 
             <% if (day.overtime) { %>
@@ -182,7 +182,7 @@
               <span class="day govuk-!-font-weight-bold"
                 ><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime))
                 %></span
-              ><span class="event event-absence govuk-!-font-size-19"><%= day.type %></span>
+              ><span class="event event-absence"><%= day.type %></span>
             </div>
             <div class="hide-0-to-1024">
               <span class="day govuk-!-font-weight-bold"
@@ -201,13 +201,13 @@
               <span class="day govuk-!-font-weight-bold"
                 ><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime))
                 %></span
-              ><span class="event event-absence govuk-!-font-size-19"><%= day.type %></span>
+              ><span class="event event-absence"><%= day.type %></span>
             </div>
             <div class="hide-0-to-1024">
               <span class="day govuk-!-font-weight-bold"
                 ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
               >
-              <span class="event event-absence govuk-!-font-size-19" style="display:inline;">  <%= day.type %></span>
+              <span class="event event-absence" style="display:inline;">  <%= day.type %></span>
             </div>
 
             <% if (day.overtime) { %>
