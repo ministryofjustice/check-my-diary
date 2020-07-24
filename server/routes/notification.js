@@ -53,7 +53,7 @@ router
   .get(async (req, res, next) => {
     try {
       const {
-        user: { username, employeeName, token },
+        user: { employeeName, token },
         app,
         hmppsAuthMFAUser,
         authUrl,
@@ -80,7 +80,6 @@ router
         hmppsAuthMFAUser,
         snoozeUntil: getSnoozeUntil(snoozeUntil),
         moment,
-        uid: username,
         employeeName,
         authUrl,
       })

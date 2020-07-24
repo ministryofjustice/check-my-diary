@@ -5,7 +5,7 @@ const notificationSettingsMiddleware = async (req, res, next) => {
   logger.info('GET notifications settings')
   try {
     const {
-      user: { username, employeeName, token },
+      user: { employeeName, token },
       hmppsAuthMFAUser,
       authUrl,
       app,
@@ -22,7 +22,6 @@ const notificationSettingsMiddleware = async (req, res, next) => {
       contactMethod,
       inputEmail,
       inputMobile,
-      uid: username,
       employeeName,
       csrfToken: res.locals.csrfToken,
       hmppsAuthMFAUser,

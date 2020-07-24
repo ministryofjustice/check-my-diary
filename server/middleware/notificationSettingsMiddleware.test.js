@@ -8,7 +8,6 @@ describe('notification settings middleware', () => {
   const csrfToken = 'courgette'
   const authUrl = 'carrot'
   const employeeName = 'fennel'
-  const username = 'kale'
   const hmppsAuthMFAUser = 'peas'
   const mobileNumber = '404040404'
 
@@ -18,7 +17,7 @@ describe('notification settings middleware', () => {
   let res
   beforeEach(() => {
     res = { render: renderMock, locals: { csrfToken } }
-    req = { user: { token, username, employeeName }, authUrl, hmppsAuthMFAUser, body: {}, app }
+    req = { user: { token, employeeName }, authUrl, hmppsAuthMFAUser, body: {}, app }
   })
   afterEach(() => {
     jest.resetAllMocks()
@@ -39,7 +38,6 @@ describe('notification settings middleware', () => {
         csrfToken,
         employeeName,
         hmppsAuthMFAUser,
-        uid: username,
         contactMethod: SMS,
         inputEmail: '',
         inputMobile: mobileNumber,
@@ -66,7 +64,6 @@ describe('notification settings middleware', () => {
         csrfToken,
         employeeName,
         hmppsAuthMFAUser,
-        uid: username,
         contactMethod: NONE,
         inputEmail: '',
         inputMobile: '',

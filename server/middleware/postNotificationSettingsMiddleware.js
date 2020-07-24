@@ -21,7 +21,7 @@ const postNotificationSettingsMiddleware = async (req, res, next) => {
       app,
       authUrl,
       hmppsAuthMFAUser,
-      user: { token, username, employeeName },
+      user: { token, employeeName },
       body: { contactMethod = NONE, inputEmail = '', inputMobile = '' },
     } = req
     const {
@@ -33,7 +33,6 @@ const postNotificationSettingsMiddleware = async (req, res, next) => {
         contactMethod,
         inputEmail,
         inputMobile,
-        uid: username,
         employeeName,
         csrfToken,
         hmppsAuthMFAUser,
