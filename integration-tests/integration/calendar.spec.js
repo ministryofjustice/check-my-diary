@@ -49,7 +49,7 @@ context('A staff member can view their calendar', () => {
     nightShift.click()
 
     // the title comes from the seed data, hence the jumping between dates
-    const nightShiftPage = CalendarDetailPage.verifyOnPage('Monday 23 March 2020')
+    const nightShiftPage = CalendarDetailPage.verifyOnPage('Monday, 23rd March 2020')
     nightShiftPage.detailFinish().should('contain.text', 'End of shift')
     nightShiftPage.detailStartNight().should('contain', 'Start of shift').should('contain', 'Night Duties')
   })
@@ -62,10 +62,10 @@ context('A staff member can view their calendar', () => {
     dayShift.click()
 
     const calendarDetailPage = CalendarDetailPage.verifyOnPage('Friday, 6th March 2020')
-    calendarDetailPage.nextDay().should('contain.text', 'Saturday, 7th March 2020').click()
+    calendarDetailPage.nextDay().should('contain.text', 'Saturday, 7th').click()
     // the title comes from the seed data, hence the jumping between dates
     const nightShiftPage = CalendarDetailPage.verifyOnPage('Saturday, 7th March 2020')
-    nightShiftPage.previousDay().should('contain.text', 'Friday, 6th March 2020').click()
+    nightShiftPage.previousDay().should('contain.text', 'Friday, 6th').click()
 
     CalendarDetailPage.verifyOnPage('Friday, 6th March 2020')
   })
