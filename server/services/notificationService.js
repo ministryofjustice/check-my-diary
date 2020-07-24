@@ -38,6 +38,24 @@ const notificationService = {
       })
   },
 
+  updatePreferences(accessToken, preference = 'none', email = '', sms = '') {
+    logger.info(`updatePreferences to ${preference}, hasEmail: ${!!email}, hasSms: ${!!sms}`)
+    return axios
+      .put(
+        `${baseUrl}/preferences/notifications/details`,
+        { preference, email, sms },
+        {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        },
+      )
+      .catch((error) => {
+        logger.error(`notificationService : ${error}`)
+        throw error
+      })
+  },
+
   updateSnooze(accessToken, snoozeUntil) {
     logger.info(`updateSnooze until ${snoozeUntil}`)
     return axios
