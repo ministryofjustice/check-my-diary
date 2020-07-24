@@ -34,7 +34,6 @@ router.get('/settings', async (req, res) => {
   res.render('pages/notification-settings', {
     errors: null,
     userNotificationSettings: userNotificationSettings[0] || null,
-    uid: username,
     employeeName,
     csrfToken: res.locals.csrfToken,
     hmppsAuthMFAUser,
@@ -70,7 +69,6 @@ router.post(
           errors: errors.array(),
           notificationSettings: data,
           userNotificationSettings: null,
-          uid: req.user.username,
           employeeName: req.user.employeeName,
           csrfToken: res.locals.csrfToken,
           hmppsAuthMFAUser: req.hmppsAuthMFAUser,
@@ -112,7 +110,7 @@ router
   .route('/')
   .get(async (req, res) => {
     const {
-      user: { token },
+      user: { token, employeeName, authUrl },
       app,
       hmppsAuthMFAUser,
     } = req
@@ -134,7 +132,9 @@ router
         errors: null,
         data,
         csrfToken,
+        employeeName,
         hmppsAuthMFAUser,
+        authUrl,
         snoozeUntil: getSnoozeUntil(snoozeUntil),
         moment,
       })
@@ -142,7 +142,9 @@ router
       return res.render('pages/notifications', {
         errors,
         csrfToken,
+        employeeName,
         hmppsAuthMFAUser,
+        authUrl,
       })
     }
   })

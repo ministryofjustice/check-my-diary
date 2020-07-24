@@ -7,7 +7,6 @@
       </svg>
       <a class="moj-header__link moj-header__link--organisation-name" href="/">Check my diary</a>
     </div>
-    <% if (typeof uid !== 'undefined') { %>
       <div class="moj-header__content">
 
         <nav class="moj-header__navigation" aria-label="Account navigation">
@@ -19,11 +18,10 @@
                 </li>
             <% } %>
             <li class="moj-header__navigation-item moj-header__centre">
-              <a class="moj-header__navigation-link" href="/logout">Log out</a>
+              <a class="moj-header__navigation-link" href="/logout">Sign out</a>
             </li>
           </ul>
         </nav>
       </div>
-      <% } %>
   </div>
 </header>
