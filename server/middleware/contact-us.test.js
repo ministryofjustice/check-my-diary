@@ -18,6 +18,6 @@ describe('contact-us middleware', () => {
   })
   it('should call the render function with the correct parameters', () => {
     expect(renderMock.mock.calls[0][0]).toBe('pages/contact-us')
-    expect(renderMock.mock.calls[0][1]).toEqual({ uid: username, employeeName, csrfToken, hmppsAuthMFAUser, authUrl })
+    expect(renderMock.mock.calls[0][1]).toEqual({ employeeName, csrfToken, hmppsAuthMFAUser, authUrl })
   })
 })

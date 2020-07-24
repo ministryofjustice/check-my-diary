@@ -14,7 +14,6 @@ describe('post notification settings middleware', () => {
   const csrfToken = 'courgette'
   const authUrl = 'carrot'
   const employeeName = 'fennel'
-  const username = 'kale'
   const hmppsAuthMFAUser = 'peas'
   const emailText = 'checkmydiary@digital.justice.gov.uk'
   const mobileNumber = '404040404'
@@ -25,7 +24,7 @@ describe('post notification settings middleware', () => {
   let res
   beforeEach(() => {
     res = { render: renderMock, redirect: redirectMock, locals: { csrfToken } }
-    req = { user: { token, username, employeeName }, authUrl, hmppsAuthMFAUser, body: {}, app }
+    req = { user: { token, employeeName }, authUrl, hmppsAuthMFAUser, body: {}, app }
   })
   afterEach(() => {
     jest.resetAllMocks()
@@ -79,7 +78,6 @@ describe('post notification settings middleware', () => {
           csrfToken,
           employeeName,
           hmppsAuthMFAUser,
-          uid: username,
           contactMethod: EMAIL,
           inputEmail: emailText,
           inputMobile: '',
