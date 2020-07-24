@@ -53,7 +53,6 @@ router
   .get(async (req, res, next) => {
     try {
       const {
-        user: { employeeName, token },
         app,
         hmppsAuthMFAUser,
         authUrl,
