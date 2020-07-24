@@ -110,29 +110,28 @@ ul.calendar {
 
     &.day {
       padding-top: 5px;
-      margin-bottom: 3px;
-    }         
+      background-color: govuk-colour('white');
+      border-bottom: 1px solid govuk-colour('dark-grey');
+    }
 
     &.detail {
-      background-color: govuk-colour('green');      
-      padding: 2px 0 0 3px;
+      background-color: govuk-colour('green');
+      padding: 2px 0 0 2px;
       color: govuk-colour('white');
-      margin: 0 2px;
-      border-radius: 2px;
-      margin-top: 2px;
+      height:25px;
     }
 
     &.detail-start-night {
       background-color: govuk-colour('black');
-    } 
+    }
 
     &.detail-start-night-full {
       background-color: govuk-colour('black');
-      height: 92px;
       background-image: url("../assets/images/night-shift.PNG");
       background-repeat: no-repeat;
-      background-size: auto;
-      background-position: top 20px left;
+      background-size: 25px 20px;
+      background-position: top 2px right;
+      margin-top: 73px;
     }
 
     &.detail-start-night-full-overtime {
@@ -140,73 +139,64 @@ ul.calendar {
       height: 68px;
       background-image: url("../assets/images/night-shift.PNG");
       background-repeat: no-repeat;
-      background-size: auto;
-      background-position: top 20px left;
+      background-size: 25px 20px;
+      background-position: top 2px right;
     }
-    
+
     &.detail-start-night-half {
       background-color: govuk-colour('black');
-      height: 45px;
       background-image: url("../assets/images/night-shift.PNG");
       background-repeat: no-repeat;
-      background-size: auto;
-      background-position: bottom right;
+      background-size: 25px 20px;
+      background-position: top 2px right;
+      margin-top: 26px;
     }
 
     &.detail-overtime-night {
       background-color: govuk-colour('black');
-      margin-bottom: 1px;
     }
-    
+
     &.detail-finish-night {
       background-color: govuk-colour('black');
-    }   
+    }
 
     &.detail-finish {
       background-color: govuk-colour('red');
-    }    
+    }
 
     &.detail-duration {
-      margin-top: 3px;
     }
 
     &.detail-overtime {
-      background-color: govuk-colour('purple');      
-      padding: 2px 0 0 3px;
+      background-color: govuk-colour('purple');
+      padding: 2px 0 0 2px;
       color: govuk-colour('white');
-      margin: 0 2px;
-      border-radius: 2px;
-      margin-top: 48px;
-      margin-bottom: 2px;
+      height:25px;
+      margin-top: 53px;
     }
 
     &.detail-overtime-before {
-      background-color: govuk-colour('purple');      
-      padding: 2px 0 0 3px;
+      background-color: govuk-colour('purple');
+      padding: 2px 0 0 2px;
       color: govuk-colour('white');
-      margin: 0 2px;
-      border-radius: 2px;      
-      margin-bottom: 2px;
+      height:25px;
+      margin-top: 46px;
     }
 
     &.detail-overtime-after {
-      background-color: govuk-colour('purple');      
-      padding: 2px 0 0 3px;
+      background-color: govuk-colour('purple');
+      padding: 2px 0 0 2px;
       color: govuk-colour('white');
-      margin: 0 2px;
-      border-radius: 2px;
-      margin-top: 28px;     
-      margin-bottom: 2px;
+      height:25px;
+      margin-top: 26px;
     }
 
     &.detail-overtime-normal {
-      background-color: govuk-colour('purple');      
-      padding: 2px 0 0 3px;
+      background-color: govuk-colour('purple');
+      padding: 2px 0 0 2px;
       color: govuk-colour('white');
-      margin: 0 2px;
-      border-radius: 2px;
-      margin-top: 4px;
-      margin-bottom: 2px;
+      height:25px;
+      margin-top: -1px;
     }
   }
 }

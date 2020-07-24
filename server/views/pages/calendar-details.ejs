@@ -6,25 +6,36 @@
   <% include ../partials/head %>
 </head>
 <body class="govuk-template__body">
+  <% include ../partials/header %>
 
-<% include ../partials/header %>
+  <div class="govuk-width-container">
+    <% include ../partials/beta-banner %>
 
-<div class="govuk-width-container">
+    <main id="main-content" role="main">
+        <div class="tabs-wrapper">
+            <ul class="tabs">
+                <li><a class="active" href="/calendar/<%=startDate.format('YYYY-MM-01')%>">Calendar</a></li>
+                <li>
+                    <a href="/notifications">Notifications
+                    </a>
+                </li>
+            </ul>
+        </div>
 
-  <% include ../partials/beta-banner %>
+              <div class="calendar-controls center-align">
+                  <h1 class="govuk-heading-m govuk-!-margin-bottom-0"><%= startDate.format('dddd, Do MMMM YYYY') %></h1>
+                  <a id="btnPreviousShiftDetail" href="/details/<%= startDate.clone().subtract(1,'d').format('YYYY-MM-DD') %>"
+                     class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19"><%= startDate.clone().subtract(1,'d').format('dddd Do') %> </a>
 
-  <a href="/calendar/<%=moment(date).format('YYYY-MM-DD')%>" class="govuk-back-link">Back</a>
-
-  <main id="main-content" class="govuk-main-wrapper govuk-!-margin-bottom-8" role="main">
-
-    <div class="grid-row">
-      <div class="column-full">
+                  <a id="btnNextShiftDetail" href="/details/<%= startDate.clone().add(1,'d').format('YYYY-MM-DD') %>"
+                     class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 app-link-!-border "><%= startDate.clone().add(1,'d').format('dddd, Do') %></a>
+              </div>
 
         <% if (data != null && data.tasks.length > 0) { %>
 
-          <h1 class="govuk-heading-l"><%= getDayOfWeek(data.tasks[0].date) %> <%= parseFullDateFormat(data.tasks[0].date) %></h1>
+            <a href="/calendar/<%= startDate.format('YYYY-MM-01') %>" class="govuk-back-link govuk-!-margin-bottom-8">Back</a>
 
-          <ul class="app-shift-detail">
+            <ul class="app-shift-detail">
 
             <% data.tasks.forEach(function(task, index){ %>
 
@@ -140,7 +151,7 @@
           </ul>
           <% } %>
 
-          <% if (overtimeShiftDetailsData != null && overtimeShiftDetailsData.tasks.length > 0) { %>
+        <% if (overtimeShiftDetailsData != null && overtimeShiftDetailsData.tasks.length > 0) { %>
             <span class="app-shift-detail" style="font-weight: bold;">Overtime</span>
 
             <ul class="app-shift-detail">
@@ -181,23 +192,11 @@
               <% } );%>
             </ul>
             <% } %>
-          <div class="govuk-clearfix"></div>
-
-            <a id="btnPreviousShiftDetail" href="/details/<%= getDatePartFormatted(getPreviousDate(data.tasks[0].date)) %>"
-              class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19">&larr; <%= getPreviousDay(getDayOfWeek(data.tasks[0].date)) %> <%= parseFullDateFormat(getPreviousDate(data.tasks[0].date)) %></a>
-
-            <a id="btnNextShiftDetail" href="/details/<%= getDatePartFormatted(getNextDate(data.tasks[0].date)) %>"
-              class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 app-link-!-border "><%= getNextDay(getDayOfWeek(data.tasks[0].date)) %> <%= parseFullDateFormat(getNextDate(data.tasks[0].date)) %> &rarr;</a>
-
-          </div>
-
 		<input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-    </div>
-  </main>
+        <div class="govuk-clearfix govuk-!-margin-bottom-8"> </div>
+    </main>
+  </div>
 
-</div>
-
-<% include ../partials/footer %>
-
-</body>
+  <% include ../partials/footer %>
+  </body>
 </html>

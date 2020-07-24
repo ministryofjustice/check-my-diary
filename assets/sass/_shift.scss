@@ -16,7 +16,6 @@
       &.time {
         border: 1px solid govuk-colour('mid-grey');
         width: 220px;
-        border-radius: 3px;
         margin-right: 15px;
         padding: 25px 0 20px 0;
         float: left;
@@ -61,7 +60,6 @@
         margin-bottom: 0;
         color: white;
         padding: 10px 5px 10px 8px;
-        border-radius: 3px;
         border: none;
       }
 
@@ -81,7 +79,7 @@
       &.detail-holiday {
         background-color: govuk-colour('yellow');
       }
-      
+
       &.detail-rest-day {
         background-color: govuk-colour('orange');
       }
@@ -89,19 +87,19 @@
       &.detail-holiday {
         background-color: govuk-colour('yellow');
       }
-  
+
       &.detail-illness {
         background-color: govuk-colour('light-green');
       }
-  
+
       &.detail-absence {
         background-color: govuk-colour('yellow');
       }
-  
+
       &.detail-detached-duty {
         background-color: govuk-colour('brown');
       }
-  
+
       &.detail-tu-official {
         background-color: govuk-colour('pink');
       }
@@ -121,8 +119,8 @@
       background-color: govuk-colour('green');
       border: none;
       color: govuk-colour('white');
-    }    
-    
+    }
+
     &.detail-finish span.time {
       background-color: govuk-colour('red');
     }

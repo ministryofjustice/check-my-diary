@@ -33,7 +33,7 @@ router.get('/:date', async (req, res) => {
     res.render('pages/calendar-details', {
       data: apiShiftDetailsResponse,
       overtimeShiftDetailsData: apiOvertimeShiftDetailsResponse,
-      date: req.params.date,
+      startDate: moment(req.params.date),
       employeeName: req.user.employeeName,
       csrfToken: res.locals.csrfToken,
       hmppsAuthMFAUser: req.hmppsAuthMFAUser,
