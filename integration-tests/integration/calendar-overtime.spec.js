@@ -24,7 +24,15 @@ context('A staff member can view their overtime calendar', () => {
     const dayShift = calendarPage.day('2020-03-08')
     dayShift.children().should((spans) => {
       const allText = spans.map((i, el) => Cypress.$(el).text().trim())
-      expect(allText.get()).to.deep.eq(['Sunday, 8', '8', 'Start 07:30', 'Finish 17:15', '8hrs 45mins', 'Overtime'])
+      expect(allText.get()).to.deep.eq([
+        'Visits Manager',
+        'Sunday, 8',
+        '8',
+        'Start 07:30',
+        'Finish 17:15',
+        '8hrs 45mins',
+        'Overtime',
+      ])
     })
 
     const restDay = calendarPage.day('2020-03-09')
