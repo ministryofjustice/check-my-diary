@@ -27,7 +27,7 @@ context('A staff member can view their calendar', () => {
       const allText = spans.map((i, el) => Cypress.$(el).text().trim())
       expect(allText.get()).to.deep.eq([
         'Visits Manager',
-        'Friday, 6',
+        'Friday, 6th March 2020',
         '6',
         'Start 07:45',
         'Finish 19:30',
