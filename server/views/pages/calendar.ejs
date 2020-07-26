@@ -2,231 +2,126 @@
 
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
-  <head>
+    <head>
     <% include ../partials/head %>
-  </head>
-  <body class="govuk-template__body">
+    </head>
+    <body class="govuk-template__body">
     <% include ../partials/header %>
 
     <div class="govuk-width-container">
-      <% include ../partials/beta-banner %>
+        <% include ../partials/beta-banner %>
 
-      <main id="main-content" role="main">
+        <main id="main-content" role="main">
         <div class="tabs-wrapper">
-          <ul class="tabs">
-            <li><a class="active" href="">Calendar</a></li>
-            <li>
-              <a href="/notifications"
-                >Notifications <% if (notificationCount != null && notificationCount > 0) { %>
-                <span class="loud font-xsmall" style="background-color: #df3034;padding: 0 5px;color: white;"
-                  >(<%= notificationCount %> new)</span>
-                <% } %>
-              </a>
-            </li>
-          </ul>
+            <ul class="tabs">
+                <li><a class="active" href="">Calendar</a></li>
+                <li>
+                    <a href="/notifications">
+                        Notifications
+                        <% if (notificationCount != null && notificationCount > 0) { %>
+                            <span class="loud font-xsmall" style="background-color: #df3034;padding: 0 5px;color: white;">
+                                (<%= notificationCount %> new)
+                            </span>
+                        <% } %>
+                    </a>
+                </li>
+            </ul>
         </div>
 
         <div class="calendar-controls center-align govuk-!-margin-bottom-8">
-          <h1 class="govuk-heading-m govuk-!-margin-bottom-0"><%= startDate.format('MMMM YYYY') %></h1>
-          <a
-            class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19"
-            href="/calendar/<%=startDate.clone().subtract(1, 'M').format('YYYY-MM-DD')%>"
-            >Last month</a
-          >
-          <a
-            class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 app-link-!-border"
-            href="/calendar/<%=startDate.clone().add(1, 'M').format('YYYY-MM-DD')%>"
-            >Next month</a
-          >
+            <h1 class="govuk-heading-m govuk-!-margin-bottom-0"><%= startDate.format('MMMM YYYY') %></h1>
+            <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/calendar/<%=startDate.clone().subtract(1, 'M').format('YYYY-MM-DD')%>">
+                Last month
+            </a>
+            <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 app-link-!-border" href="/calendar/<%=startDate.clone().add(1, 'M').format('YYYY-MM-DD')%>">
+                Next month
+            </a>
         </div>
 
         <% if (data == null || data.shifts.length == 0) { %>
-          <%- include('../partials/error-summary', {message: 'There is no detail information to show for this account.'}); %>
-        <% } %>
+            <%- include('../partials/summary', {message: 'There is no shift information to show for this account.'}); %>
+        <% } else { %>
         <ul class="calendar">
-          <% if (data != null && data.shifts.length > 0) { %> <% getDays().forEach(function(day){ %>
 
-          <li class="calendar-item calendar-header"><%= day %></li>
+            <% getDays().forEach(function(day){ %>
+                <li class="calendar-item calendar-header"><%= day %></li>
+            <% }); %>
 
-          <% }); %> <% } %> <% if (data != null && data.shifts.length > 0) { %> <% data.shifts.forEach(function(day){ %>
+            <% data.shifts.forEach(function(day){ %>
 
-          <li
-            class="calendar-item <% if (day.type === 'Rest Day') { %>rest-day<% } else if (day.type === 'Holiday') { %>holiday<% } else if (day.type === 'Illness') { %>illness<% } else if (day.type === 'no-day') { %>no-day<% } else if (day.type === 'Shift') { %>shift <% } else if (day.type === 'Detached Duty') { %>detached-duty <% } else if (day.type === 'TU Officials Leave Days' || day.type === 'TU Officials Leave Hours') { %>tu-official<% } else { %>absence<% } %>"
-          >
-          <% if (day.type !== 'no-day' || day.overtime) { %>
-            <a href="/details/<%=getDatePartFormatted(day.startDateTime)%>">
-          <% } %>
-            <% if (day.type === 'Shift') { %>
-
-              <div class="hide-1024-up">
-                <span class="day govuk-!-font-weight-bold"
-                  ><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime))
-                  %></span
-                >
-              </div>
-              <div class="hide-0-to-1024">
-                <span class="day govuk-!-font-weight-bold"
-                  ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
-                >
-              </div>
-
-              <% if (checkIfDateTimeIsNull(day.dailyStartDateTime)) { %>
-              <span class="detail detail-finish-night">Finish <%= getTimeFromDate(day.dailyEndDateTime) %></span>
-              <span class="detail-duration"><%= convertSecondsToHms(day.durationInSeconds) %></span>
-                <% if (day.overtime) { %>
-                  <span class="detail-overtime-after">Overtime</span>
-                <% } %>
-              <% } else if (checkIfDateTimeIsNull(day.dailyEndDateTime)) { %>
-                <% if (day.overtime) { %>
-                  <span class="detail-overtime-before">Overtime</span>
-                  <span class="detail detail-start-night-full-overtime">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
-                <% } else { %>
-                  <span class="detail detail-start-night-full">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
-                <% } %>
-              <% } else if (checkIfStartDateTimeBeforeEndDateTime(day.dailyStartDateTime, day.dailyEndDateTime)) { %>
-                <% if (day.overtime) { %>
-                  <span class="detail detail-overtime-night">Finish <%= getTimeFromDate(day.dailyEndDateTime) %></span>
-                  <span class="detail-overtime-before">Overtime</span>
-                  <span class="detail detail-start-night-half">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
-                <% } else { %>
-                  <span class="detail detail-finish-night">Finish <%= getTimeFromDate(day.dailyEndDateTime) %></span>
-                  <span class="detail-duration"><%= convertSecondsToHms(day.durationInSeconds) %></span>
-                  <span class="detail detail-start-night-half">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
-                <% } %>
-              <% } else { %>
-              <span class="detail detail-start">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
-              <span class="detail detail-finish">Finish <%= getTimeFromDate(day.dailyEndDateTime) %></span>
-              <span class="detail-duration"><%= convertSecondsToHms(day.durationInSeconds) %></span>
-                <% if (day.overtime) { %>
-                  <span class="detail-overtime-normal">Overtime</span>
-                <% } %>
-              <% } %>
-
-            <% } %> <% if (day.type === 'Rest Day') { %>
-            <div class="hide-1024-up">
-              <span class="day govuk-!-font-weight-bold"
-                ><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime))
-                %></span
-              >
-            </div>
-            <div class="hide-0-to-1024">
-              <span class="day govuk-!-font-weight-bold"
-                ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
-              >
-            </div>
-            <span class="event govuk-!-font-size-19">Rest day</span>
-            <% if (day.overtime) { %>
-              <span class="detail-overtime">Overtime</span>
-            <% } %>
-            <% } else if (day.type === 'Holiday') { %>
-            <div class="hide-1024-up">
-              <span class="day govuk-!-font-weight-bold"
-                ><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime))
-                %></span
-              >
-            </div>
-            <div class="hide-0-to-1024">
-              <span class="day govuk-!-font-weight-bold"
-                ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
-              >
-            </div>
-            <span class="event event-holiday govuk-!-font-size-19">Holiday</span>
-            <% if (day.overtime) { %>
-              <span class="detail-overtime">Overtime</span>
-            <% } %>
-            <% } else if (day.type === 'Illness') { %>
-            <div class="hide-1024-up">
-              <span class="day govuk-!-font-weight-bold"
-                ><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime))
-                %></span
-              >
-            </div>
-            <div class="hide-0-to-1024">
-              <span class="day govuk-!-font-weight-bold"
-                ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
-              >
-            </div>
-            <span class="event event-illness govuk-!-font-size-19">Sick</span>
-            <% } else if (day.type === 'Detached Duty') { %>
-            <div class="hide-1024-up">
-              <span class="day govuk-!-font-weight-bold"
-                ><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime))
-                %></span
-              >
-            </div>
-            <div class="hide-0-to-1024">
-              <span class="day govuk-!-font-weight-bold"
-                ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
-              >
-            </div>
-            <span class="event event-detach-duty govuk-!-font-size-19">Detached Duty</span>
-            <% } else if (day.type === 'TU Officials Leave Days' || day.type === 'TU Officials Leave Hours') { %>
-            <div class="hide-1024-up">
-              <span class="day govuk-!-font-weight-bold"
-                ><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime))
-                %></span
-              ><span class="event event-tu-official govuk-!-font-size-19"><%= day.type %></span>
-            </div>
-            <div class="hide-0-to-1024">
-              <span class="day govuk-!-font-weight-bold" style="display:inline;"
-                ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
-              ><span class="event event-tu-official govuk-!-font-size-19" style="display:inline;"><%= day.type %></span>
-            </div>
-
-            <% if (day.overtime) { %>
-              <span class="detail-overtime">Overtime</span>
-            <% } %>
-            <% } else if (day.type !== 'no-day' && day.type !== 'Shift' && day.startDateTime !== day.date + 'T00:00:00'
-            && day.endDateTime !== day.date + 'T23:59:59') { %>
-            <div class="hide-1024-up">
-              <span class="day govuk-!-font-weight-bold"
-                ><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime))
-                %></span
-              ><span class="event event-absence govuk-!-font-size-19"><%= day.type %></span>
-            </div>
-            <div class="hide-0-to-1024">
-              <span class="day govuk-!-font-weight-bold"
-                ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
-              >
-            </div>
-
-            <span class="detail detail-start">Start <%= getTimeFromDate(day.dailyStartDateTime) %></span>
-            <span class="detail detail-finish">Finish <%= getTimeFromDate(day.dailyEndDateTime) %></span>
-            <span class="detail-duration"><%= convertSecondsToHms(day.durationInSeconds) %></span>
-            <% if (day.overtime) { %>
-              <span class="detail-overtime-normal">Overtime</span>
-            <% } %>
-            <% } else if (day.type !== 'no-day' && day.type !== 'Shift') { %>
-            <div class="hide-1024-up">
-              <span class="day govuk-!-font-weight-bold"
-                ><%= getDayOfWeek(day.startDateTime) %>, <%= parseShortDate(getDatePartFormatted(day.startDateTime))
-                %></span
-              ><span class="event event-absence govuk-!-font-size-19"><%= day.type %></span>
-            </div>
-            <div class="hide-0-to-1024">
-              <span class="day govuk-!-font-weight-bold"
-                ><%= parseShortDate(getDatePartFormatted(day.startDateTime)) %></span
-              >
-              <span class="event event-absence govuk-!-font-size-19" style="display:inline;">  <%= day.type %></span>
-            </div>
-
-            <% if (day.overtime) { %>
-              <span class="detail-overtime-normal">Overtime</span>
-            <% } %>
-
-            <% } %>
+            <li class="calendar-item
+            <% if (day.type === 'Rest Day') { %>rest-day<% }
+                 else if (day.type === 'Holiday') { %>holiday<% }
+                 else if (day.type === 'Illness') { %>illness<% }
+                 else if (day.type === 'no-day') { %>no-day<% }
+                 else if (day.type === 'Shift') { %>shift <% }
+                 else if (day.type === 'Detached Duty') { %>detached-duty <% }
+                 else if (day.type === 'TU Officials Leave Days' || day.type === 'TU Officials Leave Hours') { %>tu-official<% }
+                 else { %>absence<% } %>"
+            >
             <% if (day.type !== 'no-day' || day.overtime) { %>
-              </a>
+            <a href="/details/<%=moment(day.startDateTime).format('YYYY-MM-DD')%>">
+                <% if (day.type !== 'no-day') { %>
+
+                    <div class="hide-1024-up">
+                        <span class="day govuk-!-font-weight-bold">
+                            <%= moment(day.startDateTime).format('dddd, Do MMMM YYYY')%>
+                        </span>
+                    </div>
+                    <div class="hide-0-to-1024">
+                        <span class="day govuk-!-font-weight-bold">
+                            <%= moment(day.startDateTime).format('D') %>
+                        </span>
+                    </div>
+                    <span class="line-text">
+                        <% if (day.type !== 'Shift') { %>
+                            <%= day.type %>
+                        <% } %>
+                    </span>
+                    <% if (day.type === 'Shift') { %>
+                        <% if(firstDateIsAfterSecondDate(day.dailyEndDateTime, day.dailyStartDateTime)) {%>
+                            <span class="line start">Start <%= moment(day.dailyStartDateTime).format("HH:m") %></span>
+                            <span class="line finish">Finish <%= moment(day.dailyEndDateTime).format("HH:m") %></span>
+                            <span class="line-text"><%= convertSecondsToHms(day.durationInSeconds) %></span>
+                        <% } else if (firstDateIsAfterSecondDate(day.dailyStartDateTime, day.dailyEndDateTime) || checkIfDateTimeIsNull(day.dailyStartDateTime)) { %>
+                            <span class="line night">Finish <%= moment(day.dailyEndDateTime).format("HH:m") %></span>
+                            <span class="line-text" ><%= convertSecondsToHms(day.durationInSeconds) %></span>
+                        <% } %>
+                        <% if (day.overtime) { %>
+                            <span class="line overtime">Overtime</span>
+                        <% } %>
+                        <% if (firstDateIsAfterSecondDate(day.dailyStartDateTime, day.dailyEndDateTime) || checkIfDateTimeIsNull(day.dailyEndDateTime)) { %>
+                            <% if (day.overtime && checkIfDateTimeIsNull(day.dailyEndDateTime)) { %>
+                                <span class="line overtime">Overtime</span>
+                            <% } %>
+                            <span class="line night moon">Start <%= moment(day.dailyStartDateTime).format("HH:m") %></span>
+                        <% } %>
+
+                    <% } else if (day.type !== 'Rest Day'
+                            && day.type !== 'Holiday'
+                            && day.type !== 'Illness'
+                            && day.type !== 'Detached Duty'
+                            && day.type !== 'TU Officials Leave Days'
+                            && day.type !== 'TU Officials Leave Hours'
+                            && day.startDateTime !== day.date + 'T00:00:00'
+                            && day.endDateTime !== day.date + 'T23:59:59') { %>
+                        <span class="line start">Start <%= moment(day.dailyStartDateTime).format("HH:m") %></span>
+                        <span class="line finish">Finish <%= moment(day.dailyEndDateTime).format("HH:m") %></span>
+                        <span class="line-text"><%= convertSecondsToHms(day.durationInSeconds) %></span>
+                    <% } else if (day.overtime) { %>
+                        <span class="line overtime">Overtime</span>
+                    <% } %>
+                <% } %>
+                </a>
             <% } %>
-          </li>
-
-          <% }); %> <% } %>
+            </li>
+            <% }); %>
+        <% } %>
         </ul>
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-        <div class="govuk-clearfix govuk-!-margin-bottom-8"> </div>
-      </main>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+    <div class="govuk-clearfix govuk-!-margin-bottom-8"> </div>
+        </main>
     </div>
-
     <% include ../partials/footer %>
-  </body>
+    </body>
 </html>

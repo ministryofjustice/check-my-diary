@@ -1,44 +1,25 @@
 <%
 
-/**
- * Split the string and return an Array ('2018-08-01' = ['2018', '08', '01'])
- * @param input
- * @param split
- * @returns {string[]}
- */
-function splitString(input, split) {
-  return input.toString().split(split);
-}
 
 convertSecondsToHms = (d) => {
   d = Number(d);
   var h = Math.floor(d / 3600);
   var m = Math.floor(d % 3600 / 60);
-  var s = Math.floor(d % 3600 % 60);
 
   var hDisplay = h > 0 ? h + (h == 1 ? "hr " : "hrs ") : "";
   var mDisplay = m > 0 ? m + (m == 1 ? "min " : "mins ") : "";
-  var sDisplay = s > 0 ? s + (s == 1 ? "sec" : " secs") : "";
   return hDisplay + mDisplay;
 }
 
-checkIfStartDateTimeBeforeEndDateTime = (startDateTime, endDateTime) => {
+firstDateIsAfterSecondDate = (startDateTime, endDateTime) => {
   var startTime = new Date(startDateTime);
   var endTime = new Date(endDateTime);
 
-  if (startTime > endTime){
-      return true;
-  } else {
-      return false;
-  }
+  return !checkIfDateTimeIsNull(startDateTime) && !checkIfDateTimeIsNull(endDateTime) && startTime > endTime;
 }
 
 checkIfDateTimeIsNull = (dateTime) => {
-  if (dateTime == "null"){
-    return true;
-  } else {
-    return false;
-  }
+  return dateTime == "null";
 }
 
 getNextDate = (dateTime) => {
@@ -81,28 +62,6 @@ getDays = () => {
   return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 }
 
-/**
- * Take HH:MM and return HHhr MMmin
- * @param duration
- * @returns {string}
- */
-parseDuration = (duration) => {
-  const split = splitString(duration, ':'),
-    hours = parseInt(split[0], 10),
-    minutes = parseInt(split[1], 10);
-
-  return (hours ? hours + 'hr ' : '') + (minutes ? minutes + 'min' : '');
-}
-
-/**
- * Take YYYY-MM-DD and return D
- * @param date
- * @returns {number}
- */
-parseShortDate = (date) => {
-  return parseInt(date.substr(date.length - 2), 10);
-}
-
 parseFullDateFormat = (date) => {
   var months    = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
@@ -131,14 +90,6 @@ getNextDay = (day) => {
 getPreviousDay = (day) => {
   const days = getDays();
   return days[days.indexOf(day) - 1] || days[days.length - 1];
-}
-
-getDateTimeNowUTC = () => {
-
-  var now = new Date();
-  var utc_timestamp =  Date.UTC(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate() ,
-      now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds());
-  return new Date(utc_timestamp);
 }
 
 getRelativeModifiedDate = (moment, modifiedDate) => {
