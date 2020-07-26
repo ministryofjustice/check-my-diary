@@ -65,7 +65,7 @@
 
                     <div class="hide-1024-up">
                         <span class="day govuk-!-font-weight-bold">
-                            <%= moment(day.startDateTime).format('dddd, Do MMMM YYYY')%>
+                            <%= moment(day.startDateTime).format('dddd, Do')%>
                         </span>
                     </div>
                     <div class="hide-0-to-1024">
@@ -73,11 +73,11 @@
                             <%= moment(day.startDateTime).format('D') %>
                         </span>
                     </div>
-                    <span class="line-text">
-                        <% if (day.type !== 'Shift') { %>
+                    <% if (day.type !== 'Shift') { %>
+                        <span class="line-text">
                             <%= day.type %>
-                        <% } %>
-                    </span>
+                         </span>
+                     <% } %>
                     <% if (day.type === 'Shift') { %>
                         <% if(firstDateIsAfterSecondDate(day.dailyEndDateTime, day.dailyStartDateTime)) {%>
                             <span class="line start">Start <%= moment(day.dailyStartDateTime).format("HH:m") %></span>
@@ -87,7 +87,7 @@
                             <span class="line night">Finish <%= moment(day.dailyEndDateTime).format("HH:m") %></span>
                             <span class="line-text" ><%= convertSecondsToHms(day.durationInSeconds) %></span>
                         <% } %>
-                        <% if (day.overtime) { %>
+                        <% if (day.overtime && !checkIfDateTimeIsNull(day.dailyEndDateTime)) { %>
                             <span class="line overtime">Overtime</span>
                         <% } %>
                         <% if (firstDateIsAfterSecondDate(day.dailyStartDateTime, day.dailyEndDateTime) || checkIfDateTimeIsNull(day.dailyEndDateTime)) { %>
