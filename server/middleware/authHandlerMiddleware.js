@@ -1,13 +1,21 @@
-const userAuthenticationService = require('../services/userAuthenticationService')
+const moment = require('moment')
 
-module.exports = async function authHandler(req, res, next) {
-  const userSessionExpiryDateTime = await userAuthenticationService.getSessionExpiryDateTime(req.user.username)
-
-  if (userSessionExpiryDateTime !== null && userSessionExpiryDateTime[0] != null) {
-    if (new Date() > new Date(userSessionExpiryDateTime[0].SessionExpiryDateTime)) {
-      res.redirect('/logout')
-    } else {
-      next()
-    }
+const authHandler = async ({ app, user: { username } }, res, next) => {
+  try {
+    const {
+      userAuthenticationService: { getSessionExpiryDateTime },
+    } = app.get('DataServices')
+    const userSessionExpiryDateTime = await getSessionExpiryDateTime(username)
+    if (
+      !userSessionExpiryDateTime ||
+      !userSessionExpiryDateTime[0] ||
+      moment().isAfter(moment(userSessionExpiryDateTime[0].SessionExpiryDateTime))
+    )
+      return res.redirect('/auth/login')
+    return next()
+  } catch (error) {
+    return next(error)
   }
 }
+
+module.exports = authHandler
