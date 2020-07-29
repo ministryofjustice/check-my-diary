@@ -29,13 +29,17 @@
         </div>
 
         <div class="calendar-controls center-align govuk-!-margin-bottom-8">
-            <h1 class="govuk-heading-m govuk-!-margin-bottom-0"><%= startDate.format('MMMM YYYY') %></h1>
-            <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/calendar/<%=startDate.clone().subtract(1, 'M').format('YYYY-MM-DD')%>">
-                Last month
-            </a>
-            <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 app-link-!-border" href="/calendar/<%=startDate.clone().add(1, 'M').format('YYYY-MM-DD')%>">
-                Next month
-            </a>
+          <h1 class="govuk-heading-m govuk-!-margin-bottom-0"><%= startDate.format('MMMM YYYY') %></h1>
+          <a
+            class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19"
+            href="/calendar/<%=startDate.clone().subtract(1, 'M').format('YYYY-MM-DD')%>"
+            ><%=startDate.clone().subtract(1, 'M').format('MMMM')%></a
+          >
+          <a
+            class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 app-link-!-border"
+            href="/calendar/<%=startDate.clone().add(1, 'M').format('YYYY-MM-DD')%>"
+            ><%=startDate.clone().add(1, 'M').format('MMMM')%></a
+          >
         </div>
 
         <% if (data == null || data.shifts.length == 0) { %>

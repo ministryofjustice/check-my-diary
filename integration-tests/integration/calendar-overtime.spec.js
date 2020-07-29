@@ -65,7 +65,7 @@ context('A staff member can view their overtime calendar', () => {
     const dayShift = calendarPage.day('2020-03-08')
     dayShift.click()
 
-    const calendarDetailPage = CalendarDetailPage.verifyOnPage('Sunday 8 March 2020')
+    const calendarDetailPage = CalendarDetailPage.verifyOnPage('Sunday, 8th March 2020')
     calendarDetailPage.detailStart().should('contain', 'Start').should('contain', 'Visits Manager')
     calendarDetailPage.detailFinish().should('contain.text', 'End of shift')
 
@@ -81,7 +81,7 @@ context('A staff member can view their overtime calendar', () => {
     const dayShift = calendarPage.day('2020-03-09')
     dayShift.click()
 
-    const calendarDetailPage = CalendarDetailPage.verifyOnPage('Monday 9 March 2020')
+    const calendarDetailPage = CalendarDetailPage.verifyOnPage('Monday, 9th March 2020')
     calendarDetailPage.detailRestDay().should('contain', 'Rest Day')
 
     calendarDetailPage.detailStartOvertime().should('contain', 'Start').should('contain', 'Visits Manager')
@@ -96,7 +96,7 @@ context('A staff member can view their overtime calendar', () => {
     const dayShift = calendarPage.day('2020-03-28')
     dayShift.click()
 
-    const calendarDetailPage = CalendarDetailPage.verifyOnPage('Saturday 28 March 2020')
+    const calendarDetailPage = CalendarDetailPage.verifyOnPage('Saturday, 28th March 2020')
     calendarDetailPage.detailAbsence().should('contain', 'Holiday')
 
     calendarDetailPage.detailStartOvertime().should('contain', 'Start').should('contain', 'Visits Manager')
@@ -111,7 +111,7 @@ context('A staff member can view their overtime calendar', () => {
     const dayShift = calendarPage.day('2020-03-22')
     dayShift.click()
 
-    const calendarDetailPage = CalendarDetailPage.verifyOnPage('Sunday 22 March 2020')
+    const calendarDetailPage = CalendarDetailPage.verifyOnPage('Sunday, 22nd March 2020')
     calendarDetailPage.detailStartNight().should('contain', 'Start').should('contain', 'Night Duties')
 
     calendarDetailPage.detailStartOvertime().should('contain', 'Start').should('contain', 'Visits Manager')
@@ -126,7 +126,7 @@ context('A staff member can view their overtime calendar', () => {
     const dayShift = calendarPage.day('2020-03-26')
     dayShift.click()
 
-    const calendarDetailPage = CalendarDetailPage.verifyOnPage('Thursday 26 March 2020')
+    const calendarDetailPage = CalendarDetailPage.verifyOnPage('Thursday, 26th March 2020')
     calendarDetailPage.detailFinish().should('contain', '07:45').should('contain', 'End of shift')
 
     calendarDetailPage.detailStartOvertime().should('contain', 'Start').should('contain', 'Visits Manager')
@@ -141,7 +141,7 @@ context('A staff member can view their overtime calendar', () => {
     const dayShift = calendarPage.day('2020-03-24')
     dayShift.click()
 
-    const calendarDetailPage = CalendarDetailPage.verifyOnPage('Tuesday 24 March 2020')
+    const calendarDetailPage = CalendarDetailPage.verifyOnPage('Tuesday, 24th March 2020')
     calendarDetailPage.detailFinish().should('contain', '07:30').should('contain', 'End of shift')
     calendarDetailPage.detailStartNight().should('contain', '20:45', 'Start').should('contain', 'Night Duties')
 

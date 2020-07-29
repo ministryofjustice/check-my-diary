@@ -36,7 +36,7 @@ context('A staff member can view their calendar', () => {
     const dayShift = calendarPage.day('2020-03-06')
     dayShift.click()
 
-    const calendarDetailPage = CalendarDetailPage.verifyOnPage('Friday 6 March 2020')
+    const calendarDetailPage = CalendarDetailPage.verifyOnPage('Friday, 6th March 2020')
     calendarDetailPage.detailStart().should('contain', 'Start of shift').should('contain', 'Training - Internal')
     calendarDetailPage.detailFinish().should('contain.text', 'End of shift')
   })
@@ -49,7 +49,7 @@ context('A staff member can view their calendar', () => {
     nightShift.click()
 
     // the title comes from the seed data, hence the jumping between dates
-    const nightShiftPage = CalendarDetailPage.verifyOnPage('Monday 23 March 2020')
+    const nightShiftPage = CalendarDetailPage.verifyOnPage('Monday, 23rd March 2020')
     nightShiftPage.detailFinish().should('contain.text', 'End of shift')
     nightShiftPage.detailStartNight().should('contain', 'Start of shift').should('contain', 'Night Duties')
   })
@@ -61,12 +61,12 @@ context('A staff member can view their calendar', () => {
     const dayShift = calendarPage.day('2020-03-06')
     dayShift.click()
 
-    const calendarDetailPage = CalendarDetailPage.verifyOnPage('Friday 6 March 2020')
-    calendarDetailPage.nextDay().should('contain.text', 'Saturday 7 March 2020').click()
+    const calendarDetailPage = CalendarDetailPage.verifyOnPage('Friday, 6th March 2020')
+    calendarDetailPage.nextDay().should('contain.text', 'Saturday, 7th').click()
     // the title comes from the seed data, hence the jumping between dates
-    const nightShiftPage = CalendarDetailPage.verifyOnPage('Saturday 7 March 2020')
-    nightShiftPage.previousDay().should('contain.text', 'Friday 6 March 2020').click()
+    const nightShiftPage = CalendarDetailPage.verifyOnPage('Saturday, 7th March 2020')
+    nightShiftPage.previousDay().should('contain.text', 'Friday, 6th').click()
 
-    CalendarDetailPage.verifyOnPage('Friday 6 March 2020')
+    CalendarDetailPage.verifyOnPage('Friday, 6th March 2020')
   })
 })
