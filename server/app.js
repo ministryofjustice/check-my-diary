@@ -18,10 +18,10 @@ const calendarDetailRouter = require('./routes/calendar-detail')
 const maintenance = require('./middleware/maintenance')
 const contactUs = require('./middleware/contact-us')
 const notificationRouter = require('./routes/notification')
-const logger = require('../log.js')
 const auth = require('./authentication/auth')
 const config = require('../config')
 const userAuthenticationService = require('./services/userAuthenticationService')
+const errorHandler = require('./errorHandler')
 
 const tokenRefresh = require('./middleware/tokenRefresh')
 const authenticationMiddleware = require('./middleware/authenticationMiddleware')
@@ -232,19 +232,7 @@ module.exports = function createApp({ signInService }) {
     next(new Error('Not found'))
   })
 
-  app.use(renderErrors)
+  app.use(errorHandler)
 
   return app
-}
-
-// eslint-disable-next-line no-unused-vars
-function renderErrors(error, req, res, next) {
-  logger.error(error)
-  res.locals.error = error
-  res.locals.stack = production ? null : error.stack
-  res.locals.message = production ? 'Something went wrong. The error has been logged. Please try again' : error.message
-
-  res.status(error.status || 500)
-
-  res.render('pages/error', { csrfToken: res.locals.csrfToken })
 }
