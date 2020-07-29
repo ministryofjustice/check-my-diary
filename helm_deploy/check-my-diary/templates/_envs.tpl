@@ -17,10 +17,7 @@ env:
         key: API_CLIENT_SECRET
 
   - name: API_AUTH_ENDPOINT_URL
-    valueFrom:
-      secretKeyRef:
-        name: {{ template "app.name" . }}
-        key: API_AUTH_ENDPOINT_URL
+    value: {{ .Values.env.TWO_FACT_AUTH_ON | quote }}
 
   - name: SESSION_SECRET
     valueFrom:
