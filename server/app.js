@@ -204,7 +204,7 @@ module.exports = function createApp({ signInService }) {
 
   app.get('/login/callback', (req, res, next) =>
     passport.authenticate('oauth2', {
-      successReturnToOrRedirect: req.session.returnTo || '/',
+      successReturnToOrRedirect: '/auth/login',
       failureRedirect: '/autherror',
     })(req, res, next),
   )
@@ -219,15 +219,15 @@ module.exports = function createApp({ signInService }) {
   })
 
   // Routing
+  app.use('*', maintenance)
   app.use(authenticationMiddleware, csrfTokenMiddleware)
-  app.use('/', loginRouter)
+  app.use('/auth', loginRouter)
   app.use(authHandlerMiddleware)
   app.use('/contact-us', contactUs)
   app.use('/calendar', calendarRouter)
   app.use('/details', calendarDetailRouter)
   app.use('/notifications', notificationRouter)
-  app.use('/maintenance', maintenance)
-
+  app.get('/', (_req, res) => res.redirect('/calendar'))
   app.use((req, res, next) => {
     next(new Error('Not found'))
   })

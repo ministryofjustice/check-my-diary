@@ -7,21 +7,19 @@
       </svg>
       <a class="moj-header__link moj-header__link--organisation-name" href="/">Check my diary</a>
     </div>
+    <% if (employeeName) { %>
       <div class="moj-header__content">
-
         <nav class="moj-header__navigation" aria-label="Account navigation">
-
           <ul class="moj-header__navigation-list">
-            <% if (typeof employeeName != 'undefined') { %>
-                <li class="moj-header__navigation-item moj-header__centre">
-                  <div class="govuk-!-font-weight-bold"><%= employeeName %></div><a class="moj-header__navigation-link" href="<%= authUrl %>/account-details">Manage your details</a>
-                </li>
-            <% } %>
-            <li class="moj-header__navigation-item moj-header__centre">
-              <a class="moj-header__navigation-link" href="/logout">Sign out</a>
-            </li>
+              <li class="moj-header__navigation-item moj-header__centre">
+                <div class="govuk-!-font-weight-bold"><%= employeeName %></div><a class="moj-header__navigation-link" href="<%= authUrl %>/account-details">Manage your details</a>
+              </li>
+              <li class="moj-header__navigation-item moj-header__centre">
+                <a class="moj-header__navigation-link" href="/logout">Sign out</a>
+              </li>
           </ul>
         </nav>
       </div>
+    <% } %>
   </div>
 </header>

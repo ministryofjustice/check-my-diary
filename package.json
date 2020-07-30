@@ -12,7 +12,7 @@
     "css-build": "./bin/build-css",
     "clean": "rm -rf assets/* .port.tmp *.log build/* uploads/* test-results.xml",
     "lint": "eslint . --cache --max-warnings 0",
-    "test": "jest --config=jest.config.json",
+    "test": "TZ=UTC jest --config=jest.config.json",
     "int-test": "cypress run",
     "int-test-ui": "cypress open",
     "migrate": "knex migrate:latest",
