@@ -1,6 +1,5 @@
 const moment = require('moment')
 const config = require('../../config')
-const { isNullOrEmpty } = require('../helpers/utilities')
 
 module.exports = (
   { user: { employeeName = '' } = { employeeName: '' }, hmppsAuthMFAUser = false, authUrl = '' },
@@ -11,7 +10,7 @@ module.exports = (
     const {
       maintenance: { start, end },
     } = config
-    if (!isNullOrEmpty(start) && !isNullOrEmpty(end)) {
+    if (start && end) {
       const maintenanceStartDateTime = moment(start)
       const maintenanceEndDateTime = moment(end)
       const currentDateTime = moment()

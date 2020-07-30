@@ -20,21 +20,6 @@ function createTwoFactorAuthenticationHash(input) {
   return crypto.createHash('sha256').update(input.toString()).digest('base64')
 }
 
-function isNullOrEmpty(str) {
-  if (
-    typeof str === 'undefined' ||
-    !str ||
-    str.length === 0 ||
-    str === '' ||
-    !/[^\s]/.test(str) ||
-    /^\s*$/.test(str) ||
-    str.replace(/\s/g, '') === ''
-  ) {
-    return true
-  }
-  return false
-}
-
 function getAuthErrorDescription(error) {
   log.info(`login error description = ${error}`)
   log.info(
@@ -117,7 +102,6 @@ module.exports = {
   getStartMonth,
   getEndDate,
   get2faCode,
-  isNullOrEmpty,
   getAuthErrorDescription,
   createTwoFactorAuthenticationHash,
   configureCalendar,
