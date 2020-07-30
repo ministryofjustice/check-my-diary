@@ -25,3 +25,4 @@ env:
   MAINTENANCE_END: "2019-12-16T13:00:00"
   QUANTUM_ADDRESS: "212.137.36.230/32,62.25.109.197/32,195.92.38.16/28,35.177.125.252,35.177.137.160,195.59.75.0/24,194.33.192.0/25,194.33.193.0/25,194.33.196.0/25,194.33.197.0/25"
   REGIONS: "https://api.check-my-diary-dev.hmpps.dsd.io/api/health"
+  API_AUTH_ENDPOINT_URL: "https://sign-in-dev.hmpps.service.justice.gov.uk/auth"
