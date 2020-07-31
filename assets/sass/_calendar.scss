@@ -47,6 +47,7 @@ ul.calendar {
   .no-day,
   .calendar-item a {
     display: block;
+    position: relative;
     height: 125px;
     text-decoration: none;
     color: govuk-colour('black');
@@ -57,32 +58,26 @@ ul.calendar {
   }
 
   .rest-day {
-    color: white;
     background-color: govuk-colour('orange');
   }
 
   .holiday {
-    color: white;
     background-color: govuk-colour('yellow');
   }
 
   .illness {
-    color: white;
     background-color: govuk-colour('light-green');
   }
 
   .absence {
-    color: white;
     background-color: govuk-colour('yellow');
   }
 
   .detached-duty {
-    color: white;
     background-color: govuk-colour('brown');
   }
 
   .tu-official {
-    color: white;
     background-color: govuk-colour('pink');
   }
 
@@ -104,113 +99,50 @@ ul.calendar {
     }
   }
 
-  .calendar-item span {
+  .calendar-item span{
     display: block;
     padding-left: 5px;
 
     &.day {
       padding-top: 5px;
+      padding-left: 8px;
       margin-bottom: 3px;
-    }         
+      background-color: govuk-colour('white');
+    }
 
-    &.detail {
-      background-color: govuk-colour('green');      
-      padding: 2px 0 0 3px;
-      color: govuk-colour('white');
-      margin: 0 2px;
+    &.line{
+      margin: 2px 3px 0;
       border-radius: 2px;
-      margin-top: 2px;
+      height:23px;
+      color: govuk-colour('white');
     }
 
-    &.detail-start-night {
-      background-color: govuk-colour('black');
-    } 
-
-    &.detail-start-night-full {
-      background-color: govuk-colour('black');
-      height: 92px;
-      background-image: url("../assets/images/night-shift.PNG");
-      background-repeat: no-repeat;
-      background-size: auto;
-      background-position: top 20px left;
+    &.line-text{
+      padding-left: 8px;
+      color: govuk-colour('black');
     }
 
-    &.detail-start-night-full-overtime {
-      background-color: govuk-colour('black');
-      height: 68px;
-      background-image: url("../assets/images/night-shift.PNG");
-      background-repeat: no-repeat;
-      background-size: auto;
-      background-position: top 20px left;
-    }
-    
-    &.detail-start-night-half {
-      background-color: govuk-colour('black');
-      height: 45px;
-      background-image: url("../assets/images/night-shift.PNG");
-      background-repeat: no-repeat;
-      background-size: auto;
-      background-position: bottom right;
+    &.start {
+      background-color: govuk-colour('green');
     }
 
-    &.detail-overtime-night {
-      background-color: govuk-colour('black');
-      margin-bottom: 1px;
-    }
-    
-    &.detail-finish-night {
-      background-color: govuk-colour('black');
-    }   
-
-    &.detail-finish {
+    &.finish {
       background-color: govuk-colour('red');
-    }    
-
-    &.detail-duration {
-      margin-top: 3px;
     }
 
-    &.detail-overtime {
-      background-color: govuk-colour('purple');      
-      padding: 2px 0 0 3px;
-      color: govuk-colour('white');
-      margin: 0 2px;
-      border-radius: 2px;
-      margin-top: 48px;
-      margin-bottom: 2px;
+    &.night {
+      background-color: govuk-colour('black');
     }
 
-    &.detail-overtime-before {
-      background-color: govuk-colour('purple');      
-      padding: 2px 0 0 3px;
-      color: govuk-colour('white');
-      margin: 0 2px;
-      border-radius: 2px;      
-      margin-bottom: 2px;
+    &.overtime {
+      background-color: govuk-colour('purple');
     }
 
-    &.detail-overtime-after {
-      background-color: govuk-colour('purple');      
-      padding: 2px 0 0 3px;
-      color: govuk-colour('white');
-      margin: 0 2px;
-      border-radius: 2px;
-      margin-top: 28px;     
-      margin-bottom: 2px;
-    }
-
-    &.detail-overtime-normal {
-      background-color: govuk-colour('purple');      
-      padding: 2px 0 0 3px;
-      color: govuk-colour('white');
-      margin: 0 2px;
-      border-radius: 2px;
-      margin-top: 4px;
-      margin-bottom: 2px;
+    &.moon {
+      background-image: url("../assets/images/night-shift.PNG");
+      background-repeat: no-repeat;
+      background-size: 25px 20px;
+      background-position: top 0px right;
     }
   }
-}
-
-.calendar-title {
-  display: block;
 }
