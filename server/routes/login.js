@@ -1,7 +1,6 @@
 const router = require('express').Router()
 const { NotifyClient } = require('notifications-node-client')
 const ipRangeCheck = require('ip-range-check')
-const jwtDecode = require('jwt-decode')
 const logError = require('../logError')
 const config = require('../../config')
 const utilities = require('../helpers/utilities')
@@ -88,8 +87,6 @@ const postLogin = async (req, res) => {
 
       res.render('pages/two-factor-auth', { authError: false, csrfToken: res.locals.csrfToken })
     } else {
-      req.user.employeeName = jwtDecode(req.user.token).name
-
       await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(
         req.user.username,
         new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000),
@@ -121,8 +118,6 @@ router.post('/2fa', async (req, res) => {
     const inputTwoFactorCode = utilities.createTwoFactorAuthenticationHash(req.body.code)
 
     if (inputTwoFactorCode === userAuthenticationDetails[0].TwoFactorAuthenticationHash) {
-      req.user.employeeName = jwtDecode(req.user.token).name
-
       await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(
         req.user.username,
         new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000),

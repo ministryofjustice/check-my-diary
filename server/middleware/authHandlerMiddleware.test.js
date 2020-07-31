@@ -17,6 +17,18 @@ describe('auth handler middleware', () => {
   afterEach(() => {
     jest.resetAllMocks()
   })
+  describe('with an "hmppsAuthMFAUser" user', () => {
+    beforeEach(() => {
+      req.hmppsAuthMFAUser = true
+      authHandlerMiddleware(req, res, nextMock)
+    })
+    it('should not redirect', () => {
+      expect(redirectMock).not.toHaveBeenCalled()
+    })
+    it('should call next', () => {
+      expect(nextMock).toHaveBeenCalledTimes(1)
+    })
+  })
   describe('with a current session', () => {
     beforeEach(() => {
       getSessionExpiryDateTimeMock.mockResolvedValueOnce([{ SessionExpiryDateTime: '1979-10-12T08:29:00.000Z' }])
@@ -52,7 +64,7 @@ describe('auth handler middleware', () => {
   })
   describe('with no session found', () => {
     beforeEach(() => {
-      getSessionExpiryDateTimeMock.mockResolvedValueOnce()
+      getSessionExpiryDateTimeMock.mockResolvedValueOnce([{ SessionExpiryDateTime: null }])
       authHandlerMiddleware(req, res, nextMock)
     })
     it('should not call "getSessionExpiryDate" with the username', () => {
@@ -65,6 +77,20 @@ describe('auth handler middleware', () => {
     })
     it('should not call next', () => {
       expect(nextMock).not.toHaveBeenCalled()
+    })
+  })
+  describe('with no entry in the db', () => {
+    beforeEach(() => {
+      getSessionExpiryDateTimeMock.mockResolvedValueOnce()
+      authHandlerMiddleware(req, res, nextMock)
+    })
+    it('should not redirect to the 2fa route', () => {
+      expect(redirectMock).not.toHaveBeenCalled()
+    })
+    it('should call next with an error', () => {
+      expect(nextMock).toHaveBeenCalledWith(
+        new Error('There appears to be a problem with your account. Please contact customer services.'),
+      )
     })
   })
 })

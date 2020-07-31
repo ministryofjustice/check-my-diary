@@ -1,20 +1,19 @@
 const moment = require('moment')
+const logger = require('../../log')
 
-const authHandler = async ({ app, user: { username } }, res, next) => {
+const authHandler = async ({ hmppsAuthMFAUser, app, user: { username } }, res, next) => {
   try {
+    if (hmppsAuthMFAUser) return next()
     const {
       userAuthenticationService: { getSessionExpiryDateTime },
     } = app.get('DataServices')
     const userSessionExpiryDateTime = await getSessionExpiryDateTime(username)
-    if (
-      !userSessionExpiryDateTime ||
-      !userSessionExpiryDateTime[0] ||
-      moment().isAfter(moment(userSessionExpiryDateTime[0].SessionExpiryDateTime))
-    )
-      return res.redirect('/auth/login')
-    return next()
+    const [{ SessionExpiryDateTime }] = userSessionExpiryDateTime
+    if (SessionExpiryDateTime && moment().isBefore(moment(SessionExpiryDateTime))) return next()
+    return res.redirect('/auth/login')
   } catch (error) {
-    return next(error)
+    logger.info(error)
+    return next(new Error('There appears to be a problem with your account. Please contact customer services.'))
   }
 }
 
