@@ -7,7 +7,7 @@
       </svg>
       <a class="moj-header__link moj-header__link--organisation-name" href="/">Check my diary</a>
     </div>
-    <% if (employeeName) { %>
+    <% if (typeof employeeName === 'string' && employeeName) { %>
       <div class="moj-header__content">
         <nav class="moj-header__navigation" aria-label="Account navigation">
           <ul class="moj-header__navigation-list">
