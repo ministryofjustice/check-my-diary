@@ -95,7 +95,7 @@
                     <% } %>
 
                   <% } else { %>
-                    <% if (checkIfStartDateTimeBeforeEndDateTime(task.dailyStartDateTime, task.dailyEndDateTime)) { %>
+                    <% if (firstDateIsAfterSecondDate(task.dailyStartDateTime, task.dailyEndDateTime)) { %>
 
                       <li class="detail-finish">
                         <span class="time"><%= getTimeFromDate(task.dailyEndDateTime) %></span>

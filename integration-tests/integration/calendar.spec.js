@@ -25,7 +25,7 @@ context('A staff member can view their calendar', () => {
     const dayShift = calendarPage.day('2020-03-06')
     dayShift.children().should((spans) => {
       const allText = spans.map((i, el) => Cypress.$(el).text().trim())
-      expect(allText.get()).to.deep.eq(['Friday, 6', '6', 'Start 07:45', 'Finish 19:30', '10hrs 15mins'])
+      expect(allText.get()).to.deep.eq(['Friday, 6th', '6', 'Start 07:45', 'Finish 19:30', '10hrs 15mins'])
     })
   })
 

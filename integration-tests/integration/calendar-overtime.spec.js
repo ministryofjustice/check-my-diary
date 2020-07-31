@@ -24,37 +24,37 @@ context('A staff member can view their overtime calendar', () => {
     const dayShift = calendarPage.day('2020-03-08')
     dayShift.children().should((spans) => {
       const allText = spans.map((i, el) => Cypress.$(el).text().trim())
-      expect(allText.get()).to.deep.eq(['Sunday, 8', '8', 'Start 07:30', 'Finish 17:15', '8hrs 45mins', 'Overtime'])
+      expect(allText.get()).to.deep.eq(['Sunday, 8th', '8', 'Start 07:30', 'Finish 17:15', '8hrs 45mins', 'Overtime'])
     })
 
     const restDay = calendarPage.day('2020-03-09')
     restDay.children().should((spans) => {
       const allText = spans.map((i, el) => Cypress.$(el).text().trim())
-      expect(allText.get()).to.deep.eq(['Monday, 9', '9', 'Rest day', 'Overtime'])
+      expect(allText.get()).to.deep.eq(['Monday, 9th', '9', 'Rest Day', 'Overtime'])
     })
 
     const holiday = calendarPage.day('2020-03-28')
     holiday.children().should((spans) => {
       const allText = spans.map((i, el) => Cypress.$(el).text().trim())
-      expect(allText.get()).to.deep.eq(['Saturday, 28', '28', 'Holiday', 'Overtime'])
+      expect(allText.get()).to.deep.eq(['Saturday, 28th', '28', 'Holiday', 'Overtime'])
     })
 
     const nightShiftStart = calendarPage.day('2020-03-22')
     nightShiftStart.children().should((spans) => {
       const allText = spans.map((i, el) => Cypress.$(el).text().trim())
-      expect(allText.get()).to.deep.eq(['Sunday, 22', '22', 'Overtime', 'Start 20:45'])
+      expect(allText.get()).to.deep.eq(['Sunday, 22nd', '22', 'Overtime', 'Start 20:45'])
     })
 
     const nightShift = calendarPage.day('2020-03-24')
     nightShift.children().should((spans) => {
       const allText = spans.map((i, el) => Cypress.$(el).text().trim())
-      expect(allText.get()).to.deep.eq(['Tuesday, 24', '24', 'Finish 07:30', 'Overtime', 'Start 20:45'])
+      expect(allText.get()).to.deep.eq(['Tuesday, 24th', '24', 'Finish 07:30', '11hrs', 'Overtime', 'Start 20:45'])
     })
 
     const nightShiftFinish = calendarPage.day('2020-03-26')
     nightShiftFinish.children().should((spans) => {
       const allText = spans.map((i, el) => Cypress.$(el).text().trim())
-      expect(allText.get()).to.deep.eq(['Thursday, 26', '26', 'Finish 07:45', '10hrs 30mins', 'Overtime'])
+      expect(allText.get()).to.deep.eq(['Thursday, 26th', '26', 'Finish 07:45', '10hrs 30mins', 'Overtime'])
     })
   })
 

@@ -49,6 +49,7 @@ router.get('/:date', async (req, res) => {
       csrfToken: res.locals.csrfToken,
       hmppsAuthMFAUser,
       authUrl,
+      moment,
     })
   } catch (error) {
     serviceUnavailable(req, res)
