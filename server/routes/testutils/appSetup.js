@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 const cookieSession = require('cookie-session')
 const path = require('path')
 
-module.exports = (route, services) => {
+module.exports = (route, services, reqParams = {}) => {
   const app = express()
 
   app.set('views', path.join(__dirname, '../../views'))
@@ -14,14 +14,20 @@ module.exports = (route, services) => {
   app.set('DataServices', services)
 
   app.use((req, res, next) => {
-    ;(req.user = {
-      firstName: 'first',
-      lastName: 'last',
-      userId: 'id',
-      token: 'token',
-      username: 'user1',
-    }),
-      next()
+    Object.assign(
+      req,
+      {
+        user: {
+          firstName: 'first',
+          lastName: 'last',
+          userId: 'id',
+          token: 'token',
+          employeeName: 'user1',
+        },
+      },
+      reqParams,
+    )
+    next()
   })
   app.use(cookieSession({ keys: [''] }))
   app.use(bodyParser.json())

@@ -4,7 +4,7 @@ const stubShifts = () =>
   stubFor({
     request: {
       method: 'GET',
-      urlPathPattern: '/api/shifts',
+      urlPathPattern: '/shifts',
     },
     response: {
       status: 200,
@@ -313,7 +313,7 @@ const stubRestDay = () =>
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/tasks\\?date=2020-03-09',
+      urlPattern: '/shifts/tasks\\?date=2020-03-09',
     },
     response: {
       status: 200,
@@ -341,7 +341,7 @@ const stubHoliday = () =>
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/tasks\\?date=2020-03-28',
+      urlPattern: '/shifts/tasks\\?date=2020-03-28',
     },
     response: {
       status: 200,
@@ -369,7 +369,7 @@ const stubOvertimeDayShift1 = () =>
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/tasks\\?date=2020-03-08',
+      urlPattern: '/shifts/tasks\\?date=2020-03-08',
     },
     response: {
       status: 200,
@@ -415,7 +415,7 @@ const stubOvertimeDayShift2 = () =>
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/overtime/tasks\\?date=2020-03-08',
+      urlPattern: '/shifts/overtime/tasks\\?date=2020-03-08',
     },
     response: {
       status: 200,
@@ -443,7 +443,7 @@ const stubOvertimeDayShift3 = () =>
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/overtime/tasks\\?date=2020-03-09',
+      urlPattern: '/shifts/overtime/tasks\\?date=2020-03-09',
     },
     response: {
       status: 200,
@@ -471,7 +471,7 @@ const stubOvertimeDayShift4 = () =>
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/overtime/tasks\\?date=2020-03-28',
+      urlPattern: '/shifts/overtime/tasks\\?date=2020-03-28',
     },
     response: {
       status: 200,
@@ -499,7 +499,7 @@ const stubOvertimeDayShift5 = () =>
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/overtime/tasks\\?date=2020-03-22',
+      urlPattern: '/shifts/overtime/tasks\\?date=2020-03-22',
     },
     response: {
       status: 200,
@@ -527,7 +527,7 @@ const stubOvertimeDayShift6 = () =>
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/overtime/tasks\\?date=2020-03-26',
+      urlPattern: '/shifts/overtime/tasks\\?date=2020-03-26',
     },
     response: {
       status: 200,
@@ -555,7 +555,7 @@ const stubOvertimeDayShift7 = () =>
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/overtime/tasks\\?date=2020-03-24',
+      urlPattern: '/shifts/overtime/tasks\\?date=2020-03-24',
     },
     response: {
       status: 200,
@@ -583,7 +583,7 @@ const stubDayShift1 = () =>
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/tasks\\?date=2020-03-06',
+      urlPattern: '/shifts/tasks\\?date=2020-03-06',
     },
     response: {
       status: 200,
@@ -638,7 +638,7 @@ const stubDayShift2 = () =>
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/tasks\\?date=2020-03-07',
+      urlPattern: '/shifts/tasks\\?date=2020-03-07',
     },
     response: {
       status: 200,
@@ -684,7 +684,7 @@ const stubNightShift1 = () =>
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/tasks\\?date=2020-03-23',
+      urlPattern: '/shifts/tasks\\?date=2020-03-23',
     },
     response: {
       status: 200,
@@ -712,7 +712,7 @@ const stubNightShift2 = () =>
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/tasks\\?date=2020-03-22',
+      urlPattern: '/shifts/tasks\\?date=2020-03-22',
     },
     response: {
       status: 200,
@@ -740,7 +740,7 @@ const stubNightShift3 = () =>
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/tasks\\?date=2020-03-26',
+      urlPattern: '/shifts/tasks\\?date=2020-03-26',
     },
     response: {
       status: 200,
@@ -768,7 +768,7 @@ const stubNightShift4 = () =>
     priority: '1',
     request: {
       method: 'GET',
-      urlPattern: '/api/shifts/tasks\\?date=2020-03-24',
+      urlPattern: '/shifts/tasks\\?date=2020-03-24',
     },
     response: {
       status: 200,

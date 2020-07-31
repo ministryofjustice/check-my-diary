@@ -609,26 +609,16 @@ const fakeCalendarData2 = {
   ],
 }
 
-const fakeUserAuthenticationDetails = [
-  {
-    ApiUrl: 'https://localhost:80',
-  },
-]
-
-const userAuthenticationService = {
-  getUserAuthenticationDetails: jest.fn(),
-}
-
 const calendarService = {
-  getCalendarData: jest.fn(),
+  getCalendarData: jest.fn().mockResolvedValue(),
 }
 
 const calendarOvertimeService = {
-  getCalendarOvertimeData: jest.fn(),
+  getCalendarOvertimeData: jest.fn().mockResolvedValue(),
 }
 
 const notificationService = {
-  countUnprocessedNotifications: jest.fn(),
+  countUnprocessedNotifications: jest.fn().mockResolvedValue(),
   getNotifications: jest.fn(),
 }
 
@@ -640,15 +630,17 @@ jest.mock('../../log', () => ({
 let app
 
 beforeEach(() => {
-  app = appSetup(calendarRoute, {
-    calendarService,
-    calendarOvertimeService,
-    notificationService,
-    userAuthenticationService,
-  })
+  app = appSetup(
+    calendarRoute,
+    {
+      calendarService,
+      calendarOvertimeService,
+      notificationService,
+    },
+    { params: { date: '2020-02-01' }, hmppsAuthMFAUser: false, authUrl: 'https://www.gov.uk/' },
+  )
 
-  notificationService.countUnprocessedNotifications.mockReturnValue(fakeShiftNotifications.length)
-  userAuthenticationService.getUserAuthenticationDetails.mockReturnValue(fakeUserAuthenticationDetails)
+  notificationService.countUnprocessedNotifications.mockResolvedValue(fakeShiftNotifications.length)
 })
 
 afterEach(() => {
@@ -657,7 +649,7 @@ afterEach(() => {
 
 describe('GET and POST for /:date', () => {
   it('returns calendar page for February 2020', async () => {
-    await calendarService.getCalendarData.mockReturnValue(fakeCalendarData1)
+    await calendarService.getCalendarData.mockResolvedValue(fakeCalendarData1)
 
     await request(app)
       .get('/2020-02-01')
@@ -681,13 +673,12 @@ describe('GET and POST for /:date', () => {
         expect(calendarService.getCalendarData).toHaveBeenCalledTimes(1)
         expect(calendarOvertimeService.getCalendarOvertimeData).toHaveBeenCalledTimes(1)
         expect(notificationService.countUnprocessedNotifications).toHaveBeenCalledTimes(1)
-        expect(userAuthenticationService.getUserAuthenticationDetails).toHaveBeenCalledTimes(1)
         expect(logger.info).toHaveBeenCalledTimes(1)
       })
   })
 
   it('returns calendar page for March 2020', async () => {
-    await calendarService.getCalendarData.mockReturnValue(fakeCalendarData2)
+    await calendarService.getCalendarData.mockResolvedValue(fakeCalendarData2)
 
     await request(app)
       .get('/2020-03-01')
@@ -710,7 +701,6 @@ describe('GET and POST for /:date', () => {
         expect(calendarService.getCalendarData).toHaveBeenCalledTimes(1)
         expect(calendarOvertimeService.getCalendarOvertimeData).toHaveBeenCalledTimes(1)
         expect(notificationService.countUnprocessedNotifications).toHaveBeenCalledTimes(1)
-        expect(userAuthenticationService.getUserAuthenticationDetails).toHaveBeenCalledTimes(1)
         expect(logger.info).toHaveBeenCalledTimes(1)
       })
   })

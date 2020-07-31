@@ -90,16 +90,6 @@ const fakeCalendarDetailData2 = {
   ],
 }
 
-const fakeUserAuthenticationDetails = [
-  {
-    ApiUrl: 'https://localhost:80',
-  },
-]
-
-const userAuthenticationService = {
-  getUserAuthenticationDetails: jest.fn(),
-}
-
 const calendarService = {
   getCalendarDetails: jest.fn(),
 }
@@ -116,8 +106,7 @@ jest.mock('../../log', () => ({
 let app
 
 beforeEach(() => {
-  app = appSetup(calendarRoute, { calendarService, calendarOvertimeService, userAuthenticationService })
-  userAuthenticationService.getUserAuthenticationDetails.mockReturnValue(fakeUserAuthenticationDetails)
+  app = appSetup(calendarRoute, { calendarService, calendarOvertimeService })
 })
 
 afterEach(() => {
@@ -154,7 +143,6 @@ describe('GET and POST for /:details', () => {
         expect(res.text).toContain('End of shift')
 
         expect(calendarService.getCalendarDetails).toHaveBeenCalledTimes(1)
-        expect(userAuthenticationService.getUserAuthenticationDetails).toHaveBeenCalledTimes(1)
         expect(logger.info).toHaveBeenCalledTimes(1)
       })
   })
@@ -183,7 +171,6 @@ describe('GET and POST for /:details', () => {
         expect(res.text).toContain('End of shift')
 
         expect(calendarService.getCalendarDetails).toHaveBeenCalledTimes(1)
-        expect(userAuthenticationService.getUserAuthenticationDetails).toHaveBeenCalledTimes(1)
         expect(logger.info).toHaveBeenCalledTimes(1)
       })
   })

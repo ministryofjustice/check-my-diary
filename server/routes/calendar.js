@@ -1,51 +1,44 @@
 const router = require('express').Router()
 const moment = require('moment')
-const { appendUserErrorMessage, processOvertimeShifts, getStartMonth } = require('../helpers/utilities')
+const { processOvertimeShifts, getStartMonth } = require('../helpers/utilities')
 const logger = require('../../log')
 
-router.get('/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', async (req, res, next) => {
-  logger.info('GET calendar view')
+router.get(
+  '/:date',
+  async ({ app, user: { employeeName, token }, params: { date }, hmppsAuthMFAUser, authUrl }, res, next) => {
+    const {
+      locals: { csrfToken },
+    } = res
+    logger.info('GET calendar view')
+    const {
+      calendarService: { getCalendarData },
+      calendarOvertimeService: { getCalendarOvertimeData },
+      notificationService: { countUnprocessedNotifications },
+    } = app.get('DataServices')
 
-  const { app, user, params, hmppsAuthMFAUser, authUrl } = req
+    try {
+      const [notificationCount, apiShiftsResponse, apiOvertimeShiftsResponse] = await Promise.all([
+        countUnprocessedNotifications(token),
+        getCalendarData(date, token),
+        getCalendarOvertimeData(date, token),
+      ])
+      const results = processOvertimeShifts(apiShiftsResponse, apiOvertimeShiftsResponse)
 
-  const { calendarService, calendarOvertimeService, notificationService, userAuthenticationService } = app.get(
-    'DataServices',
-  )
-
-  try {
-    const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(user.username)
-
-    const notificationCount = await notificationService.countUnprocessedNotifications(user.token)
-
-    const apiShiftsResponse = await calendarService.getCalendarData(
-      userAuthenticationDetails[0].ApiUrl,
-      params.date,
-      user.token,
-    )
-
-    const apiOvertimeShiftsResponse = await calendarOvertimeService.getCalendarOvertimeData(
-      userAuthenticationDetails[0].ApiUrl,
-      params.date,
-      user.token,
-    )
-
-    const results = processOvertimeShifts(apiShiftsResponse, apiOvertimeShiftsResponse)
-
-    res.render('pages/calendar', {
-      notificationCount,
-      tab: 'Calendar',
-      startDate: moment(params.date),
-      data: results,
-      employeeName: user.employeeName,
-      csrfToken: res.locals.csrfToken,
-      hmppsAuthMFAUser,
-      authUrl,
-      moment,
-    })
-  } catch (error) {
-    next(appendUserErrorMessage(error))
-  }
-})
+      res.render('pages/calendar', {
+        notificationCount,
+        tab: 'Calendar',
+        startDate: moment(date),
+        data: results,
+        employeeName,
+        csrfToken,
+        hmppsAuthMFAUser,
+        authUrl,
+      })
+    } catch (error) {
+      next(error)
+    }
+  },
+)
 
 // eslint-disable-next-line func-names
 router.get('/', function (req, res) {
