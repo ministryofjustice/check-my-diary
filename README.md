@@ -12,7 +12,13 @@ to send emails and SMS.
 ```bash
 git clone git@github.com:ministryofjustice/check-my-diary.git
 cd check-my-diary
+npm i
 ```
+## Setting environment variables
+[`template.env`](./template.env) contains all the enviroment variables need for running this app.
+
+Ask a contributor for any values you need then rename this file to `.env`
+
 ## Build assets
 `npm run build`
 
@@ -21,9 +27,21 @@ Ensure you build assets first
 
 `npm start`
 
-## Running the app in dev mode
+
+## Running the app in "watch mode"
 
 `npm start:dev`
+
+
+## Running the app locally against local service
+1. Remove any running docker containers `docker-compose down --rm all`
+2. In this repository run `docker-compose up`
+3. Remote into docker database to create your user 
+  - `docker exec -it check-my-diary-db psql -U [DATABASE-NAME-FROM-.ENV]`
+  - `INSERT INTO "UserAuthentication"("QuantumId", "EmailAddress", "Sms", "UseEmailAddress", "UseSms", "ApiUrl")VALUES ('your-name', '', '', false, false, 'https://api.check-my-diary-dev.hmpps.dsd.io/api/');`
+4. Clone and cd into `cmd-api`
+5. Run `cmd-api`
+6. Start app in dev mode, in `check-my-diary` run `npm start:dev`
 
 ## Run linter
 
@@ -42,6 +60,8 @@ npm test
 
 The integration tests are also run using jest, but separated out from the unit tests as they require a database and
 a [wiremock](http://wiremock.org/) instance.
+
+NB: To run integration tests you must remove your `.env` from scope so that `config.js` uses defaults
 
 To start the docker images for the tests:
 
