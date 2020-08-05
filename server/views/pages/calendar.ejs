@@ -84,11 +84,11 @@
                      <% } %>
                     <% if (day.type === 'Shift') { %>
                         <% if(firstDateIsAfterSecondDate(day.dailyEndDateTime, day.dailyStartDateTime)) {%>
-                            <span class="line start">Start <%= moment(day.dailyStartDateTime).format("HH:m") %></span>
-                            <span class="line finish">Finish <%= moment(day.dailyEndDateTime).format("HH:m") %></span>
+                            <span class="line start">Start <%= moment(day.dailyStartDateTime).format("HH:mm") %></span>
+                            <span class="line finish">Finish <%= moment(day.dailyEndDateTime).format("HH:mm") %></span>
                             <span class="line-text"><%= convertSecondsToHms(day.durationInSeconds) %></span>
                         <% } else if (firstDateIsAfterSecondDate(day.dailyStartDateTime, day.dailyEndDateTime) || checkIfDateTimeIsNull(day.dailyStartDateTime)) { %>
-                            <span class="line night">Finish <%= moment(day.dailyEndDateTime).format("HH:m") %></span>
+                            <span class="line night">Finish <%= moment(day.dailyEndDateTime).format("HH:mm") %></span>
                             <span class="line-text" ><%= convertSecondsToHms(day.durationInSeconds) %></span>
                         <% } %>
                         <% if (day.overtime && !checkIfDateTimeIsNull(day.dailyEndDateTime)) { %>
@@ -98,7 +98,7 @@
                             <% if (day.overtime && checkIfDateTimeIsNull(day.dailyEndDateTime)) { %>
                                 <span class="line overtime">Overtime</span>
                             <% } %>
-                            <span class="line night moon">Start <%= moment(day.dailyStartDateTime).format("HH:m") %></span>
+                            <span class="line night moon">Start <%= moment(day.dailyStartDateTime).format("HH:mm") %></span>
                         <% } %>
 
                     <% } else if (day.type !== 'Rest Day'
@@ -109,8 +109,8 @@
                             && day.type !== 'TU Officials Leave Hours'
                             && day.startDateTime !== day.date + 'T00:00:00'
                             && day.endDateTime !== day.date + 'T23:59:59') { %>
-                        <span class="line start">Start <%= moment(day.dailyStartDateTime).format("HH:m") %></span>
-                        <span class="line finish">Finish <%= moment(day.dailyEndDateTime).format("HH:m") %></span>
+                        <span class="line start">Start <%= moment(day.dailyStartDateTime).format("HH:mm") %></span>
+                        <span class="line finish">Finish <%= moment(day.dailyEndDateTime).format("HH:mm") %></span>
                         <span class="line-text"><%= convertSecondsToHms(day.durationInSeconds) %></span>
                     <% } else if (day.overtime) { %>
                         <span class="line overtime">Overtime</span>
