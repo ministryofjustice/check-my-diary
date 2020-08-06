@@ -74,7 +74,9 @@ const postLogin = async (req, res) => {
           .catch((err) => {
             throw new Error(err)
           })
-      } else if (emailEnabled) {
+      }
+      
+      if (emailEnabled) {
         // For email
         await notify
           .sendEmail(notifyEmailTemplate, userAuthentication.EmailAddress || '', {
