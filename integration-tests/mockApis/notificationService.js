@@ -66,6 +66,8 @@ const stubNotificationPreferencesGet = async () =>
       },
       jsonBody: {
         snoozeUntil: '2020-08-27',
+        preference: 'SMS',
+        sms: '01189998819991197253',
       },
     },
   })
