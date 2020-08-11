@@ -22,7 +22,7 @@
         </ul>
       </div>
       <div id="notifications" class="govuk-grid-row">
-        <% if (snoozeUntil) { %>
+        <% if (notificationsEnabled && snoozeUntil) { %>
           <% include ../partials/snooze-banner %>
         <% } %>
         <div class="govuk-grid-column-two-thirds">
@@ -53,7 +53,9 @@
               <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/settings">Notification settings</a>
 
             </section>
-          <% include ../partials/pause-notifcations %>
+            <% if (notificationsEnabled ) { %>
+              <% include ../partials/pause-notifcations %>
+            <% } %>
           <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
 
         </div>
