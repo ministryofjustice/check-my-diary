@@ -14,8 +14,8 @@ const notificationService = {
       })
       .then((response) => response.data)
       .catch((error) => {
-        logger.error(`notificationService : ${error}`)
-        return error
+        logger.error(`notificationService getNotifications : ${error}`)
+        throw error
       })
   },
 
@@ -33,8 +33,8 @@ const notificationService = {
       })
       .then((response) => response.data)
       .catch((error) => {
-        logger.error(`notificationService : ${error}`)
-        return error
+        logger.error(`notificationService getPreferences : ${error}`)
+        throw error
       })
   },
 
@@ -51,7 +51,7 @@ const notificationService = {
         },
       )
       .catch((error) => {
-        logger.error(`notificationService : ${error}`)
+        logger.error(`notificationService updatePreferences : ${error}`)
         throw error
       })
   },
@@ -69,8 +69,8 @@ const notificationService = {
         },
       )
       .catch((error) => {
-        logger.error(`notificationService : ${error}`)
-        return error
+        logger.error(`notificationService updateSnooze : ${error}`)
+        throw error
       })
   },
 

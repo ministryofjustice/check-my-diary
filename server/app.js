@@ -18,7 +18,6 @@ const calendarDetailRouter = require('./routes/calendar-detail')
 const maintenance = require('./middleware/maintenance')
 const contactUs = require('./middleware/contact-us')
 const notificationRouter = require('./routes/notification')
-const logger = require('../log.js')
 const auth = require('./authentication/auth')
 const config = require('../config')
 const userAuthenticationService = require('./services/userAuthenticationService')
@@ -31,10 +30,14 @@ const calendarOvertimeService = require('./services/calendarOvertimeService')
 const notificationService = require('./services/notificationService')
 const authHandlerMiddleware = require('./middleware/authHandlerMiddleware')
 const csrfTokenMiddleware = require('./middleware/csrfTokenMiddleware')
+const errorsMiddleware = require('./middleware/errorsMiddleware')
 
 const version = moment.now().toString()
 const production = process.env.NODE_ENV === 'production'
 const testMode = process.env.NODE_ENV === 'test'
+
+const { appendUserErrorMessage } = require('./helpers/utilities')
+const { NOT_FOUND_ERROR } = require('./helpers/errorConstants')
 
 if (config.rejectUnauthorized) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = config.rejectUnauthorized
@@ -228,23 +231,14 @@ module.exports = function createApp({ signInService }) {
   app.use('/details', calendarDetailRouter)
   app.use('/notifications', notificationRouter)
   app.get('/', (_req, res) => res.redirect('/calendar'))
-  app.use((req, res, next) => {
-    next(new Error('Not found'))
+
+  app.use('*', (req, res, next) => {
+    const error = new Error('Not found')
+    error.status = 404
+    next(appendUserErrorMessage(error, NOT_FOUND_ERROR))
   })
 
-  app.use(renderErrors)
+  app.use('*', errorsMiddleware)
 
   return app
-}
-
-// eslint-disable-next-line no-unused-vars
-function renderErrors(error, req, res, next) {
-  logger.error(error)
-  res.locals.error = error
-  res.locals.stack = production ? null : error.stack
-  res.locals.message = production ? 'Something went wrong. The error has been logged. Please try again' : error.message
-
-  res.status(error.status || 500)
-
-  res.render('pages/error', { csrfToken: res.locals.csrfToken })
 }

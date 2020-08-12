@@ -1,5 +1,6 @@
 require('jwt-decode')
-const { hmppsAuthMFAUser, getSnoozeUntil } = require('./utilities')
+const { hmppsAuthMFAUser, getSnoozeUntil, appendUserErrorMessage } = require('./utilities')
+const { GENERAL_ERROR, NOT_FOUND_ERROR } = require('./errorConstants')
 
 jest.mock('jwt-decode', () => (token) => token)
 
@@ -33,5 +34,29 @@ describe('getSnoozeUntil', () => {
   })
   it('should return an empty string if the date is undefined', () => {
     expect(getSnoozeUntil()).toEqual('')
+  })
+})
+
+describe('appendUserErrorMessage', () => {
+  let mrsError
+  let returnedValue
+  beforeEach(() => {
+    mrsError = new Error()
+  })
+  describe('with a specific error message', () => {
+    beforeEach(() => {
+      returnedValue = appendUserErrorMessage(mrsError, NOT_FOUND_ERROR)
+    })
+    it('should return the error', () => {
+      expect(returnedValue).toBe(mrsError)
+    })
+    it('should append a user error message', () => {
+      expect(returnedValue.userMessage).toEqual(NOT_FOUND_ERROR)
+    })
+  })
+  describe('with no specific error message', () => {
+    it('should append a general user error message', () => {
+      expect(appendUserErrorMessage(mrsError).userMessage).toEqual(GENERAL_ERROR)
+    })
   })
 })

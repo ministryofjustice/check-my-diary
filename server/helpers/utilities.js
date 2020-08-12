@@ -3,6 +3,7 @@ const crypto = require('crypto')
 const jwtDecode = require('jwt-decode')
 
 const log = require('../../log')
+const { GENERAL_ERROR } = require('./errorConstants')
 
 function getStartMonth() {
   return moment().startOf('month').format('YYYY-MM-DD')
@@ -98,6 +99,8 @@ const getSnoozeUntil = (rawSnoozeUntil) => {
   return snoozeUntil.isAfter(moment()) ? snoozeUntil.add(1, 'day').format('dddd, Do MMMM YYYY') : ''
 }
 
+const appendUserErrorMessage = (error, userMessage = GENERAL_ERROR) => Object.assign(error, { userMessage })
+
 module.exports = {
   getStartMonth,
   getEndDate,
@@ -108,4 +111,5 @@ module.exports = {
   processOvertimeShifts,
   hmppsAuthMFAUser,
   getSnoozeUntil,
+  appendUserErrorMessage,
 }

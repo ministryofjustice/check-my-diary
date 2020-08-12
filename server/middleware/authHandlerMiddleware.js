@@ -1,5 +1,7 @@
 const moment = require('moment')
 const logger = require('../../log')
+const { appendUserErrorMessage } = require('../helpers/utilities')
+const { AUTHENTICATION_ERROR } = require('../helpers/errorConstants')
 
 const authHandler = async ({ hmppsAuthMFAUser, app, user: { username } }, res, next) => {
   try {
@@ -13,7 +15,7 @@ const authHandler = async ({ hmppsAuthMFAUser, app, user: { username } }, res, n
     return res.redirect('/auth/login')
   } catch (error) {
     logger.info(error)
-    return next(new Error('There appears to be a problem with your account. Please contact customer services.'))
+    return next(appendUserErrorMessage(error, AUTHENTICATION_ERROR))
   }
 }
 

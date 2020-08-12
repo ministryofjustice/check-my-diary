@@ -1,6 +1,8 @@
 const { body, validationResult } = require('express-validator')
 const logger = require('../../log')
 const { NONE, EMAIL, SMS } = require('../helpers/constants')
+const { appendUserErrorMessage } = require('../helpers/utilities')
+const { NOTIFICATION_SETTINGS_POST_ERROR } = require('../helpers/errorConstants')
 
 const validationRules = () => {
   const contactMethod = 'contactMethod'
@@ -50,8 +52,7 @@ const postNotificationSettingsMiddleware = async (req, res, next) => {
     )
     return res.redirect('/notifications')
   } catch (error) {
-    res.locals.error = error
-    return next()
+    return next(appendUserErrorMessage(error, NOTIFICATION_SETTINGS_POST_ERROR))
   }
 }
 
