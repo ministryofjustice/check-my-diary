@@ -1,9 +1,6 @@
 const router = require('express').Router()
-const moment = require('moment')
 
 const { check } = require('express-validator')
-
-const { getSnoozeUntil } = require('../helpers/utilities')
 
 const logger = require('../../log')
 const postNotificationMiddleware = require('../middleware/postNotificationMiddleware')
@@ -13,6 +10,7 @@ const {
   postNotificationSettingsValidationRules,
 } = require('../middleware/postNotificationSettingsMiddleware')
 const validate = require('../middleware/validate')
+const notificationMiddleware = require('../middleware/notificationMiddleware')
 
 /**
  * Service unavailable
@@ -50,44 +48,7 @@ router.post('/resume', async (req, res) => {
 
 router
   .route('/')
-  .get(async (req, res, next) => {
-    try {
-      const {
-        user: { employeeName, token },
-        app,
-        hmppsAuthMFAUser,
-        authUrl,
-      } = req
-
-      const {
-        locals: { csrfToken },
-      } = res
-      let errors
-      const { notificationService } = app.get('DataServices')
-      const [{ snoozeUntil }, data] = await Promise.all([
-        notificationService.getPreferences(token),
-        notificationService.getNotifications(token),
-      ]).catch((error) => {
-        errors = error
-      })
-
-      logger.info('GET notifications view')
-
-      return res.render('pages/notifications', {
-        errors,
-        data,
-        csrfToken,
-        hmppsAuthMFAUser,
-        snoozeUntil: getSnoozeUntil(snoozeUntil),
-        moment,
-        employeeName,
-        authUrl,
-      })
-    } catch (error) {
-      res.locals.error = error
-      return next()
-    }
-  })
+  .get(notificationMiddleware)
   .post(
     [
       check('pauseValue', 'Must be a number under 100').exists({ checkFalsy: true }).isInt({ min: 1, max: 99 }),
@@ -95,9 +56,7 @@ router
     ],
     validate,
     postNotificationMiddleware,
-    (req, res) => {
-      res.redirect('/notifications')
-    },
+    notificationMiddleware,
   )
 
 module.exports = router
