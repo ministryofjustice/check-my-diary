@@ -21,7 +21,7 @@ const notificationMiddleware = async (req, res, next) => {
       notificationService.getPreferences(token),
       notificationService.getNotifications(token),
     ])
-
+    data.sort(({ shiftModified: first }, { shiftModified: second }) => moment(second) - moment(first))
     const notificationsEnabled = preference !== NONE
     logger.info('GET notifications view')
 
