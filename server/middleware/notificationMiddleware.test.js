@@ -11,7 +11,9 @@ describe('notification middleware', () => {
   const authUrl = 'carrot'
   const employeeName = 'fennel'
   const hmppsAuthMFAUser = 'peas'
-  const noticationData = 'apples and pears'
+  const notification1 = { shiftModified: '2020-08-24' }
+  const notification2 = { shiftModified: '2020-08-26' }
+  let noticationData
 
   const getPreferencesMock = jest.fn()
   const getNotificationsMock = jest.fn()
@@ -24,6 +26,7 @@ describe('notification middleware', () => {
   let res
   const errors = null
   beforeEach(() => {
+    noticationData = [notification1, notification2]
     getNotificationsMock.mockResolvedValue(noticationData)
     res = { render: renderMock, locals: { csrfToken } }
     req = { user: { token, employeeName }, authUrl, hmppsAuthMFAUser, body: {}, app }
@@ -44,6 +47,9 @@ describe('notification middleware', () => {
       it('should get the users notifications', () => {
         expect(getNotificationsMock).toHaveBeenCalledTimes(1)
         expect(getNotificationsMock).toHaveBeenCalledWith(token)
+      })
+      it('should sort the users notifications', () => {
+        expect(noticationData).toEqual([notification2, notification1])
       })
       it('should render the page with the correct values', () => {
         expect(renderMock).toHaveBeenCalledTimes(1)
