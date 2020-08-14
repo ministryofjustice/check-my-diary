@@ -1,5 +1,6 @@
 const moment = require('moment')
 const logger = require('../../log')
+const logError = require('../logError')
 
 const postNotificationMiddleware = async (req, res, next) => {
   try {
@@ -21,7 +22,8 @@ const postNotificationMiddleware = async (req, res, next) => {
 
     return next()
   } catch (error) {
-    res.locals.error = error
+    logError(error)
+    res.locals.error = ['Pause notifications failed. Please try again.']
     return next()
   }
 }

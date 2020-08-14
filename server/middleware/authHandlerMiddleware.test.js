@@ -80,17 +80,17 @@ describe('auth handler middleware', () => {
     })
   })
   describe('with no entry in the db', () => {
+    let mockError
     beforeEach(() => {
-      getSessionExpiryDateTimeMock.mockResolvedValueOnce()
+      mockError = new Error('tum ti tum ti tum')
+      getSessionExpiryDateTimeMock.mockRejectedValueOnce(mockError)
       authHandlerMiddleware(req, res, nextMock)
     })
     it('should not redirect to the 2fa route', () => {
       expect(redirectMock).not.toHaveBeenCalled()
     })
     it('should call next with an error', () => {
-      expect(nextMock).toHaveBeenCalledWith(
-        new Error('There appears to be a problem with your account. Please contact customer services.'),
-      )
+      expect(nextMock).toHaveBeenCalledWith(mockError)
     })
   })
 })

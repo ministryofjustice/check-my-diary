@@ -12,9 +12,9 @@
       <main id="main-container" class="govuk-main-wrapper govuk-!-margin-bottom-8" role="main">
         <h1 class="govuk-heading-l"><%= message %></h1>
 
-        <p class="govuk-caption-l govuk-!-margin-bottom-6"><%= error.status %></p>
+        <p class="govuk-caption-l govuk-!-margin-bottom-6"><%= status %></p>
 
-        <p class="govuk-body"><%= error.stack %></p>
+        <p class="govuk-body"><%= stack %></p>
         <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
       </main>
     </div>

@@ -1,5 +1,7 @@
 const logger = require('../../log')
 const { NONE } = require('../helpers/constants')
+const { appendUserErrorMessage } = require('../helpers/utilities')
+const { NOTIFICATION_SETTINGS_ERROR } = require('../helpers/errorConstants')
 
 const notificationSettingsMiddleware = async (req, res, next) => {
   logger.info('GET notifications settings')
@@ -28,8 +30,7 @@ const notificationSettingsMiddleware = async (req, res, next) => {
       authUrl,
     })
   } catch (error) {
-    res.locals.error = error
-    return next()
+    return next(appendUserErrorMessage(error, NOTIFICATION_SETTINGS_ERROR))
   }
 }
 
