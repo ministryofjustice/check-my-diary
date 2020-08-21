@@ -8,6 +8,7 @@ const knex = require('knex')({
     database: config.db.database,
     user: config.db.username,
     password: config.db.password,
+    ssl: config.db.sslEnabled,
   },
   pool: { min: 0, max: 7 },
 })
