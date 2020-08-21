@@ -1,116 +1,39 @@
 <%
+  /**
+   * Array of days in same order as the view
+   * @returns {string[]}
+   */
+  getDays = () => ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
+  getTypeClass = type => ({
+      'Rest Day': 'rest-day',
+      'Holiday': 'holiday',
+      'Illness': 'illness',
+      'no-day': 'no-day',
+      'Shift': 'shift',
+      'Detached Duty': 'detached-duty',
+      'TU Officials Leave Days': 'tu-official',
+      'TU Officials Leave Hours': 'tu-official',
+    }[type] || 'absence');
 
-convertSecondsToHms = (d) => {
-  d = Number(d);
-  var h = Math.floor(d / 3600);
-  var m = Math.floor(d % 3600 / 60);
+  getRelativeModifiedDate = (moment, modifiedDate) => {
 
-  var hDisplay = h > 0 ? h + (h == 1 ? "hr " : "hrs ") : "";
-  var mDisplay = m > 0 ? m + (m == 1 ? "min " : "mins ") : "";
-  return hDisplay + mDisplay;
-}
+    var s = ( moment().diff(moment(modifiedDate)))/ 1000,
+      m = s / 60,
+      h = m / 60,
+      d = h / 24,
+      y = d / 365.242199,
+      tmp;
 
-firstDateIsAfterSecondDate = (startDateTime, endDateTime) => {
-  var startTime = new Date(startDateTime);
-  var endTime = new Date(endDateTime);
-
-  return !checkIfDateTimeIsNull(startDateTime) && !checkIfDateTimeIsNull(endDateTime) && startTime > endTime;
-}
-
-checkIfDateTimeIsNull = (dateTime) => {
-  return dateTime == "null";
-}
-
-getNextDate = (dateTime) => {
-  var today = new Date(dateTime);
-  var tomorrow = today.setDate(today.getDate()+1);
-
-  return getDatePartFormatted(tomorrow);
-}
-
-getPreviousDate = (dateTime) => {
-  var today = new Date(dateTime);
-  var yesterday = today.setDate(today.getDate()-1);
-
-  return getDatePartFormatted(yesterday);
-}
-
-getTimeFromDate = (dateTime) => {
-
-  var date = new Date(dateTime);
-  var hours = (date.getHours() < 10 ? "0" + date.getHours() : date.getHours());
-  var minutes = (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
-
-  return hours + ":" + minutes;
-}
-
-getDayOfWeek = (date) => {
-  var dayOfWeek = new Date(date).getDay();
-  return isNaN(dayOfWeek) ? null : getDays()[dayOfWeek];
-}
-
-getDatePartFormatted = (dateTime) => {
-  return new Date(dateTime).getFullYear()+'-'+("0"+(new Date(dateTime).getMonth()+1)).slice(-2)+'-'+("0"+new Date(dateTime).getDate()).slice(-2)
-}
-
-/**
- * Array of days in same order as the view
- * @returns {string[]}
- */
-getDays = () => {
-  return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-}
-
-parseFullDateFormat = (date) => {
-  var months    = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-
-  var formattedDate = new Date(date);
-
-  var thisMonth = months[formattedDate.getMonth()];
-
-  return formattedDate.getDate() + ' ' + thisMonth + ' ' + formattedDate.getFullYear();
-}
-
-/**
- * Get the next day
- * @param day
- * @returns {string}
- */
-getNextDay = (day) => {
-  const days = getDays();
-  return days[days.indexOf(day) + 1] || days[0];
-}
-
-/**
- * Get the previous day
- * @param day
- * @returns {string}
- */
-getPreviousDay = (day) => {
-  const days = getDays();
-  return days[days.indexOf(day) - 1] || days[days.length - 1];
-}
-
-getRelativeModifiedDate = (moment, modifiedDate) => {
-
-  var s = ( moment().diff(moment(modifiedDate)))/ 1000,
-    m = s / 60,
-    h = m / 60,
-    d = h / 24,
-    y = d / 365.242199,
-    tmp;
-
-  return ( tmp = Math.round(s) ) === 1 ? 'just now'
-       : m < 1.01                      ? tmp + ' seconds ago'
-       : ( tmp = Math.round(m) ) === 1 ? 'a minute ago'
-       : h < 1.01                      ? tmp + ' minutes ago'
-       : ( tmp = Math.round(h) ) === 1 ? 'an hour ago'
-       : d < 1.01                      ? tmp + ' hours ago'
-       : ( tmp = Math.round(d) ) === 1 ? 'yesterday'
-       : y < 1.01                      ? tmp + ' days ago'
-       : ( tmp = Math.round(y) ) === 1 ? 'a year ago'
-       : tmp + ' years ago';
-}
-
+    return ( tmp = Math.round(s) ) === 1 ? 'just now'
+        : m < 1.01                      ? tmp + ' seconds ago'
+        : ( tmp = Math.round(m) ) === 1 ? 'a minute ago'
+        : h < 1.01                      ? tmp + ' minutes ago'
+        : ( tmp = Math.round(h) ) === 1 ? 'an hour ago'
+        : d < 1.01                      ? tmp + ' hours ago'
+        : ( tmp = Math.round(d) ) === 1 ? 'yesterday'
+        : y < 1.01                      ? tmp + ' days ago'
+        : ( tmp = Math.round(y) ) === 1 ? 'a year ago'
+        : tmp + ' years ago';
+  }
 %>

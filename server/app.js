@@ -14,7 +14,6 @@ const cookieParser = require('cookie-parser')
 const healthcheckFactory = require('./services/healthcheck')
 const loginRouter = require('./routes/login')
 const calendarRouter = require('./routes/calendar')
-const calendarDetailRouter = require('./routes/calendar-detail')
 const maintenance = require('./middleware/maintenance')
 const contactUs = require('./middleware/contact-us')
 const notificationRouter = require('./routes/notification')
@@ -26,11 +25,11 @@ const tokenRefresh = require('./middleware/tokenRefresh')
 const authenticationMiddleware = require('./middleware/authenticationMiddleware')
 
 const calendarService = require('./services/calendarService')
-const calendarOvertimeService = require('./services/calendarOvertimeService')
 const notificationService = require('./services/notificationService')
 const authHandlerMiddleware = require('./middleware/authHandlerMiddleware')
 const csrfTokenMiddleware = require('./middleware/csrfTokenMiddleware')
 const errorsMiddleware = require('./middleware/errorsMiddleware')
+const calendarDetailMiddleware = require('./middleware/calendarDetailMiddleware')
 
 const version = moment.now().toString()
 const production = process.env.NODE_ENV === 'production'
@@ -146,7 +145,6 @@ module.exports = function createApp({ signInService }) {
 
   app.set('DataServices', {
     calendarService,
-    calendarOvertimeService,
     notificationService,
     userAuthenticationService,
   })
@@ -228,9 +226,9 @@ module.exports = function createApp({ signInService }) {
   app.use(authHandlerMiddleware)
   app.use('/contact-us', contactUs)
   app.use('/calendar', calendarRouter)
-  app.use('/details', calendarDetailRouter)
+  app.get('/details/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', calendarDetailMiddleware)
   app.use('/notifications', notificationRouter)
-  app.get('/', (_req, res) => res.redirect('/calendar'))
+  app.get('/', (_req, res) => res.redirect('/calendar#today'))
 
   app.use('*', (req, res, next) => {
     const error = new Error('Not found')
