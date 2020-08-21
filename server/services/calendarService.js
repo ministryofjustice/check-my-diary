@@ -1,53 +1,35 @@
 const axios = require('axios')
 const logger = require('../../log')
 const utilities = require('../helpers/utilities')
+// const baseUrl = require('../../config').cmdApi.url
+const baseUrl = 'http://localhost:18081/'
 
 module.exports = {
-  getCalendarData(apiUrl, startDate, accessToken) {
-    return new Promise((resolve, reject) => {
-      axios
-        .get(`${apiUrl}shifts?startdate=${startDate}&enddate=${utilities.getEndDate(startDate)}`, {
-          headers: {
-            authorization: `Bearer ${accessToken}`,
-          },
-        })
-        .then((response) => {
-          resolve(utilities.configureCalendar(response.data, startDate))
-        })
-        .catch((error) => {
-          if (error.response) {
-            if (error.response.status === 404) {
-              resolve(null)
-            }
-          } else {
-            logger.error(`CalendarService : getCalendarData Error : ${error}`)
-            reject(error)
-          }
-        })
-    })
+  getCalendarData(startDate, accessToken) {
+    return axios
+      .get(`${baseUrl}shifts?startdate=${startDate}&enddate=${utilities.getEndDate(startDate)}`, {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then(({ data }) => data)
+      .catch((error) => {
+        logger.error(`CalendarService : getCalendarData Error : ${error}`)
+        throw error
+      })
   },
 
-  getCalendarDetails(apiUrl, date, accessToken) {
-    return new Promise((resolve, reject) => {
-      axios
-        .get(`${apiUrl}shifts/tasks?date=${date}`, {
-          headers: {
-            authorization: `Bearer ${accessToken}`,
-          },
-        })
-        .then((response) => {
-          resolve(response.data)
-        })
-        .catch((error) => {
-          if (error.response) {
-            if (error.response.status === 404) {
-              resolve(null)
-            }
-          } else {
-            logger.error(`CalendarService : getCalendarData Error : ${error}`)
-            reject(error)
-          }
-        })
-    })
+  getCalendarDetails(date, accessToken) {
+    return axios
+      .get(`${baseUrl}shifts/tasks?date=${date}`, {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then(({ data }) => data)
+      .catch((error) => {
+        logger.error(`CalendarService : getCalendarDetails Error : ${error}`)
+        throw error
+      })
   },
 }
