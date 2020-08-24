@@ -86,11 +86,12 @@ describe('auth handler middleware', () => {
       getSessionExpiryDateTimeMock.mockRejectedValueOnce(mockError)
       authHandlerMiddleware(req, res, nextMock)
     })
-    it('should not redirect to the 2fa route', () => {
-      expect(redirectMock).not.toHaveBeenCalled()
+    it('should redirect to the 2fa route', () => {
+      expect(redirectMock).toHaveBeenCalledTimes(1)
+      expect(redirectMock).toHaveBeenCalledWith('/auth/login')
     })
-    it('should call next with an error', () => {
-      expect(nextMock).toHaveBeenCalledWith(mockError)
+    it('should not call next', () => {
+      expect(nextMock).not.toHaveBeenCalled()
     })
   })
 })

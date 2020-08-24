@@ -1,6 +1,5 @@
 const jwtDecode = require('jwt-decode')
 const { hmppsAuthMFAUser, appendUserErrorMessage } = require('../helpers/utilities')
-const { AUTHENTICATION_ERROR } = require('../helpers/errorConstants')
 const config = require('../../config')
 
 const authenticationMiddleware = (req, res, next) => {
@@ -17,7 +16,7 @@ const authenticationMiddleware = (req, res, next) => {
     req.session.returnTo = req.originalUrl
     return res.redirect('/login')
   } catch (error) {
-    return next(appendUserErrorMessage(error, AUTHENTICATION_ERROR))
+    return next(appendUserErrorMessage(error))
   }
 }
 

@@ -165,6 +165,7 @@ module.exports = function createApp({ signInService }) {
     })
   })
   app.get('/ping', (req, res) => res.send('pong'))
+  app.use('*', maintenance)
 
   // GovUK Template Configuration
   app.locals.assetPath = '/assets/'
@@ -222,7 +223,6 @@ module.exports = function createApp({ signInService }) {
   })
 
   // Routing
-  app.use('*', maintenance)
   app.use(authenticationMiddleware, csrfTokenMiddleware)
   app.use('/auth', loginRouter)
   app.use(authHandlerMiddleware)
