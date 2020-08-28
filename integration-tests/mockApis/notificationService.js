@@ -1,3 +1,4 @@
+const moment = require('moment')
 const { stubFor } = require('./wiremock')
 
 const fakeShiftNotifications = [
@@ -65,7 +66,7 @@ const stubNotificationPreferencesGet = async () =>
         'Content-Type': 'application/json',
       },
       jsonBody: {
-        snoozeUntil: '2020-08-27',
+        snoozeUntil: moment().add(3, 'days').format('YYYY-MM-DD'),
         preference: 'SMS',
         sms: '01189998819991197253',
       },
