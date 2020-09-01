@@ -2,6 +2,9 @@ const moment = require('moment')
 
 const notificationMiddleware = require('./notificationMiddleware')
 const { NONE, SMS } = require('../helpers/constants')
+const { getSnoozeUntil } = require('../helpers/utilities')
+
+jest.mock('../helpers/utilities', () => ({ getSnoozeUntil: jest.fn() }))
 
 describe('notification middleware', () => {
   const renderMock = jest.fn()
@@ -13,7 +16,7 @@ describe('notification middleware', () => {
   const hmppsAuthMFAUser = 'peas'
   const notification1 = { shiftModified: '2020-08-24' }
   const notification2 = { shiftModified: '2020-08-26' }
-  let noticationData
+  let notificationData
 
   const getPreferencesMock = jest.fn()
   const getNotificationsMock = jest.fn()
@@ -26,8 +29,9 @@ describe('notification middleware', () => {
   let res
   const errors = null
   beforeEach(() => {
-    noticationData = [notification1, notification2]
-    getNotificationsMock.mockResolvedValue(noticationData)
+    getSnoozeUntil.mockReturnValue('')
+    notificationData = [notification1, notification2]
+    getNotificationsMock.mockResolvedValue(notificationData)
     res = { render: renderMock, locals: { csrfToken } }
     req = { user: { token, employeeName }, authUrl, hmppsAuthMFAUser, body: {}, app }
   })
@@ -49,13 +53,13 @@ describe('notification middleware', () => {
         expect(getNotificationsMock).toHaveBeenCalledWith(token)
       })
       it('should sort the users notifications', () => {
-        expect(noticationData).toEqual([notification2, notification1])
+        expect(notificationData).toEqual([notification2, notification1])
       })
       it('should render the page with the correct values', () => {
         expect(renderMock).toHaveBeenCalledTimes(1)
         expect(renderMock).toHaveBeenCalledWith('pages/notifications', {
           errors,
-          data: noticationData,
+          data: notificationData,
           csrfToken,
           hmppsAuthMFAUser,
           notificationsEnabled: true,
@@ -68,21 +72,30 @@ describe('notification middleware', () => {
       it('should not call the next function', () => {
         expect(nextMock).not.toHaveBeenCalled()
       })
+      it('should try to generate a snooze until string', () => {
+        expect(getSnoozeUntil).toHaveBeenCalledTimes(1)
+      })
     })
     describe('with a snooze', () => {
+      const snoozeUntil = 'Friday, 28th August 2020'
       beforeEach(async () => {
-        getPreferencesMock.mockResolvedValue({ snoozeUntil: '2020-08-27', preference: SMS })
+        getPreferencesMock.mockResolvedValue({ preference: SMS, snoozeUntil: '2020-08-27' })
+        getSnoozeUntil.mockReturnValue(snoozeUntil)
         await notificationMiddleware(req, res, nextMock)
+      })
+
+      it('should generate a snooze until string', () => {
+        expect(getSnoozeUntil).toHaveBeenCalledTimes(1)
       })
       it('should render the page with the correct values', () => {
         expect(renderMock).toHaveBeenCalledTimes(1)
         expect(renderMock).toHaveBeenCalledWith('pages/notifications', {
           errors,
-          data: noticationData,
+          data: notificationData,
           csrfToken,
           hmppsAuthMFAUser,
           notificationsEnabled: true,
-          snoozeUntil: 'Friday, 28th August 2020',
+          snoozeUntil,
           moment,
           employeeName,
           authUrl,
@@ -99,11 +112,14 @@ describe('notification middleware', () => {
       expect(getPreferencesMock).toHaveBeenCalledTimes(1)
       expect(getPreferencesMock).toHaveBeenCalledWith(token)
     })
+    it('should not generate a snooze until string', () => {
+      expect(getSnoozeUntil).not.toHaveBeenCalled()
+    })
     it('should render the page reflecting a "none" notifications type', () => {
       expect(renderMock).toHaveBeenCalledTimes(1)
       expect(renderMock).toHaveBeenCalledWith('pages/notifications', {
         errors,
-        data: noticationData,
+        data: notificationData,
         csrfToken,
         hmppsAuthMFAUser,
         notificationsEnabled: false,
