@@ -1,7 +1,6 @@
 require('jwt-decode')
 const {
   configureCalendar,
-  hmppsAuthMFAUser,
   getSnoozeUntil,
   appendUserErrorMessage,
   processDay,
@@ -70,20 +69,6 @@ describe('processDay', () => {
   })
   it('should order the details by displayTypeTime', () => {
     expect(day.details).toEqual([detail1, detail2])
-  })
-})
-
-describe('hmppsAuthMFAUser', () => {
-  afterEach(() => {
-    jest.resetAllMocks()
-  })
-  it('should return true if the user has the ROLE_MFA role', () => {
-    const token = { authorities: 'ROLE_MFA' }
-    expect(hmppsAuthMFAUser(token)).toEqual(true)
-  })
-  it('should return false if the user does not have the ROLE_MFA role', () => {
-    const token = { authorities: '' }
-    expect(hmppsAuthMFAUser(token)).toEqual(false)
   })
 })
 
