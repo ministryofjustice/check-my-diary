@@ -1,4 +1,5 @@
 const moment = require('moment')
+const util = require('util')
 const logger = require('../../log')
 const { appendUserErrorMessage, configureCalendar, processDay } = require('../helpers/utilities')
 
@@ -21,6 +22,7 @@ const calendarMiddleware = async (req, res, next) => {
     const month = await calendarService.getCalendarData(date, token)
     month.forEach(processDay)
     const data = configureCalendar(month)
+    console.log(util.inspect(data, false, null, true))
     const currentMonthMoment = moment(date)
     const previousMonthMoment = currentMonthMoment.clone().subtract('1', 'M')
     const nextMonthMoment = currentMonthMoment.clone().add('1', 'M')

@@ -38,14 +38,14 @@
           </a>
         </div>
 
-        <% if (data == null || data.length == 0) { %>
+        <% if (data == null || data.length === 0) { %>
             <%- include('../partials/summary', {message: 'There is no shift information to show for this account.'}); %>
         <%} else { %>
           <ul class="calendar">
             <% getDays().forEach(day => { %>
               <li class="calendar-item calendar-header"><%= day %></li>
             <% }); %>
-            <% data.forEach(({ today=false, fullDayType, date, dateText, dateDayText, tasks }) => { %>
+            <% data.forEach(({ today=false, fullDayType, date, dateText, dateDayText, details }) => { %>
             <li <% if (today) { %> id="today" <% } %> class="calendar-item <%= getTypeClass(fullDayType) %>">
                 <% if (fullDayType !== 'no-day') { %>
                   <a href="/details/<%=date%>">
@@ -60,8 +60,8 @@
                           <%= dateText %>
                         </span>
                       </div>
-                      <% tasks.forEach(({ displayType, eventText, finishDuration }) => { %>
-                        <span class="line <%= displayType %>"><%= eventText %></span>
+                      <% details.forEach(({ displayType, activity, finishDuration }) => { %>
+                        <span class="line <%= displayType.toLowerCase() %>"><%= activity %></span>
                         <% if (finishDuration) { %>
                           <span class="line-text"><%= finishDuration %></span>
                         <% } %>

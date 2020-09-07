@@ -7,14 +7,16 @@
 
   getTypeClass = type => ({
       'Rest Day': 'rest-day',
-      'Holiday': 'holiday',
-      'Illness': 'illness',
-      'no-day': 'no-day',
-      'Shift': 'shift',
-      'Detached Duty': 'detached-duty',
-      'TU Officials Leave Days': 'tu-official',
-      'TU Officials Leave Hours': 'tu-official',
-    }[type] || 'absence');
+      'HOLIDAY': 'holiday',
+      'ILLNESS': 'illness',
+      'ABSENCE' : 'absence',
+      'None': 'no-day',
+      'Shift': 'shift'
+      //TODO: how can these values come through?
+     // 'Detached Duty': 'detached-duty',
+      //'TU Officials Leave Days': 'tu-official',
+      //'TU Officials Leave Hours': 'tu-official',
+    }[type] || 'no-day');
 
   getRelativeModifiedDate = (moment, modifiedDate) => {
 
