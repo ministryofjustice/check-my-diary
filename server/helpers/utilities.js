@@ -57,7 +57,7 @@ function getAuthErrorDescription(error) {
 const sortByDate = (data) => data.sort(({ date: first }, { date: second }) => moment(first) - moment(second))
 
 const configureCalendar = (data, startDate = null) => {
-  if (data === null || data.length === 0) return null
+  if (data === undefined || data == null || data.length === 0) return null
   sortByDate(data)
   const startDateMoment = moment(startDate || data[0].date)
   const pad = startDateMoment.day()
@@ -72,38 +72,41 @@ const configureCalendar = (data, startDate = null) => {
 
 const getTaskText = (displayType) =>
   ({
-    day_start: 'Start',
-    day_finish: 'Finish',
-    night_start: 'Start',
-    night_finish: 'Finish',
-    overtime_night_start: 'Start',
-    overtime_night_finish: 'Finish',
+    DAY_START: 'Start',
+    DAY_FINISH: 'Finish',
+    NIGHT_START: 'Start',
+    NIGHT_FINISH: 'Finish',
+    OVERTIME_DAY_START: 'Start',
+    OVERTIME_DAY_FINISH: 'Finish',
+    OVERTIME_NIGHT_START: 'Start',
+    OVERTIME_NIGHT_FINISH: 'Finish',
   }[displayType])
 
 const displayedTasks = [
-  'day_start',
-  'day_finish',
-  'overtime_day_finish',
-  'overtime_night_start',
-  'overtime_night_finish',
-  'night_start',
-  'night_finish',
+  'DAY_START',
+  'DAY_FINISH',
+  'NIGHT_START',
+  'NIGHT_FINISH',
+  'OVERTIME_DAY_START',
+  'OVERTIME_DAY_FINISH',
+  'OVERTIME_NIGHT_START',
+  'OVERTIME_NIGHT_FINISH',
 ]
 
 const processDay = (day) => {
-  const { date, tasks: rawTasks } = day
+  const { date, details: rawTasks } = day
   const dateMoment = moment(date)
   const today = dateMoment.isSame(moment(), 'day')
-  const tasks = rawTasks.filter(({ displayType }) => displayedTasks.includes(displayType))
-  tasks.forEach((task) => {
-    const { displayType, eventTime } = task
-    const eventText =
-      displayType === 'overtime_day_finish'
-        ? 'Overtime'
-        : `${getTaskText(displayType)} ${moment(eventTime).format('HH:mm')}`
-    Object.assign(task, { eventText })
+  const format = 'hh:mm:ss'
+  const details = rawTasks.filter(
+    ({ displayType, start }) => displayedTasks.includes(displayType) && !moment(start, format).isSame('00:00:00'),
+  )
+  details.forEach((detail) => {
+    const { displayType, displayTypeTime } = detail
+    const activity = `${getTaskText(displayType)} ${moment(displayTypeTime).format('HH:mm')}`
+    Object.assign(detail, { activity })
   })
-  Object.assign(day, { today, dateText: dateMoment.format('D'), dateDayText: dateMoment.format('dddd Do'), tasks })
+  Object.assign(day, { today, dateText: dateMoment.format('D'), dateDayText: dateMoment.format('dddd Do'), details })
 }
 
 const hmppsAuthMFAUser = (token) => jwtDecode(token).authorities.includes('ROLE_MFA')

@@ -34,25 +34,25 @@
             <% if (tasks != null && tasks.length > 0) { %>
               <ul class="app-shift-detail">
                 <% if (fullDayType !== 'Shift') { %>
-                  <li class="<%= getTypeClass(fullDayType) %>">
+                  <li class="<%= getTypeClass(fullDayType).toLowerCase() %>">
                     <div class="time"><%= fullDayType %></div>
                   </li>
                 <% } %>
-                <% 
+                <%
                   let started = false;
                   tasks.forEach((task, index) => {
                 %>
-                  <li class="<% if(task.displayType !== 'day_start' || !started){ %><%= task.displayType %><% } %>">
+                  <li class="<% if(task.displayType !== 'DAY_START' || !started){ %><%= task.displayType.toLowerCase() %><% } %>">
                     <div class="time"><%= task.start || '' %><% if(task.end) { %> - <%= task.end %><% } %></div>
                     <div class="description">
-                      <% if(!started && task.displayType === 'day_start') { %> Start of shift: <% } %>
-                      <% if (started && task.displayType === 'day_finish') { %>End of shift<% } %>
+                      <% if(!started && task.displayType === 'DAY_START') { %> Start of shift: <% } %>
+                      <% if (started && task.displayType === 'DAY_FINISH') { %>End of shift<% } %>
                       <%= task.label %>
                     </div>
                   </li>
-                <% 
-                    started = started ? task.displayType !== 'day_finish' : task.displayType === 'day_start'
-                  }) 
+                <%
+                    started = started ? task.displayType !== 'DAY_FINISH' : task.displayType === 'DAY_START'
+                  })
                 %>
               </ul>
             <% } %>

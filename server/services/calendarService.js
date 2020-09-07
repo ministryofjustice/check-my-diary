@@ -2,12 +2,12 @@ const axios = require('axios')
 const logger = require('../../log')
 const utilities = require('../helpers/utilities')
 // const baseUrl = require('../../config').cmdApi.url
-const baseUrl = 'http://localhost:18081/'
+const baseUrl = 'http://localhost:8080/'
 
 module.exports = {
   getCalendarData(startDate, accessToken) {
     return axios
-      .get(`${baseUrl}shifts?startdate=${startDate}&enddate=${utilities.getEndDate(startDate)}`, {
+      .get(`${baseUrl}user/details?from=${startDate}&to=${utilities.getEndDate(startDate)}`, {
         headers: {
           authorization: `Bearer ${accessToken}`,
         },
@@ -19,9 +19,9 @@ module.exports = {
       })
   },
 
-  getCalendarDetails(date, accessToken) {
+  getCalendarDetails(startDate, accessToken) {
     return axios
-      .get(`${baseUrl}shifts/tasks?date=${date}`, {
+      .get(`${baseUrl}user/details?from=${startDate}&to=${utilities.getEndDate(startDate)}`, {
         headers: {
           authorization: `Bearer ${accessToken}`,
         },
