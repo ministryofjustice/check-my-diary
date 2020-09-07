@@ -16,7 +16,7 @@ const requiredInProduction = { requireInProduction: true }
 const noFallbackInProduction = { noFallbackInProduction: true }
 
 module.exports = {
-  sessionSecret: get('SESSION_SECRET', '456456453rtretretete', requiredInProduction),
+  sessionSecret: get('SESSION_SECRET', 'app-insecure-default-session', requiredInProduction),
   db: {
     username: get('DATABASE_USER', 'check-my-diary'),
     password: get('DATABASE_PASSWORD', 'check-my-diary'),
@@ -40,12 +40,12 @@ module.exports = {
       freeSocketTimeout: 30000,
     },
     apiClientId: get('API_CLIENT_ID', 'my-diary', requiredInProduction),
-    apiClientSecret: get('API_CLIENT_SECRET', 'kJwGCYAhn4AYRQF9', requiredInProduction),
+    apiClientSecret: get('API_CLIENT_SECRET', 'clientsecret', requiredInProduction),
   },
   app: {
     production,
     mailTo: process.env.MAIL_TO || 'feedback@digital.justice.gov.uk',
-    url: process.env.CHECK_MY_DIARY_URL || 'http://localhost:3000',
+    url: process.env.CHECK_MY_DIARY_URL || `http://localhost:${process.env.PORT || 3005}`,
   },
   maintenance: {
     start: process.env.MAINTENANCE_START,
@@ -66,12 +66,12 @@ module.exports = {
     domain: process.env.HMPPS_COOKIE_DOMAIN || 'localhost',
     expiryMinutes: process.env.WEB_SESSION_TIMEOUT_IN_MINUTES || 20,
   },
-  port: get('PORT', 3000, requiredInProduction),
+  port: get('PORT', 3005, requiredInProduction),
   domain: process.env.HMPPS_COOKIE_DOMAIN,
   sessionTimeout: process.env.WEB_SESSION_TIMEOUT_IN_MINUTES,
   quantumAddresses: get('QUANTUM_ADDRESS', '127.0.0.1', requiredInProduction),
-  rejectUnauthorized: 0,
-  twoFactorAuthOn: false,
+  rejectUnauthorized: process.env.REJECT_UNAUTHORIZED,
+  twoFactorAuthOn: process.env.TWO_FACT_AUTH_ON,
   https: production,
   regions: get('REGIONS', '', requiredInProduction),
 }
