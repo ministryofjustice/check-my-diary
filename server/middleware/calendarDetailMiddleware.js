@@ -12,20 +12,20 @@ const calendarDetailMiddleware = async (
   const { calendarService } = app.get('DataServices')
 
   try {
-    const { date: currentDate, fullDayType, tasks } = await calendarService.getCalendarDetails(date, token)
+    const { date: currentDate, fullDayType, details } = await calendarService.getCalendarDetails(date, token)
     const todayMoment = moment(currentDate)
     const backLink = `/calendar/${todayMoment.clone().format('YYYY-MM-01')}`
     const yesterdayMoment = todayMoment.clone().subtract('1', 'd')
     const tomorrowMoment = todayMoment.clone().add('1', 'd')
-    sortByDate(tasks)
-    tasks.forEach((task) => {
-      const start = moment(task.start).format('HH:mm')
-      const end = task.end ? moment(task.end).format('HH:mm') : ''
-      Object.assign(task, { start, end })
+    sortByDate(details)
+    details.forEach((detail) => {
+      const start = moment(detail.start).format('HH:mm')
+      const end = detail.end ? moment(detail.end).format('HH:mm') : ''
+      Object.assign(detail, { start, end, displayType: detail.displayType.toLowerCase() })
     })
     res.render('pages/calendar-details', {
       ...res.locals,
-      tasks,
+      details,
       backLink,
       fullDayType,
       today: todayMoment.format('dddd, Do MMMM YYYY'),

@@ -54,7 +54,8 @@ function getAuthErrorDescription(error) {
   return type
 }
 
-const sortByDate = (data) => data.sort(({ date: first }, { date: second }) => moment(first) - moment(second))
+const sortByDate = (data, dateField = 'date') =>
+  data.sort((first, second) => moment(first[dateField]) - moment(second[dateField]))
 
 const configureCalendar = (data, startDate = null) => {
   if (data === undefined || data == null || data.length === 0) return null
@@ -101,11 +102,13 @@ const processDay = (day) => {
   const details = rawTasks.filter(
     ({ displayType, start }) => displayedTasks.includes(displayType) && !moment(start, format).isSame('00:00:00'),
   )
+  // const sortedDetails = details.sort(d => d.start)
   details.forEach((detail) => {
     const { displayType, displayTypeTime } = detail
     const activity = `${getTaskText(displayType)} ${moment(displayTypeTime).format('HH:mm')}`
-    Object.assign(detail, { activity })
+    Object.assign(detail, { activity, displayType: displayType.toLowerCase() })
   })
+  sortByDate(details, 'displayTypeTime')
   Object.assign(day, { today, dateText: dateMoment.format('D'), dateDayText: dateMoment.format('dddd Do'), details })
 }
 

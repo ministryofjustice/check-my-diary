@@ -21,6 +21,7 @@ const calendarMiddleware = async (req, res, next) => {
 
     const month = await calendarService.getCalendarData(date, token)
     month.forEach(processDay)
+
     const data = configureCalendar(month)
     console.log(util.inspect(data, false, null, true))
     const currentMonthMoment = moment(date)

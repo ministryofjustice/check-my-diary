@@ -11,12 +11,13 @@ const { GENERAL_ERROR, NOT_FOUND_ERROR } = require('./errorConstants')
 jest.mock('jwt-decode', () => (token) => token)
 
 describe('configureCalendar', () => {
-  const none = { date: '2020-08-03', fullDayType: 'None', tasks: [] }
-  const shift = { date: '2020-08-01', fullDayType: 'Shift', tasks: [] }
-  const rest = { date: '2020-08-02', fullDayType: 'Rest Day', tasks: [] }
+  const none = { date: '2020-08-03', fullDayType: 'None', details: [] }
+  const rest = { date: '2020-08-02', fullDayType: 'Rest Day', details: [] }
   const noDay = { fullDayType: 'no-day' }
+  let shift
   let returnedData
   beforeEach(() => {
+    shift = { date: '2020-08-01', fullDayType: 'Shift', details: [] }
     returnedData = configureCalendar([none, rest, shift, ...new Array(28).fill(none)])
   })
   it('should return an array of objects', () => {
@@ -34,24 +35,24 @@ describe('configureCalendar', () => {
 })
 
 describe('processDay', () => {
-  let task1
-  let task2
+  let detail1
+  let detail2
   let day
   beforeEach(() => {
-    task1 = {
-      eventTime: '2020-08-03T07:15:00',
-      displayType: 'day_start',
+    detail1 = {
+      displayTypeTime: '2020-08-03T07:15:00',
+      displayType: 'DAY_START',
       finishDuration: null,
     }
-    task2 = {
-      eventTime: '2020-08-03T17:00:00',
-      displayType: 'day_finish',
+    detail2 = {
+      displayTypeTime: '2020-08-03T17:00:00',
+      displayType: 'DAY_FINISH',
       finishDuration: '8h 45m',
     }
     day = {
       date: '2020-08-03',
       fullDayType: 'Shift',
-      tasks: [task1, task2],
+      details: [detail2, detail1],
     }
     processDay(day)
   })
@@ -61,9 +62,12 @@ describe('processDay', () => {
   it('should set the date day text', () => {
     expect(day.dateDayText).toBe('Monday 3rd')
   })
-  it('should set the event text for the tasks', () => {
-    expect(task1.eventText).toBe('Start 07:15')
-    expect(task2.eventText).toBe('Finish 17:00')
+  it('should set the activity text for the details', () => {
+    expect(detail1.activity).toBe('Start 07:15')
+    expect(detail2.activity).toBe('Finish 17:00')
+  })
+  it('should order the details by displayTypeTime', () => {
+    expect(day.details).toEqual([detail1, detail2])
   })
 })
 

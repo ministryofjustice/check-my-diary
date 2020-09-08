@@ -31,27 +31,27 @@
         <a href="<%= backLink %>" class="govuk-back-link">Back</a>
         <div class="grid-row">
           <div class="column-full">
-            <% if (tasks != null && tasks.length > 0) { %>
+            <% if (details != null && details.length > 0) { %>
               <ul class="app-shift-detail">
                 <% if (fullDayType !== 'Shift') { %>
-                  <li class="<%= getTypeClass(fullDayType).toLowerCase() %>">
+                  <li class="<%= getTypeClass(fullDayType) %>">
                     <div class="time"><%= fullDayType %></div>
                   </li>
                 <% } %>
                 <%
                   let started = false;
-                  tasks.forEach((task, index) => {
+                  details.forEach((detail, index) => {
                 %>
-                  <li class="<% if(task.displayType !== 'DAY_START' || !started){ %><%= task.displayType.toLowerCase() %><% } %>">
-                    <div class="time"><%= task.start || '' %><% if(task.end) { %> - <%= task.end %><% } %></div>
+                  <li class="<% if(detail.displayType !== 'day_start' || !started){ %><%= detail.displayType %><% } %>">
+                    <div class="time"><%= detail.start || '' %><% if(detail.end) { %> - <%= detail.end %><% } %></div>
                     <div class="description">
-                      <% if(!started && task.displayType === 'DAY_START') { %> Start of shift: <% } %>
-                      <% if (started && task.displayType === 'DAY_FINISH') { %>End of shift<% } %>
-                      <%= task.label %>
+                      <% if(!started && detail.displayType === 'day_start') { %> Start of shift: <% } %>
+                      <% if (started && detail.displayType === 'day_finish') { %>End of shift<% } %>
+                      <%= detail.label %>
                     </div>
                   </li>
                 <%
-                    started = started ? task.displayType !== 'DAY_FINISH' : task.displayType === 'DAY_START'
+                    started = started ? detail.displayType !== 'day_finish' : detail.displayType === 'day_start'
                   })
                 %>
               </ul>
