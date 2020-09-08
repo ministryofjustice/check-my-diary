@@ -143,6 +143,8 @@ const processDay = (day) => {
   )
   // const sortedDetails = details.sort(d => d.start)
   details.forEach((detail) => {
+    console.log('HERE')
+    console.log(detail)
     const { displayType, displayTypeTime } = detail
     const activity = `${getTaskText(displayType)} ${moment(displayTypeTime).format('HH:mm')}`
     Object.assign(detail, { activity, displayType: displayType.toLowerCase() })
