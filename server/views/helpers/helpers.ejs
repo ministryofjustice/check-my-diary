@@ -6,12 +6,12 @@
   getDays = () => ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   getTypeClass = type => ({
-      'Rest Day': 'rest-day',
+      'REST_DAY': 'rest-day',
       'HOLIDAY': 'holiday',
       'ILLNESS': 'illness',
       'ABSENCE' : 'absence',
-      'None': 'no-day',
-      'Shift': 'shift'
+      'NONE': 'no-day',
+      'SHIFT': 'shift'
       //TODO: how can these values come through?
      // 'Detached Duty': 'detached-duty',
       //'TU Officials Leave Days': 'tu-official',
@@ -19,7 +19,7 @@
     }[type] || 'no-day');
 
   getTypeDescription = type => ({
-      'Rest Day': 'Rest Day',
+      'REST_DAY': 'Rest Day',
       'HOLIDAY': 'Holiday',
       'ILLNESS': 'Illness',
       'ABSENCE' : 'Absence',
