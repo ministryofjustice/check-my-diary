@@ -5,6 +5,7 @@ const {
   getSnoozeUntil,
   appendUserErrorMessage,
   processDay,
+  sortByDisplayType,
 } = require('./utilities')
 const { GENERAL_ERROR, NOT_FOUND_ERROR } = require('./errorConstants')
 
@@ -124,6 +125,29 @@ describe('appendUserErrorMessage', () => {
   describe('with no specific error message', () => {
     it('should append a general user error message', () => {
       expect(appendUserErrorMessage(mrsError).userMessage).toEqual(GENERAL_ERROR)
+    })
+  })
+})
+
+describe('sortByDisplayType', () => {
+  const detail1 = { displayTypeTime: '2020-08-03T07:30:00', displayType: 'line overtime_day_start' }
+  const detail2a = { displayTypeTime: '2020-08-03T12:25:00', displayType: 'line overtime_day_finish' }
+  const detail2b = { displayTypeTime: '2020-08-03T12:30:00', displayType: 'line overtime_day_finish' }
+  const detail3 = { displayTypeTime: '2020-08-03T12:30:00', displayType: 'day_start' }
+  const detail4 = { displayTypeTime: '2020-08-03T17:30:00', displayType: 'day_finish' }
+
+  describe('with a dates out of order', () => {
+    it('should return items in date order', () => {
+      const initialArray = [detail3, detail1, detail4, detail2a]
+      sortByDisplayType(initialArray)
+      expect(initialArray).toEqual([detail1, detail2a, detail3, detail4])
+    })
+  })
+  describe('with a start types before end types out of order', () => {
+    it('should return items in date order, and prioritise none start display types', () => {
+      const initialArray = [detail4, detail3, detail2b, detail1]
+      sortByDisplayType(initialArray)
+      expect(initialArray).toEqual([detail1, detail2b, detail3, detail4])
     })
   })
 })

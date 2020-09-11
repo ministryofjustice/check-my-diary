@@ -45,7 +45,7 @@
             <% getDays().forEach(day => { %>
               <li class="calendar-item calendar-header"><%= day %></li>
             <% }); %>
-            <% data.forEach(({ today=false, fullDayType, date, dateText, dateDayText, details }) => { %>
+            <% data.forEach(({ today=false, fullDayType, fullDayTypeDescription, date, dateText, dateDayText, details }) => { %>
             <li <% if (today) { %> id="today" <% } %> class="calendar-item <%= getTypeClass(fullDayType) %>">
                 <% if (fullDayType !== 'no-day')  { %>
                 <!-- no-day here represents boxes that are not in the current month, they should be None -->
@@ -60,8 +60,8 @@
                           <%= dateText %>
                         </span>
                       </div>
-                      <% if (fullDayType !== 'None' && fullDayType !== 'Shift') { %>
-                      <span class="line"><%= fullDayType %></span>
+                      <% if (fullDayType !== 'NONE' && fullDayType !== 'SHIFT') { %>
+                        <span class="line-text"><%= fullDayTypeDescription %></span>
                       <% } %>
                       <% details !== null && details.forEach(({ displayType, activity, finishDuration }) => { %>
                         <span class="line <%= displayType %>"><%= activity %></span>

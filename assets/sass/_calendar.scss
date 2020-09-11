@@ -61,16 +61,12 @@ ul.calendar {
     background-color: govuk-colour('orange');
   }
 
-  .holiday {
+  .holiday, .absence, .training-external, .training-internal, .otherType {
     background-color: govuk-colour('yellow');
   }
 
   .illness {
     background-color: govuk-colour('light-green');
-  }
-
-  .absence {
-    background-color: govuk-colour('yellow');
   }
 
   .detached-duty {

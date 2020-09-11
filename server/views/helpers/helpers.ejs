@@ -6,28 +6,18 @@
   getDays = () => ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   getTypeClass = type => ({
-      'Rest Day': 'rest-day',
+      'REST_DAY': 'rest-day',
       'HOLIDAY': 'holiday',
       'ILLNESS': 'illness',
       'ABSENCE' : 'absence',
-      'None': 'no-day',
-      'Shift': 'shift'
-      //TODO: how can these values come through?
-     // 'Detached Duty': 'detached-duty',
-      //'TU Officials Leave Days': 'tu-official',
-      //'TU Officials Leave Hours': 'tu-official',
-    }[type] || 'no-day');
-
-  getTypeDescription = type => ({
-      'Rest Day': 'Rest Day',
-      'HOLIDAY': 'Holiday',
-      'ILLNESS': 'Illness',
-      'ABSENCE' : 'Absence',
-      //TODO: how can these values come through?
-      // 'Detached Duty': 'Detached Duty',
-      //'TU Officials Leave Days': 'TU Officials Leave Days',
-      //'TU Officials Leave Hours': 'TU Officials Leave Hours',
-  }[type] || 'no-day');
+      'NONE': 'no-day',
+      'SHIFT': 'shift',
+      'DETACHED_DUTY': 'detached-duty',
+      'TU_OFFICIALS_LEAVE_DAYS': 'tu-official',
+      'TU_OFFICIALS_LEAVE_HOURS': 'tu-official',
+      'TRAINING_EXTERNAL': 'training-external',
+      'TRAINING_INTERNAL': 'training-internal',
+    }[type] || 'otherType');
 
   getRelativeModifiedDate = (moment, modifiedDate) => {
 

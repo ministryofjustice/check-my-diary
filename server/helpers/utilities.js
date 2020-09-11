@@ -57,9 +57,48 @@ function getAuthErrorDescription(error) {
 const sortByDate = (data, dateField = 'date') =>
   data.sort((first, second) => moment(first[dateField]) - moment(second[dateField]))
 
+const sortByDisplayType = (data) =>
+  data.sort(
+    ({ displayTypeTime, displayType, start }, { displayTypeTime: compareDisplayTypeTime, start: compareStart }) => {
+      const date = displayTypeTime || start
+      const compareDate = compareDisplayTypeTime || compareStart
+      const comparison = moment(date) - moment(compareDate)
+      if (comparison !== 0) return comparison
+      return displayType && displayType.toLowerCase().includes('finish') ? -1 : 1
+    },
+  )
+
+const removeShiftDetails = (details) => {
+  return details.filter(({ displayType }) => !['day_start', 'day_finish'].includes(displayType))
+}
+
+const humanizeNumber = (value, unit) => {
+  if (value === 0) return ''
+  return `${value}${unit}${value > 1 ? 's' : ''}`
+}
+
+const getDuration = (duration) => {
+  const displayTypeTimeRaw = moment.duration(duration, 'seconds')
+  return `${humanizeNumber(displayTypeTimeRaw.hours(), 'hr')} ${humanizeNumber(
+    displayTypeTimeRaw.minutes(),
+    'min',
+  )}`.trim()
+}
+
+const configureCalendarDay = (day) => {
+  const { fullDayType, details } = day
+  sortByDisplayType(details)
+  details.forEach(
+    (detail) => detail.finishDuration && Object.assign(detail, { finishDuration: getDuration(detail.finishDuration) }),
+  )
+  if (!['SHIFT', 'SECONDMENT', 'TRAINING_EXTERNAL', 'TRAINING_INTERNAL', 'TOIL'].includes(fullDayType))
+    Object.assign(day, { details: removeShiftDetails(details) })
+}
+
 const configureCalendar = (data, startDate = null) => {
   if (data === undefined || data == null || data.length === 0) return null
   sortByDate(data)
+  data.forEach((day) => configureCalendarDay(day))
   const startDateMoment = moment(startDate || data[0].date)
   const pad = startDateMoment.day()
   const noDay = { fullDayType: 'no-day' }
@@ -128,6 +167,7 @@ module.exports = {
   getAuthErrorDescription,
   createTwoFactorAuthenticationHash,
   sortByDate,
+  sortByDisplayType,
   configureCalendar,
   processDay,
   hmppsAuthMFAUser,

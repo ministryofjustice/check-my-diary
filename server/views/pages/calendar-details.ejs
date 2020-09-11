@@ -31,23 +31,29 @@
         <a href="<%= backLink %>" class="govuk-back-link">Back</a>
         <div class="grid-row">
           <div class="column-full">
-            <% if (details != null && details.length > 0) { %>
+            <% if (details != null) { %>
               <ul class="app-shift-detail">
-                <% if (fullDayType !== 'Shift') { %>
-                  <li class="<%= getTypeClass(fullDayType) %>">
-                    <div class="time"><%= fullDayType %></div>
+                <% if (fullDayType !== 'SHIFT') { %>
+                  <li class="detail <%= getTypeClass(fullDayType) %>">
+                    <div class="time"><%= fullDayTypeDescription %></div>
                   </li>
                 <% } %>
                 <%
                   let started = false;
                   details.forEach((detail, index) => {
                 %>
-                  <li class="<% if(detail.displayType !== 'day_start' || !started){ %><%= detail.displayType %><% } %>">
-                    <div class="time"><%= detail.start || '' %><% if(detail.end) { %> - <%= detail.end %><% } %></div>
+                  <li class="detail <%= detail.displayType || 'activity' %>">
+                    <div class="time"><% if(detail.start) { %> <%= detail.start %> - <% } %><% if(detail.end) { %><%= detail.end %><% } %></div>
                     <div class="description">
+                      <% if(detail.displayType === 'night_start') { %> Start of night shift: <% } %>
+                      <% if(detail.displayType === 'night_finish') { %> End of night shift: <% } %>
                       <% if(!started && detail.displayType === 'day_start') { %> Start of shift: <% } %>
-                      <% if (started && detail.displayType === 'day_finish') { %>End of shift<% } %>
-                      <%= detail.label %>
+                      <% if(detail.displayType === 'day_finish') { %>End of shift<% }%>
+                      <% if(detail.displayType === 'overtime_day_start') { %> Start of overtime: <% } %>
+                      <% if(detail.displayType === 'overtime_day_finish') { %> End of overtime<% } %>
+                      <% if(detail.displayType === 'overtime_night_start') { %> Start of overtime night shift: <% } %>
+                      <% if(detail.displayType === 'overtime_night_finish') { %> End of overtime night shift<% } %>
+                      <%= detail.activity %>
                     </div>
                   </li>
                 <%

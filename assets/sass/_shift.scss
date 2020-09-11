@@ -45,62 +45,17 @@
         font-weight: bold;
       }
 
-      &.rest_day,
-      &.illness,
-      &.absence,
-      &.detached_duty,
-      &.tu_official,
-      &.holiday {
-        background-color: govuk-colour('green');
+      &.detail {
         margin-bottom: 0;
         color: white;
         padding: 10px 5px 10px 8px;
         border-radius: 3px;
         border: none;
       }
-
-      &.start_night {
-        background-color: govuk-colour('black');
-      }
-      &.overtime_day_start, &.overtime_night_start {
-        background-color: govuk-colour('purple');
-      }
-      &.day_finish {
-        background-color: govuk-colour('red');
-      }
-      &.overtime_day_finish, &.overtime_night_finish {
-        background-color: govuk-colour('light-purple');
-      }
-
-      &.holiday {
-        background-color: govuk-colour('yellow');
-      }
-      
-      &.rest_day {
-        background-color: govuk-colour('orange');
-      }
-
-      &.holiday {
-        background-color: govuk-colour('yellow');
-      }
-  
-      &.illness {
-        background-color: govuk-colour('light-green');
-      }
-  
-      &.absence {
-        background-color: govuk-colour('yellow');
-      }
-  
-      &.detached_duty {
-        background-color: govuk-colour('brown');
-      }
-  
-      &.tu_official {
-        background-color: govuk-colour('pink');
+      &.activity {
+        color: govuk-colour('black')
       }
     }
-
     &.day_start div.time,
     &.overtime_day_start div.time,
     &.overtime_day_finish div.time,
@@ -128,15 +83,16 @@
       background-color: govuk-colour('black');
     }
 
-    &.holiday div.time {
-      background-color: govuk-colour('yellow');
-    }
-
     &.rest-day div.time {
       background-color: govuk-colour('orange');
     }
 
-    &.holiday div.time {
+    &.holiday div.time,
+    &.absence div.time,
+    &.absence div.time,
+    &.training-external div.time,
+    &.training-internal div.time, 
+    &.otherType div.time {
       background-color: govuk-colour('yellow');
     }
 
@@ -158,7 +114,7 @@
     &.overtime_day_start div.time, &.overtime_night_start div.time {
       background-color: govuk-colour('purple');
     }
-    &.overtime_day_finish div.time {
+    &.overtime_day_finish div.time, &.overtime_night_finish div.time {
       background-color: govuk-colour('light-purple');
     }
   }
