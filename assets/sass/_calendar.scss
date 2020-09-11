@@ -130,10 +130,13 @@ ul.calendar {
       background-color: govuk-colour('red');
     }
 
-    &.overtime_day_start, &.overtime_day_finish, &.overtime_night_start, &.overtime_night_finish {
+    &.overtime_day_start, &.overtime_night_start {
       background-color: govuk-colour('purple');
     }
 
+    &.overtime_day_finish, &.overtime_night_finish {
+      background-color: govuk-colour('light-purple');
+    }
 
     &.night_start, &.night_finish {
       background-color: govuk-colour('black');

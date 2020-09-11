@@ -15,11 +15,11 @@ describe('calendar middleware', () => {
   const hmppsAuthMFAUser = ''
   const authUrl = ''
   const csrfToken = 'tomato'
-  const getCalendarDataMock = jest.fn()
+  const getCalendarMonthMock = jest.fn()
   const countUnprocessedNotificationsMock = jest.fn()
   const app = {
     get: () => ({
-      calendarService: { getCalendarData: getCalendarDataMock },
+      calendarService: { getCalendarMonth: getCalendarMonthMock },
       notificationService: { countUnprocessedNotifications: countUnprocessedNotificationsMock },
     }),
   }
@@ -30,7 +30,7 @@ describe('calendar middleware', () => {
   const notificationCount = 42
   beforeEach(async () => {
     configureCalendar.mockReturnValue(returnCalendarData)
-    getCalendarDataMock.mockResolvedValue(calendarData)
+    getCalendarMonthMock.mockResolvedValue(calendarData)
     countUnprocessedNotificationsMock.mockResolvedValue(notificationCount)
     res = { render: renderMock, locals: { csrfToken } }
     req = {
@@ -51,7 +51,7 @@ describe('calendar middleware', () => {
       expect(countUnprocessedNotificationsMock).toHaveBeenCalledTimes(1)
     })
     it('should get calendar data', () => {
-      expect(getCalendarDataMock).toHaveBeenCalledTimes(1)
+      expect(getCalendarMonthMock).toHaveBeenCalledTimes(1)
     })
     it('should not call the next function', () => {
       expect(nextMock).not.toHaveBeenCalled()

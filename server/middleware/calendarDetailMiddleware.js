@@ -12,7 +12,13 @@ const calendarDetailMiddleware = async (
   const { calendarService } = app.get('DataServices')
 
   try {
-    const { date: currentDate, fullDayType, details } = await calendarService.getCalendarDetails(date, token)
+    const { date: currentDate, fullDayType, details } = await calendarService.getCalendarDay(date, token)
+    console.log(`BOOM BOOM BOOM BOOM`)
+    console.log(currentDate)
+    console.log(fullDayType)
+    console.log(details)
+    console.log(`BOOM BOOM BOOM`)
+
     const todayMoment = moment(currentDate)
     const backLink = `/calendar/${todayMoment.clone().format('YYYY-MM-01')}`
     const yesterdayMoment = todayMoment.clone().subtract('1', 'd')

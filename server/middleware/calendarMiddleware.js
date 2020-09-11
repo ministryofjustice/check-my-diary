@@ -19,7 +19,7 @@ const calendarMiddleware = async (req, res, next) => {
   try {
     const notificationCount = await notificationService.countUnprocessedNotifications(token)
 
-    const month = await calendarService.getCalendarData(date, token)
+    const month = await calendarService.getCalendarMonth(date, token)
     month.forEach(processDay)
 
     const data = configureCalendar(month)

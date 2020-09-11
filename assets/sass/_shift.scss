@@ -65,10 +65,10 @@
       &.overtime_day_start, &.overtime_night_start {
         background-color: govuk-colour('purple');
       }
-      &.day_finish, &.overtime_night_finish {
+      &.day_finish {
         background-color: govuk-colour('red');
       }
-      &.overtime_day_finish {
+      &.overtime_day_finish, &.overtime_night_finish {
         background-color: govuk-colour('light-purple');
       }
 

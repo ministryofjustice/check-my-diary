@@ -60,7 +60,7 @@
                           <%= dateText %>
                         </span>
                       </div>
-                      <% if (fullDayType !== 'None') { %>
+                      <% if (fullDayType !== 'None' && fullDayType !== 'Shift') { %>
                       <span class="line"><%= fullDayType %></span>
                       <% } %>
                       <% details !== null && details.forEach(({ displayType, activity, finishDuration }) => { %>
