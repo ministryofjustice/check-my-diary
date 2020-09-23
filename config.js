@@ -25,11 +25,8 @@ module.exports = {
     sslEnabled: get('DB_SSL_ENABLED', 'false'),
   },
   nomis: {
-    authUrl: get('API_AUTH_ENDPOINT_URL', get('NOMIS_AUTH_URL', 'https://gateway.t3.nomis-api.hmpps.dsd.io/auth')),
-    authExternalUrl: get(
-      'API_AUTH_EXTERNAL_ENDPOINT_URL',
-      get('API_AUTH_ENDPOINT_URL', 'https://gateway.t3.nomis-api.hmpps.dsd.io/auth'),
-    ),
+    authUrl: get('API_AUTH_ENDPOINT_URL', get('NOMIS_AUTH_URL', 'http://localhost:9191/auth')),
+    authExternalUrl: get('API_AUTH_EXTERNAL_ENDPOINT_URL', get('API_AUTH_ENDPOINT_URL', 'http://localhost:9191/auth')),
     timeout: {
       response: 30000,
       deadline: 35000,
@@ -45,7 +42,7 @@ module.exports = {
   app: {
     production,
     mailTo: process.env.MAIL_TO || 'feedback@digital.justice.gov.uk',
-    url: process.env.CHECK_MY_DIARY_URL || 'http://localhost:3000',
+    url: process.env.CHECK_MY_DIARY_URL || `http://localhost:${process.env.PORT || 3005}`,
   },
   maintenance: {
     start: process.env.MAINTENANCE_START,
@@ -59,19 +56,19 @@ module.exports = {
     healthCheckUrl: process.env.NOTIFY_HEALTH_CHECK_URL || 'https://api.notifications.service.gov.uk/_status',
   },
   cmdApi: {
-    url: get('CMD_API_URL', 'http://localhost:8080'),
+    url: get('CMD_API_URL', 'http://localhost:9191'),
   },
   hmppsCookie: {
     name: process.env.HMPPS_COOKIE_NAME || 'check-my-diary-dev',
-    domain: process.env.HMPPS_COOKIE_DOMAIN || 'http://localhost:3000',
+    domain: process.env.HMPPS_COOKIE_DOMAIN || 'localhost',
     expiryMinutes: process.env.WEB_SESSION_TIMEOUT_IN_MINUTES || 20,
   },
-  port: get('PORT', 3000, requiredInProduction),
+  port: get('PORT', 3005, requiredInProduction),
   domain: process.env.HMPPS_COOKIE_DOMAIN,
   sessionTimeout: process.env.WEB_SESSION_TIMEOUT_IN_MINUTES,
   quantumAddresses: get('QUANTUM_ADDRESS', '127.0.0.1', requiredInProduction),
-  rejectUnauthorized: 0,
-  twoFactorAuthOn: false,
+  rejectUnauthorized: process.env.REJECT_UNAUTHORIZED,
+  twoFactorAuthOn: process.env.TWO_FACT_AUTH_ON,
   https: production,
   regions: get('REGIONS', '', requiredInProduction),
 }
