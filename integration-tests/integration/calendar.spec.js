@@ -25,7 +25,7 @@ context('A staff member can view their calendar', () => {
     const dayShift = calendarPage.day('2020-03-06')
     dayShift.children().should((spans) => {
       const allText = spans.map((i, el) => Cypress.$(el).text().trim())
-      expect(allText.get()).to.deep.eq(['Friday, 6th', '6', 'Start 07:45', 'Finish 19:30', '10hrs 15mins'])
+      expect(allText.get()).to.deep.eq(['Friday 6th', '6', 'Start 07:45', 'Finish 19:30', '10hrs 15mins'])
     })
   })
 
@@ -45,13 +45,13 @@ context('A staff member can view their calendar', () => {
     cy.task('stubTasks')
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
 
-    const nightShift = calendarPage.day('2020-03-23')
+    const nightShift = calendarPage.day('2020-03-26')
     nightShift.click()
 
     // the title comes from the seed data, hence the jumping between dates
-    const nightShiftPage = CalendarDetailPage.verifyOnPage('Monday, 23rd March 2020')
+    const nightShiftPage = CalendarDetailPage.verifyOnPage('Thursday, 26th March 2020')
     nightShiftPage.detailFinish().should('contain.text', 'End of shift')
-    nightShiftPage.detailStartNight().should('contain', 'Start of shift').should('contain', 'Night Duties')
+    nightShiftPage.detailStartNight().should('contain', 'Start of night shift').should('contain', 'Night Duties')
   })
 
   it('A staff member navigate to different days', () => {

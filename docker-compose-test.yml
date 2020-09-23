@@ -13,11 +13,11 @@ services:
       - POSTGRES_USER=check-my-diary
       - POSTGRES_DB=check-my-diary
 
-  check-my-diary-wiremock:
+  cmd-api-wiremock:
     image: rodolpheche/wiremock
     networks:
       - hmpps_int
-    container_name: check-my-diary-wiremock
+    container_name: cmd-api-wiremock
     restart: always
     ports:
       - "9191:8080"
