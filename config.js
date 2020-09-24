@@ -16,7 +16,7 @@ const requiredInProduction = { requireInProduction: true }
 const noFallbackInProduction = { noFallbackInProduction: true }
 
 module.exports = {
-  sessionSecret: get('SESSION_SECRET', '456456453rtretretete', requiredInProduction),
+  sessionSecret: get('SESSION_SECRET', 'app-insecure-default-session', requiredInProduction),
   db: {
     username: get('DATABASE_USER', 'check-my-diary'),
     password: get('DATABASE_PASSWORD', 'check-my-diary'),
