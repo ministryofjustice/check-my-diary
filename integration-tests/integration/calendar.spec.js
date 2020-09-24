@@ -30,7 +30,6 @@ context('A staff member can view their calendar', () => {
   })
 
   it('A staff member can drill into a day shift', () => {
-    cy.task('stubTasks')
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
 
     const dayShift = calendarPage.day('2020-03-06')
@@ -42,7 +41,6 @@ context('A staff member can view their calendar', () => {
   })
 
   it('A staff member can drill into a night shift', () => {
-    cy.task('stubTasks')
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
 
     const nightShift = calendarPage.day('2020-03-26')
@@ -55,7 +53,6 @@ context('A staff member can view their calendar', () => {
   })
 
   it('A staff member navigate to different days', () => {
-    cy.task('stubTasks')
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
 
     const dayShift = calendarPage.day('2020-03-06')

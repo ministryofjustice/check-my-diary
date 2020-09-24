@@ -62,7 +62,6 @@ context('A staff member can view their overtime calendar', () => {
   })
 
   it('A staff member can drill into a day shift with overtime', () => {
-    cy.task('stubTasks')
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
 
     const dayShift = calendarPage.day('2020-03-07')
@@ -80,8 +79,6 @@ context('A staff member can view their overtime calendar', () => {
   })
 
   it('A staff member can drill into a rest day with overtime', () => {
-    cy.task('stubTasks')
-
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
 
     const dayShift = calendarPage.day('2020-03-20')
@@ -95,8 +92,6 @@ context('A staff member can view their overtime calendar', () => {
   })
 
   it('A staff member can drill into a holiday with overtime', () => {
-    cy.task('stubTasks')
-
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
 
     const dayShift = calendarPage.day('2020-03-21')
@@ -110,8 +105,6 @@ context('A staff member can view their overtime calendar', () => {
   })
 
   it('A staff member can drill into a night shift start with overtime', () => {
-    cy.task('stubTasks')
-
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
 
     const dayShift = calendarPage.day('2020-03-22')
@@ -125,8 +118,6 @@ context('A staff member can view their overtime calendar', () => {
   })
 
   it('A staff member can drill into a night shift end with overtime', () => {
-    cy.task('stubTasks')
-
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
 
     const dayShift = calendarPage.day('2020-03-23')
@@ -141,8 +132,6 @@ context('A staff member can view their overtime calendar', () => {
   })
 
   it('A staff member can drill into a night shift with overtime', () => {
-    cy.task('stubTasks')
-
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
 
     const dayShift = calendarPage.day('2020-03-27')
