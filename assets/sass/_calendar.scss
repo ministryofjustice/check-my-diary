@@ -48,7 +48,7 @@ ul.calendar {
   .calendar-item a {
     display: block;
     position: relative;
-    height: 125px;
+    height: 200px;
     text-decoration: none;
     color: govuk-colour('black');
 
@@ -61,16 +61,12 @@ ul.calendar {
     background-color: govuk-colour('orange');
   }
 
-  .holiday {
+  .holiday, .absence, .training-external, .training-internal, .otherType {
     background-color: govuk-colour('yellow');
   }
 
   .illness {
     background-color: govuk-colour('light-green');
-  }
-
-  .absence {
-    background-color: govuk-colour('yellow');
   }
 
   .detached-duty {
@@ -122,23 +118,27 @@ ul.calendar {
       color: govuk-colour('black');
     }
 
-    &.start {
+    &.day_start {
       background-color: govuk-colour('green');
     }
 
-    &.finish {
+    &.day_finish {
       background-color: govuk-colour('red');
     }
 
-    &.night {
-      background-color: govuk-colour('black');
-    }
-
-    &.overtime {
+    &.overtime_day_start, &.overtime_night_start {
       background-color: govuk-colour('purple');
     }
 
-    &.moon {
+    &.overtime_day_finish, &.overtime_night_finish {
+      background-color: govuk-colour('light-purple');
+    }
+
+    &.night_start, &.night_finish {
+      background-color: govuk-colour('black');
+    }
+
+    &.night_start, &.night_finish {
       background-image: url("../assets/images/night-shift.PNG");
       background-repeat: no-repeat;
       background-size: 25px 20px;

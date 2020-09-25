@@ -54,42 +54,101 @@ function getAuthErrorDescription(error) {
   return type
 }
 
-function configureCalendar(data, startDate) {
-  if (data === null || data.shifts.length === 0) return { shifts: null }
+const sortByDate = (data, dateField = 'date') =>
+  data.sort((first, second) => moment(first[dateField]) - moment(second[dateField]))
 
-  const convertedStartDate = moment(startDate)
+const sortByDisplayType = (data) =>
+  data.sort(
+    ({ displayTypeTime, displayType, start }, { displayTypeTime: compareDisplayTypeTime, start: compareStart }) => {
+      const date = displayTypeTime || start
+      const compareDate = compareDisplayTypeTime || compareStart
+      const comparison = moment(date) - moment(compareDate)
+      if (comparison !== 0) return comparison
+      return displayType && displayType.toLowerCase().includes('finish') ? -1 : 1
+    },
+  )
 
-  const daysInMonth = convertedStartDate.daysInMonth()
-
-  const pad = convertedStartDate.day()
-
-  const noDay = { type: 'no-day' }
-  const prePad = new Array(pad).fill(noDay)
-  const postPadSize = Math.ceil((daysInMonth + pad) / 7) * 7
-  const postPad = new Array(postPadSize - data.shifts.length - pad).fill(noDay)
-
-  return { shifts: [...prePad, ...data.shifts, ...postPad] }
+const removeShiftDetails = (details) => {
+  return details.filter(({ displayType }) => !['day_start', 'day_finish'].includes(displayType))
 }
 
-function processOvertimeShifts(shiftsData, overtimeShiftsData) {
-  if (shiftsData != null && shiftsData.shifts.length > 0) {
-    if (overtimeShiftsData != null && overtimeShiftsData.shifts.length > 0) {
-      overtimeShiftsData.shifts.forEach((overtimeShift) => {
-        for (let i = 0; i < shiftsData.shifts.length; i += 1) {
-          const shift = shiftsData.shifts[i]
-          if (shift.type !== 'no-day') {
-            if (overtimeShift.date === shift.date) {
-              shift.overtime = true
-            } else {
-              shift.overtime = shift.overtime || false
-            }
-          }
-        }
-      })
-    }
-  }
+const humanizeNumber = (value, unit) => {
+  if (value === 0) return ''
+  return `${value}${unit}${value > 1 ? 's' : ''}`
+}
 
-  return shiftsData
+const getDuration = (duration) => {
+  const displayTypeTimeRaw = moment.duration(duration, 'seconds')
+  return `${humanizeNumber(displayTypeTimeRaw.hours(), 'hr')} ${humanizeNumber(
+    displayTypeTimeRaw.minutes(),
+    'min',
+  )}`.trim()
+}
+
+const configureCalendarDay = (day) => {
+  const { fullDayType, details } = day
+  sortByDisplayType(details)
+  details.forEach(
+    (detail) => detail.finishDuration && Object.assign(detail, { finishDuration: getDuration(detail.finishDuration) }),
+  )
+  if (!['SHIFT', 'SECONDMENT', 'TRAINING_EXTERNAL', 'TRAINING_INTERNAL', 'TOIL'].includes(fullDayType))
+    Object.assign(day, { details: removeShiftDetails(details) })
+}
+
+const configureCalendar = (data, startDate = null) => {
+  if (data === undefined || data == null || data.length === 0) return null
+  sortByDate(data)
+  data.forEach((day) => configureCalendarDay(day))
+  const startDateMoment = moment(startDate || data[0].date)
+  const pad = startDateMoment.day()
+  const noDay = { fullDayType: 'no-day' }
+  const prePad = new Array(pad).fill(noDay)
+  const monthPadTotal = startDateMoment.daysInMonth() + pad
+  const totalCalendarSize = Math.ceil(monthPadTotal / 7) * 7
+  const postPad = new Array(totalCalendarSize - monthPadTotal).fill(noDay)
+
+  return [...prePad, ...data, ...postPad]
+}
+
+const getTaskText = (displayType) =>
+  ({
+    DAY_START: 'Start',
+    DAY_FINISH: 'Finish',
+    NIGHT_START: 'Start',
+    NIGHT_FINISH: 'Finish',
+    OVERTIME_DAY_START: 'Start',
+    OVERTIME_DAY_FINISH: 'Finish',
+    OVERTIME_NIGHT_START: 'Start',
+    OVERTIME_NIGHT_FINISH: 'Finish',
+  }[displayType])
+
+const displayedTasks = [
+  'DAY_START',
+  'DAY_FINISH',
+  'NIGHT_START',
+  'NIGHT_FINISH',
+  'OVERTIME_DAY_START',
+  'OVERTIME_DAY_FINISH',
+  'OVERTIME_NIGHT_START',
+  'OVERTIME_NIGHT_FINISH',
+]
+
+const processDay = (day) => {
+  const { date, details: rawTasks } = day
+  const dateMoment = moment(date)
+  const today = dateMoment.isSame(moment(), 'day')
+  const format = 'hh:mm:ss'
+  const details = rawTasks.filter(
+    ({ displayType, start }) => displayedTasks.includes(displayType) && !moment(start, format).isSame('00:00:00'),
+  )
+  // const sortedDetails = details.sort(d => d.start)
+  details.forEach((detail) => {
+    const { displayType, displayTypeTime } = detail
+    const activity = `${getTaskText(displayType)} ${moment(displayTypeTime).format('HH:mm')}`
+    Object.assign(detail, { activity, displayType: displayType.toLowerCase() })
+  })
+  sortByDate(details, 'displayTypeTime')
+  Object.assign(day, { today, dateText: dateMoment.format('D'), dateDayText: dateMoment.format('dddd Do'), details })
 }
 
 const hmppsAuthMFAUser = (token) => jwtDecode(token).authorities.includes('ROLE_MFA')
@@ -107,8 +166,10 @@ module.exports = {
   get2faCode,
   getAuthErrorDescription,
   createTwoFactorAuthenticationHash,
+  sortByDate,
+  sortByDisplayType,
   configureCalendar,
-  processOvertimeShifts,
+  processDay,
   hmppsAuthMFAUser,
   getSnoozeUntil,
   appendUserErrorMessage,

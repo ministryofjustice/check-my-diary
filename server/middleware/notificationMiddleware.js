@@ -17,7 +17,7 @@ const notificationMiddleware = async (req, res, next) => {
       locals: { csrfToken, errors = null },
     } = res
     const { notificationService } = app.get('DataServices')
-    const [{ snoozeUntil, preference = NONE }, data] = await Promise.all([
+    const [{ snoozeUntil: rawSnoozeUntil, preference = NONE }, data] = await Promise.all([
       notificationService.getPreferences(token),
       notificationService.getNotifications(token),
     ])
@@ -31,7 +31,7 @@ const notificationMiddleware = async (req, res, next) => {
       csrfToken,
       hmppsAuthMFAUser,
       notificationsEnabled,
-      snoozeUntil: notificationsEnabled ? getSnoozeUntil(snoozeUntil) : '',
+      snoozeUntil: notificationsEnabled ? getSnoozeUntil(rawSnoozeUntil) : '',
       moment,
       employeeName,
       authUrl,

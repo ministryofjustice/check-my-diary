@@ -75,7 +75,7 @@ const postLogin = async (req, res) => {
             throw new Error(err)
           })
       }
-      
+
       if (emailEnabled) {
         // For email
         await notify
@@ -94,7 +94,7 @@ const postLogin = async (req, res) => {
         new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000),
       )
 
-      res.redirect(`/calendar/${utilities.getStartMonth()}`)
+      res.redirect(`/calendar/${utilities.getStartMonth()}#today`)
     }
   } catch (error) {
     const data = {
@@ -125,7 +125,7 @@ router.post('/2fa', async (req, res) => {
         new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000),
       )
 
-      res.redirect(`/calendar/${utilities.getStartMonth()}`)
+      res.redirect(`/calendar/${utilities.getStartMonth()}#today`)
     } else {
       logError(req.url, '2FA failure')
       res.render('pages/two-factor-auth', { authError: true, csrfToken: res.locals.csrfToken })

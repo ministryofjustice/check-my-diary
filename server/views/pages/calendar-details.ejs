@@ -2,211 +2,73 @@
 
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
-<head>
-  <% include ../partials/head %>
-</head>
-<body class="govuk-template__body">
-
-<% include ../partials/header %>
-
-<div class="govuk-width-container">
-
-  <% include ../partials/beta-banner %>
-
-    <main id="main-content" role="main">
+  <head>
+    <% include ../partials/head %>
+  </head>
+  <body class="govuk-template__body">
+    <% include ../partials/header %>
+    <div class="govuk-width-container">
+      <% include ../partials/beta-banner %>
+      <main id="main-content" role="main">
         <div class="tabs-wrapper">
-            <ul class="tabs">
-                <li><a class="active" href="/calendar/<%=startDate.format('YYYY-MM-01')%>">Calendar</a></li>
-                <li>
-                    <a href="/notifications">Notifications
-                    </a>
-                </li>
-            </ul>
+          <ul class="tabs">
+            <li>
+              <a class="active" href="<%= backLink %>">Calendar</a>
+            </li>
+            <li>
+              <a href="/notifications">Notifications</a>
+            </li>
+          </ul>
         </div>
 
         <div class="calendar-controls center-align">
-            <h1 class="govuk-heading-m govuk-!-margin-bottom-0"><%= startDate.format('dddd, Do MMMM YYYY') %></h1>
-            <a id="btnPreviousShiftDetail" href="/details/<%= startDate.clone().subtract(1,'d').format('YYYY-MM-DD') %>"
-               class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19"><%= startDate.clone().subtract(1,'d').format('dddd, Do') %></a>
-
-            <a id="btnNextShiftDetail" href="/details/<%= startDate.clone().add(1,'d').format('YYYY-MM-DD') %>"
-               class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 app-link-!-border "><%= startDate.clone().add(1,'d').format('dddd, Do') %></a>
+          <h1 class="govuk-heading-m govuk-!-margin-bottom-0"><%= today %></h1>
+          <a id="btnPreviousShiftDetail" href="/details/<%= yesterday.link %>"
+            class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19"><%= yesterday.text %></a>
+          <a id="btnNextShiftDetail" href="/details/<%= tomorrow.link %>"
+          class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 app-link-!-border "><%= tomorrow.text %></a>
         </div>
-        <a href="/calendar/<%=moment(startDate).format('YYYY-MM-01')%>" class="govuk-back-link">Back</a>
-
+        <a href="<%= backLink %>" class="govuk-back-link">Back</a>
         <div class="grid-row">
-      <div class="column-full">
-        <% if (data != null && data.tasks.length > 0) { %>
-
-          <ul class="app-shift-detail">
-
-            <% data.tasks.forEach(function(task, index){ %>
-
-                <% if (task.startDateTime !== task.date + 'T00:00:00' && task.endDateTime !== task.date + 'T23:59:59') { %>
-
-                  <% if (checkIfDateTimeIsNull(task.dailyStartDateTime) && checkIfDateTimeIsNull(task.dailyEndDateTime)) { %>
-
-                    <% if (task.taskType === 'Absence' || task.taskType === 'Break') { %>
-                      <li class="<% if (index === 0) { %>detail-start<% } %>">
-                        <span class="time"><%= getTimeFromDate(task.startDateTime) %> - <%= getTimeFromDate(task.endDateTime) %></span>
-                        <span class="description">
-                          <% if (index === 0) { %>Start :
-                          <% } %>
-                          <%= task.label %></span>
-                      </li>
-
-                      <% if (index === data.tasks.length - 1) { %>
-                        <li class="detail-finish">
-                          <span class="time"><%= getTimeFromDate(task.endDateTime) %></span>
-                          <span class="description">End</span>
-                        </li>
-                      <% } %>
-                    <% } else { %>
-                      <li class="<% if (index === 0) { %>detail-start<% } %>">
-                        <span class="time"><%= getTimeFromDate(task.startDateTime) %> - <%= getTimeFromDate(task.endDateTime) %></span>
-                        <span class="description">
-                          <% if (index === 0) { %>Start of shift:
-                          <% } %>
-                          <%= task.label %></span>
-                      </li>
-
-                      <% if (index === data.tasks.length - 1) { %>
-                        <li class="detail-finish">
-                          <span class="time"><%= getTimeFromDate(task.endDateTime) %></span>
-                          <span class="description">End of shift</span>
-                        </li>
-                      <% } %>
-                    <% }  %>
-
-                  <% } else if (checkIfDateTimeIsNull(task.dailyEndDateTime) && !checkIfDateTimeIsNull(task.dailyStartDateTime)) { %>
-                    <li class="<% if (index === 0) { %>detail-start-night<% } %>">
-                      <span class="time"><%= getTimeFromDate(task.dailyStartDateTime) %> </span>
-                      <span class="description">
-                        <% if (index === 0) { %>Start of shift:
-                        <% } %>
-                        <%= task.label %></span>
-                    </li>
-                  <% } else if (!checkIfDateTimeIsNull(task.dailyEndDateTime) && checkIfDateTimeIsNull(task.dailyStartDateTime)) { %>
-                    <% if (index === data.tasks.length - 1) { %>
-                      <li class="detail-finish">
-                        <span class="time"><%= getTimeFromDate(task.dailyEndDateTime) %></span>
-                        <span class="description">End of shift</span>
-                      </li>
-                    <% } %>
-
-                  <% } else { %>
-                    <% if (firstDateIsAfterSecondDate(task.dailyStartDateTime, task.dailyEndDateTime)) { %>
-
-                      <li class="detail-finish">
-                        <span class="time"><%= getTimeFromDate(task.dailyEndDateTime) %></span>
-                        <span class="description">End of shift</span>
-                      </li>
-
-                      <li class="detail-start-night">
-                        <span class="time"><%= getTimeFromDate(task.dailyStartDateTime) %></span>
-                        <span class="description">Start of shift: <%= task.label %></span>
-                      </li>
-
-                    <% } else { %>
-                      <li class="detail-start">
-                        <span class="time"><%= getTimeFromDate(task.dailyStartDateTime) %></span>
-                        <span class="description">Start of shift: <%= task.label %></span>
-                      </li>
-
-                      <li class="detail-finish">
-                        <span class="time"><%= getTimeFromDate(task.dailyEndDateTime) %></span>
-                        <span class="description">End of shift</span>
-                      </li>
-
-                    <% } %>
-                  <% } %>
-
-                <% } %>
-
-
-              <% if ((task.taskType === 'Holiday' && task.startDateTime === task.date + 'T00:00:00' && task.endDateTime === task.date + 'T23:59:59') || task.taskType === 'Illness' || task.taskType === 'Detached Duty' || task.taskType === 'TU Officials Leave Days' || task.taskType === 'TU Officials Leave Hours' || (task.taskType === 'Absence' && (task.startDateTime === task.date + 'T00:00:00' && task.endDateTime === task.date + 'T23:59:59')) || (task.taskType === 'Unspecific' && (task.startDateTime === task.date + 'T00:00:00' && task.endDateTime === task.date + 'T23:59:59')) || (task.taskType === 'Absence' && task.label.toLowerCase().includes("rest day")) ) { %>
-
-                  <li
-                    class="<% if (task.taskType === 'Holiday') { %>detail-holiday<% } else if (task.taskType === 'Absence' && task.label === 'Rest Day') { %>detail-rest-day<% } else if (task.taskType === 'Illness') { %>detail-illness<% } else if (task.taskType === 'Absence' && task.label === 'Detached Duty') { %>detail-detached-duty<% } else if ((task.taskType === 'Absence' && task.label === 'TU Officials Leave Days') || (task.taskType === 'Absence' && task.label === 'TU Officials Leave Hours')) { %>detail-tu-official<% } else { %>detail-absence<% } %>">
-                    <span class="time">
-
-                      <% if (task.taskType === 'Holiday') { %>Holiday
-                      <% } else if (task.taskType === 'Absence') { %><%= task.label %>
-                      <% } else if (task.taskType === 'Illness') { %>Sick
-
-                      <% } else if (task.label === 'Detached Duty') { %>Detached Duty
-
-                      <% } else if (task.label === 'TU Officials Leave Days' || task.taskType === 'TU Officials Leave Hours') { %>
-                        <%= task.label %>
-                      <% } else if (task.taskType === 'Unspecific' && (task.startDateTime === task.date + 'T00:00:00' && task.endDateTime === task.date + 'T23:59:59')) { %>
-                        <%= task.label %>
-                      <% } %>
-                    </span>
-                    <% if (overtimeShiftDetailsData === null || overtimeShiftDetailsData.tasks.length === 0) { %>
-                      <span class="description">All day</span>
-                    <% } %>
+          <div class="column-full">
+            <% if (details != null) { %>
+              <ul class="app-shift-detail">
+                <% if (fullDayType !== 'SHIFT') { %>
+                  <li class="detail <%= getTypeClass(fullDayType) %>">
+                    <div class="time"><%= fullDayTypeDescription %></div>
                   </li>
-
-              <% } %>
-
-            <% } );%>
-
-          </ul>
-          <% } %>
-
-          <% if (overtimeShiftDetailsData != null && overtimeShiftDetailsData.tasks.length > 0) { %>
-            <span class="app-shift-detail" style="font-weight: bold;">Overtime</span>
-
-            <ul class="app-shift-detail">
-
-              <% overtimeShiftDetailsData.tasks.forEach(function(task, index){ %>
-
-                <% if (task.taskType === 'Absence' || task.taskType === 'Break') { %>
-                    <li class="<% if (index === 0) { %>detail-start-overtime<% } %>">
-                      <span class="time"><%= getTimeFromDate(task.startDateTime) %> - <%= getTimeFromDate(task.endDateTime) %></span>
-                      <span class="description">
-                        <% if (index === 0) { %>Start :
-                        <% } %>
-                        <%= task.label %></span>
-                    </li>
-
-                    <% if (index === overtimeShiftDetailsData.tasks.length - 1) { %>
-                      <li class="detail-finish-overtime">
-                        <span class="time"><%= getTimeFromDate(task.endDateTime) %></span>
-                        <span class="description">End</span>
-                      </li>
-                    <% } %>
-                  <% } else { %>
-                    <li class="<% if (index === 0) { %>detail-start-overtime<% } %>">
-                      <span class="time"><%= getTimeFromDate(task.startDateTime) %> - <%= getTimeFromDate(task.endDateTime) %></span>
-                      <span class="description">
-                        <% if (index === 0) { %>Start of shift:
-                        <% } %>
-                        <%= task.label %></span>
-                    </li>
-
-                    <% if (index === overtimeShiftDetailsData.tasks.length - 1) { %>
-                      <li class="detail-finish-overtime">
-                        <span class="time"><%= getTimeFromDate(task.endDateTime) %></span>
-                        <span class="description">End of shift</span>
-                      </li>
-                    <% } %>
-                  <% }  %>
-              <% } );%>
-            </ul>
+                <% } %>
+                <%
+                  let started = false;
+                  details.forEach((detail, index) => {
+                %>
+                  <li class="detail <%= detail.displayType || 'activity' %>">
+                    <div class="time"><% if(detail.start) { %> <%= detail.start %> - <% } %><% if(detail.end) { %><%= detail.end %><% } %></div>
+                    <div class="description">
+                      <% if(detail.displayType === 'night_start') { %> Start of night shift: <% } %>
+                      <% if(detail.displayType === 'night_finish') { %> End of night shift: <% } %>
+                      <% if(!started && detail.displayType === 'day_start') { %> Start of shift: <% } %>
+                      <% if(detail.displayType === 'day_finish') { %>End of shift<% }%>
+                      <% if(detail.displayType === 'overtime_day_start') { %> Start of overtime: <% } %>
+                      <% if(detail.displayType === 'overtime_day_finish') { %> End of overtime<% } %>
+                      <% if(detail.displayType === 'overtime_night_start') { %> Start of overtime night shift: <% } %>
+                      <% if(detail.displayType === 'overtime_night_finish') { %> End of overtime night shift<% } %>
+                      <%= detail.activity %>
+                    </div>
+                  </li>
+                <%
+                    started = started ? detail.displayType !== 'day_finish' : detail.displayType === 'day_start'
+                  })
+                %>
+              </ul>
             <% } %>
-
             <div class="govuk-clearfix"></div>
-
           </div>
 
-		<input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        </div>
+      </main>
     </div>
-  </main>
-
-</div>
-
-<% include ../partials/footer %>
-
-</body>
+    <% include ../partials/footer %>
+  </body>
 </html>
