@@ -23,10 +23,11 @@
       }
 
       &.description {
+        color: govuk-colour('black');
         padding-top: 25px;
 
         @include app-breakpoint {
-          padding: 0;
+          padding: 0 0 0 5px;
         }
       }
     }
@@ -41,7 +42,7 @@
         width: 100%;
         border: none;
         text-align: left;
-        padding: 0;
+        padding: 2px 0 2px 5px;
         font-weight: bold;
       }
 

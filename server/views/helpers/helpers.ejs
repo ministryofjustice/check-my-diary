@@ -19,28 +19,6 @@
       'TRAINING_INTERNAL': 'training-internal',
     }[type] || 'otherType');
 
-  getTypeDescription = type => ({
-      'Rest Day': 'Rest Day',
-      'HOLIDAY': 'Holiday',
-      'ILLNESS': 'Illness',
-      'ABSENCE' : 'Absence',
-      //TODO: how can these values come through?
-      // 'Detached Duty': 'Detached Duty',
-      //'TU Officials Leave Days': 'TU Officials Leave Days',
-      //'TU Officials Leave Hours': 'TU Officials Leave Hours',
-  }[type] || 'no-day');
-
-  getTypeDescription = type => ({
-      'REST_DAY': 'Rest Day',
-      'HOLIDAY': 'Holiday',
-      'ILLNESS': 'Illness',
-      'ABSENCE' : 'Absence',
-      //TODO: how can these values come through?
-      // 'Detached Duty': 'Detached Duty',
-      //'TU Officials Leave Days': 'TU Officials Leave Days',
-      //'TU Officials Leave Hours': 'TU Officials Leave Hours',
-  }[type] || 'no-day');
-
   getRelativeModifiedDate = (moment, modifiedDate) => {
 
     var s = ( moment().diff(moment(modifiedDate)))/ 1000,
