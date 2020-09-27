@@ -3,10 +3,10 @@
   width: 100%;
   padding: 0;
   margin: 0 0 20px 0;
-  @include govuk-font(24);
+  @include govuk-font(16);
 
   li {
-    @include govuk-font(24);
+    @include govuk-font(16);
     list-style: none;
     margin-bottom: 30px;
 
@@ -14,49 +14,37 @@
       display: inline-block;
 
       &.time {
-        border: 1px solid govuk-colour('mid-grey');
-        width: 220px;
-        border-radius: 3px;
+        float: left;
+        width: 300px;
         margin-right: 15px;
         padding: 25px 0 20px 0;
         text-align: center;
+        border: 1px solid govuk-colour('mid-grey');
       }
 
       &.description {
+        padding: 25px 0 20px 0;
         color: govuk-colour('black');
-        padding-top: 25px;
-
-        @include app-breakpoint {
-          padding: 0 0 0 5px;
-        }
       }
     }
 
     @include app-breakpoint {
-      border-top: 1px solid govuk-colour('mid-grey');
-      padding: 15px 0 10px 0;
-      margin-bottom: 10px;
+      div {
+        display: block;
 
-      div.time {
-        float: none;
-        width: 100%;
-        border: none;
-        text-align: left;
-        padding: 2px 0 2px 5px;
-        font-weight: bold;
-      }
+        &.time, &.description {
+          float:none;
+          width: 80%;
+          margin:auto;
+        }
 
-      &.detail {
-        margin-bottom: 0;
-        color: white;
-        padding: 10px 5px 10px 8px;
-        border-radius: 3px;
-        border: none;
-      }
-      &.activity {
-        color: govuk-colour('black')
+        &.description {
+          @include govuk-font(19);
+          @include govuk-typography-weight-bold;
+        }
       }
     }
+
     &.day_start div.time,
     &.overtime_day_start div.time,
     &.overtime_day_finish div.time,
@@ -64,7 +52,12 @@
     &.night_start div.time,
     &.night_finish div.time,
     &.overtime_night_start div.time,
-    &.overtime_night_finish div.time,
+    &.overtime_night_finish div.time {
+      background-color: govuk-colour('green');
+      border: none;
+      color: govuk-colour('white');
+    }
+
     &.holiday div.time,
     &.illness div.time,
     &.absence div.time,
@@ -72,10 +65,9 @@
     &.tu-official div.time,
     &.rest-day div.time {
       background-color: govuk-colour('green');
-      border: none;
-      color: govuk-colour('white');
-    }    
-    
+      color: govuk-colour('black');
+    }
+
     &.day_finish div.time, &.night_finish div.time {
       background-color: govuk-colour('red');
     }
@@ -92,7 +84,7 @@
     &.absence div.time,
     &.absence div.time,
     &.training-external div.time,
-    &.training-internal div.time, 
+    &.training-internal div.time,
     &.otherType div.time {
       background-color: govuk-colour('yellow');
     }
