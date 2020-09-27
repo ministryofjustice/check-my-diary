@@ -160,6 +160,37 @@ const getSnoozeUntil = (rawSnoozeUntil) => {
 
 const appendUserErrorMessage = (error, userMessage = GENERAL_ERROR) => Object.assign(error, { userMessage })
 
+const processDetail = (detail, detailIndex, details) => {
+  const { start, end, displayType, activity } = detail
+  let startText = start ? moment(start).format('HH:mm') : ''
+  const endText = end ? moment(end).format('HH:mm') : ''
+  let processedActivity = activity
+  const processedDisplayType = displayType ? displayType.toLowerCase() : ''
+  if (['DAY_FINISH', 'OVERTIME_DAY_FINISH'].includes(displayType)) {
+    const lastDetail = detailIndex > 0 ? details[detailIndex - 1] : null
+    if (lastDetail && lastDetail.start === start) {
+      startText = ''
+      processedActivity = ''
+    } else {
+      return [
+        {
+          start: startText,
+          end: endText,
+          displayType: 'activity',
+          activity: processedActivity,
+        },
+        { displayType: processedDisplayType, end: endText },
+      ]
+    }
+  }
+  return {
+    start: startText,
+    end: endText,
+    displayType: processedDisplayType,
+    activity: processedActivity,
+  }
+}
+
 module.exports = {
   getStartMonth,
   getEndDate,
@@ -170,6 +201,7 @@ module.exports = {
   sortByDisplayType,
   configureCalendar,
   processDay,
+  processDetail,
   hmppsAuthMFAUser,
   getSnoozeUntil,
   appendUserErrorMessage,

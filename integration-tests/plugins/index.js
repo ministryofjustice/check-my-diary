@@ -1,8 +1,7 @@
 const auth = require('../mockApis/auth')
 const { resetStubs } = require('../mockApis/wiremock')
-const { stubTasks, stubShifts, stubOvertimeShifts } = require('../mockApis/prisonOfficerApi')
+const { stubShifts } = require('../mockApis/prisonOfficerApi')
 const {
-  stubCount,
   stubNotificationPreferencesGet,
   stubNotificationUpdate,
   stubNotificationGet,
@@ -17,11 +16,7 @@ module.exports = (on) => {
     getLoginUrl: auth.getLoginUrl,
     stubLogin: () => Promise.all([auth.stubLogin({})]),
 
-    stubTasks,
     stubShifts,
-    stubOvertimeShifts,
-
-    stubCount,
 
     createTablesInsertData,
     stubNotificationCount,

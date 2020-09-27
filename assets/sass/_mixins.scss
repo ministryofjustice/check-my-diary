@@ -1,12 +1,12 @@
 @mixin app-breakpoint() {
-  @media (min-width: 320px) and (max-width: 1023px) {
+  @media (min-width: 0px) and (max-width: 1023px) {
     @content;
   }
 }
 
 .logout-asset {
   margin-top: 10px;
-	float: right !important;	
+	float: right !important;
 	color: white;
 }
 
@@ -27,7 +27,7 @@
 
 .govuk-notifications {
 
-  ul {    
+  ul {
     list-style-type: none;
     margin-block-start: 1em;
     margin-block-end: 1em;
@@ -37,17 +37,17 @@
   }
 
   li {
-    border-bottom: 1px solid;    
+    border-bottom: 1px solid;
     margin-bottom: 20px;
   }
 }
 
-.govuk-notifications-indicator{    
+.govuk-notifications-indicator{
   background-color: #df3034;
-  padding: 0 5px;   
+  padding: 0 5px;
 }
 
-.govuk-notifications-settings-error{    
+.govuk-notifications-settings-error{
   color: #df3034;
   font-weight: bold;
   padding: 10px 0px 0px 0px;

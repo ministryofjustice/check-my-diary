@@ -6,6 +6,7 @@ const {
   appendUserErrorMessage,
   processDay,
   sortByDisplayType,
+  processDetail,
 } = require('./utilities')
 const { GENERAL_ERROR, NOT_FOUND_ERROR } = require('./errorConstants')
 
@@ -148,6 +149,91 @@ describe('sortByDisplayType', () => {
       const initialArray = [detail4, detail3, detail2b, detail1]
       sortByDisplayType(initialArray)
       expect(initialArray).toEqual([detail1, detail2b, detail3, detail4])
+    })
+  })
+})
+describe('processDetail', () => {
+  const activity = 'Bicycle Race'
+  const detail1 = { activity, start: '2020-07-08T10:00:00', end: '2020-07-08T16:30:00', displayType: 'DAY_START' }
+  const detail2a = { activity, start: '2020-07-08T10:00:00', end: '2020-07-08T16:30:00', displayType: 'DAY_FINISH' }
+  const detail2b = { activity, start: '2020-07-08T14:00:00', end: '2020-07-08T16:30:00', displayType: 'DAY_FINISH' }
+  describe('with no overtime', () => {
+    describe('with basic start data', () => {
+      it('should produce readable time stamps', () => {
+        expect(processDetail(detail1, 0, [detail1, detail2a])).toEqual({
+          activity,
+          start: '10:00',
+          end: '16:30',
+          displayType: 'day_start',
+        })
+      })
+    })
+    describe('with basic finish data', () => {
+      it('should produce readable time stamps', () => {
+        expect(processDetail(detail2a, 1, [detail1, detail2a])).toEqual({
+          activity: '',
+          start: '',
+          end: '16:30',
+          displayType: 'day_finish',
+        })
+      })
+    })
+    describe('with unique shift data in the finish data', () => {
+      it('should return an array containing an activity detail and a finish detail', () => {
+        expect(processDetail(detail2b, 1, [detail1, detail2b])).toEqual([
+          { activity, start: '14:00', end: '16:30', displayType: 'activity' },
+          { end: '16:30', displayType: 'day_finish' },
+        ])
+      })
+    })
+  })
+  describe('with overtime', () => {
+    const activity2 = 'One Vision'
+    const detail3 = {
+      activity: activity2,
+      start: '2020-07-08T12:00:00',
+      end: '2020-07-08T14:00:00',
+      displayType: 'OVERTIME_DAY_START',
+    }
+    const detail4a = {
+      activity: activity2,
+      start: '2020-07-08T12:00:00',
+      end: '2020-07-08T14:00:00',
+      displayType: 'OVERTIME_DAY_FINISH',
+    }
+    const detail4b = {
+      activity: activity2,
+      start: '2020-07-08T13:00:00',
+      end: '2020-07-08T14:00:00',
+      displayType: 'OVERTIME_DAY_FINISH',
+    }
+    describe('with basic overtime start data', () => {
+      it('should produce readable time stamps', () => {
+        expect(processDetail(detail3, 1, [detail1, detail3, detail4a, detail2a])).toEqual({
+          activity: activity2,
+          start: '12:00',
+          end: '14:00',
+          displayType: 'overtime_day_start',
+        })
+      })
+    })
+    describe('with basic overtime finish data', () => {
+      it('should return an overtime finish detail', () => {
+        expect(processDetail(detail4a, 2, [detail1, detail3, detail4a, detail2a])).toEqual({
+          activity: '',
+          start: '',
+          end: '14:00',
+          displayType: 'overtime_day_finish',
+        })
+      })
+    })
+    describe('with unique shift data in the overtime finish data', () => {
+      it('should return an array containing an activity detail and an overtime finish detail', () => {
+        expect(processDetail(detail4b, 2, [detail1, detail3, detail4b, detail2a])).toEqual([
+          { activity: activity2, start: '13:00', end: '14:00', displayType: 'activity' },
+          { end: '14:00', displayType: 'overtime_day_finish' },
+        ])
+      })
     })
   })
 })

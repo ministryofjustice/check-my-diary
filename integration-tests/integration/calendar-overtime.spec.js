@@ -62,11 +62,10 @@ context('A staff member can view their overtime calendar', () => {
   })
 
   it('A staff member can drill into a day shift with overtime', () => {
-    cy.task('stubTasks')
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
 
     const dayShift = calendarPage.day('2020-03-07')
-    dayShift.click()
+    dayShift.click({ force: true })
 
     const calendarDetailPage = CalendarDetailPage.verifyOnPage('Saturday, 7th March 2020')
     calendarDetailPage.detailStart().should('contain', 'Start of shift').should('contain', 'Duty Manager')
@@ -80,12 +79,10 @@ context('A staff member can view their overtime calendar', () => {
   })
 
   it('A staff member can drill into a rest day with overtime', () => {
-    cy.task('stubTasks')
-
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
 
     const dayShift = calendarPage.day('2020-03-20')
-    dayShift.click()
+    dayShift.click({ force: true })
 
     const calendarDetailPage = CalendarDetailPage.verifyOnPage('Friday, 20th March 2020')
     calendarDetailPage.detailRestDay().should('contain', 'Rest Day')
@@ -95,12 +92,10 @@ context('A staff member can view their overtime calendar', () => {
   })
 
   it('A staff member can drill into a holiday with overtime', () => {
-    cy.task('stubTasks')
-
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
 
     const dayShift = calendarPage.day('2020-03-21')
-    dayShift.click()
+    dayShift.click({ force: true })
 
     const calendarDetailPage = CalendarDetailPage.verifyOnPage('Saturday, 21st March 2020')
     calendarDetailPage.detailHoliday().should('contain', 'Holiday')
@@ -110,12 +105,10 @@ context('A staff member can view their overtime calendar', () => {
   })
 
   it('A staff member can drill into a night shift start with overtime', () => {
-    cy.task('stubTasks')
-
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
 
     const dayShift = calendarPage.day('2020-03-22')
-    dayShift.click()
+    dayShift.click({ force: true })
 
     const calendarDetailPage = CalendarDetailPage.verifyOnPage('Sunday, 22nd March 2020')
     calendarDetailPage
@@ -125,12 +118,10 @@ context('A staff member can view their overtime calendar', () => {
   })
 
   it('A staff member can drill into a night shift end with overtime', () => {
-    cy.task('stubTasks')
-
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
 
     const dayShift = calendarPage.day('2020-03-23')
-    dayShift.click()
+    dayShift.click({ force: true })
 
     const calendarDetailPage = CalendarDetailPage.verifyOnPage('Monday, 23rd March 2020')
     calendarDetailPage
@@ -141,12 +132,10 @@ context('A staff member can view their overtime calendar', () => {
   })
 
   it('A staff member can drill into a night shift with overtime', () => {
-    cy.task('stubTasks')
-
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
 
     const dayShift = calendarPage.day('2020-03-27')
-    dayShift.click()
+    dayShift.click({ force: true })
 
     const calendarDetailPage = CalendarDetailPage.verifyOnPage('Friday, 27th March 2020')
     calendarDetailPage
