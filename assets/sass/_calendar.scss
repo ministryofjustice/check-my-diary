@@ -29,6 +29,7 @@ ul.calendar .calendar-item {
   }
 }
 
+
 ul.calendar {
 
   padding: 0;
@@ -44,7 +45,7 @@ ul.calendar {
   .no-day,
   .calendar-item a {
     position: relative;
-    height: 220px;
+    height: 210px;
     text-decoration: none;
     color: govuk-colour('black');
 
@@ -91,33 +92,36 @@ ul.calendar {
     }
   }
 
+  .calendar-item {
+    border: 1px solid govuk-colour('mid-grey');
+  }
+
   .calendar-item span{
     display: block;
-
-    @include app-breakpoint {
-      padding: 10px 0 10px 5px;
-
-      &.line{
-        text-align: center;
-        border: 1px solid govuk-colour('mid-grey');
-      }
-
-      &.day{
-        @include govuk-font(19);
-      }
-    }
 
     &.day {
       padding-left: 5px;
       padding-top: 5px;
+      padding-bottom: 5px;
       background-color: govuk-colour('white');
+
+      @include app-breakpoint {
+        @include govuk-font(19);
+      }
 
     }
 
     &.line{
-      padding-left: 5px;
-      height:25px;
+      padding: 3px 0 3px 5px;
+      min-height:25px;
       color: govuk-colour('black');
+
+      @include app-breakpoint {
+        text-align: center;
+        padding: 15px 0 15px 0;
+        @include govuk-font(24);
+      }
+
     }
 
     &.day_start {
