@@ -113,6 +113,18 @@ ul.calendar {
 
     &.line{
       padding: 3px 0 3px 5px;
+      height:25px;
+      color: govuk-colour('black');
+
+      @include app-breakpoint {
+        text-align: center;
+        padding: 15px 0 15px 0;
+        @include govuk-font(24);
+      }
+    }
+
+    &.line-text {
+      padding: 3px 0 3px 5px;
       min-height:25px;
       color: govuk-colour('black');
 
@@ -121,7 +133,6 @@ ul.calendar {
         padding: 15px 0 15px 0;
         @include govuk-font(24);
       }
-
     }
 
     &.day_start {
