@@ -46,7 +46,7 @@
               <li class="calendar-item calendar-header"><%= day %></li>
             <% }); %>
             <% data.forEach(({ today=false, fullDayType, fullDayTypeDescription, date, dateText, dateDayText, details }) => { %>
-            <li <% if (today) { %> id="today" <% } %> class="calendar-item <%= getTypeClass(fullDayType) %> <% if (details === undefined)  { %> hide-0-to-1024 <%}%> ">
+            <li <% if (today) { %> id="today" <% } %> class="calendar-item <%= getTypeClass(fullDayType) %> <% if (details === undefined)  { %>no-day hide-0-to-1024 <%}%> ">
                 <% if (fullDayType !== 'no-day')  { %>
                   <a href="/details/<%=date%>">
                       <div class="hide-1024-up">
