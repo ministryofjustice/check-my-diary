@@ -42,13 +42,15 @@ ul.calendar {
   .absence,
   .detached-duty,
   .tu-official,
+  .training-internal,
+  .training-external,
+  .otherType,
   .no-day,
   .calendar-item a {
     position: relative;
-    height: 210px;
     text-decoration: none;
     color: govuk-colour('black');
-
+    height: 225px;
     @include app-breakpoint {
       height: inherit;
     }
