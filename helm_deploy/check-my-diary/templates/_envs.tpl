@@ -52,9 +52,6 @@ env:
   - name: "CHECK_MY_DIARY_URL"
     value: https://{{ .Values.ingress.host }}
 
-  - name: QUANTUM_ADDRESS
-    value: {{ .Values.env.QUANTUM_ADDRESS | quote }}
-
   - name: MAINTENANCE_START
     value: {{ .Values.env.MAINTENANCE_START | quote }}
 

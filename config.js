@@ -51,7 +51,6 @@ module.exports = {
   port: get('PORT', 3005, requiredInProduction),
   domain: process.env.HMPPS_COOKIE_DOMAIN,
   sessionTimeout: process.env.WEB_SESSION_TIMEOUT_IN_MINUTES,
-  quantumAddresses: get('QUANTUM_ADDRESS', '127.0.0.1', requiredInProduction),
   rejectUnauthorized: process.env.REJECT_UNAUTHORIZED,
   https: production,
 }
