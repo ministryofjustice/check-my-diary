@@ -43,6 +43,7 @@
                   details.forEach((detail, index) => {
                 %>
                   <li class="detail <%= detail.displayType || 'activity' %>">
+                    <div class="time"><% if(detail.start) { %> <%= detail.start %> - <% } %><% if(detail.end) { %><%= detail.end %><% } %></div>
                     <div class="description">
                       <% if(detail.displayType === 'night_start') { %> Start of night shift: <% } %>
                       <% if(detail.displayType === 'night_finish') { %> End of night shift: <% } %>
@@ -54,7 +55,6 @@
                       <% if(detail.displayType === 'overtime_night_finish') { %> End of overtime night shift<% } %>
                       <%= detail.activity %>
                     </div>
-                    <div class="time"><% if(detail.start) { %> <%= detail.start %> - <% } %><% if(detail.end) { %><%= detail.end %><% } %></div>
                   </li>
                 <%
                     started = started ? detail.displayType !== 'day_finish' : detail.displayType === 'day_start'
