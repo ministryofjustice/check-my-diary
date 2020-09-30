@@ -41,7 +41,7 @@ module.exports = {
     end: process.env.MAINTENANCE_END,
   },
   cmdApi: {
-    url: get('CMD_API_URL', 'http://localhost:8080'),
+    url: get('CMD_API_URL', 'http://localhost:9191'),
   },
   hmppsCookie: {
     name: process.env.HMPPS_COOKIE_NAME || 'check-my-diary-dev',
