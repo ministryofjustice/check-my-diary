@@ -10,7 +10,6 @@ function getEndDate(startDate) {
   return moment(startDate).endOf('month').format('YYYY-MM-DD')
 }
 
-<<<<<<< HEAD
 const sortByDate = (data, dateField = 'date') =>
   data.sort((first, second) => moment(first[dateField]) - moment(second[dateField]))
 
@@ -41,14 +40,6 @@ const getDuration = (duration) => {
     'min',
   )}`.trim()
 }
-=======
-function configureCalendar(data, startDate) {
-  if (data === null || data.shifts.length === 0) return { shifts: null }
-
-  const convertedStartDate = moment(startDate)
-
-  const daysInMonth = convertedStartDate.daysInMonth()
->>>>>>> 625a896... 🔥remove-bespoke-mfa
 
 const configureCalendarDay = (day) => {
   const { fullDayType, details } = day
@@ -157,16 +148,11 @@ const processDetail = (detail, detailIndex, details) => {
 module.exports = {
   getStartMonth,
   getEndDate,
-<<<<<<< HEAD
   sortByDate,
   sortByDisplayType,
   configureCalendar,
   processDay,
   processDetail,
-=======
-  configureCalendar,
-  processOvertimeShifts,
->>>>>>> 625a896... 🔥remove-bespoke-mfa
   getSnoozeUntil,
   appendUserErrorMessage,
 }
