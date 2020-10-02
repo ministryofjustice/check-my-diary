@@ -18,7 +18,6 @@ const contactUs = require('./middleware/contact-us')
 const notificationRouter = require('./routes/notification')
 const auth = require('./authentication/auth')
 const config = require('../config')
-const userAuthenticationService = require('./services/userAuthenticationService')
 
 const tokenRefresh = require('./middleware/tokenRefresh')
 const authenticationMiddleware = require('./middleware/authenticationMiddleware')
@@ -144,7 +143,6 @@ module.exports = function createApp({ signInService }) {
   app.set('DataServices', {
     calendarService,
     notificationService,
-    userAuthenticationService,
   })
 
   // Express Routing Configuration

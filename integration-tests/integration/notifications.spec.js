@@ -1,7 +1,4 @@
 context('A staff member can view their notifications', () => {
-  before(() => {
-    cy.task('createTablesInsertData')
-  })
   beforeEach(() => {
     cy.task('reset')
 
