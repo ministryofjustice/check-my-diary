@@ -1,9 +1,9 @@
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  labels:
-    app: check-my-diary
   name: check-my-diary
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
 spec:
   maxReplicas: {{ .Values.maxReplicaCount }}
   minReplicas: {{ .Values.replicaCount }}
