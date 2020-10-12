@@ -12,6 +12,7 @@ image:
 ingress:
   enabled: true
   enable_whitelist: false
+  modesecurity_enabled: false
   host: check-my-diary-preprod.prison.service.justice.gov.uk
   cert_secret: check-my-diary-cert
   path: /
