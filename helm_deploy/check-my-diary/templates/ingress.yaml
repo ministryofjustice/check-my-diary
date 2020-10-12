@@ -9,6 +9,7 @@ metadata:
     {{- include "app.labels" . | nindent 4 }}
   annotations:
     kubernetes.io/ingress.class: "nginx"
+    {{- if .Values.ingress.modsecurity_enabled -}}
     nginx.ingress.kubernetes.io/enable-modsecurity: "true"
     nginx.ingress.kubernetes.io/modsecurity-snippet: |
       Include /etc/nginx/owasp-modsecurity-crs/nginx-modsecurity.conf
@@ -18,6 +19,7 @@ metadata:
       SecAuditLogType Serial
       SecRuleUpdateActionById 949110 "t:none,deny,status:406,logdata:%{SERVER_NAME}"
       SecRuleUpdateActionById 959100 "t:none,deny,status:406,logdata:%{SERVER_NAME}"
+    {{- end }}
     nginx.ingress.kubernetes.io/custom-http-errors: "418"
     {{ if .Values.ingress.enable_whitelist }}nginx.ingress.kubernetes.io/whitelist-source-range: {{ include "app.joinListWithComma" .Values.whitelist | quote }}{{ end }}
 spec:
