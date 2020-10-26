@@ -99,4 +99,3 @@ that specification.
 If the mocking is not working properly after the test has been completed then the docker terminal will show what stubs
 aren't matched by requests. http://localhost:9191/__admin/requests will provide more information on the requests that
 are made and http://localhost:9191/__admin/mappings will show what stubs have been created for the requests.
-
