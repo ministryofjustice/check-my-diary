@@ -14,7 +14,7 @@ const service = (name, url) => {
 }
 
 module.exports = function healthcheckFactory(authUrl) {
-  const checks = [db, service('auth', `${authUrl}/health/ping`)]
+  const checks = [db]
 
   return (callback) =>
     Promise.all(checks.map((fn) => fn())).then((checkResults) => {
