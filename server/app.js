@@ -139,7 +139,7 @@ module.exports = function createApp({ signInService }) {
   app.use('/assets', express.static(path.join(__dirname, '../assets'), cacheControl))
   app.use('*/images', express.static(path.join(__dirname, '../assets/images'), cacheControl))
 
-  const healthcheck = healthcheckFactory(config.nomis.authUrl)
+  const healthcheck = healthcheckFactory()
 
   // Add services to server
 
