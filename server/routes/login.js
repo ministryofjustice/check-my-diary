@@ -1,11 +1,8 @@
+const router = require('express').Router()
 const { NotifyClient } = require('notifications-node-client')
 const ipRangeCheck = require('ip-range-check')
-const jwtDecode = require('jwt-decode')
-const asyncMiddleware = require('../middleware/asyncMiddleware')
 const logError = require('../logError')
 const config = require('../../config')
-const health = require('../controllers/health')
-const log = require('../../log')
 const utilities = require('../helpers/utilities')
 const userAuthenticationService = require('../services/userAuthenticationService')
 
@@ -17,196 +14,126 @@ const notify = url ? new NotifyClient(url, clientKey) : new NotifyClient(clientK
 const notifySmsTemplate = smsTemplateId || ''
 const notifyEmailTemplate = emailTemplateId || ''
 
-module.exports = () => (router) => {
-  router.get(
-    '/',
-    asyncMiddleware(async (req, res) => {
-      postLogin(req, res)
-    }),
-  )
+const postLogin = async (req, res) => {
+  const ipAddress =
+    req.headers['x-forwarded-for'] ||
+    req.connection.remoteAddress ||
+    req.socket.remoteAddress ||
+    (req.connection.socket ? req.connection.socket.remoteAddress : null)
 
-  router.get(
-    '/auth/login',
-    asyncMiddleware(async (req, res) => {
-      postLogin(req, res)
-    }),
-  )
+  let userNotSignedUpMessage = false
 
-  router.post(
-    '/auth/2fa',
-    asyncMiddleware(async (req, res) => {
-      const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
+  try {
+    const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
 
-      const inputTwoFactorCode = utilities.createTwoFactorAuthenticationHash(req.body.code)
-
-      if (inputTwoFactorCode === userAuthenticationDetails[0].TwoFactorAuthenticationHash) {
-        req.user.employeeName = jwtDecode(req.user.token).name
-
-        await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(
-          req.user.username,
-          new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000),
-        )
-
-        res.redirect(`/calendar/${utilities.getStartMonth()}`)
-      } else {
-        logError(req.url, '2FA failure')
-        res.render('pages/two-factor-auth', { authError: true, csrfToken: res.locals.csrfToken })
-      }
-    }),
-  )
-
-  const postLogin = asyncMiddleware(async (req, res) => {
-    // if maintenance start/end dates exist then dcheck whether to display maintenance page
-    // otherwise just ignore the following, it will become effective as soon as those environment
-    // variables are created.  13DEC19.
-    try {
-      if (!utilities.isNullOrEmpty(config.maintenance.start) && !utilities.isNullOrEmpty(config.maintenance.end)) {
-        // eslint-disable-next-line vars-on-top
-        const maintenanceStartDateTime = Date.parse(config.maintenance.start)
-          ? new Date(config.maintenance.start)
-          : null
-        const maintenanceEndDateTime = Date.parse(config.maintenance.end) ? new Date(config.maintenance.end) : null
-
-        if (utilities.calculateMaintenanceDates(maintenanceStartDateTime, maintenanceEndDateTime)) {
-          res.render('pages/maintenance', {
-            startDateTime: maintenanceStartDateTime,
-            endDateTime: maintenanceEndDateTime,
-            csrfToken: res.locals.csrfToken,
-          })
-          return
-        }
-      }
-    } catch (error) {
-      // eslint-disable-next-line no-undef
-      logError(req.url, data, 'Login failure')
+    if (userAuthenticationDetails === null || userAuthenticationDetails.length === 0) {
+      userNotSignedUpMessage = true
+      throw new Error(`Error : No Sms or Email address returned for QuantumId : ${req.user.username}`)
     }
 
-    const ipAddress =
-      req.headers['x-forwarded-for'] ||
-      req.connection.remoteAddress ||
-      req.socket.remoteAddress ||
-      (req.connection.socket ? req.connection.socket.remoteAddress : null)
-
-    log.info(`Ip Address : ${ipAddress}`)
-    log.info(`Quantum Address : ${config.quantumAddresses}`)
-
-    let healthRes
-    let isApiUp
-
-    let userNotSignedUpMessage = false
-
-    try {
-      const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
-
+    const quantumAddresses = config.quantumAddresses.split(',')
+    if (
+      !utilities.hmppsAuthMFAUser(req.user.token) &&
+      config.twoFactorAuthOn === 'true' &&
+      ipRangeCheck(ipAddress, quantumAddresses) === false
+    ) {
       if (userAuthenticationDetails === null || userAuthenticationDetails.length === 0) {
-        userNotSignedUpMessage = true
         throw new Error(`Error : No Sms or Email address returned for QuantumId : ${req.user.username}`)
       }
 
+      // eslint-disable-next-line no-shadow
       const userAuthentication = userAuthenticationDetails[0]
 
-      // Add Api health check
-      healthRes = await health.healthResult([
-        `${userAuthentication.ApiUrl}health`,
-        `${userAuthentication.ApiUrl}health/invision`,
-      ])
-      isApiUp = healthRes.status === 200
-      log.info(`loginIndex - health check called and the isAppUp = ${isApiUp} with status ${healthRes.status}`)
-      log.info(`${userAuthentication.ApiUrl}health - health check with status ${healthRes.status}`)
-
-      if (isApiUp === false) {
-        log.error(healthRes.appInfo)
-        res.render('pages/index', {
-          showUserNotSignedUpMessage: false,
-          authError: false,
-          apiUp: isApiUp,
-          csrfToken: res.locals.csrfToken,
-        })
-        return
-      }
-
-      const quantumAddresses = config.quantumAddresses.split(',')
       if (
-        !utilities.hmppsAuthMFAUser(req.user.token) &&
-        config.twoFactorAuthOn === 'true' &&
-        ipRangeCheck(ipAddress, quantumAddresses) === false
+        (userAuthentication.EmailAddress === null || userAuthentication.EmailAddress === '') &&
+        (userAuthentication.Sms === null || userAuthentication.Sms === '')
       ) {
-        if (userAuthenticationDetails === null || userAuthenticationDetails.length === 0) {
-          throw new Error(`Error : No Sms or Email address returned for QuantumId : ${req.user.username}`)
-        }
-
-        // eslint-disable-next-line no-shadow
-        const userAuthentication = userAuthenticationDetails[0]
-
-        if (
-          (userAuthentication.EmailAddress === null || userAuthentication.EmailAddress === '') &&
-          (userAuthentication.Sms === null || userAuthentication.Sms === '')
-        ) {
-          throw new Error(`Error : Sms or Email address null or empty for QuantumId : ${req.user.username}`)
-        }
-
-        const emailEnabled = userAuthentication.UseEmailAddress
-        const smsEnabled = userAuthentication.UseSms
-
-        if (!emailEnabled && !smsEnabled) {
-          throw new Error(`Error : Sms or Email address both set to false for QuantumId : ${req.user.username}`)
-        }
-
-        const twofactorCode = utilities.get2faCode()
-
-        await userAuthenticationService.updateTwoFactorAuthenticationHash(
-          req.user.username,
-          utilities.createTwoFactorAuthenticationHash(twofactorCode.toString()),
-        )
-
-        if (smsEnabled) {
-          // For SMS
-          await notify
-            .sendSms(notifySmsTemplate, userAuthentication.Sms || '', {
-              personalisation: { '2fa_code': twofactorCode },
-            })
-            .catch((err) => {
-              throw new Error(err)
-            })
-        }
-
-        if (emailEnabled) {
-          // For email
-          await notify
-            .sendEmail(notifyEmailTemplate, userAuthentication.EmailAddress || '', {
-              personalisation: { '2fa_code': twofactorCode },
-            })
-            .catch((err) => {
-              throw new Error(err)
-            })
-        }
-
-        res.render('pages/two-factor-auth', { authError: false, csrfToken: res.locals.csrfToken })
-      } else {
-        req.user.employeeName = jwtDecode(req.user.token).name
-
-        await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(
-          req.user.username,
-          new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000),
-        )
-
-        res.redirect(`/calendar/${utilities.getStartMonth()}`)
-      }
-    } catch (error) {
-      const data = {
-        id: req.user.username,
-        authError: true,
-        showUserNotSignedUpMessage: userNotSignedUpMessage,
-        apiUp: isApiUp,
-        authErrorText: utilities.getAuthErrorDescription(error),
-        csrfToken: res.locals.csrfToken,
+        throw new Error(`Error : Sms or Email address null or empty for QuantumId : ${req.user.username}`)
       }
 
-      logError(req.url, data, 'Login failure')
+      const emailEnabled = userAuthentication.UseEmailAddress
+      const smsEnabled = userAuthentication.UseSms
 
-      res.render('pages/index', data)
+      if (!emailEnabled && !smsEnabled) {
+        throw new Error(`Error : Sms or Email address both set to false for QuantumId : ${req.user.username}`)
+      }
+
+      const twofactorCode = utilities.get2faCode()
+
+      await userAuthenticationService.updateTwoFactorAuthenticationHash(
+        req.user.username,
+        utilities.createTwoFactorAuthenticationHash(twofactorCode.toString()),
+      )
+
+      if (smsEnabled) {
+        // For SMS
+        await notify
+          .sendSms(notifySmsTemplate, userAuthentication.Sms || '', {
+            personalisation: { '2fa_code': twofactorCode },
+          })
+          .catch((err) => {
+            throw new Error(err)
+          })
+      }
+
+      if (emailEnabled) {
+        // For email
+        await notify
+          .sendEmail(notifyEmailTemplate, userAuthentication.EmailAddress || '', {
+            personalisation: { '2fa_code': twofactorCode },
+          })
+          .catch((err) => {
+            throw new Error(err)
+          })
+      }
+
+      res.render('pages/two-factor-auth', { authError: false, csrfToken: res.locals.csrfToken })
+    } else {
+      await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(
+        req.user.username,
+        new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000),
+      )
+
+      res.redirect(`/calendar/${utilities.getStartMonth()}#today`)
     }
-  })
+  } catch (error) {
+    const data = {
+      id: req.user.username,
+      authError: true,
+      showUserNotSignedUpMessage: userNotSignedUpMessage,
+      authErrorText: utilities.getAuthErrorDescription(error),
+      csrfToken: res.locals.csrfToken,
+    }
 
-  return router
+    logError(req.url, data, 'Login failure')
+
+    res.render('pages/index', data)
+  }
 }
+
+router.get('/login', postLogin)
+
+router.post('/2fa', async (req, res) => {
+  try {
+    const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
+
+    const inputTwoFactorCode = utilities.createTwoFactorAuthenticationHash(req.body.code)
+
+    if (inputTwoFactorCode === userAuthenticationDetails[0].TwoFactorAuthenticationHash) {
+      await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(
+        req.user.username,
+        new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000),
+      )
+
+      res.redirect(`/calendar/${utilities.getStartMonth()}#today`)
+    } else {
+      logError(req.url, '2FA failure')
+      res.render('pages/two-factor-auth', { authError: true, csrfToken: res.locals.csrfToken })
+    }
+  } catch (error) {
+    logError(req.url, '2FA failure')
+    res.render('pages/two-factor-auth', { authError: true, csrfToken: res.locals.csrfToken })
+  }
+})
+
+module.exports = router
