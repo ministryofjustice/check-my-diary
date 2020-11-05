@@ -7,18 +7,10 @@ require('./azure-appinsights')
 
 const createApp = require('./app')
 const createSignInService = require('./authentication/signInService')
-const calendarService = require('./services/calendarService')
-const calendarOvertimeService = require('./services/calendarOvertimeService')
-const notificationService = require('./services/notificationService')
 
 // pass in dependencies of service
-const app = createApp(
-  {
-    signInService: createSignInService(),
-  },
-  calendarService(),
-  calendarOvertimeService(),
-  notificationService(),
-)
+const app = createApp({
+  signInService: createSignInService(),
+})
 
 module.exports = app

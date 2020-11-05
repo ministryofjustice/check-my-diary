@@ -5,11 +5,13 @@ const bodyParser = require('body-parser')
 const cookieSession = require('cookie-session')
 const path = require('path')
 
-module.exports = (route) => {
+module.exports = (route, services) => {
   const app = express()
 
   app.set('views', path.join(__dirname, '../../views'))
   app.set('view engine', 'ejs')
+
+  app.set('DataServices', services)
 
   app.use((req, res, next) => {
     ;(req.user = {
@@ -28,5 +30,7 @@ module.exports = (route) => {
   app.use((error, req, res, next) => {
     console.log(error)
   })
+
+  app.set()
   return app
 }

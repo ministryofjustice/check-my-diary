@@ -16,6 +16,6 @@ const setupMockAuthentication = (app, signInService) => {
   app.use(passport.session())
 }
 
-module.exports.authenticationMiddleware = () => (req, res, next) => next()
+module.exports.authenticationMiddleware = (req, res, next) => next()
 
 module.exports.setupMockAuthentication = setupMockAuthentication

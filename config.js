@@ -55,8 +55,11 @@ module.exports = {
     emailTemplateId: get('NOTIFY_EMAIL_TEMPLATE', 'not_email', requiredInProduction),
     healthCheckUrl: process.env.NOTIFY_HEALTH_CHECK_URL || 'https://api.notifications.service.gov.uk/_status',
   },
+  cmdApi: {
+    url: get('CMD_API_URL', 'http://localhost:9191'),
+  },
   hmppsCookie: {
-    name: process.env.HMPPS_COOKIE_NAME || 'hmpps-session-dev',
+    name: process.env.HMPPS_COOKIE_NAME || 'check-my-diary-dev',
     domain: process.env.HMPPS_COOKIE_DOMAIN || 'localhost',
     expiryMinutes: process.env.WEB_SESSION_TIMEOUT_IN_MINUTES || 20,
   },

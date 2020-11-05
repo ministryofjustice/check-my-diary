@@ -1,15 +1,16 @@
+const moment = require('moment')
 const crypto = require('crypto')
 const jwtDecode = require('jwt-decode')
+
 const log = require('../../log')
+const { GENERAL_ERROR } = require('./errorConstants')
 
 function getStartMonth() {
-  const now = new Date()
-  return [now.getFullYear(), `0${now.getMonth() + 1}`.slice(-2), '01'].join('-')
+  return moment().startOf('month').format('YYYY-MM-DD')
 }
 
 function getEndDate(startDate) {
-  const splitDate = startDate.split('-')
-  return `${splitDate[0]}-${splitDate[1]}-${new Date(splitDate[0], splitDate[1], 0).getDate()}`
+  return moment(startDate).endOf('month').format('YYYY-MM-DD')
 }
 
 function get2faCode() {
@@ -18,30 +19,6 @@ function get2faCode() {
 
 function createTwoFactorAuthenticationHash(input) {
   return crypto.createHash('sha256').update(input.toString()).digest('base64')
-}
-
-function isNullOrEmpty(str) {
-  if (
-    typeof str === 'undefined' ||
-    !str ||
-    str.length === 0 ||
-    str === '' ||
-    !/[^\s]/.test(str) ||
-    /^\s*$/.test(str) ||
-    str.replace(/\s/g, '') === ''
-  ) {
-    return true
-  }
-  return false
-}
-
-function areDatesTheSame(date1, date2) {
-  return (
-    date1.getFullYear() === date2.getFullYear() &&
-    // getMonth is 0-indexed
-    date1.getMonth() === date2.getMonth() &&
-    date1.getDate() === date2.getDate()
-  )
 }
 
 function getAuthErrorDescription(error) {
@@ -77,69 +54,155 @@ function getAuthErrorDescription(error) {
   return type
 }
 
-function calculateMaintenanceDates(maintenanceStartDateTime, maintenanceEndDateTime) {
-  let showMaintenancePage = false
-  const currentDateTime = new Date()
+const sortByDate = (data, dateField = 'date') =>
+  data.sort((first, second) => moment(first[dateField]) - moment(second[dateField]))
 
-  if (maintenanceEndDateTime !== null) {
-    showMaintenancePage = !!(currentDateTime >= maintenanceStartDateTime && currentDateTime <= maintenanceEndDateTime)
-  } else {
-    showMaintenancePage = areDatesTheSame(currentDateTime, maintenanceStartDateTime)
-  }
+const sortByDisplayType = (data) =>
+  data.sort(
+    ({ displayTypeTime, displayType, start }, { displayTypeTime: compareDisplayTypeTime, start: compareStart }) => {
+      const date = displayTypeTime || start
+      const compareDate = compareDisplayTypeTime || compareStart
+      const comparison = moment(date) - moment(compareDate)
+      if (comparison !== 0) return comparison
+      return displayType && displayType.toLowerCase().includes('finish') ? -1 : 1
+    },
+  )
 
-  return showMaintenancePage
+const removeShiftDetails = (details) => {
+  return details.filter(({ displayType }) => !['day_start', 'day_finish'].includes(displayType))
 }
 
-function configureCalendar(data, startDate) {
-  if (data === null || data.shifts.length === 0) return { shifts: null }
+const humanizeNumber = (value, unit) => {
+  if (value === 0) return ''
+  return `${value}${unit}${value > 1 ? 's' : ''}`
+}
 
-  const convertedStartDate = new Date(startDate)
+const getDuration = (duration) => {
+  const displayTypeTimeRaw = moment.duration(duration, 'seconds')
+  return `${humanizeNumber(displayTypeTimeRaw.hours(), 'hr')} ${humanizeNumber(
+    displayTypeTimeRaw.minutes(),
+    'min',
+  )}`.trim()
+}
 
-  const daysInMonth = new Date(convertedStartDate.getFullYear(), convertedStartDate.getMonth() + 1, 0).getDate()
+const configureCalendarDay = (day) => {
+  const { fullDayType, details } = day
+  sortByDisplayType(details)
+  details.forEach(
+    (detail) => detail.finishDuration && Object.assign(detail, { finishDuration: getDuration(detail.finishDuration) }),
+  )
+  if (!['SHIFT', 'SECONDMENT', 'TRAINING_EXTERNAL', 'TRAINING_INTERNAL', 'TOIL'].includes(fullDayType))
+    Object.assign(day, { details: removeShiftDetails(details) })
+}
 
-  const pad = convertedStartDate.getDay()
-
-  const noDay = { type: 'no-day' }
+const configureCalendar = (data, startDate = null) => {
+  if (data === undefined || data == null || data.length === 0) return null
+  sortByDate(data)
+  data.forEach((day) => configureCalendarDay(day))
+  const startDateMoment = moment(startDate || data[0].date)
+  const pad = startDateMoment.day()
+  const noDay = { fullDayType: 'no-day' }
   const prePad = new Array(pad).fill(noDay)
-  const postPadSize = Math.ceil((daysInMonth + pad) / 7) * 7
-  const postPad = new Array(postPadSize - data.shifts.length - pad).fill(noDay)
+  const monthPadTotal = startDateMoment.daysInMonth() + pad
+  const totalCalendarSize = Math.ceil(monthPadTotal / 7) * 7
+  const postPad = new Array(totalCalendarSize - monthPadTotal).fill(noDay)
 
-  return { shifts: [...prePad, ...data.shifts, ...postPad] }
+  return [...prePad, ...data, ...postPad]
 }
 
-function processOvertimeShifts(shiftsData, overtimeShiftsData) {
-  if (shiftsData != null && shiftsData.shifts.length > 0) {
-    if (overtimeShiftsData != null && overtimeShiftsData.shifts.length > 0) {
-      overtimeShiftsData.shifts.forEach((overtimeShift) => {
-        for (let i = 0; i < shiftsData.shifts.length; i += 1) {
-          const shift = shiftsData.shifts[i]
-          if (shift.type !== 'no-day') {
-            if (overtimeShift.date === shift.date) {
-              shift.overtime = true
-            } else {
-              shift.overtime = shift.overtime || false
-            }
-          }
-        }
-      })
-    }
-  }
+const getTaskText = (displayType) =>
+  ({
+    DAY_START: 'Start',
+    DAY_FINISH: 'Finish',
+    NIGHT_START: 'Start',
+    NIGHT_FINISH: 'Finish',
+    OVERTIME_DAY_START: 'Start',
+    OVERTIME_DAY_FINISH: 'Finish',
+    OVERTIME_NIGHT_START: 'Start',
+    OVERTIME_NIGHT_FINISH: 'Finish',
+  }[displayType])
 
-  return shiftsData
+const displayedTasks = [
+  'DAY_START',
+  'DAY_FINISH',
+  'NIGHT_START',
+  'NIGHT_FINISH',
+  'OVERTIME_DAY_START',
+  'OVERTIME_DAY_FINISH',
+  'OVERTIME_NIGHT_START',
+  'OVERTIME_NIGHT_FINISH',
+]
+
+const processDay = (day) => {
+  const { date, details: rawTasks } = day
+  const dateMoment = moment(date)
+  const today = dateMoment.isSame(moment(), 'day')
+  const format = 'hh:mm:ss'
+  const details = rawTasks.filter(
+    ({ displayType, start }) => displayedTasks.includes(displayType) && !moment(start, format).isSame('00:00:00'),
+  )
+  // const sortedDetails = details.sort(d => d.start)
+  details.forEach((detail) => {
+    const { displayType, displayTypeTime } = detail
+    const activity = `${getTaskText(displayType)} ${moment(displayTypeTime).format('HH:mm')}`
+    Object.assign(detail, { activity, displayType: displayType.toLowerCase() })
+  })
+  sortByDate(details, 'displayTypeTime')
+  Object.assign(day, { today, dateText: dateMoment.format('D'), dateDayText: dateMoment.format('dddd Do'), details })
 }
 
 const hmppsAuthMFAUser = (token) => jwtDecode(token).authorities.includes('ROLE_MFA')
+
+const getSnoozeUntil = (rawSnoozeUntil) => {
+  const snoozeUntil = moment(rawSnoozeUntil)
+  return snoozeUntil.isAfter(moment()) ? snoozeUntil.add(1, 'day').format('dddd, Do MMMM YYYY') : ''
+}
+
+const appendUserErrorMessage = (error, userMessage = GENERAL_ERROR) => Object.assign(error, { userMessage })
+
+const processDetail = (detail, detailIndex, details) => {
+  const { start, end, displayType, activity } = detail
+  let startText = start ? moment(start).format('HH:mm') : ''
+  const endText = end ? moment(end).format('HH:mm') : ''
+  let processedActivity = activity
+  const processedDisplayType = displayType ? displayType.toLowerCase() : ''
+  if (['DAY_FINISH', 'OVERTIME_DAY_FINISH'].includes(displayType)) {
+    const lastDetail = detailIndex > 0 ? details[detailIndex - 1] : null
+    if (lastDetail && lastDetail.start === start) {
+      startText = ''
+      processedActivity = ''
+    } else {
+      return [
+        {
+          start: startText,
+          end: endText,
+          displayType: 'activity',
+          activity: processedActivity,
+        },
+        { displayType: processedDisplayType, end: endText },
+      ]
+    }
+  }
+  return {
+    start: startText,
+    end: endText,
+    displayType: processedDisplayType,
+    activity: processedActivity,
+  }
+}
 
 module.exports = {
   getStartMonth,
   getEndDate,
   get2faCode,
-  isNullOrEmpty,
-  areDatesTheSame,
   getAuthErrorDescription,
-  calculateMaintenanceDates,
   createTwoFactorAuthenticationHash,
+  sortByDate,
+  sortByDisplayType,
   configureCalendar,
-  processOvertimeShifts,
+  processDay,
+  processDetail,
   hmppsAuthMFAUser,
+  getSnoozeUntil,
+  appendUserErrorMessage,
 }

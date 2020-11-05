@@ -4,8 +4,7 @@ const db = require('../../server/database')
 const deleteRows = (table) => db(table).del()
 
 const clearNotificationTables = async () => {
-  await deleteRows('ShiftNotification')
-  await deleteRows('ShiftTaskNotification')
+  await deleteRows('shift_notification')
 }
 
 const destroy = async (done) => {

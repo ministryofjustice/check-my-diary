@@ -1,127 +1,83 @@
-const db = require('../database')
+const axios = require('axios')
+const moment = require('moment')
 
-const notificationService = () => {
-  const getShiftNotifications = async (quantumId) => {
-    return db
-      .select('DateTime', 'Description', 'LastModifiedDateTime', 'LastModifiedDateTimeInSeconds', 'Read')
-      .from('ShiftNotification')
-      .where('QuantumId', '=', quantumId.toLowerCase())
-      .union(
-        db
-          .select('DateTime', 'Description', 'LastModifiedDateTime', 'LastModifiedDateTimeInSeconds', 'Read')
-          .from('ShiftTaskNotification')
-          .where('QuantumId', '=', quantumId.toLowerCase()),
+const logger = require('../../log')
+const baseUrl = require('../../config').cmdApi.url
+
+const notificationService = {
+  getNotifications(accessToken, processOnRead = true, unprocessedOnly = false) {
+    return axios
+      .get(`${baseUrl}/notifications?processOnRead=${processOnRead}&unprocessedOnly=${unprocessedOnly}`, {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then((response) => response.data)
+      .catch((error) => {
+        logger.error(`notificationService getNotifications : ${error}`)
+        throw error
+      })
+  },
+
+  async countUnprocessedNotifications(accessToken) {
+    const data = await notificationService.getNotifications(accessToken, false, true)
+    return data.length
+  },
+
+  getPreferences(accessToken) {
+    return axios
+      .get(`${baseUrl}/preferences/notifications`, {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then((response) => response.data)
+      .catch((error) => {
+        logger.error(`notificationService getPreferences : ${error}`)
+        throw error
+      })
+  },
+
+  updatePreferences(accessToken, preference = 'none', email = '', sms = '') {
+    logger.info(`updatePreferences to ${preference}, hasEmail: ${!!email}, hasSms: ${!!sms}`)
+    return axios
+      .put(
+        `${baseUrl}/preferences/notifications/details`,
+        { preference, email, sms },
+        {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        },
       )
-      .orderBy('LastModifiedDateTimeInSeconds', 'desc')
-      .catch((err) => {
-        throw err
+      .catch((error) => {
+        logger.error(`notificationService updatePreferences : ${error}`)
+        throw error
       })
-  }
+  },
 
-  const getShiftNotificationsPaged = (quantumId, offset, perPage) => {
-    return db
-      .select('DateTime', 'Description', 'LastModifiedDateTime', 'LastModifiedDateTimeInSeconds', 'Read')
-      .from('ShiftNotification')
-      .where('QuantumId', '=', quantumId.toLowerCase())
-      .union(
-        db
-          .select('DateTime', 'Description', 'LastModifiedDateTime', 'LastModifiedDateTimeInSeconds', 'Read')
-          .from('ShiftTaskNotification')
-          .where('QuantumId', '=', quantumId.toLowerCase()),
+  updateSnooze(accessToken, snoozeUntil) {
+    logger.info(`updateSnooze until ${snoozeUntil}`)
+    return axios
+      .put(
+        `${baseUrl}/preferences/notifications/snooze`,
+        { snoozeUntil },
+        {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        },
       )
-      .offset(offset)
-      .limit(perPage)
-      .orderBy('LastModifiedDateTimeInSeconds', 'desc')
-      .catch((err) => {
-        throw err
+      .catch((error) => {
+        logger.error(`notificationService updateSnooze : ${error}`)
+        throw error
       })
-  }
+  },
 
-  const getShiftNotificationsCount = (quantumId) => {
-    return db
-      .count('QuantumId')
-      .from('ShiftNotification')
-      .where('QuantumId', '=', quantumId.toLowerCase())
-      .first()
-      .catch((err) => {
-        throw err
-      })
-  }
-
-  const getShiftTaskNotificationsCount = (quantumId) => {
-    return db
-      .count('QuantumId')
-      .from('ShiftTaskNotification')
-      .where('QuantumId', '=', quantumId.toLowerCase())
-      .first()
-      .catch((err) => {
-        throw err
-      })
-  }
-
-  const updateShiftNotificationsToRead = async (quantumId) => {
-    db('ShiftNotification')
-      .where({ QuantumId: `${quantumId.toLowerCase()}`, Read: false })
-      .update({ Read: true })
-      .catch((err) => {
-        throw err
-      })
-  }
-
-  const updateShiftTaskNotificationsToRead = async (quantumId) => {
-    db('ShiftTaskNotification')
-      .where({ QuantumId: `${quantumId.toLowerCase()}`, Read: false })
-      .update({ Read: true })
-      .catch((err) => {
-        throw err
-      })
-  }
-
-  const getUserNotificationSettings = async (quantumId) => {
-    return db
-      .select('EmailAddress', 'Sms', 'UseEmailAddress', 'UseSms')
-      .from('UserNotificationSetting')
-      .where('QuantumId', '=', quantumId.toLowerCase())
-      .catch((err) => {
-        throw err
-      })
-  }
-
-  const updateUserNotificationSettings = async (quantumId, emailAddress, sms, useEmailAddress, useSms) => {
-    const userNotificationSetting = await getUserNotificationSettings(quantumId)
-
-    if (userNotificationSetting !== null && userNotificationSetting.length > 0) {
-      db('UserNotificationSetting')
-        .where({ QuantumId: quantumId.toLowerCase() })
-        .update({ EmailAddress: emailAddress, Sms: sms, UseEmailAddress: useEmailAddress, UseSms: useSms })
-        .catch((err) => {
-          throw err
-        })
-    } else {
-      db('UserNotificationSetting')
-        .insert({
-          QuantumId: quantumId.toLowerCase(),
-          EmailAddress: emailAddress,
-          Sms: sms,
-          UseEmailAddress: useEmailAddress,
-          UseSms: useSms,
-        })
-        .catch((err) => {
-          throw err
-        })
-    }
-  }
-
-  return {
-    getShiftNotifications,
-    getShiftNotificationsPaged,
-    getShiftNotificationsCount,
-    getShiftTaskNotificationsCount,
-    updateShiftNotificationsToRead,
-    updateShiftTaskNotificationsToRead,
-    getUserNotificationSettings,
-    updateUserNotificationSettings,
-  }
+  resumeNotifications(accessToken) {
+    logger.info('resume notification')
+    return notificationService.updateSnooze(accessToken, moment().format('YYYY-MM-DD'))
+  },
 }
 
 module.exports = notificationService

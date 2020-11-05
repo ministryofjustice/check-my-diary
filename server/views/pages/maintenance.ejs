@@ -14,23 +14,14 @@
       <main id="main-content" class="govuk-main-wrapper govuk-!-margin-bottom-8" role="main">
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-two-thirds">
-            <h1 class="govuk-heading-l">Service unavailable</h1>
+            <h1 class="govuk-heading-l">Service Unavailable</h1>
 
-            <% if (checkIfDateTimeIsNullOrUndefined(endDateTime)) { %>
             <p class="govuk-caption-l govuk-!-margin-bottom-6">
-              We are performing some scheduled maintenance on <%= parseFullDateFormat(startDateTime) %> at <%=
-              getTimeFromDate(startDateTime) %>.
+              We are performing scheduled maintenance from <%= startDateTime %> until <%= endDateTime %>.
             </p>
-            <% } else { %>
-            <p class="govuk-caption-l govuk-!-margin-bottom-6">
-              We are performing some scheduled maintenance from <%= parseFullDateFormat(startDateTime) %> at <%=
-              getTimeFromDate(startDateTime) %> to <%= parseFullDateFormat(endDateTime) %> at <%=
-              getTimeFromDate(endDateTime) %>.
-            </p>
-            <% } %>
 
             <p class="govuk-body">
-              The service will be unavailable during this time, please try again later.
+              The service will be unavailable during this time.
             </p>
             <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
           </div>

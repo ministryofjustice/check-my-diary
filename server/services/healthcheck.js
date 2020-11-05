@@ -1,25 +1,12 @@
-const { dbCheck, serviceCheckFactory } = require('../data/healthcheck')
-const { regions } = require('../../config')
+const { dbCheck } = require('../data/healthcheck')
 
 const db = () =>
   dbCheck()
     .then(() => ({ name: 'db', status: 'ok', message: 'OK' }))
     .catch((err) => ({ name: 'db', status: 'ERROR', message: err.message }))
 
-const service = (name, url) => {
-  const check = serviceCheckFactory(name, url)
-  return () =>
-    check()
-      .then((result) => ({ name, status: 'ok', message: result }))
-      .catch((err) => ({ name, status: 'ERROR', message: err }))
-}
-
-module.exports = function healthcheckFactory(authUrl) {
-  const regionChecks = regions
-    .split(',')
-    .filter((region) => region !== '')
-    .map((region) => service(region, region))
-  const checks = [db, service('auth', `${authUrl}/health/ping`), ...regionChecks]
+module.exports = function healthcheckFactory() {
+  const checks = [db]
 
   return (callback) =>
     Promise.all(checks.map((fn) => fn())).then((checkResults) => {

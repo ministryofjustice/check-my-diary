@@ -10,25 +10,21 @@
     list-style: none;
     margin-bottom: 30px;
 
-    span {
-      display: block;
+    div {
+      display: inline-block;
 
       &.time {
-        border: 1px solid govuk-colour('mid-grey');
+        border: none;
         width: 220px;
         border-radius: 3px;
         margin-right: 15px;
-        padding: 25px 0 20px 0;
-        float: left;
+        padding: 15px 0 15px 0;
         text-align: center;
+        color: govuk-colour('white');
       }
 
       &.description {
         padding-top: 25px;
-
-        @include app-breakpoint {
-          padding: 0;
-        }
       }
     }
 
@@ -37,131 +33,77 @@
       padding: 15px 0 10px 0;
       margin-bottom: 10px;
 
-      span.time {
-        float: none;
-        width: 100%;
-        border: none;
-        text-align: left;
-        padding: 0;
-        font-weight: bold;
+      div {
+        &.time {
+          float: none;
+          width: 100%;
+          border: none;
+          text-align: left;
+          font-weight: bold;
+          padding: govuk-spacing(1);
+        }
+        &.description {
+          padding: govuk-spacing(1);
+        }
       }
 
-      &.detail-start,
-      &.detail-start-overtime,
-      &.detail-start-night,
-      &.detail-finish,
-      &.detail-finish-overtime,
-      &.detail-rest-day,
-      &.detail-illness,
-      &.detail-absence,
-      &.detail-detached-duty,
-      &.detail-tu-official,
-      &.detail-holiday {
-        background-color: govuk-colour('green');
+      &.detail {
         margin-bottom: 0;
-        color: white;
-        padding: 10px 5px 10px 8px;
-        border-radius: 3px;
+        padding: govuk-spacing(1);
         border: none;
       }
-
-      &.detail-start-night {
-        background-color: govuk-colour('black');
-      }
-      &.detail-start-overtime {
-        background-color: govuk-colour('purple');
-      }
-      &.detail-finish {
-        background-color: govuk-colour('red');
-      }
-      &.detail-finish-overtime {
-        background-color: govuk-colour('light-purple');
-      }
-
-      &.detail-holiday {
-        background-color: govuk-colour('yellow');
-      }
-      
-      &.detail-rest-day {
-        background-color: govuk-colour('orange');
-      }
-
-      &.detail-holiday {
-        background-color: govuk-colour('yellow');
-      }
-  
-      &.detail-illness {
-        background-color: govuk-colour('light-green');
-      }
-  
-      &.detail-absence {
-        background-color: govuk-colour('yellow');
-      }
-  
-      &.detail-detached-duty {
-        background-color: govuk-colour('brown');
-      }
-  
-      &.detail-tu-official {
-        background-color: govuk-colour('pink');
+      &.activity {
+        color: govuk-colour('black');
       }
     }
 
-    &.detail-start span.time,
-    &.detail-start-overtime span.time,
-    &.detail-start-night span.time,
-    &.detail-finish span.time,
-    &.detail-finish-overtime span.time,
-    &.detail-holiday span.time,
-    &.detail-illness span.time,
-    &.detail-absence span.time,
-    &.detail-detached-duty span.time,
-    &.detail-tu-official span.time,
-    &.detail-rest-day span.time {
-      background-color: govuk-colour('green');
-      border: none;
-      color: govuk-colour('white');
-    }    
+    &.detail.activity div.time {
+      border: 1px solid govuk-colour('mid-grey');
+      color: govuk-colour('black');
+    }
     
-    &.detail-finish span.time {
+    &.day_start div.time{
+      background-color: govuk-colour('green');
+    }
+    
+    &.day_finish div.time, &.night_finish div.time {
       background-color: govuk-colour('red');
     }
 
-    &.detail-start-night span.time {
+    &.night_start div.time {
       background-color: govuk-colour('black');
     }
 
-    &.detail-holiday span.time {
-      background-color: govuk-colour('yellow');
-    }
-
-    &.detail-rest-day span.time {
+    &.rest-day div.time {
+      color: govuk-colour('black');
       background-color: govuk-colour('orange');
     }
 
-    &.detail-holiday span.time {
-      background-color: govuk-colour('yellow');
+    &.holiday div.time,
+    &.absence div.time,
+    &.training-external div.time,
+    &.training-internal div.time,
+    &.otherType div.time {
+        color: govuk-colour('black');
+        background-color: govuk-colour('yellow');
     }
 
-    &.detail-illness span.time {
+    &.illness div.time {
       background-color: govuk-colour('light-green');
     }
 
-    &.detail-absence span.time {
-      background-color: govuk-colour('yellow');
-    }
-
-    &.detail-detached-duty span.time {
+    &.detached-duty div.time {
       background-color: govuk-colour('brown');
     }
 
-    &.detail-tu-official span.time {
+    &.tu-official div.time {
+      color: govuk-colour('black');
       background-color: govuk-colour('pink');
     }
-    &.detail-start-overtime span.time {
+    &.overtime_day_start div.time, &.overtime_night_start div.time {
       background-color: govuk-colour('purple');
     }
-    &.detail-finish-overtime span.time {
+    &.overtime_day_finish div.time, &.overtime_night_finish div.time {
       background-color: govuk-colour('light-purple');
     }
   }

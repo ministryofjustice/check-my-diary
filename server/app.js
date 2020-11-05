@@ -12,29 +12,38 @@ const sassMiddleware = require('node-sass-middleware')
 
 const cookieParser = require('cookie-parser')
 const healthcheckFactory = require('./services/healthcheck')
-const createLoginRouter = require('./routes/login')
-const createCalendarRouter = require('./routes/calendar')
-const createCalendarDetailRouter = require('./routes/calendar-detail')
-const createMaintenanceRouter = require('./routes/maintenance')
-const createNotificationRouter = require('./routes/notification')
-const standardRouter = require('./routes/standardRouter')
-const logger = require('../log.js')
+const loginRouter = require('./routes/login')
+const calendarRouter = require('./routes/calendar')
+const maintenance = require('./middleware/maintenance')
+const contactUs = require('./middleware/contact-us')
+const notificationRouter = require('./routes/notification')
 const auth = require('./authentication/auth')
 const config = require('../config')
 const userAuthenticationService = require('./services/userAuthenticationService')
 
-const { authenticationMiddleware } = auth
+const tokenRefresh = require('./middleware/tokenRefresh')
+const authenticationMiddleware = require('./middleware/authenticationMiddleware')
+
+const calendarService = require('./services/calendarService')
+const notificationService = require('./services/notificationService')
+const authHandlerMiddleware = require('./middleware/authHandlerMiddleware')
+const csrfTokenMiddleware = require('./middleware/csrfTokenMiddleware')
+const errorsMiddleware = require('./middleware/errorsMiddleware')
+const calendarDetailMiddleware = require('./middleware/calendarDetailMiddleware')
 
 const version = moment.now().toString()
 const production = process.env.NODE_ENV === 'production'
 const testMode = process.env.NODE_ENV === 'test'
+
+const { appendUserErrorMessage } = require('./helpers/utilities')
+const { NOT_FOUND_ERROR } = require('./helpers/errorConstants')
 
 if (config.rejectUnauthorized) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = config.rejectUnauthorized
 }
 
 // eslint-disable-next-line no-shadow
-module.exports = function createApp({ signInService }, calendarService, calendarOvertimeService, notificationService) {
+module.exports = function createApp({ signInService }) {
   const app = express()
 
   auth.init(signInService)
@@ -130,7 +139,15 @@ module.exports = function createApp({ signInService }, calendarService, calendar
   app.use('/assets', express.static(path.join(__dirname, '../assets'), cacheControl))
   app.use('*/images', express.static(path.join(__dirname, '../assets/images'), cacheControl))
 
-  const healthcheck = healthcheckFactory(config.nomis.authUrl)
+  const healthcheck = healthcheckFactory()
+
+  // Add services to server
+
+  app.set('DataServices', {
+    calendarService,
+    notificationService,
+    userAuthenticationService,
+  })
 
   // Express Routing Configuration
   app.get('/health', (req, res, next) => {
@@ -146,6 +163,7 @@ module.exports = function createApp({ signInService }, calendarService, calendar
     })
   })
   app.get('/ping', (req, res) => res.send('pong'))
+  app.use('*', maintenance)
 
   // GovUK Template Configuration
   app.locals.assetPath = '/assets/'
@@ -166,29 +184,7 @@ module.exports = function createApp({ signInService }, calendarService, calendar
   }
 
   // token refresh
-  app.use(async (req, res, next) => {
-    if (req.user && req.originalUrl !== '/logout') {
-      const timeToRefresh = new Date() > req.user.refreshTime
-      if (timeToRefresh) {
-        try {
-          const newToken = await signInService.getRefreshedToken(req.user)
-          req.user.token = newToken.token
-          req.user.refreshToken = newToken.refreshToken
-          logger.info(`existing refreshTime in the past by ${new Date() - req.user.refreshTime}`)
-          logger.info(
-            `updating time by ${newToken.refreshTime - req.user.refreshTime} from ${req.user.refreshTime} to ${
-              newToken.refreshTime
-            }`,
-          )
-          req.user.refreshTime = newToken.refreshTime
-        } catch (error) {
-          logger.error(`Token refresh error: ${req.user.username}`, error.stack)
-          return res.redirect('/logout')
-        }
-      }
-    }
-    return next()
-  })
+  app.use(tokenRefresh(signInService))
 
   // Update a value in the cookie so that the set-cookie will be sent.
   // Only changes every minute so that it's not sent with every request.
@@ -210,7 +206,7 @@ module.exports = function createApp({ signInService }, calendarService, calendar
 
   app.get('/login/callback', (req, res, next) =>
     passport.authenticate('oauth2', {
-      successReturnToOrRedirect: req.session.returnTo || '/',
+      successReturnToOrRedirect: '/auth/login',
       failureRedirect: '/autherror',
     })(req, res, next),
   )
@@ -224,66 +220,23 @@ module.exports = function createApp({ signInService }, calendarService, calendar
     res.redirect(authLogoutUrl)
   })
 
-  const standardRoute = standardRouter({ authenticationMiddleware })
-
   // Routing
-  app.use('/', standardRoute(createLoginRouter()))
-  app.use(
-    '/calendar',
-    authHandler,
-    standardRoute(
-      createCalendarRouter(
-        logger,
-        calendarService,
-        calendarOvertimeService,
-        notificationService,
-        userAuthenticationService,
-      ),
-    ),
-  )
-  app.use(
-    '/details',
-    authHandler,
-    standardRoute(
-      createCalendarDetailRouter(logger, calendarService, calendarOvertimeService, userAuthenticationService),
-    ),
-  )
-  app.use('/notifications', authHandler, standardRoute(createNotificationRouter(logger, notificationService)))
-  app.use(
-    '/maintenance',
-    authHandler,
-    standardRoute(createMaintenanceRouter(logger, calendarService, notificationService)),
-  )
+  app.use(authenticationMiddleware, csrfTokenMiddleware)
+  app.use('/auth', loginRouter)
+  app.use(authHandlerMiddleware)
+  app.use('/contact-us', contactUs)
+  app.use('/calendar', calendarRouter)
+  app.get('/details/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', calendarDetailMiddleware)
+  app.use('/notifications', notificationRouter)
+  app.get('/', (_req, res) => res.redirect('/calendar#today'))
 
-  app.use((req, res, next) => {
-    next(new Error('Not found'))
+  app.use('*', (req, res, next) => {
+    const error = new Error('Not found')
+    error.status = 404
+    next(appendUserErrorMessage(error, NOT_FOUND_ERROR))
   })
 
-  app.use(renderErrors)
+  app.use('*', errorsMiddleware)
 
   return app
-}
-
-// eslint-disable-next-line no-unused-vars
-function renderErrors(error, req, res, next) {
-  logger.error(error)
-  res.locals.error = error
-  res.locals.stack = production ? null : error.stack
-  res.locals.message = production ? 'Something went wrong. The error has been logged. Please try again' : error.message
-
-  res.status(error.status || 500)
-
-  res.render('pages/error', { csrfToken: res.locals.csrfToken })
-}
-
-async function authHandler(req, res, next) {
-  const userSessionExpiryDateTime = await userAuthenticationService.getSessionExpiryDateTime(req.user.username)
-
-  if (userSessionExpiryDateTime !== null && userSessionExpiryDateTime[0] != null) {
-    if (new Date() > new Date(userSessionExpiryDateTime[0].SessionExpiryDateTime)) {
-      res.redirect('/logout')
-    } else {
-      next()
-    }
-  }
 }

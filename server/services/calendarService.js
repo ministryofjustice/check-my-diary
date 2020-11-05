@@ -1,58 +1,30 @@
 const axios = require('axios')
+const moment = require('moment')
 const logger = require('../../log')
 const utilities = require('../helpers/utilities')
+const baseUrl = require('../../config').cmdApi.url
 
-module.exports = function CalendarService() {
-  function getCalendarData(apiUrl, startDate, accessToken) {
-    return new Promise((resolve, reject) => {
-      axios
-        .get(`${apiUrl}shifts?startdate=${startDate}&enddate=${utilities.getEndDate(startDate)}`, {
-          headers: {
-            authorization: `Bearer ${accessToken}`,
-          },
-        })
-        .then((response) => {
-          resolve(utilities.configureCalendar(response.data, startDate))
-        })
-        .catch((error) => {
-          if (error.response) {
-            if (error.response.status === 404) {
-              resolve(null)
-            }
-          } else {
-            logger.error(`CalendarService : getCalendarData Error : ${error}`)
-            reject(error)
-          }
-        })
-    })
-  }
+module.exports = {
+  getCalendarData(startDate, endDate, accessToken) {
+    logger.info(`calendarService:getCalendarData(${startDate}, ${endDate})`)
+    return axios
+      .get(`${baseUrl}/user/details?from=${startDate}&to=${endDate}`, {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then(({ data }) => data)
+      .catch((error) => {
+        logger.error(`CalendarService : getCalendarData(${startDate}, ${endDate}) Error : ${error}`)
+        throw error
+      })
+  },
 
-  function getCalendarDetails(apiUrl, date, accessToken) {
-    return new Promise((resolve, reject) => {
-      axios
-        .get(`${apiUrl}shifts/tasks?date=${date}`, {
-          headers: {
-            authorization: `Bearer ${accessToken}`,
-          },
-        })
-        .then((response) => {
-          resolve(response.data)
-        })
-        .catch((error) => {
-          if (error.response) {
-            if (error.response.status === 404) {
-              resolve(null)
-            }
-          } else {
-            logger.error(`CalendarService : getCalendarData Error : ${error}`)
-            reject(error)
-          }
-        })
-    })
-  }
+  getCalendarMonth(startDate, accessToken) {
+    return this.getCalendarData(moment(startDate).format('YYYY-MM-01'), utilities.getEndDate(startDate), accessToken)
+  },
 
-  return {
-    getCalendarData,
-    getCalendarDetails,
-  }
+  getCalendarDay(startDate, accessToken) {
+    return this.getCalendarMonth(startDate, accessToken).then((month) => month.find(({ date }) => startDate === date))
+  },
 }
