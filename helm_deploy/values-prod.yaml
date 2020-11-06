@@ -12,6 +12,7 @@ image:
 ingress:
   enabled: true
   enable_whitelist: false
+  modsecurity_enabled: false
   host: checkmydiary.service.justice.gov.uk
   cert_secret: tls-certificate
   path: /
