@@ -8,7 +8,6 @@ const notificationSettingsMiddleware = async (req, res, next) => {
   try {
     const {
       user: { employeeName, token },
-      hmppsAuthMFAUser,
       authUrl,
       app,
     } = req
@@ -26,7 +25,6 @@ const notificationSettingsMiddleware = async (req, res, next) => {
       inputMobile,
       employeeName,
       csrfToken: res.locals.csrfToken,
-      hmppsAuthMFAUser,
       authUrl,
     })
   } catch (error) {

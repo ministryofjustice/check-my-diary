@@ -12,21 +12,18 @@ const sassMiddleware = require('node-sass-middleware')
 
 const cookieParser = require('cookie-parser')
 const healthcheckFactory = require('./services/healthcheck')
-const loginRouter = require('./routes/login')
 const calendarRouter = require('./routes/calendar')
 const maintenance = require('./middleware/maintenance')
 const contactUs = require('./middleware/contact-us')
 const notificationRouter = require('./routes/notification')
 const auth = require('./authentication/auth')
 const config = require('../config')
-const userAuthenticationService = require('./services/userAuthenticationService')
 
 const tokenRefresh = require('./middleware/tokenRefresh')
 const authenticationMiddleware = require('./middleware/authenticationMiddleware')
 
 const calendarService = require('./services/calendarService')
 const notificationService = require('./services/notificationService')
-const authHandlerMiddleware = require('./middleware/authHandlerMiddleware')
 const csrfTokenMiddleware = require('./middleware/csrfTokenMiddleware')
 const errorsMiddleware = require('./middleware/errorsMiddleware')
 const calendarDetailMiddleware = require('./middleware/calendarDetailMiddleware')
@@ -146,7 +143,6 @@ module.exports = function createApp({ signInService }) {
   app.set('DataServices', {
     calendarService,
     notificationService,
-    userAuthenticationService,
   })
 
   // Express Routing Configuration
@@ -206,15 +202,13 @@ module.exports = function createApp({ signInService }) {
 
   app.get('/login/callback', (req, res, next) =>
     passport.authenticate('oauth2', {
-      successReturnToOrRedirect: '/auth/login',
+      successReturnToOrRedirect: '/calendar#today',
       failureRedirect: '/autherror',
     })(req, res, next),
   )
 
   app.use('/logout', async (req, res) => {
     if (req.user) {
-      await userAuthenticationService.updateSessionExpiryDateTime(req.user.username)
-
       req.logout()
     }
     res.redirect(authLogoutUrl)
@@ -222,8 +216,6 @@ module.exports = function createApp({ signInService }) {
 
   // Routing
   app.use(authenticationMiddleware, csrfTokenMiddleware)
-  app.use('/auth', loginRouter)
-  app.use(authHandlerMiddleware)
   app.use('/contact-us', contactUs)
   app.use('/calendar', calendarRouter)
   app.get('/details/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', calendarDetailMiddleware)

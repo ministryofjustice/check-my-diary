@@ -1,8 +1,5 @@
 const moment = require('moment')
-const crypto = require('crypto')
-const jwtDecode = require('jwt-decode')
 
-const log = require('../../log')
 const { GENERAL_ERROR } = require('./errorConstants')
 
 function getStartMonth() {
@@ -11,47 +8,6 @@ function getStartMonth() {
 
 function getEndDate(startDate) {
   return moment(startDate).endOf('month').format('YYYY-MM-DD')
-}
-
-function get2faCode() {
-  return Math.floor(Math.random() * 899999 + 100000)
-}
-
-function createTwoFactorAuthenticationHash(input) {
-  return crypto.createHash('sha256').update(input.toString()).digest('base64')
-}
-
-function getAuthErrorDescription(error) {
-  log.info(`login error description = ${error}`)
-  log.info(
-    `login response error description = ${
-      error.response && error.response.data && error.response.data.error_description
-    }`,
-  )
-  let type =
-    'Service temporarily unavailable. Please try again later. If this issue persists, please contact the Helpdesk on 0203 788 4636.'
-  if (error !== null && error.message !== '') {
-    if (error.message.includes('No Sms or Email address returned for QuantumId')) {
-      type =
-        'You have not been setup on Check My Diary. Please contact us via: checkmydiary@digital.justice.gov.uk if you would like to be included.'
-    } else if (error.message.includes('Sms or Email address null or empty for QuantumId')) {
-      type =
-        'You have not been setup with a email address or mobile number. Please contact us via: checkmydiary@digital.justice.gov.uk.'
-    } else if (error.message.includes('Sms or Email address both set to false for QuantumId')) {
-      type =
-        'Your email address or mobile number has not been enabled. Please contact us via: checkmydiary@digital.justice.gov.uk.'
-    } else if (error.message.includes('email_address Not a valid email address')) {
-      type = '<p>We do not have a valid email address for you.</p><p>Please call the Service Desk on 0203 788 4636</p>'
-    } else if (
-      error.message.includes('phone_number Not enough digits') ||
-      error.message.includes('phone_number Must not contain letters or symbols') ||
-      error.message.includes('phone_number Too many digits')
-    ) {
-      type =
-        '<p>We do not have a valid mobile phone number for you.</p><p>Please call the Service Desk on 0203 788 4636</p>'
-    }
-  }
-  return type
 }
 
 const sortByDate = (data, dateField = 'date') =>
@@ -151,8 +107,6 @@ const processDay = (day) => {
   Object.assign(day, { today, dateText: dateMoment.format('D'), dateDayText: dateMoment.format('dddd Do'), details })
 }
 
-const hmppsAuthMFAUser = (token) => jwtDecode(token).authorities.includes('ROLE_MFA')
-
 const getSnoozeUntil = (rawSnoozeUntil) => {
   const snoozeUntil = moment(rawSnoozeUntil)
   return snoozeUntil.isAfter(moment()) ? snoozeUntil.add(1, 'day').format('dddd, Do MMMM YYYY') : ''
@@ -194,15 +148,11 @@ const processDetail = (detail, detailIndex, details) => {
 module.exports = {
   getStartMonth,
   getEndDate,
-  get2faCode,
-  getAuthErrorDescription,
-  createTwoFactorAuthenticationHash,
   sortByDate,
   sortByDisplayType,
   configureCalendar,
   processDay,
   processDetail,
-  hmppsAuthMFAUser,
   getSnoozeUntil,
   appendUserErrorMessage,
 }

@@ -13,7 +13,6 @@ describe('notification middleware', () => {
   const csrfToken = 'courgette'
   const authUrl = 'carrot'
   const employeeName = 'fennel'
-  const hmppsAuthMFAUser = 'peas'
   const notification1 = { shiftModified: '2020-08-24' }
   const notification2 = { shiftModified: '2020-08-26' }
   let notificationData
@@ -33,7 +32,7 @@ describe('notification middleware', () => {
     notificationData = [notification1, notification2]
     getNotificationsMock.mockResolvedValue(notificationData)
     res = { render: renderMock, locals: { csrfToken } }
-    req = { user: { token, employeeName }, authUrl, hmppsAuthMFAUser, body: {}, app }
+    req = { user: { token, employeeName }, authUrl, body: {}, app }
   })
   afterEach(() => {
     jest.resetAllMocks()
@@ -61,7 +60,6 @@ describe('notification middleware', () => {
           errors,
           data: notificationData,
           csrfToken,
-          hmppsAuthMFAUser,
           notificationsEnabled: true,
           snoozeUntil: '',
           moment,
@@ -93,7 +91,6 @@ describe('notification middleware', () => {
           errors,
           data: notificationData,
           csrfToken,
-          hmppsAuthMFAUser,
           notificationsEnabled: true,
           snoozeUntil,
           moment,
@@ -121,7 +118,6 @@ describe('notification middleware', () => {
         errors,
         data: notificationData,
         csrfToken,
-        hmppsAuthMFAUser,
         notificationsEnabled: false,
         snoozeUntil: '',
         moment,
