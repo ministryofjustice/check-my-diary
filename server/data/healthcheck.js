@@ -2,13 +2,8 @@
 const superagent = require('superagent')
 const Agent = require('agentkeepalive')
 const { HttpsAgent } = require('agentkeepalive')
-const db = require('./dataAccess/db')
 const logger = require('../../log.js')
 const config = require('../../config')
-
-function dbCheck() {
-  return db.query('SELECT 1 AS ok')
-}
 
 const agentOptions = {
   maxSockets: config.nomis.agent.maxSockets,
@@ -46,6 +41,5 @@ function serviceCheckFactory(name, url) {
 }
 
 module.exports = {
-  dbCheck,
   serviceCheckFactory,
 }

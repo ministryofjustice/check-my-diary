@@ -1,11 +1,7 @@
 const moment = require('moment')
 const config = require('../../config')
 
-module.exports = (
-  { user: { employeeName = '' } = { employeeName: '' }, hmppsAuthMFAUser = false, authUrl = '' },
-  res,
-  next,
-) => {
+module.exports = ({ user: { employeeName = '' } = { employeeName: '' }, authUrl = '' }, res, next) => {
   try {
     const {
       maintenance: { start, end },
@@ -24,7 +20,6 @@ module.exports = (
           endDateTime: maintenanceEndDateTime.format(formatString),
           csrfToken: res.locals.csrfToken,
           employeeName,
-          hmppsAuthMFAUser,
           authUrl,
         })
       }

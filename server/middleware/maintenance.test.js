@@ -29,7 +29,6 @@ describe('maintenance middleware', () => {
         endDateTime: '10:28 on Friday 12th October',
         csrfToken,
         employeeName: '',
-        hmppsAuthMFAUser: false,
         authUrl: '',
       })
     })

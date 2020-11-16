@@ -4,9 +4,6 @@ const CalendarDetailPage = require('../pages/calendarDetailPage')
 const utilities = require('../helpers/utililies')
 
 context('A staff member can view their overtime calendar', () => {
-  before(() => {
-    cy.task('createTablesInsertData')
-  })
   beforeEach(() => {
     cy.task('reset')
 

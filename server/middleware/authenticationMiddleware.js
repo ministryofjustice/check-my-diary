@@ -1,5 +1,5 @@
 const jwtDecode = require('jwt-decode')
-const { hmppsAuthMFAUser, appendUserErrorMessage } = require('../helpers/utilities')
+const { appendUserErrorMessage } = require('../helpers/utilities')
 const config = require('../../config')
 
 const authenticationMiddleware = (req, res, next) => {
@@ -9,7 +9,6 @@ const authenticationMiddleware = (req, res, next) => {
         user: { token },
       } = req
       req.authUrl = config.nomis.authUrl
-      req.hmppsAuthMFAUser = hmppsAuthMFAUser(token)
       req.user.employeeName = jwtDecode(token).name
       return next()
     }
