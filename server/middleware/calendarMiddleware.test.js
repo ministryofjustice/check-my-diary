@@ -25,7 +25,6 @@ describe('calendar middleware', () => {
   let res
   const calendarData = ['sausages']
   const returnCalendarData = ['bacon']
-  const notificationCount = 42
   beforeEach(async () => {
     configureCalendar.mockReturnValue(returnCalendarData)
     getCalendarMonthMock.mockResolvedValue(calendarData)
