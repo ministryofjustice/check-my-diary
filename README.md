@@ -36,7 +36,7 @@ Ensure you build assets first
 ## Running the app locally against local service
 1. Remove any running docker containers `docker-compose down --rm all`
 2. In this repository run `docker-compose up`
-3. Remote into docker database to create your user 
+3. Remote into docker database to create your user
   - `docker exec -it check-my-diary-db psql -U [DATABASE-NAME-FROM-.ENV]`
   - `INSERT INTO "UserAuthentication"("QuantumId", "EmailAddress", "Sms", "UseEmailAddress", "UseSms", "ApiUrl")VALUES ('your-name', '', '', false, false, 'https://api.check-my-diary-dev.hmpps.dsd.io/api/');`
 4. Clone and cd into `cmd-api`
