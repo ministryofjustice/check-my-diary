@@ -16,11 +16,9 @@ describe('calendar middleware', () => {
   const authUrl = ''
   const csrfToken = 'tomato'
   const getCalendarMonthMock = jest.fn()
-  const countUnprocessedNotificationsMock = jest.fn()
   const app = {
     get: () => ({
       calendarService: { getCalendarMonth: getCalendarMonthMock },
-      notificationService: { countUnprocessedNotifications: countUnprocessedNotificationsMock },
     }),
   }
   let req
@@ -31,7 +29,6 @@ describe('calendar middleware', () => {
   beforeEach(async () => {
     configureCalendar.mockReturnValue(returnCalendarData)
     getCalendarMonthMock.mockResolvedValue(calendarData)
-    countUnprocessedNotificationsMock.mockResolvedValue(notificationCount)
     res = { render: renderMock, locals: { csrfToken } }
     req = {
       hmppsAuthMFAUser,
@@ -47,9 +44,6 @@ describe('calendar middleware', () => {
     jest.resetAllMocks()
   })
   describe('with valid data', () => {
-    it('should get the notification count', () => {
-      expect(countUnprocessedNotificationsMock).toHaveBeenCalledTimes(1)
-    })
     it('should get calendar data', () => {
       expect(getCalendarMonthMock).toHaveBeenCalledTimes(1)
     })

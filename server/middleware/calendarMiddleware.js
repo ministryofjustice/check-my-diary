@@ -13,10 +13,10 @@ const calendarMiddleware = async (req, res, next) => {
     authUrl,
   } = req
 
-  const { calendarService, notificationService } = app.get('DataServices')
+  const { calendarService } = app.get('DataServices')
 
   try {
-    const notificationCount = await notificationService.countUnprocessedNotifications(token)
+    const notificationCount = 0
 
     const month = await calendarService.getCalendarMonth(date, token)
     month.forEach(processDay)

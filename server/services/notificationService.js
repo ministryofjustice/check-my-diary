@@ -19,11 +19,6 @@ const notificationService = {
       })
   },
 
-  async countUnprocessedNotifications(accessToken) {
-    const data = await notificationService.getNotifications(accessToken, false, true)
-    return data.length
-  },
-
   getPreferences(accessToken) {
     return axios
       .get(`${baseUrl}/preferences/notifications`, {
