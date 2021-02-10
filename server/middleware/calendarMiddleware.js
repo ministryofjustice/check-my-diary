@@ -16,7 +16,6 @@ const calendarMiddleware = async (req, res, next) => {
   const { calendarService } = app.get('DataServices')
 
   try {
-    const notificationCount = 0
 
     const month = await calendarService.getCalendarMonth(date, token)
     month.forEach(processDay)
@@ -26,7 +25,6 @@ const calendarMiddleware = async (req, res, next) => {
     const nextMonthMoment = currentMonthMoment.clone().add('1', 'M')
     return res.render('pages/calendar', {
       ...res.locals,
-      notificationCount,
       tab: 'Calendar',
       currentMonth: currentMonthMoment.format('MMMM YYYY'),
       previousMonth: { link: previousMonthMoment.format('YYYY-MM-DD'), text: previousMonthMoment.format('MMMM') },
