@@ -29,7 +29,7 @@ function getAuthErrorDescription(error) {
     }`,
   )
   let type =
-    'Service temporarily unavailable. Please try again later. If this issue persists, please contact the Helpdesk on 0203 788 4636.'
+    'Service temporarily unavailable. Please try again later. If this issue persists, please contact the Helpdesk on 0800 917 5148.'
   if (error !== null && error.message !== '') {
     if (error.message.includes('No Sms or Email address returned for QuantumId')) {
       type =
@@ -41,14 +41,14 @@ function getAuthErrorDescription(error) {
       type =
         'Your email address or mobile number has not been enabled. Please contact us via: checkmydiary@digital.justice.gov.uk.'
     } else if (error.message.includes('email_address Not a valid email address')) {
-      type = '<p>We do not have a valid email address for you.</p><p>Please call the Service Desk on 0203 788 4636</p>'
+      type = '<p>We do not have a valid email address for you.</p><p>Please call the Service Desk on 0800 917 5148</p>'
     } else if (
       error.message.includes('phone_number Not enough digits') ||
       error.message.includes('phone_number Must not contain letters or symbols') ||
       error.message.includes('phone_number Too many digits')
     ) {
       type =
-        '<p>We do not have a valid mobile phone number for you.</p><p>Please call the Service Desk on 0203 788 4636</p>'
+        '<p>We do not have a valid mobile phone number for you.</p><p>Please call the Service Desk on 0800 917 5148</p>'
     }
   }
   return type
