@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  hmpps: ministryofjustice/hmpps@1.0.0
+  hmpps: ministryofjustice/hmpps@3.2
 
 executors:
   validator:
@@ -145,4 +145,6 @@ workflows:
               only:
                 - master
     jobs:
-      - hmpps/npm_security_audit
+      - hmpps/npm_security_audit:
+          context:
+            - hmpps-common-vars
