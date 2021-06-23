@@ -29,6 +29,8 @@ services:
     image: quay.io/hmpps/cmd-api:latest
     networks:
       - hmpps
+    depends_on:
+      - check-my-diary-db
     container_name: cmd-api
     ports:
       - '8080:8080'
@@ -36,7 +38,7 @@ services:
       test: ['CMD', 'curl', '-f', 'http://localhost:8080/health']
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - DATABASE_ENDPOINT=postgres:5432
+      - DATABASE_ENDPOINT=check-my-diary-db:5432
       - DATABASE_USERNAME=check-my-diary
       - DATABASE_PASSWORD=check-my-diary
       - DATABASE_NAME=check-my-diary
