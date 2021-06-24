@@ -8,7 +8,6 @@ const compression = require('compression')
 const passport = require('passport')
 const bodyParser = require('body-parser')
 const cookieSession = require('cookie-session')
-const sassMiddleware = require('node-sass-middleware')
 
 const cookieParser = require('cookie-parser')
 const healthcheckFactory = require('./services/healthcheck')
