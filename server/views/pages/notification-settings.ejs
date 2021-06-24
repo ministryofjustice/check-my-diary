@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
   <head>
-    <% include ../partials/head %>
+    <%- include ('../partials/head') -%>
   </head>
   <body class="govuk-template__body">
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
-    <% include ../partials/header %>
+    <%- include ('../partials/header') -%>
 
     <div class="govuk-width-container">
 
-      <% include ../partials/beta-banner %>
+      <%- include ('../partials/beta-banner') -%>
 
       <a href="/notifications" class="govuk-back-link">Back</a>
 
@@ -88,6 +88,6 @@
 
     <script src="/assets/govuk/all.js"></script>
     <script>window.GOVUKFrontend.initAll();</script>
-    <% include ../partials/footer %>
+    <%- include ('../partials/footer') -%>
   </body>
 </html>

@@ -13,7 +13,7 @@ const getUserAuthenticationDetails = async (quantumId) => {
 const updateUserSessionExpiryAndLastLoginDateTime = async (quantumId, dateTime) => {
   db('UserAuthentication')
     .where({ QuantumId: quantumId.toLowerCase() })
-    .update({ LastLoginDateTime: new Date().toLocaleString(), SessionExpiryDateTime: dateTime })
+    .update({ LastLoginDateTime: new Date(), SessionExpiryDateTime: dateTime })
     .catch((err) => {
       throw err
     })

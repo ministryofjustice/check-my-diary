@@ -105,20 +105,6 @@ module.exports = function createApp({ signInService }) {
     })
   }
 
-  if (!production) {
-    app.use(
-      '/assets',
-      sassMiddleware({
-        src: path.join(__dirname, '../assets/sass'),
-        dest: path.join(__dirname, '../assets/stylesheets'),
-        debug: true,
-        outputStyle: 'compressed',
-        prefix: '/stylesheets/',
-        includePaths: ['node_modules/govuk-frontend', 'node_modules/@ministryofjustice/frontend'],
-      }),
-    )
-  }
-
   //  Static Resources Configuration
   const cacheControl = { maxAge: config.staticResourceCacheDuration * 1000 }
 

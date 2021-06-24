@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
   <head>
-    <% include ../partials/head %>
+    <%- include ('../partials/head') -%>
   </head>
   <body class="govuk-template__body">
-    <% include ../partials/header %>
+    <%- include ('../partials/header') -%>
 
     <div class="govuk-width-container">
-      <% include ../partials/beta-banner %>
+      <%- include ('../partials/beta-banner') -%>
 
       <main id="main-container" class="govuk-main-wrapper govuk-!-margin-bottom-8" role="main">
         <h1 class="govuk-heading-l"><%= message %></h1>
@@ -18,6 +18,6 @@
       </main>
     </div>
 
-    <% include ../partials/footer %>
+    <%- include ('../partials/footer') -%>
   </body>
 </html>
