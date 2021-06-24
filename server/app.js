@@ -8,7 +8,6 @@ const compression = require('compression')
 const passport = require('passport')
 const bodyParser = require('body-parser')
 const cookieSession = require('cookie-session')
-const sassMiddleware = require('node-sass-middleware')
 
 const cookieParser = require('cookie-parser')
 const healthcheckFactory = require('./services/healthcheck')
@@ -103,20 +102,6 @@ module.exports = function createApp({ signInService }) {
       res.locals.version = moment.now().toString()
       return next()
     })
-  }
-
-  if (!production) {
-    app.use(
-      '/assets',
-      sassMiddleware({
-        src: path.join(__dirname, '../assets/sass'),
-        dest: path.join(__dirname, '../assets/stylesheets'),
-        debug: true,
-        outputStyle: 'compressed',
-        prefix: '/stylesheets/',
-        includePaths: ['node_modules/govuk-frontend', 'node_modules/@ministryofjustice/frontend'],
-      }),
-    )
   }
 
   //  Static Resources Configuration
