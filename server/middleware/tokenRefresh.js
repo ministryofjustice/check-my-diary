@@ -1,4 +1,4 @@
-const logger = require('../../log.js')
+const logger = require('../../log')
 
 module.exports = (signInService) => async (req, res, next) => {
   if (req.user && req.originalUrl !== '/logout') {
