@@ -1,5 +1,5 @@
 const fs = require('fs')
-const config = require('../../config.js')
+const config = require('../../config')
 
 // eslint-disable-next-line import/order
 const knex = require('knex')({
@@ -12,9 +12,9 @@ const knex = require('knex')({
     ssl:
       config.db.sslEnabled === 'true'
         ? {
-          ca: fs.readFileSync('root.cert'),
-          rejectUnauthorized: true,
-        }
+            ca: fs.readFileSync('root.cert'),
+            rejectUnauthorized: true,
+          }
         : false,
   },
   pool: { min: 0, max: 7 },

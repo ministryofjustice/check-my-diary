@@ -1,4 +1,4 @@
-const logger = require('../../log.js')
+const logger = require('../../log')
 const { GENERAL_ERROR } = require('../helpers/errorConstants')
 
 // eslint-disable-next-line no-unused-vars
