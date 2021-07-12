@@ -2,10 +2,8 @@
 generic-service:
   nameOverride: check-my-diary
 
-#  replicaCount: 4
   autoscaling:
     enabled: true
-    targetCPUUtilizationPercentage: 80
 
   image:
     repository: quay.io/hmpps/check-my-diary
@@ -14,7 +12,6 @@ generic-service:
 
   ingress:
     enabled: true
-#    enable_whitelist: false
     modsecurity_enabled: false
     path: /
     annotations:
@@ -81,4 +78,4 @@ generic-service:
       DATABASE_PASSWORD: "database_password"
 
 generic-prometheus-alerts:
-  targetApplication: hmpps-template-typescript
+  targetApplication: check-my-diary
