@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/ministryofjustice/check-my-diary/tree/master.svg?style=svg)](https://circleci.com/gh/ministryofjustice/check-my-diary)
+[![CircleCI](https://circleci.com/gh/ministryofjustice/check-my-diary/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/check-my-diary)
 [![Known Vulnerabilities](https://snyk.io/test/github/ministryofjustice/check-my-diary/badge.svg)](https://snyk.io/test/github/ministryofjustice/check-my-diary)
 
 # Check My Diary
