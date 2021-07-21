@@ -102,14 +102,14 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - main
       - hmpps/deploy_env:
           name: deploy_dev
           env: "dev"
           filters:
             branches:
               only:
-                - master
+                - main
           requires:
             - helm_lint
             - integration_test
@@ -145,7 +145,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - main
     jobs:
       - hmpps/npm_security_audit:
           context:
