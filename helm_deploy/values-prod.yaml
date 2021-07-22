@@ -5,7 +5,7 @@ generic-service:
     maxReplicas: 4
 
   ingress:
-    host: check-my-diary.service.justice.gov.uk
+    host: checkmydiary.service.justice.gov.uk
     tlsSecretName: tls-certificate
 
   env:
@@ -18,5 +18,5 @@ generic-service:
     QUANTUM_ADDRESS: "212.137.36.230/32,62.25.109.197/32,195.92.38.16/28,35.177.125.252,35.177.137.160,195.59.75.0/24,194.33.192.0/25,194.33.193.0/25,194.33.196.0/25,194.33.197.0/25"
     REGIONS: "https://region1-api.check-my-diary-prod.hmpps.dsd.io/api/health,https://region2-api.check-my-diary-prod.hmpps.dsd.io/api/health,https://region3-api.check-my-diary-prod.hmpps.dsd.io/api/health,https://region4-api.check-my-diary-prod.hmpps.dsd.io/api/health,https://region5-api.check-my-diary-prod.hmpps.dsd.io/api/health,https://region6-api.check-my-diary-prod.hmpps.dsd.io/api/health"
     API_AUTH_ENDPOINT_URL: "https://sign-in.hmpps.service.justice.gov.uk/auth"
-    HMPPS_COOKIE_DOMAIN: check-my-diary.service.justice.gov.uk
-    CHECK_MY_DIARY_URL: https://check-my-diary.service.justice.gov.uk
+    HMPPS_COOKIE_DOMAIN: checkmydiary.service.justice.gov.uk
+    CHECK_MY_DIARY_URL: https://checkmydiary.service.justice.gov.uk
