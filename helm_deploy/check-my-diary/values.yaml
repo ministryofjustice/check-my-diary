@@ -79,3 +79,5 @@ generic-service:
 
 generic-prometheus-alerts:
   targetApplication: check-my-diary
+# TODO
+  runbookUrl: https://dsdmoj.atlassian.net/wiki/spaces/NOM/pages/1514766438/DPS+CloudPlatform+Apps
