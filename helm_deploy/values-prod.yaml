@@ -20,3 +20,6 @@ generic-service:
     API_AUTH_ENDPOINT_URL: "https://sign-in.hmpps.service.justice.gov.uk/auth"
     HMPPS_COOKIE_DOMAIN: checkmydiary.service.justice.gov.uk
     CHECK_MY_DIARY_URL: https://checkmydiary.service.justice.gov.uk
+
+generic-prometheus-alerts:
+  alertSeverity: digital-prison-service
