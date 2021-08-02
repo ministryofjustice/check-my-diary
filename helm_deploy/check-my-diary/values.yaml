@@ -49,6 +49,10 @@ generic-service:
                     - "check-my-diary"
             topologyKey: kubernetes.io/hostname
 
+  resources:
+    requests:
+      cpu: 20m
+
   # Environment variables to load into the deployment
   env:
     NODE_ENV: "production"
