@@ -71,8 +71,7 @@ jobs:
           name: Run the node app.
           command: npm run start-feature
           background: true
-      # Wait for node app to start
-      - hmpps/wait_till_ready
+      - hmpps/wait_till_ready: # Wait for node app to start
           port: 3005
       - run:
           name: integration tests
