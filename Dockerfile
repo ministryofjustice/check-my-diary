@@ -2,7 +2,7 @@
 ARG BUILD_NUMBER
 ARG GIT_REF
 
-FROM node:12-buster-slim as base
+FROM node:14.15-buster-slim as base
 
 LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
 

@@ -1,17 +1,17 @@
 version: 2.1
 
 orbs:
-  hmpps: ministryofjustice/hmpps@3.8
+  hmpps: ministryofjustice/hmpps@3.10
 
 executors:
   validator:
     docker:
-      - image: circleci/node:12-buster-browsers
+      - image: cimg/node:14.15.3-browsers
     working_directory: ~/app
   integration-tests:
     docker:
-      - image: circleci/node:12-buster-browsers
-      - image: circleci/postgres:10.6-alpine-ram
+      - image: cimg/node:14.15.3-browsers
+      - image: circleci/postgres:11.4-alpine-ram
         environment:
           POSTGRES_PASSWORD: check-my-diary
           POSTGRES_USER: check-my-diary
@@ -71,9 +71,9 @@ jobs:
           name: Run the node app.
           command: npm run start-feature
           background: true
-      - run:
-          name: Wait for node app to start
-          command: sleep 5
+      # Wait for node app to start
+      - hmpps/wait_till_ready
+          port: 3005
       - run:
           name: integration tests
           command: npm run int-test
@@ -148,5 +148,8 @@ workflows:
                 - main
     jobs:
       - hmpps/npm_security_audit:
+          context:
+            - hmpps-common-vars
+      - hmpps/veracode_pipeline_scan:
           context:
             - hmpps-common-vars
