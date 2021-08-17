@@ -1,6 +1,7 @@
 const express = require('express')
 const addRequestId = require('express-request-id')()
 const helmet = require('helmet')
+const noCache = require('nocache')
 const csurf = require('csurf')
 const path = require('path')
 const moment = require('moment')
@@ -161,7 +162,7 @@ module.exports = function createApp({ signInService }) {
   app.use(addTemplateVariables)
 
   // Don't cache dynamic resources
-  app.use(helmet.noCache())
+  app.use(noCache())
 
   // CSRF protection
   if (!testMode) {
