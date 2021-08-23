@@ -151,4 +151,5 @@ workflows:
             - hmpps-common-vars
       - hmpps/veracode_pipeline_scan:
           context:
+            - veracode-credentials
             - hmpps-common-vars
