@@ -11,8 +11,8 @@ module.exports = (
       maintenance: { start, end },
     } = config
     if (start && end) {
-      const maintenanceStartDateTime = moment(start)
-      const maintenanceEndDateTime = moment(end)
+      const maintenanceStartDateTime = moment(start, 'YYYY-MM-DD HH:mm:ss')
+      const maintenanceEndDateTime = moment(end, 'YYYY-MM-DD HH:mm:ss')
       const currentDateTime = moment()
       if (
         currentDateTime.isSameOrAfter(maintenanceStartDateTime) &&
