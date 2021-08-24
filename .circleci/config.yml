@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  hmpps: ministryofjustice/hmpps@3.10
+  hmpps: ministryofjustice/hmpps@3.11
 
 executors:
   validator:
@@ -137,10 +137,10 @@ workflows:
           requires:
             - request-prod-approval
 
-  scheduled:
+  security:
     triggers:
       - schedule:
-          cron: "0 7 * * 1-5"
+          cron: "34 5 * * 1-5"
           filters:
             branches:
               only:
@@ -149,7 +149,23 @@ workflows:
       - hmpps/npm_security_audit:
           context:
             - hmpps-common-vars
+      - hmpps/trivy_latest_scan:
+          context:
+            - hmpps-common-vars
       - hmpps/veracode_pipeline_scan:
+          context:
+            - veracode-credentials
+            - hmpps-common-vars
+  security-weekly:
+    triggers:
+      - schedule:
+          cron: "53 3 * * 1"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - hmpps/veracode_policy_scan:
           context:
             - veracode-credentials
             - hmpps-common-vars
