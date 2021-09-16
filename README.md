@@ -99,3 +99,13 @@ that specification.
 If the mocking is not working properly after the test has been completed then the docker terminal will show what stubs
 aren't matched by requests. http://localhost:9191/__admin/requests will provide more information on the requests that
 are made and http://localhost:9191/__admin/mappings will show what stubs have been created for the requests.
+
+## Create shift data in Corporate Staff Rostering (CSR)
+
+`Check my diary` displays shift data from `CSR`, so you need to configure access appropriately:
+1. Request access to CSR
+2. Map your DPS account to an existing CSR account
+3. Create some shift data in CSR
+
+Follow instructions here:
+[Set up access to CSR](https://dsdmoj.atlassian.net/wiki/spaces/TI/pages/3564568692/Check+My+Diary+Onboarding)
