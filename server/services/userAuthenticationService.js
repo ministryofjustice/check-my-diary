@@ -1,14 +1,13 @@
 const db = require('../database')
 
-const getUserAuthenticationDetails = async (quantumId) => {
-  return db
+const getUserAuthenticationDetails = async (quantumId) =>
+  db
     .select('EmailAddress', 'Sms', 'UseEmailAddress', 'UseSms', 'ApiUrl', 'TwoFactorAuthenticationHash')
     .from('UserAuthentication')
     .where('QuantumId', '=', quantumId.toLowerCase())
     .catch((err) => {
       throw err
     })
-}
 
 const updateUserSessionExpiryAndLastLoginDateTime = async (quantumId, dateTime) => {
   db('UserAuthentication')
@@ -28,25 +27,23 @@ const updateTwoFactorAuthenticationHash = async (quantumId, hash) => {
     })
 }
 
-const getTwoFactorAuthenticationHash = async (quantumId) => {
-  return db
+const getTwoFactorAuthenticationHash = async (quantumId) =>
+  db
     .select('TwoFactorAuthenticationHash', 'ApiUrl')
     .from('UserAuthentication')
     .where('QuantumId', '=', quantumId.toLowerCase())
     .catch((err) => {
       throw err
     })
-}
 
-const getSessionExpiryDateTime = async (quantumId) => {
-  return db
+const getSessionExpiryDateTime = async (quantumId) =>
+  db
     .select('SessionExpiryDateTime')
     .from('UserAuthentication')
     .where('QuantumId', '=', quantumId.toLowerCase())
     .catch((err) => {
       throw err
     })
-}
 
 const updateSessionExpiryDateTime = async (quantumId) => {
   db('UserAuthentication')

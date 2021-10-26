@@ -68,9 +68,7 @@ const sortByDisplayType = (data) =>
     },
   )
 
-const removeShiftDetails = (details) => {
-  return details.filter(({ displayType }) => !['day_start', 'day_finish'].includes(displayType))
-}
+const removeShiftDetails = (details) => details.filter(({ displayType }) => !['day_start', 'day_finish'].includes(displayType))
 
 const humanizeNumber = (value, unit) => {
   if (value === 0) return ''
