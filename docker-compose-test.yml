@@ -5,7 +5,7 @@ services:
     networks:
       - hmpps_int
     container_name: check-my-diary-db
-    restart: always
+    restart: unless-stopped
     ports:
       - "5432:5432"
     environment:
