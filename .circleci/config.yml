@@ -6,12 +6,12 @@ orbs:
 executors:
   validator:
     docker:
-      - image: cimg/node:14.15.3-browsers
+      - image: cimg/node:14.18.1-browsers
     working_directory: ~/app
   integration-tests:
     docker:
-      - image: cimg/node:14.15.3-browsers
-      - image: circleci/postgres:11.4-alpine-ram
+      - image: cimg/node:14.18.1-browsers
+      - image: cimg/postgres:14.0
         environment:
           POSTGRES_PASSWORD: check-my-diary
           POSTGRES_USER: check-my-diary
