@@ -36,12 +36,43 @@ Ensure you build assets first
 ## Running the app locally against local service
 1. Remove any running docker containers `docker-compose down --rm all`
 2. In this repository run `docker-compose up`
-3. Remote into docker database to create your user
-  - `docker exec -it check-my-diary-db psql -U [DATABASE-NAME-FROM-.ENV]`
-  - `INSERT INTO "UserAuthentication"("QuantumId", "EmailAddress", "Sms", "UseEmailAddress", "UseSms", "ApiUrl")VALUES ('your-name', '', '', false, false, 'https://api.check-my-diary-dev.hmpps.dsd.io/api/');`
-4. Clone and cd into `cmd-api`
-5. Run `cmd-api`
-6. Start app in dev mode, in `check-my-diary` run `npm start:dev`
+3. Connect to database
+
+   ### Locally: create a local database
+      1. Create database and set up required values (see docker-compose.yml)
+      2. Run migration scripts to create and populate tables (\postgres-dump\*.sql)
+      3. Create your account: *`INSERT INTO "UserAuthentication"("QuantumId", "EmailAddress", "Sms", "UseEmailAddress", "UseSms", "ApiUrl")VALUES ('your-name', '', '', false, false, 'https://api.check-my-diary-dev.hmpps.dsd.io/api/');`*
+      4. Amend environment variables to point to local database:
+
+         [`template.env`](./template.env) contains all the enviroment variables need for running this app.
+
+         Add env variables from *values-dev.yaml*, modify where necessary, for example:
+         - TWO_FACT_AUTH_ON: *false*
+         - HMPPS_COOKIE_DOMAIN: *localhost:3000*
+         - CHECK_MY_DIARY_URL: *http://localhost:3000*
+         - CMD_API_URL: *http://localhost:3002*
+         - PORT: *3000*
+
+         Add OAuth keys (**<from kubernetes secrets>**)
+         - API_CLIENT_ID:
+         - API_CLIENT_SECRET:
+
+      ### Remotely: connect to docker database to create your user
+
+```bash
+docker exec -it check-my-diary-db psql -U [DATABASE-NAME-FROM-.ENV]
+INSERT INTO "UserAuthentication"("QuantumId", "EmailAddress", "Sms", "UseEmailAddress", "UseSms", "ApiUrl")VALUES ('your-name', '', '', false, false, 'https://api.check-my-diary-dev.hmpps.dsd.io/api/');
+```
+5. Create a tunnel into *cmd-api* because it has no ingress:
+
+   `kubectl port-forward <cmd-api-pod number> 3002:8080 -n check-my-diary-dev`
+
+   Note: *3002* is the port number specified in CMD_API_URL above, it could be any number you chose.
+
+OR
+5. Clone and cd into `cmd-api`
+6. Run `cmd-api`
+7. Start app in dev mode, in `check-my-diary` run `npm start:dev`
 
 ## Run linter
 
