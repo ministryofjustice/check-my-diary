@@ -7,7 +7,6 @@ generic-service:
   ingress:
     host: checkmydiary.service.justice.gov.uk
     tlsSecretName: tls-certificate
-    contextColour: green
 
   env:
     TWO_FACT_AUTH_ON: "true"
