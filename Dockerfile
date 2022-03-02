@@ -1,8 +1,7 @@
 # Stage: base image
+FROM node:14.18-buster-slim as base
 ARG BUILD_NUMBER
 ARG GIT_REF
-
-FROM node:14.18-buster-slim as base
 
 LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
 
