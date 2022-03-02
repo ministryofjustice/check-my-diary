@@ -8,7 +8,7 @@
     "start": "node server.js",
     "start:dev": "npm run build && DEBUG=gov-starter-server* nodemon server.js | bunyan -o short",
     "start-feature": "NODE_ENV=development node server.js | bunyan -o short",
-    "compile-sass": "sass --no-source-map --load-path=node_modules/govuk-frontend ./assets/sass/application.sass:./assets/stylesheets/application.css ./assets/sass/application-ie8.sass:./assets/stylesheets/application-ie8.css --style compressed",
+    "compile-sass": "sass --no-source-map --load-path=. ./assets/sass/application.sass:./assets/stylesheets/application.css ./assets/sass/application-ie8.sass:./assets/stylesheets/application-ie8.css --style compressed",
     "watch-sass": "npm run compile-sass -- --watch",
     "build": "npm run compile-sass",
     "clean": "rm -rf node_modules .port.tmp *.log build uploads/* test-results.xml",
