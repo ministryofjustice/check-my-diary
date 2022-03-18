@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  hmpps: ministryofjustice/hmpps@3.12
+  hmpps: ministryofjustice/hmpps@3.14
 
 parameters:
   node-version:
@@ -110,6 +110,7 @@ workflows:
       - hmpps/deploy_env:
           name: deploy_dev
           env: "dev"
+          jira_update: true
           filters:
             branches:
               only:
@@ -125,6 +126,8 @@ workflows:
       - hmpps/deploy_env:
           name: deploy_preprod
           env: "preprod"
+          jira_update: true
+          jira_env_type: staging
           context: check-my-diary-preprod
           requires:
             - request-preprod-approval
@@ -135,6 +138,8 @@ workflows:
       - hmpps/deploy_env:
           name: deploy_prod
           env: "prod"
+          jira_update: true
+          jira_env_type: production
           slack_notification: true
           context:
             - check-my-diary-prod
