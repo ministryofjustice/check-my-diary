@@ -19,7 +19,8 @@
     "migrate": "knex migrate:latest",
     "record-build-info": "node ./bin/record-build-info",
     "security_audit": "npx audit-ci --config audit-ci.json",
-    "test-mocks": "jest --config=jest.config.integration.json"
+    "test-mocks": "jest --config=jest.config.integration.json",
+    "prepare": "husky install"
   },
   "engines": {
     "node": ">=14.*",
@@ -86,11 +87,6 @@
     "prettier": "~2.5.1",
     "sass": "^1.49.9",
     "supertest": "^6.2.2"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged && npm test"
-    }
   },
   "lint-staged": {
     "*.{js,json,css}": [
