@@ -81,7 +81,11 @@ describe('hmppsAuthMFAUser', () => {
     const token = { authorities: 'ROLE_MFA' }
     expect(hmppsAuthMFAUser(token)).toEqual(true)
   })
-  it('should return false if the user does not have the ROLE_MFA role', () => {
+  it('should return true if the user has the ROLE_CMD_MIGRATED_MFA role', () => {
+    const token = { authorities: 'ROLE_CMD_MIGRATED_MFA' }
+    expect(hmppsAuthMFAUser(token)).toEqual(true)
+  })
+  it('should return false if the user does not have the ROLE_MFA or ROLE_CMD_MIGRATED_MFA roles', () => {
     const token = { authorities: '' }
     expect(hmppsAuthMFAUser(token)).toEqual(false)
   })

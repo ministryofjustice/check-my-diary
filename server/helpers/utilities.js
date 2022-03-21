@@ -68,7 +68,8 @@ const sortByDisplayType = (data) =>
     },
   )
 
-const removeShiftDetails = (details) => details.filter(({ displayType }) => !['day_start', 'day_finish'].includes(displayType))
+const removeShiftDetails = (details) =>
+  details.filter(({ displayType }) => !['day_start', 'day_finish'].includes(displayType))
 
 const humanizeNumber = (value, unit) => {
   if (value === 0) return ''
@@ -149,7 +150,10 @@ const processDay = (day) => {
   Object.assign(day, { today, dateText: dateMoment.format('D'), dateDayText: dateMoment.format('dddd Do'), details })
 }
 
-const hmppsAuthMFAUser = (token) => jwtDecode(token).authorities.includes('ROLE_MFA')
+const hmppsAuthMFAUser = (token) => {
+  const { authorities } = jwtDecode(token)
+  return authorities.includes('ROLE_MFA') || authorities.includes('ROLE_CMD_MIGRATED_MFA')
+}
 
 const getSnoozeUntil = (rawSnoozeUntil) => {
   const snoozeUntil = moment(rawSnoozeUntil)
