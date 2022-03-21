@@ -111,6 +111,7 @@ workflows:
           name: deploy_dev
           env: "dev"
           jira_update: true
+          context: hmpps-common-vars
           filters:
             branches:
               only:
@@ -128,7 +129,9 @@ workflows:
           env: "preprod"
           jira_update: true
           jira_env_type: staging
-          context: check-my-diary-preprod
+          context:
+            - check-my-diary-preprod
+            - hmpps-common-vars
           requires:
             - request-preprod-approval
       - request-prod-approval:
