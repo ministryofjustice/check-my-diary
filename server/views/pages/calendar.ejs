@@ -28,8 +28,8 @@
         </div>
 
         <div class="calendar-controls center-align govuk-!-margin-bottom-8">
-          <h1 class="govuk-heading-m govuk-!-margin-bottom-0"><%=currentMonth%></h1>
-          <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/calendar/<%=previousMonth.link%>">
+          <h1 class="govuk-heading-m govuk-!-margin-bottom-0" tabindex="0"><%=currentMonth%></h1>
+          <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/calendar/<%=previousMonth.link%>" data-qa="previous">
             <%=previousMonth.text%>
           </a>
           <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 app-link-!-border" href="/calendar/<%=nextMonth.link%>">
@@ -47,26 +47,28 @@
             <% data.forEach(({ today=false, fullDayType, fullDayTypeDescription, date, dateText, dateDayText, details }) => { %>
             <li <% if (today) { %> id="today" <% } %> class="calendar-item <%= getTypeClass(fullDayType) %> <% if (details === undefined)  { %>no-day hide-0-to-1024 <%}%> ">
                 <% if (fullDayType !== 'no-day')  { %>
-                  <a href="/details/<%=date%>">
-                      <div class="hide-1024-up">
+                  <a href="/details/<%=date%>" tabindex="-1">
+                      <div class="hide-1024-up" tabindex="0">
                         <span class="day govuk-!-font-weight-bold">
                           <%= dateDayText %>
                         </span>
                       </div>
-                      <div class="hide-0-to-1024">
+                      <div class="hide-0-to-1024" tabindex="0">
                         <span class="day govuk-!-font-weight-bold">
                           <%= dateText %>
                         </span>
                       </div>
-                    <% if (fullDayType !== 'NONE' && fullDayType !== 'SHIFT') { %>
+                      <div tabindex="0">
+                        <% if (fullDayType !== 'NONE' && fullDayType !== 'SHIFT') { %>
                           <span class="line"><%= fullDayTypeDescription %></span>
-                    <% } %>
-                      <% details !== null && details.forEach(({ displayType, activity, finishDuration }) => { %>
-                        <span class="line <%= displayType %>"><%= activity %></span>
-                        <% if (finishDuration) { %>
-                            <span class="line"><%= finishDuration %></span>
                         <% } %>
-                      <% }) %>
+                        <% details !== null && details.forEach(({ displayType, activity, finishDuration }) => { %>
+                          <span class="line <%= displayType %>"><%= activity %></span>
+                          <% if (finishDuration) { %>
+                              <span class="line"><%= finishDuration %></span>
+                          <% } %>
+                        <% }) %>
+                      </div>
                   </a>
                 <% } %>
               </li>

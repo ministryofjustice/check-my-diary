@@ -1,7 +1,6 @@
 const moment = require('moment')
 const CalendarPage = require('../pages/calendarPage')
 const CalendarDetailPage = require('../pages/calendarDetailPage')
-const utilities = require('../helpers/utililies')
 
 context('A staff member can view their calendar', () => {
   before(() => {
@@ -15,18 +14,24 @@ context('A staff member can view their calendar', () => {
     cy.task('stubNotificationCount')
     cy.login()
 
-    utilities.gotoPreviousCalendarDate('2020-03-01')
+    CalendarPage.verifyOnPage(moment().format('MMMM YYYY'))
+    cy.visit('/calendar/2020-05-01')
+    cy.get('[data-qa=previous]').click()
+    cy.get('[data-qa=previous]').click()
   })
 
   it('A staff member can view their calendar', () => {
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
 
-    // day shift
     const dayShift = calendarPage.day('2020-03-06')
-    dayShift.children().should((spans) => {
-      const allText = spans.map((i, el) => Cypress.$(el).text().trim())
-      expect(allText.get()).to.deep.eq(['Friday 6th', '6', 'Start 07:45', 'Finish 19:30', '10hrs 15mins'])
-    })
+    dayShift
+      .within(() => {
+        cy.get('span').eq(0).should('contain.text', 'Friday 6th')
+        cy.get('span').eq(1).contains('6')
+        cy.get('span').eq(2).contains('Start 07:45')
+        cy.get('span').eq(3).contains('Finish 19:30')
+        cy.get('span').eq(4).contains('10hrs 15mins')
+      })
   })
 
   it('A staff member can drill into a day shift', () => {

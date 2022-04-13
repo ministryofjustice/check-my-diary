@@ -1,7 +1,6 @@
 const moment = require('moment')
 const CalendarPage = require('../pages/calendarPage')
 const CalendarDetailPage = require('../pages/calendarDetailPage')
-const utilities = require('../helpers/utililies')
 
 context('A staff member can view their overtime calendar', () => {
   before(() => {
@@ -15,50 +14,67 @@ context('A staff member can view their overtime calendar', () => {
     cy.task('stubNotificationCount')
     cy.login()
 
-    utilities.gotoPreviousCalendarDate('2020-03-01')
+    CalendarPage.verifyOnPage(moment().format('MMMM YYYY'))
+    cy.visit('/calendar/2020-04-01')
+    cy.get('[data-qa=previous]').click()
   })
 
   it('A staff member can view their overtime calendar', () => {
     const calendarPage = CalendarPage.verifyOnPage(moment('2020-03-01').format('MMMM YYYY'))
 
     const dayShift = calendarPage.day('2020-03-07')
-    dayShift.children().should((spans) => {
-      const allText = spans.map((i, el) => Cypress.$(el).text().trim())
-      expect(allText.get()).to.deep.eq([
-        'Saturday 7th',
-        '7',
-        'Start 07:30',
-        'Finish 12:30',
-        '5hrs',
-        'Start 12:30',
-        'Finish 21:00',
-        '8hrs',
-      ])
-    })
+    dayShift
+      .within(() => {
+        cy.get('span').eq(0).contains('Saturday 7th')
+        cy.get('span').eq(1).contains('7')
+        cy.get('span').eq(2).contains('Start 07:30')
+        cy.get('span').eq(3).contains('Finish 12:30')
+        cy.get('span').eq(4).contains('5hrs')
+        cy.get('span').eq(5).contains('Start 12:30')
+        cy.get('span').eq(6).contains('Finish 21:00')
+        cy.get('span').eq(7).contains('8hrs')
+      })
 
     const restDay = calendarPage.day('2020-03-20')
-    restDay.children().should((spans) => {
-      const allText = spans.map((i, el) => Cypress.$(el).text().trim())
-      expect(allText.get()).to.deep.eq(['Friday 20th', '20', 'Rest Day', 'Start 12:30', 'Finish 13:30', '1hr'])
-    })
+    restDay
+      .within(() => {
+        cy.get('span').eq(0).contains('Friday 20th')
+        cy.get('span').eq(1).contains('20')
+        cy.get('span').eq(2).contains('Rest Day')
+        cy.get('span').eq(3).contains('Start 12:30')
+        cy.get('span').eq(4).contains('Finish 13:30')
+        cy.get('span').eq(5).contains('1hr')
+      })
 
     const holiday = calendarPage.day('2020-03-21')
-    holiday.children().should((spans) => {
-      const allText = spans.map((i, el) => Cypress.$(el).text().trim())
-      expect(allText.get()).to.deep.eq(['Saturday 21st', '21', 'Holiday', 'Start 12:30', 'Finish 13:30', '1hr'])
-    })
+    holiday
+      .within(() => {
+        cy.get('span').eq(0).contains('Saturday 21st')
+        cy.get('span').eq(1).contains('21')
+        cy.get('span').eq(2).contains('Holiday')
+        cy.get('span').eq(3).contains('Start 12:30')
+        cy.get('span').eq(4).contains('Finish 13:30')
+        cy.get('span').eq(5).contains('1hr')
+      })
 
     const nightShiftStart = calendarPage.day('2020-03-22')
-    nightShiftStart.children().should((spans) => {
-      const allText = spans.map((i, el) => Cypress.$(el).text().trim())
-      expect(allText.get()).to.deep.eq(['Sunday 22nd', '22', 'Rest Day', 'Start 22:30'])
-    })
+    nightShiftStart
+      .within(() => {
+        cy.get('span').eq(0).contains('Sunday 22nd')
+        cy.get('span').eq(1).contains('22')
+        cy.get('span').eq(2).contains('Rest Day')
+        cy.get('span').eq(3).contains('Start 22:30')
+      })
 
     const nightShift = calendarPage.day('2020-03-23')
-    nightShift.children().should((spans) => {
-      const allText = spans.map((i, el) => Cypress.$(el).text().trim())
-      expect(allText.get()).to.deep.eq(['Monday 23rd', '23', 'Rest Day', 'Finish 07:30', '9hrs'])
-    })
+    nightShift
+      .within(() => {
+        cy.get('span').eq(0).contains('Monday 23rd')
+        cy.get('span').eq(1).contains('23')
+        cy.get('span').eq(2).contains('Rest Day')
+        cy.get('span').eq(3).contains('Finish 07:30')
+        cy.get('span').eq(4).contains('9hrs')
+      })
   })
 
   it('A staff member can drill into a day shift with overtime', () => {
