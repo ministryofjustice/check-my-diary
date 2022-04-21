@@ -18,7 +18,7 @@ module.exports = (
         currentDateTime.isSameOrAfter(maintenanceStartDateTime) &&
         currentDateTime.isSameOrBefore(maintenanceEndDateTime)
       ) {
-        const formatString = 'hh:mm on dddd Do MMMM'
+        const formatString = 'HH:mm on dddd Do MMMM'
         return res.render('pages/maintenance', {
           startDateTime: maintenanceStartDateTime.format(formatString),
           endDateTime: maintenanceEndDateTime.format(formatString),
