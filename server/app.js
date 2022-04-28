@@ -1,5 +1,5 @@
+const { v4: uuidv4 } = require('uuid')
 const express = require('express')
-const addRequestId = require('express-request-id')()
 const helmet = require('helmet')
 const noCache = require('nocache')
 const csurf = require('csurf')
@@ -67,7 +67,16 @@ module.exports = function createApp({ signInService }) {
   app.use(helmet({ contentSecurityPolicy: false })) // compatible with helmet 3.x
   app.use(helmet.referrerPolicy({ policy: 'same-origin' }))
 
-  app.use(addRequestId)
+  app.use((req, res, next) => {
+    const headerName = 'X-Request-Id'
+    const oldValue = req.get(headerName)
+    const id = oldValue === undefined ? uuidv4() : oldValue
+
+    res.set(headerName, id)
+    req.id = id
+
+    next()
+  })
 
   app.use(cookieParser())
 
