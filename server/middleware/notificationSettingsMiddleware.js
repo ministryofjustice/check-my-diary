@@ -8,16 +8,17 @@ const notificationSettingsMiddleware = async (req, res, next) => {
   try {
     const {
       user: { employeeName, token },
-      hmppsAuthMFAUser,
       authUrl,
       app,
     } = req
     const {
       notificationService: { getPreferences },
     } = app.get('DataServices')
-    const { preference: contactMethod = NONE, email: inputEmail = '', sms: inputMobile = '' } = await getPreferences(
-      token,
-    )
+    const {
+      preference: contactMethod = NONE,
+      email: inputEmail = '',
+      sms: inputMobile = '',
+    } = await getPreferences(token)
 
     return res.render('pages/notification-settings', {
       errors: null,
@@ -26,7 +27,6 @@ const notificationSettingsMiddleware = async (req, res, next) => {
       inputMobile,
       employeeName,
       csrfToken: res.locals.csrfToken,
-      hmppsAuthMFAUser,
       authUrl,
     })
   } catch (error) {

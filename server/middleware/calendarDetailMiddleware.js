@@ -3,7 +3,7 @@ const logger = require('../../log')
 const { appendUserErrorMessage, sortByDisplayType, processDetail } = require('../helpers/utilities')
 
 const calendarDetailMiddleware = async (
-  { app, params: { date }, user: { token, employeeName }, hmppsAuthMFAUser, authUrl },
+  { app, params: { date }, user: { token, employeeName }, authUrl },
   res,
   next,
 ) => {
@@ -37,7 +37,6 @@ const calendarDetailMiddleware = async (
       yesterday: { link: yesterdayMoment.format('YYYY-MM-DD'), text: yesterdayMoment.format('dddd, Do') },
       tomorrow: { link: tomorrowMoment.format('YYYY-MM-DD'), text: tomorrowMoment.format('dddd, Do') },
       employeeName,
-      hmppsAuthMFAUser,
       authUrl,
     })
   } catch (error) {

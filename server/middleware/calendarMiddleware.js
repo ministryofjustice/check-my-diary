@@ -9,7 +9,6 @@ const calendarMiddleware = async (req, res, next) => {
     app,
     user: { token, employeeName },
     params: { date },
-    hmppsAuthMFAUser,
     authUrl,
   } = req
 
@@ -33,7 +32,6 @@ const calendarMiddleware = async (req, res, next) => {
       nextMonth: { link: nextMonthMoment.format('YYYY-MM-DD'), text: nextMonthMoment.format('MMMM') },
       data,
       employeeName,
-      hmppsAuthMFAUser,
       authUrl,
     })
   } catch (error) {

@@ -9,7 +9,6 @@ const notificationMiddleware = async (req, res, next) => {
     const {
       user: { employeeName, token },
       app,
-      hmppsAuthMFAUser,
       authUrl,
     } = req
 
@@ -29,7 +28,6 @@ const notificationMiddleware = async (req, res, next) => {
       errors,
       data,
       csrfToken,
-      hmppsAuthMFAUser,
       notificationsEnabled,
       snoozeUntil: notificationsEnabled ? getSnoozeUntil(rawSnoozeUntil) : '',
       moment,

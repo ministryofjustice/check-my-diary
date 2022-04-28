@@ -5,7 +5,6 @@ module.exports = (req, res) => {
   res.render('pages/contact-us', {
     employeeName: req.user.employeeName,
     csrfToken: res.locals.csrfToken,
-    hmppsAuthMFAUser: req.hmppsAuthMFAUser,
     authUrl: req.authUrl,
   })
 }
