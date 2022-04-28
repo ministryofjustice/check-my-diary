@@ -12,7 +12,6 @@ describe('calendar middleware', () => {
   const nextMock = jest.fn()
   const token = 'sausages'
   const employeeName = 'Ray Parker Jr.'
-  const hmppsAuthMFAUser = ''
   const authUrl = ''
   const csrfToken = 'tomato'
   const getCalendarMonthMock = jest.fn()
@@ -34,7 +33,6 @@ describe('calendar middleware', () => {
     countUnprocessedNotificationsMock.mockResolvedValue(notificationCount)
     res = { render: renderMock, locals: { csrfToken } }
     req = {
-      hmppsAuthMFAUser,
       authUrl,
       user: { token, employeeName },
       body: { pauseUnit: 'days', pauseValue: 3 },

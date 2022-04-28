@@ -12,7 +12,6 @@ describe('calendar detail middleware', () => {
   const nextMock = jest.fn()
   const token = 'sausages'
   const employeeName = 'Ray Parker Jr.'
-  const hmppsAuthMFAUser = ''
   const authUrl = ''
   const csrfToken = 'tomato'
   const getCalendarDayMock = jest.fn()
@@ -30,7 +29,6 @@ describe('calendar detail middleware', () => {
   beforeEach(() => {
     res = { render: renderMock, locals: { csrfToken } }
     req = {
-      hmppsAuthMFAUser,
       authUrl,
       user: { token, employeeName },
       body: { pauseUnit: 'days', pauseValue: 3 },
@@ -77,7 +75,6 @@ describe('calendar detail middleware', () => {
         employeeName,
         fullDayType,
         fullDayTypeDescription,
-        hmppsAuthMFAUser,
         today: 'Wednesday, 8th July 2020',
         tomorrow: {
           link: '2020-07-09',
@@ -133,7 +130,6 @@ describe('calendar detail middleware', () => {
         employeeName,
         fullDayType: 'SHIFT',
         fullDayTypeDescription: 'Cooking breakfast',
-        hmppsAuthMFAUser,
         today: 'Wednesday, 8th July 2020',
         tomorrow: {
           link: '2020-07-09',
