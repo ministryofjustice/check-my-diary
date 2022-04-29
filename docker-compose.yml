@@ -5,7 +5,7 @@ services:
     networks:
       - hmpps
     container_name: check-my-diary-db
-    restart: always
+    restart: unless-stopped
     ports:
       - '5432:5432'
     environment:
@@ -18,6 +18,7 @@ services:
     networks:
       - hmpps
     container_name: oauth-server
+    restart: unless-stopped
     ports:
       - '9191:8080'
     healthcheck:
@@ -32,6 +33,7 @@ services:
     depends_on:
       - check-my-diary-db
     container_name: cmd-api
+    restart: unless-stopped
     ports:
       - '8080:8080'
     healthcheck:

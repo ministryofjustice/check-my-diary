@@ -18,7 +18,7 @@ services:
     networks:
       - hmpps_int
     container_name: cmd-api-wiremock
-    restart: always
+    restart: unless-stopped
     ports:
       - "9191:8080"
 

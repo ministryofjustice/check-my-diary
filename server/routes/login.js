@@ -2,6 +2,7 @@ const router = require('express').Router()
 const { NotifyClient } = require('notifications-node-client')
 const ipRangeCheck = require('ip-range-check')
 const logError = require('../logError')
+const log = require('../../log')
 const config = require('../../config')
 const utilities = require('../helpers/utilities')
 const userAuthenticationService = require('../services/userAuthenticationService')
@@ -66,7 +67,6 @@ const postLogin = async (req, res) => {
       )
 
       if (smsEnabled) {
-        // For SMS
         await notify
           .sendSms(notifySmsTemplate, userAuthentication.Sms || '', {
             personalisation: { '2fa_code': twofactorCode },
@@ -77,7 +77,6 @@ const postLogin = async (req, res) => {
       }
 
       if (emailEnabled) {
-        // For email
         await notify
           .sendEmail(notifyEmailTemplate, userAuthentication.EmailAddress || '', {
             personalisation: { '2fa_code': twofactorCode },
@@ -98,6 +97,9 @@ const postLogin = async (req, res) => {
     }
   } catch (error) {
     const data = {
+      response: res,
+      stack: error.stack,
+      message: req.user.username,
       id: req.user.username,
       authError: true,
       showUserNotSignedUpMessage: userNotSignedUpMessage,
@@ -118,20 +120,28 @@ router.post('/2fa', async (req, res) => {
     const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
 
     const inputTwoFactorCode = utilities.createTwoFactorAuthenticationHash(req.body.code)
+    const userAuthentication = userAuthenticationDetails[0]
 
-    if (inputTwoFactorCode === userAuthenticationDetails[0].TwoFactorAuthenticationHash) {
+    if (userAuthentication && inputTwoFactorCode === userAuthentication.TwoFactorAuthenticationHash) {
       await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(
         req.user.username,
         new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000),
       )
+      log.info(
+        `2FA login success for ${req.user.username} and useSMS=${userAuthentication.UseSms}, useEmail=${userAuthentication.UseEmailAddress}`,
+      )
 
       res.redirect(`/calendar/${utilities.getStartMonth()}#today`)
     } else {
-      logError(req.url, '2FA failure')
+      logError(req.url, { response: res, message: req.user.username }, '2FA failure: code does not match')
       res.render('pages/two-factor-auth', { authError: true, csrfToken: res.locals.csrfToken })
     }
   } catch (error) {
-    logError(req.url, '2FA failure')
+    logError(
+      req.url,
+      { response: res, stack: error.stack, message: req.user.username },
+      `2FA failure: error=${error.message}`,
+    )
     res.render('pages/two-factor-auth', { authError: true, csrfToken: res.locals.csrfToken })
   }
 })

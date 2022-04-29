@@ -6,7 +6,6 @@ const baseUrl = require('../../config').cmdApi.url
 
 module.exports = {
   getCalendarData(startDate, endDate, accessToken) {
-    logger.info(`calendarService:getCalendarData(${startDate}, ${endDate})`)
     return axios
       .get(`${baseUrl}/user/details?from=${startDate}&to=${endDate}`, {
         headers: {

@@ -12,7 +12,7 @@ const authHandler = async ({ hmppsAuthMFAUser, app, user: { username } }, res, n
     if (SessionExpiryDateTime && moment().isBefore(moment(SessionExpiryDateTime))) return next()
     return res.redirect('/auth/login')
   } catch (error) {
-    logger.info(error)
+    logger.error(error)
     return res.redirect('/auth/login')
   }
 }
