@@ -3,14 +3,14 @@ const logger = require('../../log')
 const { appendUserErrorMessage, configureCalendar, processDay } = require('../helpers/utilities')
 
 const calendarMiddleware = async (req, res, next) => {
-  logger.info('GET calendar view')
-
   const {
     app,
-    user: { token, employeeName },
+    user: { token, employeeName, username },
     params: { date },
     authUrl,
   } = req
+
+  logger.info({ user: username, date }, 'GET calendar view')
 
   const { calendarService, notificationService } = app.get('DataServices')
 
