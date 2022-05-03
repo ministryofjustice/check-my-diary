@@ -13,6 +13,16 @@ services:
       - POSTGRES_USER=check-my-diary
       - POSTGRES_DB=check-my-diary
 
+  check-my-diary-redis:
+    image: 'bitnami/redis:5.0'
+    networks:
+      - hmpps
+    container_name: redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '6379:6379'
+
   oauth-server:
     image: quay.io/hmpps/hmpps-auth:latest
     networks:
@@ -32,6 +42,7 @@ services:
       - hmpps
     depends_on:
       - check-my-diary-db
+      - check-my-diary-redis
     container_name: cmd-api
     restart: unless-stopped
     ports:
