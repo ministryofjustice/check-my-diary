@@ -22,5 +22,14 @@ services:
     ports:
       - "9191:8080"
 
+  check-my-diary-redis:
+    image: 'bitnami/redis:5.0'
+    networks:
+      - hmpps_int
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '6379:6379'
+
 networks:
   hmpps_int:
