@@ -11,7 +11,7 @@ parameters:
 
   releases-slack-channel:
     type: string
-    default: dps_releases
+    default: dps-releases
 
   node-version:
     type: string
