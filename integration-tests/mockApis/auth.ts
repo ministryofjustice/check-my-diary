@@ -1,5 +1,7 @@
-const jwt = require('jsonwebtoken')
-const { stubFor, getRequests } = require('./wiremock')
+import jwt from 'jsonwebtoken'
+import { Response } from 'superagent'
+
+import { getRequests, stubFor } from './wiremock'
 
 const createToken = () => {
   const payload = {
@@ -89,7 +91,8 @@ const token = () =>
     },
   })
 
-module.exports = {
+export default {
   getLoginUrl,
-  stubLogin: () => Promise.all([favicon(), redirect(), logout(), token()]),
+  stubLogin: (): Promise<[Response, Response, Response, Response]> =>
+    Promise.all([favicon(), redirect(), logout(), token()]),
 }

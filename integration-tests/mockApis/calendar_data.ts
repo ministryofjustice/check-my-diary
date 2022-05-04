@@ -1,4 +1,4 @@
-module.exports = [
+export default [
   {
     date: '2020-03-01',
     fullDayType: 'REST_DAY',

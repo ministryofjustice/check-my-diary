@@ -1,5 +1,5 @@
-const fs = require('fs')
-const db = require('../../server/database')
+import fs from 'fs'
+import db from '../../server/database'
 
 const deleteRows = (table) => db(table).del()
 
@@ -20,7 +20,7 @@ const createTablesInsertData = async () => {
   return null
 }
 
-module.exports = {
+export default {
   clearDb: () => clearNotificationTables(),
   destroy,
   createTablesInsertData,

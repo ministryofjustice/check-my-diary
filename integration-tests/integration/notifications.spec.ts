@@ -8,7 +8,7 @@ context('A staff member can view their notifications', () => {
     cy.task('stubLogin')
     cy.task('stubShifts')
     cy.task('stubNotificationCount')
-    cy.task('stubNotifcations')
+    cy.task('stubNotifications')
 
     cy.login()
 
