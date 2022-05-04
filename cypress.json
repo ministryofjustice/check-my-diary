@@ -1,13 +1,13 @@
 {
   "chromeWebSecurity": false,
   "baseUrl": "http://localhost:3005",
-  "fixturesFolder": "integration-tests/fixtures",
+  "fixturesFolder": "integration_tests/fixtures",
   "ignoreTestFiles": "**/!(*.spec).ts",
-  "integrationFolder": "integration-tests/integration",
-  "pluginsFile": "integration-tests/plugins/index.ts",
-  "screenshotsFolder": "integration-tests/screenshots",
-  "supportFile": "integration-tests/support/index.ts",
-  "videosFolder": "integration-tests/videos",
+  "integrationFolder": "integration_tests/integration",
+  "pluginsFile": "integration_tests/plugins/index.ts",
+  "screenshotsFolder": "integration_tests/screenshots",
+  "supportFile": "integration_tests/support/index.ts",
+  "videosFolder": "integration_tests/videos",
   "reporter": "cypress-multi-reporters",
   "reporterOptions": {
     "configFile": "reporter-config.json"

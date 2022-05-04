@@ -1,8 +1,8 @@
 {
   "testMatch": [
-    "<rootDir>/integration-tests/wiremock-tests/**/?.test.{ts,js,jsx,mjs}",
-    "<rootDir>/integration-tests/wiremock-tests/**/*.test.{js,jsx,ts,tsx}",
-    "<rootDir>/integration-tests/wiremock-tests/**/?.test.{js,jsx,ts,tsx}"
+    "<rootDir>/integration_tests/wiremock-tests/**/?.test.{ts,js,jsx,mjs}",
+    "<rootDir>/integration_tests/wiremock-tests/**/*.test.{js,jsx,ts,tsx}",
+    "<rootDir>/integration_tests/wiremock-tests/**/?.test.{js,jsx,ts,tsx}"
   ],
   "testEnvironment": "node",
   "reporters": [
