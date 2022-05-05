@@ -9,6 +9,6 @@ eslint-report.html
 test-report.html
 .*
 **/*.test.js
-integration-tests
+integration_tests
 docker-compose*
 postgres-dump
