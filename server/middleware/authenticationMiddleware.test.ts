@@ -1,10 +1,14 @@
-const { hmppsAuthMFAUser } = require('../helpers/utilities')
-const authenticationMiddleware = require('./authenticationMiddleware')
-const config = require('../../config')
+import type { Request, Response } from 'express'
+import utilities from '../helpers/utilities'
+
+import config from '../../config'
+import authenticationMiddleware from './authenticationMiddleware'
 
 jest.mock('jwt-decode', () => () => ({ name: 'Ned Nederlander' }))
-jest.mock('../helpers/utilities', () => ({ hmppsAuthMFAUser: jest.fn() }))
+jest.mock('../helpers/utilities')
 jest.mock('../../config', () => ({ nomis: {} }))
+
+const hmppsAuthMFAUser = utilities.hmppsAuthMFAUser as jest.Mock
 
 describe('authentication middleware', () => {
   const nextMock = jest.fn()
@@ -13,11 +17,11 @@ describe('authentication middleware', () => {
   const token = 'the singing bush'
   const authUrl = 'www.gov.uk'
   config.nomis.authUrl = authUrl
-  let req
-  let res
+  let req: Request
+  let res: Response
   beforeEach(() => {
-    req = { isAuthenticated: isAuthenticatedMock, user: { token } }
-    res = { redirect: redirectMock }
+    req = { isAuthenticated: isAuthenticatedMock, user: { token } } as unknown as Request
+    res = { redirect: redirectMock } as unknown as Response
   })
   afterEach(() => {
     jest.resetAllMocks()
@@ -54,7 +58,7 @@ describe('authentication middleware', () => {
     const originalUrl = 'https://www.gov.uk/government/organisations/ministry-of-justice'
     beforeEach(() => {
       req.originalUrl = originalUrl
-      req.session = {}
+      req.session = {} as unknown as Request['session']
       authenticationMiddleware(req, res, nextMock)
     })
     it('should call isAuthenticated', () => {

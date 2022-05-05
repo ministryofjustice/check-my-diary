@@ -1,10 +1,12 @@
-const { validationResult } = require('express-validator')
-const { postNotificationSettingsMiddleware } = require('./postNotificationSettingsMiddleware')
-const { NONE, EMAIL } = require('../helpers/constants')
+import type { Request, Response } from 'express'
+import { validationResult } from 'express-validator'
 
-jest.mock('express-validator', () => ({
-  validationResult: jest.fn(),
-}))
+import { postNotificationSettingsMiddleware } from './postNotificationSettingsMiddleware'
+
+import { EMAIL, NONE } from '../helpers/constants'
+
+jest.mock('express-validator')
+const validationResultMock = validationResult as unknown as jest.Mock
 
 describe('post notification settings middleware', () => {
   const renderMock = jest.fn()
@@ -17,13 +19,13 @@ describe('post notification settings middleware', () => {
   const emailText = 'checkmydiary@digital.justice.gov.uk'
   const mobileNumber = '404040404'
 
-  const updatePreferencesMock = jest.fn().mockResolvedValue()
+  const updatePreferencesMock = jest.fn()
   const app = { get: () => ({ notificationService: { updatePreferences: updatePreferencesMock } }) }
-  let req
-  let res
+  let req: Request
+  let res: Response
   beforeEach(() => {
-    res = { render: renderMock, redirect: redirectMock, locals: { csrfToken } }
-    req = { user: { token, employeeName }, authUrl, body: {}, app }
+    req = { user: { token, employeeName }, authUrl, body: {}, app } as unknown as Request
+    res = { render: renderMock, redirect: redirectMock, locals: { csrfToken } } as unknown as Response
   })
   afterEach(() => {
     jest.resetAllMocks()
@@ -32,11 +34,11 @@ describe('post notification settings middleware', () => {
     describe('and no validation errors', () => {
       beforeEach(() => {
         req.body = { inputEmail: emailText, inputMobile: mobileNumber, contactMethod: EMAIL }
-        validationResult.mockReturnValueOnce({ isEmpty: () => true })
+        validationResultMock.mockReturnValueOnce({ isEmpty: () => true })
         postNotificationSettingsMiddleware(req, res, nextMock)
       })
       it('should validate the params', () => {
-        expect(validationResult).toHaveBeenCalledTimes(1)
+        expect(validationResultMock).toHaveBeenCalledTimes(1)
       })
       it('should update the preferences by calling the "updatePreferences" method on the "notificationService"', () => {
         expect(updatePreferencesMock).toHaveBeenCalledTimes(1)
@@ -57,11 +59,11 @@ describe('post notification settings middleware', () => {
       const errors = 'sausage'
       beforeEach(() => {
         req.body = { inputEmail: emailText, inputMobile: '', contactMethod: EMAIL }
-        validationResult.mockReturnValueOnce({ isEmpty: () => false, mapped: () => errors })
+        validationResultMock.mockReturnValueOnce({ isEmpty: () => false, mapped: () => errors })
         postNotificationSettingsMiddleware(req, res, nextMock)
       })
       it('should validate the params', () => {
-        expect(validationResult).toHaveBeenCalledTimes(1)
+        expect(validationResultMock).toHaveBeenCalledTimes(1)
       })
       it('should not update the preferences', () => {
         expect(updatePreferencesMock).not.toHaveBeenCalled()
@@ -91,7 +93,7 @@ describe('post notification settings middleware', () => {
   describe('with "none" selected', () => {
     beforeEach(() => {
       req.body = { inputEmail: emailText, inputMobile: mobileNumber, contactMethod: NONE }
-      validationResult.mockReturnValueOnce({ isEmpty: () => true })
+      validationResultMock.mockReturnValueOnce({ isEmpty: () => true })
       postNotificationSettingsMiddleware(req, res, nextMock)
     })
     it('should update the preferences', () => {
@@ -102,7 +104,7 @@ describe('post notification settings middleware', () => {
   describe('with "none" selected', () => {
     beforeEach(() => {
       req.body = { inputEmail: emailText, inputMobile: mobileNumber, contactMethod: NONE }
-      validationResult.mockReturnValueOnce({ isEmpty: () => true })
+      validationResultMock.mockReturnValueOnce({ isEmpty: () => true })
       postNotificationSettingsMiddleware(req, res, nextMock)
     })
     it('should update the preferences', () => {

@@ -1,5 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-npx --no-install lint-staged
-npm test
+NODE_ENV=dev && node_modules/.bin/lint-staged && node_modules/.bin/tsc && npm test

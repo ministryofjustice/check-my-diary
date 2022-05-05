@@ -1,10 +1,13 @@
-const moment = require('moment')
+import type { Request, Response } from 'express'
+import moment from 'moment'
+import notificationMiddleware from './notificationMiddleware'
+import { NONE, SMS } from '../helpers/constants'
+import type { Notification } from '../services/notifications.types'
 
-const notificationMiddleware = require('./notificationMiddleware')
-const { NONE, SMS } = require('../helpers/constants')
-const { getSnoozeUntil } = require('../helpers/utilities')
+import utilities from '../helpers/utilities'
 
-jest.mock('../helpers/utilities', () => ({ getSnoozeUntil: jest.fn() }))
+jest.mock('../helpers/utilities')
+const getSnoozeUntil = utilities.getSnoozeUntil as jest.Mock
 
 describe('notification middleware', () => {
   const renderMock = jest.fn()
@@ -15,7 +18,7 @@ describe('notification middleware', () => {
   const employeeName = 'fennel'
   const notification1 = { shiftModified: '2020-08-24' }
   const notification2 = { shiftModified: '2020-08-26' }
-  let notificationData
+  let notificationData: Notification[]
 
   const getPreferencesMock = jest.fn()
   const getNotificationsMock = jest.fn()
@@ -24,15 +27,15 @@ describe('notification middleware', () => {
       notificationService: { getPreferences: getPreferencesMock, getNotifications: getNotificationsMock },
     }),
   }
-  let req
-  let res
+  let req: Request
+  let res: Response
   const errors = null
   beforeEach(() => {
     getSnoozeUntil.mockReturnValue('')
     notificationData = [notification1, notification2]
     getNotificationsMock.mockResolvedValue(notificationData)
-    res = { render: renderMock, locals: { csrfToken } }
-    req = { user: { token, employeeName }, authUrl, body: {}, app }
+    req = { user: { token, employeeName }, authUrl, body: {}, app } as unknown as Request
+    res = { render: renderMock, locals: { csrfToken } } as unknown as Response
   })
   afterEach(() => {
     jest.resetAllMocks()
