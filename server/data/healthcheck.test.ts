@@ -1,9 +1,9 @@
-const nock = require('nock')
-const { serviceCheckFactory } = require('./healthcheck')
+import nock from 'nock'
+import { serviceCheckFactory } from './healthcheck'
 
 describe('service healthcheck', () => {
   const healthcheck = serviceCheckFactory('externalService', 'http://test-service.com/ping')
-  let fakeServiceApi
+  let fakeServiceApi: nock.Scope
 
   beforeEach(() => {
     fakeServiceApi = nock('http://test-service.com')

@@ -1,5 +1,7 @@
-const notificationSettingsMiddleware = require('./notificationSettingsMiddleware')
-const { NONE, SMS } = require('../helpers/constants')
+import type { Response } from 'express'
+import notificationSettingsMiddleware from './notificationSettingsMiddleware'
+import { NONE, SMS } from '../helpers/constants'
+import { AppRequest } from '../helpers/utilities.types'
 
 describe('notification settings middleware', () => {
   const renderMock = jest.fn()
@@ -12,11 +14,11 @@ describe('notification settings middleware', () => {
 
   const getPreferencesMock = jest.fn()
   const app = { get: () => ({ notificationService: { getPreferences: getPreferencesMock } }) }
-  let req
-  let res
+  let req: AppRequest
+  let res: Response
   beforeEach(() => {
-    res = { render: renderMock, locals: { csrfToken } }
-    req = { user: { token, employeeName }, authUrl, body: {}, app }
+    req = { user: { token, employeeName }, authUrl, body: {}, app } as unknown as AppRequest
+    res = { render: renderMock, locals: { csrfToken } } as unknown as Response
   })
   afterEach(() => {
     jest.resetAllMocks()

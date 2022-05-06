@@ -1,4 +1,4 @@
-const { generate } = require('./oauth')
+import { generate } from './oauth'
 
 describe('token is created', () => {
   it('Token can be generated', () => {

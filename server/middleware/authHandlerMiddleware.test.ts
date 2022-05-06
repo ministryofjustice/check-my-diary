@@ -1,4 +1,6 @@
-const authHandlerMiddleware = require('./authHandlerMiddleware')
+import type { Response } from 'express'
+import authHandlerMiddleware from './authHandlerMiddleware'
+import { AppRequest } from '../helpers/utilities.types'
 
 describe('auth handler middleware', () => {
   const nextMock = jest.fn()
@@ -6,12 +8,12 @@ describe('auth handler middleware', () => {
   const getSessionExpiryDateTimeMock = jest.fn()
   const app = { get: () => ({ userAuthenticationService: { getSessionExpiryDateTime: getSessionExpiryDateTimeMock } }) }
   const username = 'Agrajag'
-  let req
-  let res
+  let req: AppRequest
+  let res: Response
 
   beforeEach(() => {
-    res = { redirect: redirectMock }
-    req = { app, user: { username } }
+    req = { app, user: { username } } as unknown as AppRequest
+    res = { redirect: redirectMock } as unknown as Response
     jest.spyOn(Date, 'now').mockImplementation(() => new Date('1979-10-12T08:28:00.000Z').getTime())
   })
   afterEach(() => {
