@@ -24,9 +24,9 @@ describe('notification settings middleware', () => {
     jest.resetAllMocks()
   })
   describe('with persisted preferences', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       getPreferencesMock.mockResolvedValue({ preference: SMS, email: '', sms: '404040404' })
-      notificationSettingsMiddleware(req, res, nextMock)
+      await notificationSettingsMiddleware(req, res, nextMock)
     })
     it('should get the users notification preferences', () => {
       expect(getPreferencesMock).toHaveBeenCalledTimes(1)
@@ -49,9 +49,9 @@ describe('notification settings middleware', () => {
     })
   })
   describe('with no persisted preferences', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       getPreferencesMock.mockResolvedValue({})
-      notificationSettingsMiddleware(req, res, nextMock)
+      await notificationSettingsMiddleware(req, res, nextMock)
     })
     it('should get the users notification preferences', () => {
       expect(getPreferencesMock).toHaveBeenCalledTimes(1)
