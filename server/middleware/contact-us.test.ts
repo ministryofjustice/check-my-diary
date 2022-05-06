@@ -1,4 +1,4 @@
-const contactUs = require('./contact-us')
+import contactUs from './contact-us'
 
 describe('contact-us middleware', () => {
   const renderMock = jest.fn()
