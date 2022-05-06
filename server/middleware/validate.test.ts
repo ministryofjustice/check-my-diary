@@ -1,13 +1,14 @@
-const { validationResult } = require('express-validator')
-const validate = require('./validate')
+import type { Request, Response } from 'express'
+import { validationResult } from 'express-validator'
 
-jest.mock('express-validator', () => ({
-  validationResult: jest.fn(),
-}))
+import validate from './validate'
+
+jest.mock('express-validator')
+const validationResultMock = validationResult as unknown as jest.Mock
 
 describe('should carry out validation and set appropriate errors in "res.locals"', () => {
-  const req = {}
-  const res = { locals: {} }
+  const req = {} as unknown as Request
+  const res = { locals: {} } as unknown as Response
   const next = jest.fn()
 
   const error1Msg = 'Cynics are simply thwarted romantics.'
@@ -18,20 +19,20 @@ describe('should carry out validation and set appropriate errors in "res.locals"
   const error3 = { value: '', msg: error3Msg, param: 'vizzini', location: 'body' }
 
   afterEach(() => {
-    validationResult.mockReset()
+    validationResultMock.mockReset()
     next.mockReset()
     res.locals = {}
   })
 
   describe('when errors are found', () => {
     beforeEach(() => {
-      validationResult.mockImplementation(() => ({
+      validationResultMock.mockImplementation(() => ({
         array: () => [error1, error2, error3],
       }))
       validate(req, res, next)
     })
     it('should validate the errors', () => {
-      expect(validationResult).toHaveBeenCalledTimes(1)
+      expect(validationResultMock).toHaveBeenCalledTimes(1)
     })
     it('should set res.locals.errors', () => {
       expect(res.locals.errors.length).toBeGreaterThan(0)
@@ -46,13 +47,13 @@ describe('should carry out validation and set appropriate errors in "res.locals"
 
   describe('when errors are not found', () => {
     beforeEach(() => {
-      validationResult.mockImplementation(() => ({
+      validationResultMock.mockImplementation(() => ({
         array: () => [],
       }))
       validate(req, res, next)
     })
     it('should validate the errors', () => {
-      expect(validationResult).toHaveBeenCalledTimes(1)
+      expect(validationResultMock).toHaveBeenCalledTimes(1)
     })
     it('should not set "res.locals.errors"', () => {
       expect(res.locals.errors).not.toBeDefined()

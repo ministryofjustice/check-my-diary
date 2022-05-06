@@ -1,23 +1,24 @@
-require('jwt-decode')
-const {
-  configureCalendar,
-  hmppsAuthMFAUser,
-  getSnoozeUntil,
+import {
   appendUserErrorMessage,
+  configureCalendar,
+  getSnoozeUntil,
+  hmppsAuthMFAUser,
   processDay,
-  sortByDisplayType,
   processDetail,
-} = require('./utilities')
-const { GENERAL_ERROR, NOT_FOUND_ERROR } = require('./errorConstants')
+  sortByDisplayType,
+} from './utilities'
 
-jest.mock('jwt-decode', () => (token) => token)
+import { GENERAL_ERROR, NOT_FOUND_ERROR } from './errorConstants'
+import type { CalendarDay, Details, UserError } from './utilities.types'
+
+jest.mock('jwt-decode', () => (token: string) => token)
 
 describe('configureCalendar', () => {
   const none = { date: '2020-08-03', fullDayType: 'None', details: [] }
   const rest = { date: '2020-08-02', fullDayType: 'Rest Day', details: [] }
   const noDay = { fullDayType: 'no-day' }
-  let shift
-  let returnedData
+  let shift: CalendarDay
+  let returnedData: CalendarDay[] | null
   beforeEach(() => {
     shift = { date: '2020-08-01', fullDayType: 'Shift', details: [] }
     returnedData = configureCalendar([none, rest, shift, ...new Array(28).fill(none)])
@@ -26,20 +27,20 @@ describe('configureCalendar', () => {
     expect(returnedData).toEqual(expect.arrayContaining([none, shift, rest, noDay]))
   })
   it('should prepend the "no day" elements to the start of the array', () => {
-    expect(returnedData.slice(0, 6)).toEqual(new Array(6).fill(noDay))
+    expect(returnedData?.slice(0, 6)).toEqual(new Array(6).fill(noDay))
   })
   it('should append the "no day" elements to the end of the array', () => {
-    expect(returnedData.slice(-5)).toEqual(new Array(5).fill(noDay))
+    expect(returnedData?.slice(-5)).toEqual(new Array(5).fill(noDay))
   })
   it('should order the array elements by date', () => {
-    expect(returnedData.slice(6, 36)).toEqual([shift, rest, ...new Array(28).fill(none)])
+    expect(returnedData?.slice(6, 36)).toEqual([shift, rest, ...new Array(28).fill(none)])
   })
 })
 
 describe('processDay', () => {
-  let detail1
-  let detail2
-  let day
+  let detail1: Details
+  let detail2: Details
+  let day: CalendarDay
   beforeEach(() => {
     detail1 = {
       displayTypeTime: '2020-08-03T07:15:00',
@@ -92,7 +93,7 @@ describe('hmppsAuthMFAUser', () => {
 })
 
 describe('getSnoozeUntil', () => {
-  let dateNow
+  let dateNow: jest.SpiedFunction<() => number>
   beforeEach(() => {
     dateNow = jest.spyOn(Date, 'now').mockImplementation(() => new Date('1/3/1994').getTime())
   })
@@ -111,8 +112,8 @@ describe('getSnoozeUntil', () => {
 })
 
 describe('appendUserErrorMessage', () => {
-  let mrsError
-  let returnedValue
+  let mrsError: Error
+  let returnedValue: UserError
   beforeEach(() => {
     mrsError = new Error()
   })

@@ -1,11 +1,13 @@
-const calendarMiddleware = require('./calendarMiddleware')
-const { configureCalendar } = require('../helpers/utilities')
+import calendarMiddleware from './calendarMiddleware'
+import utilities from '../helpers/utilities'
 
 jest.mock('../helpers/utilities', () => ({
   configureCalendar: jest.fn(),
   processDay: jest.fn(() => true),
   appendUserErrorMessage: jest.fn((error) => error),
 }))
+
+const configureCalendar = utilities.configureCalendar as jest.Mock
 
 describe('calendar middleware', () => {
   const renderMock = jest.fn()

@@ -1,11 +1,16 @@
-const calendarDetailMiddleware = require('./calendarDetailMiddleware')
-const { sortByDisplayType, processDetail } = require('../helpers/utilities')
+import type { Response } from 'express'
+import calendarDetailMiddleware from './calendarDetailMiddleware'
+
+import utilities from '../helpers/utilities'
+import { AppRequest } from '../helpers/utilities.types'
 
 jest.mock('../helpers/utilities', () => ({
   sortByDisplayType: jest.fn(() => true),
   processDetail: jest.fn(),
   appendUserErrorMessage: jest.fn((error) => error),
 }))
+const processDetail = utilities.processDetail as jest.Mock
+const sortByDisplayType = utilities.sortByDisplayType as jest.Mock
 
 describe('calendar detail middleware', () => {
   const renderMock = jest.fn()
@@ -20,21 +25,21 @@ describe('calendar detail middleware', () => {
       calendarService: { getCalendarDay: getCalendarDayMock },
     }),
   }
-  let req
-  let res
+  let req: AppRequest
+  let res: Response
   const startTime = '2020-07-08T10:00:00'
   const endTime = '2020-07-08T20:00:00'
   const fullDayType = 'A_DAY_IN_THE_LIFE'
   const fullDayTypeDescription = 'Cooking breakfast'
   beforeEach(() => {
-    res = { render: renderMock, locals: { csrfToken } }
+    res = { render: renderMock, locals: { csrfToken } } as unknown as Response
     req = {
       authUrl,
       user: { token, employeeName },
       body: { pauseUnit: 'days', pauseValue: 3 },
       app,
       params: { date: '2001-01-01' },
-    }
+    } as unknown as AppRequest
   })
   afterEach(() => {
     jest.resetAllMocks()

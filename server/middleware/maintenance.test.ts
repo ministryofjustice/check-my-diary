@@ -1,5 +1,6 @@
-const maintenance = require('./maintenance')
-const config = require('../../config')
+import type { Response } from 'express'
+import maintenance from './maintenance'
+import config from '../../config'
 
 jest.mock('../../config', () => ({
   maintenance: { start: '1979-10-12T07:28:00', end: '1979-10-12T14:28:00' },
@@ -9,9 +10,9 @@ describe('maintenance middleware', () => {
   const nextMock = jest.fn()
   const renderMock = jest.fn()
   const csrfToken = 'SQUIRREL!'
-  let res
+  let res: Response
   beforeEach(() => {
-    res = { render: renderMock, locals: { csrfToken } }
+    res = { render: renderMock, locals: { csrfToken } } as unknown as Response
     jest.spyOn(Date, 'now').mockImplementation(() => new Date('1979-10-12T08:50:00.000Z').getTime())
   })
   afterEach(() => {
@@ -50,7 +51,7 @@ describe('maintenance middleware', () => {
   })
   describe('with no maintenance period', () => {
     beforeEach(() => {
-      config.maintenance = {}
+      config.maintenance = { start: undefined, end: undefined }
       maintenance({}, res, nextMock)
     })
     it('should not render the maintenance page', () => {
