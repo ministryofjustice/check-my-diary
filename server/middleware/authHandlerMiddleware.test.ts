@@ -20,9 +20,9 @@ describe('auth handler middleware', () => {
     jest.resetAllMocks()
   })
   describe('with an "hmppsAuthMFAUser" user', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       req.hmppsAuthMFAUser = true
-      authHandlerMiddleware(req, res, nextMock)
+      await authHandlerMiddleware(req, res, nextMock)
     })
     it('should not redirect', () => {
       expect(redirectMock).not.toHaveBeenCalled()
@@ -32,9 +32,9 @@ describe('auth handler middleware', () => {
     })
   })
   describe('with a current session', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       getSessionExpiryDateTimeMock.mockResolvedValueOnce([{ SessionExpiryDateTime: '1979-10-12T08:29:00.000Z' }])
-      authHandlerMiddleware(req, res, nextMock)
+      await authHandlerMiddleware(req, res, nextMock)
     })
     it('should call "getSessionExpiryDate" with the username', () => {
       expect(getSessionExpiryDateTimeMock).toHaveBeenCalledTimes(1)
@@ -48,9 +48,9 @@ describe('auth handler middleware', () => {
     })
   })
   describe('with an expired session', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       getSessionExpiryDateTimeMock.mockResolvedValueOnce([{ SessionExpiryDateTime: '1979-10-12T08:27:00.000Z' }])
-      authHandlerMiddleware(req, res, nextMock)
+      await authHandlerMiddleware(req, res, nextMock)
     })
     it('should call "getSessionExpiryDate" with the username', () => {
       expect(getSessionExpiryDateTimeMock).toHaveBeenCalledTimes(1)
@@ -65,9 +65,9 @@ describe('auth handler middleware', () => {
     })
   })
   describe('with no session found', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       getSessionExpiryDateTimeMock.mockResolvedValueOnce([{ SessionExpiryDateTime: null }])
-      authHandlerMiddleware(req, res, nextMock)
+      await authHandlerMiddleware(req, res, nextMock)
     })
     it('should not call "getSessionExpiryDate" with the username', () => {
       expect(getSessionExpiryDateTimeMock).toHaveBeenCalledTimes(1)
@@ -83,10 +83,10 @@ describe('auth handler middleware', () => {
   })
   describe('with no entry in the db', () => {
     let mockError
-    beforeEach(() => {
+    beforeEach(async () => {
       mockError = new Error('tum ti tum ti tum')
       getSessionExpiryDateTimeMock.mockRejectedValueOnce(mockError)
-      authHandlerMiddleware(req, res, nextMock)
+      await authHandlerMiddleware(req, res, nextMock)
     })
     it('should redirect to the 2fa route', () => {
       expect(redirectMock).toHaveBeenCalledTimes(1)

@@ -31,6 +31,7 @@ describe('signInService', () => {
     })
 
     afterEach(() => {
+      nock.abortPendingRequests()
       nock.cleanAll()
     })
 
