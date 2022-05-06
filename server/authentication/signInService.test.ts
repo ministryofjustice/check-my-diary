@@ -1,25 +1,16 @@
-const nock = require('nock')
-const config = require('../../config')
-const signInService = require('./signInService')
+import nock from 'nock'
+import config from '../../config'
+import signInService from './signInService'
+
+const in15MinsDate = new Date('May 31, 2018 12:15:00')
+const in15Mins = in15MinsDate.getTime()
 
 describe('signInService', () => {
-  let service
-  let realDateNow
-
-  beforeEach(() => {
-    service = signInService()
-    realDateNow = Date.now.bind(global.Date)
-    const time = new Date('May 31, 2018 12:00:00')
-    global.Date = jest.fn(() => time)
-  })
-
-  afterEach(() => {
-    global.Date.now = realDateNow
-  })
+  const service = signInService()
+  const time = new Date('May 31, 2018 12:00:00')
+  jest.spyOn(global, 'Date').mockImplementation(() => time as unknown as string)
 
   describe('getUser', () => {
-    const in15Mins = new Date('May 31, 2018 12:15:00').getTime()
-
     test('should return user object if all apis succeed', () => {
       const expectedOutput = {
         token: 'type token',
@@ -33,7 +24,7 @@ describe('signInService', () => {
   })
 
   describe('getRefreshToken', () => {
-    let fakeOauthApi
+    let fakeOauthApi: nock.Scope
 
     beforeEach(() => {
       fakeOauthApi = nock(config.nomis.authUrl)
@@ -45,8 +36,6 @@ describe('signInService', () => {
 
     test('successfully get token', async () => {
       const expectedBody = 'grant_type=refresh_token&refresh_token=REFRESH_TOKEN-1'
-      const in15MinsDate = new Date('May 31, 2018 12:15:00')
-      const in15Mins = in15MinsDate.getTime()
 
       fakeOauthApi.post('/oauth/token', expectedBody).reply(200, {
         access_token: 'NEW_ACCESS_TOKEN-1',

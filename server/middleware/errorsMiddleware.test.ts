@@ -1,4 +1,5 @@
-const errorsMiddleware = require('./errorsMiddleware')
+import type { Response } from 'express'
+import errorsMiddleware from './errorsMiddleware'
 
 jest.mock('../../config', () => ({
   maintenance: { start: '1979-10-12T07:28:00.000Z', end: '1979-10-12T10:28:00.000Z' },
@@ -11,11 +12,11 @@ describe('errors middleware', () => {
   const stack = 'FULL'
   const status = 418
   const userMessage = 'Teapot fun'
-  let mrError
-  let res
+  let mrError: Error
+  let res: Response
   beforeEach(() => {
     mrError = Object.assign(new Error('SQUIRREL!'), { stack, status, userMessage })
-    res = { status: statusMock, render: renderMock, locals: {} }
+    res = { status: statusMock, render: renderMock, locals: {} } as unknown as Response
   })
   afterEach(() => {
     jest.resetAllMocks()
@@ -38,7 +39,7 @@ describe('errors middleware', () => {
     })
   })
   describe('with a production error', () => {
-    let processNodeEnv
+    let processNodeEnv: string | undefined
     beforeEach(() => {
       processNodeEnv = process.env.NODE_ENV
       process.env.NODE_ENV = 'production'
