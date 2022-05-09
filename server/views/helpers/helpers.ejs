@@ -39,4 +39,9 @@
         : ( tmp = Math.round(y) ) === 1 ? 'a year ago'
         : tmp + ' years ago';
   }
+
+  forenameToInitial = (name) => {
+      if (!name) return null
+      return `${name.charAt()}. ${name.split(' ').pop()}`
+  }
 %>

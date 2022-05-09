@@ -1,9 +1,135 @@
-.moj-header__navigation-list li {
-  height: 100%;
-  vertical-align: middle;
-  padding-left: govuk-spacing(4);
-  border-left: 4px solid govuk-colour("white");
+// adapted from DPS
+.dps-header {
+  padding: 0 0 0 0;
+  background-color: govuk-colour('black');
+  height: 60px;
+  @include govuk-media-query($from: tablet) {
+    height: 60px;
+    padding: 5px 0 5px 0;
+  }
+
+  &__container {
+    @include govuk-width-container;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__logo {
+    @include govuk-responsive-margin(2, 'right');
+    position: relative;
+    top: 15px;
+    fill: govuk-colour('white');
+    @include govuk-media-query($from: tablet) {
+      top: -2px;
+    }
+  }
+
+  &__title {
+    @include govuk-responsive-padding(3, 'right');
+    display: flex;
+    align-items: center;
+  }
+
+  &__link {
+    @include govuk-link-common;
+    @include govuk-link-style-default;
+
+    &:link,
+    &:visited,
+    &:active {
+      color: govuk-colour('white');
+      text-decoration: none;
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:focus {
+      color: govuk-colour('black');
+
+      svg {
+        fill: govuk-colour('black');
+      }
+    }
+  }
+
+  &__navigation {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    &__item {
+      margin-bottom: govuk-spacing(1);
+      text-align: right;
+      height: 100%;
+      align-items: center;
+      border-right: 1px solid govuk-colour('white');
+      margin-right: 12px;
+      padding-right: 12px;
+
+      @include govuk-media-query($from: tablet) {
+        margin-bottom: 0;
+        margin-right: 20px;
+        padding-right: 20px;
+      }
+
+      a {
+        display: inline-block;
+      }
+
+      &:last-child {
+        margin-right: 0;
+        border-right: 0;
+        padding-right: 0;
+      }
+    }
+  }
+
+  @media print {
+    display: none;
+  }
 }
-.moj-header__navigation-list li:first-child {
-  border-left: 0;
+
+.float-left {
+  float: left;
+  width: auto !important;
+  padding: 5px;
+}
+
+.float-right {
+  float: right;
+  width: auto !important;
+  padding: 0 5px 0 5px;
+  @include govuk-media-query($from: tablet) {
+    padding: 5px;
+  }
+}
+
+.show-header-mobile {
+  display: block !important;
+  @include govuk-media-query($from: tablet) {
+    display: none !important;
+  }
+}
+
+.show-header-desktop {
+  display: none !important;
+  @include govuk-media-query($from: tablet) {
+    display: block !important;
+  }
+}
+
+.mobile-title {
+  position: relative;
+  top: -15px;
+}
+
+.mobile-menu {
+  position: relative;
+  top: -10px;
 }
