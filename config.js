@@ -16,7 +16,10 @@ const requiredInProduction = { requireInProduction: true }
 const noFallbackInProduction = { noFallbackInProduction: true }
 
 module.exports = {
-  sessionSecret: get('SESSION_SECRET', 'app-insecure-default-session', requiredInProduction),
+  session: {
+    secret: get('SESSION_SECRET', 'app-insecure-default-session', requiredInProduction),
+    expiryMinutes: Number(get('WEB_SESSION_TIMEOUT_IN_MINUTES', 20)),
+  },
   db: {
     username: get('DATABASE_USER', 'check-my-diary'),
     password: get('DATABASE_PASSWORD', 'check-my-diary'),
@@ -24,20 +27,21 @@ module.exports = {
     database: get('DATABASE_NAME', 'check-my-diary'),
     sslEnabled: get('DB_SSL_ENABLED', 'false'),
   },
-  nomis: {
-    authUrl: get('API_AUTH_ENDPOINT_URL', get('NOMIS_AUTH_URL', 'http://localhost:9191/auth')),
-    authExternalUrl: get('API_AUTH_EXTERNAL_ENDPOINT_URL', get('API_AUTH_ENDPOINT_URL', 'http://localhost:9191/auth')),
-    timeout: {
-      response: 30000,
-      deadline: 35000,
+  apis: {
+    hmppsAuth: {
+      url: get('API_AUTH_ENDPOINT_URL', get('NOMIS_AUTH_URL', 'http://localhost:9191/auth')),
+      externalUrl: get('API_AUTH_EXTERNAL_ENDPOINT_URL', get('API_AUTH_ENDPOINT_URL', 'http://localhost:9191/auth')),
+      timeout: {
+        response: Number(get('HMPPS_AUTH_TIMEOUT_RESPONSE', 30000)),
+        deadline: Number(get('HMPPS_AUTH_TIMEOUT_DEADLINE', 35000)),
+      },
+      agent: {
+        timeout: 10000,
+        freeSocketTimeout: 30000,
+      },
+      apiClientId: get('API_CLIENT_ID', 'my-diary', requiredInProduction),
+      apiClientSecret: get('API_CLIENT_SECRET', 'clientsecret', requiredInProduction),
     },
-    agent: {
-      maxSockets: 100,
-      maxFreeSockets: 10,
-      freeSocketTimeout: 30000,
-    },
-    apiClientId: get('API_CLIENT_ID', 'my-diary', requiredInProduction),
-    apiClientSecret: get('API_CLIENT_SECRET', 'clientsecret', requiredInProduction),
   },
   app: {
     production,
@@ -57,11 +61,6 @@ module.exports = {
   },
   cmdApi: {
     url: get('CMD_API_URL', 'http://localhost:9191'),
-  },
-  hmppsCookie: {
-    name: process.env.HMPPS_COOKIE_NAME || 'check-my-diary-dev',
-    domain: process.env.HMPPS_COOKIE_DOMAIN || 'localhost',
-    expiryMinutes: process.env.WEB_SESSION_TIMEOUT_IN_MINUTES || 20,
   },
   port: get('PORT', 3005, requiredInProduction),
   domain: process.env.HMPPS_COOKIE_DOMAIN,

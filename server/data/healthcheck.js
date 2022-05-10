@@ -11,9 +11,8 @@ function dbCheck() {
 }
 
 const agentOptions = {
-  maxSockets: config.nomis.agent.maxSockets,
-  maxFreeSockets: config.nomis.agent.maxFreeSockets,
-  freeSocketTimeout: config.nomis.agent.freeSocketTimeout,
+  timeout: config.apis.hmppsAuth.agent.timeout,
+  freeSocketTimeout: config.apis.hmppsAuth.agent.freeSocketTimeout,
 }
 
 function serviceCheckFactory(name, url) {

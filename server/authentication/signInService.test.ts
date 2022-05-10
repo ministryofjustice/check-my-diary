@@ -27,7 +27,7 @@ describe('signInService', () => {
     let fakeOauthApi: nock.Scope
 
     beforeEach(() => {
-      fakeOauthApi = nock(config.nomis.authUrl)
+      fakeOauthApi = nock(config.apis.hmppsAuth.url)
     })
 
     afterEach(() => {

@@ -16,10 +16,10 @@ passport.deserializeUser((user, done) => {
 function init(signInService) {
   const strategy = new Strategy(
     {
-      authorizationURL: `${config.nomis.authExternalUrl}/oauth/authorize`,
-      tokenURL: `${config.nomis.authUrl}/oauth/token`,
-      clientID: config.nomis.apiClientId,
-      clientSecret: config.nomis.apiClientSecret,
+      authorizationURL: `${config.apis.hmppsAuth.externalUrl}/oauth/authorize`,
+      tokenURL: `${config.apis.hmppsAuth.url}/oauth/token`,
+      clientID: config.apis.hmppsAuth.apiClientId,
+      clientSecret: config.apis.hmppsAuth.apiClientSecret,
       callbackURL: `${config.app.url}/login/callback`,
       state: true,
       customHeaders: { Authorization: generateOauthClientToken() },

@@ -90,7 +90,7 @@ const postLogin = async (req, res) => {
     } else {
       await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(
         req.user.username,
-        new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000),
+        new Date(Date.now() + config.session.expiryMinutes * 60 * 1000),
       )
 
       res.redirect(`/calendar/${utilities.getStartMonth()}#today`)
@@ -125,7 +125,7 @@ router.post('/2fa', async (req, res) => {
     if (userAuthentication && inputTwoFactorCode === userAuthentication.TwoFactorAuthenticationHash) {
       await userAuthenticationService.updateUserSessionExpiryAndLastLoginDateTime(
         req.user.username,
-        new Date(Date.now() + config.hmppsCookie.expiryMinutes * 60 * 1000),
+        new Date(Date.now() + config.session.expiryMinutes * 60 * 1000),
       )
       log.info(
         `2FA login success for ${req.user.username} and useSMS=${userAuthentication.UseSms}, useEmail=${userAuthentication.UseEmailAddress}`,
