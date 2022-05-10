@@ -6,16 +6,15 @@ const log = require('../../log')
 const config = require('../../config')
 const fiveMinutesBefore = require('../utils/fiveMinutesBefore')
 
-const oauthUrl = `${config.nomis.authUrl}/oauth/token`
+const oauthUrl = `${config.apis.hmppsAuth.url}/oauth/token`
 const timeoutSpec = {
-  response: config.nomis.timeout.response,
-  deadline: config.nomis.timeout.deadline,
+  response: config.apis.hmppsAuth.timeout.response,
+  deadline: config.apis.hmppsAuth.timeout.deadline,
 }
 
 const agentOptions = {
-  maxSockets: config.nomis.agent.maxSockets,
-  maxFreeSockets: config.nomis.agent.maxFreeSockets,
-  freeSocketTimeout: config.nomis.agent.freeSocketTimeout,
+  timeout: config.apis.hmppsAuth.agent.timeout,
+  freeSocketTimeout: config.apis.hmppsAuth.agent.freeSocketTimeout,
 }
 const keepaliveAgent = oauthUrl.startsWith('https') ? new HttpsAgent(agentOptions) : new Agent(agentOptions)
 
@@ -32,11 +31,11 @@ async function oauthTokenRequest(oauthRequest) {
 
 function getOauthToken(requestSpec) {
   const oauthRequest = querystring.stringify(requestSpec)
-  const clientId = config.nomis.apiClientId
-  const clientSecret = config.nomis.apiClientSecret
+  const clientId = config.apis.hmppsAuth.apiClientId
+  const clientSecret = config.apis.hmppsAuth.apiClientSecret
 
   return superagent
-    .post(`${config.nomis.authUrl}/oauth/token`)
+    .post(`${config.apis.hmppsAuth.url}/oauth/token`)
     .auth(clientId, clientSecret)
     .set('content-type', 'application/x-www-form-urlencoded')
     .agent(keepaliveAgent)

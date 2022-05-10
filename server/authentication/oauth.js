@@ -1,7 +1,7 @@
 const config = require('../../config')
 
 function generateOauthClientToken() {
-  return generate(config.nomis.apiClientId, config.nomis.apiClientSecret)
+  return generate(config.apis.hmppsAuth.apiClientId, config.apis.hmppsAuth.apiClientSecret)
 }
 
 function generate(clientId, clientSecret) {

@@ -83,7 +83,7 @@ module.exports = function createApp({ signInService }) {
   app.use(
     cookieSession({
       name: 'session',
-      keys: [config.sessionSecret],
+      keys: [config.session.secret],
       maxAge: 60 * 60 * 1000,
       secure: config.https,
       httpOnly: true,
@@ -135,7 +135,7 @@ module.exports = function createApp({ signInService }) {
   app.use('/assets', express.static(path.join(__dirname, '../assets'), cacheControl))
   app.use('*/images', express.static(path.join(__dirname, '../assets/images'), cacheControl))
 
-  const healthcheck = healthcheckFactory(config.nomis.authUrl)
+  const healthcheck = healthcheckFactory(config.apis.hmppsAuth.url)
 
   // Add services to server
 
@@ -189,7 +189,7 @@ module.exports = function createApp({ signInService }) {
     next()
   })
 
-  const authLogoutUrl = `${config.nomis.authExternalUrl}/logout?client_id=${config.nomis.apiClientId}&redirect_uri=${config.app.url}`
+  const authLogoutUrl = `${config.apis.hmppsAuth.externalUrl}/logout?client_id=${config.apis.hmppsAuth.apiClientId}&redirect_uri=${config.app.url}`
 
   app.get('/autherror', (req, res) => {
     res.status(401)

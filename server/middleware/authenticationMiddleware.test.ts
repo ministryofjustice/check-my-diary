@@ -6,7 +6,7 @@ import authenticationMiddleware from './authenticationMiddleware'
 
 jest.mock('jwt-decode', () => () => ({ name: 'Ned Nederlander' }))
 jest.mock('../helpers/utilities')
-jest.mock('../../config', () => ({ nomis: {} }))
+jest.mock('../../config', () => ({ apis: { hmppsAuth: {} } }))
 
 const hmppsAuthMFAUser = utilities.hmppsAuthMFAUser as jest.Mock
 
@@ -16,7 +16,7 @@ describe('authentication middleware', () => {
   const isAuthenticatedMock = jest.fn().mockReturnValue(false)
   const token = 'the singing bush'
   const authUrl = 'www.gov.uk'
-  config.nomis.authUrl = authUrl
+  config.apis.hmppsAuth.url = authUrl
   let req: Request
   let res: Response
   beforeEach(() => {

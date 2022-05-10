@@ -8,7 +8,7 @@ const authenticationMiddleware = (req, res, next) => {
       const {
         user: { token },
       } = req
-      req.authUrl = config.nomis.authUrl
+      req.authUrl = config.apis.hmppsAuth.url
       req.hmppsAuthMFAUser = hmppsAuthMFAUser(token)
       req.user.employeeName = jwtDecode(token).name
       return next()

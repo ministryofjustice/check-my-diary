@@ -58,7 +58,6 @@ generic-service:
   env:
     NODE_ENV: "production"
     WEB_SESSION_TIMEOUT_IN_MINUTES: "20"
-    HMPPS_COOKIE_NAME: "check-my-diary"
     DB_SSL_ENABLED: "true"
     REDIS_TLS_ENABLED: "true"
 
