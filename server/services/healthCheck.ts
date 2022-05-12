@@ -63,7 +63,7 @@ function gatherCheckInfo(aggregateStatus: Record<string, unknown>, currentStatus
 
 const apiChecks = [service('hmppsAuth', `${config.apis.hmppsAuth.url}/health/ping`, config.apis.hmppsAuth.agent), db]
 
-export default function healthCheck(callback: HealthCheckCallback, checks = apiChecks): void {
+export function healthCheck(callback: HealthCheckCallback, checks = apiChecks): void {
   Promise.all(checks.map((fn) => fn())).then((checkResults) => {
     const allOk = checkResults.every((item) => item.status === 'ok')
 
@@ -79,4 +79,8 @@ export default function healthCheck(callback: HealthCheckCallback, checks = apiC
 
     callback(addAppInfo(result))
   })
+}
+
+export default {
+  healthCheck,
 }

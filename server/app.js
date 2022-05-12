@@ -9,9 +9,9 @@ const compression = require('compression')
 const passport = require('passport')
 const bodyParser = require('body-parser')
 const cookieSession = require('cookie-session')
-
 const cookieParser = require('cookie-parser')
-const healthCheckFactory = require('./services/healthCheck')
+
+const { setUpHealthChecks } = require('./middleware/setUpHealthChecks')
 const loginRouter = require('./routes/login')
 const calendarRouter = require('./routes/calendar')
 const maintenance = require('./middleware/maintenance')
@@ -135,8 +135,6 @@ module.exports = function createApp({ signInService }) {
   app.use('/assets', express.static(path.join(__dirname, '../assets'), cacheControl))
   app.use('*/images', express.static(path.join(__dirname, '../assets/images'), cacheControl))
 
-  const healthcheck = healthCheckFactory(config.apis.hmppsAuth.url)
-
   // Add services to server
 
   app.set('DataServices', {
@@ -145,20 +143,8 @@ module.exports = function createApp({ signInService }) {
     userAuthenticationService,
   })
 
-  // Express Routing Configuration
-  app.get('/health', (req, res, next) => {
-    healthcheck((err, result) => {
-      if (err) {
-        return next(err)
-      }
-      if (!result.healthy) {
-        res.status(503)
-      }
-      res.json(result)
-      return result
-    })
-  })
-  app.get('/ping', (req, res) => res.send('pong'))
+  app.use(setUpHealthChecks())
+
   app.use('*', maintenance)
 
   // GovUK Template Configuration

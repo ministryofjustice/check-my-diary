@@ -1,4 +1,4 @@
-import healthCheck from './healthCheck'
+import { healthCheck } from './healthCheck'
 import type { HealthCheckCallback, HealthCheckService } from './healthCheck'
 
 describe('HealthCheck', () => {

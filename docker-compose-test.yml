@@ -14,7 +14,7 @@ services:
       - POSTGRES_DB=check-my-diary
 
   cmd-api-wiremock:
-    image: rodolpheche/wiremock
+    image: wiremock/wiremock
     networks:
       - hmpps_int
     container_name: cmd-api-wiremock
@@ -23,11 +23,9 @@ services:
       - "9191:8080"
 
   check-my-diary-redis:
-    image: 'bitnami/redis:5.0'
+    image: 'redis:6.2'
     networks:
       - hmpps_int
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
     ports:
       - '6379:6379'
 

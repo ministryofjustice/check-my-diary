@@ -36,6 +36,17 @@ const favicon = () =>
     },
   })
 
+const ping = () =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: '/auth/health/ping',
+    },
+    response: {
+      status: 200,
+    },
+  })
+
 const redirect = () =>
   stubFor({
     request: {
@@ -95,4 +106,5 @@ export default {
   getLoginUrl,
   stubLogin: (): Promise<[Response, Response, Response, Response]> =>
     Promise.all([favicon(), redirect(), logout(), token()]),
+  stubAuthPing: ping,
 }

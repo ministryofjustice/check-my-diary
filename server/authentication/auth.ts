@@ -14,8 +14,10 @@ passport.deserializeUser((user, done) => {
   done(null, user as Express.User)
 })
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function init({ signInService }: { signInService: any }): void {
+export function init(signInService: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getUser: (token: string, refreshToken: string, expiresIn: string, username: string) => any
+}): void {
   const strategy = new Strategy(
     {
       authorizationURL: `${config.apis.hmppsAuth.externalUrl}/oauth/authorize`,
