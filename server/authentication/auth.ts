@@ -2,7 +2,7 @@ import passport from 'passport'
 import { Strategy } from 'passport-oauth2'
 
 import config from '../../config'
-import { generateOauthClientToken } from './oauth'
+import generateOauthClientToken from './clientCredentials'
 
 passport.serializeUser((user, done) => {
   // Not used but required for Passport
