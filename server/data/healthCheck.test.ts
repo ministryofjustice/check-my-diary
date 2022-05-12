@@ -1,8 +1,8 @@
 import nock from 'nock'
-import { serviceCheckFactory } from './healthcheck'
+import { serviceCheckFactory } from './healthCheck'
 
-describe('service healthcheck', () => {
-  const healthcheck = serviceCheckFactory('externalService', 'http://test-service.com/ping')
+describe('service healthCheck', () => {
+  const healthCheck = serviceCheckFactory('externalService', 'http://test-service.com/ping', {})
   let fakeServiceApi: nock.Scope
 
   beforeEach(() => {
@@ -18,7 +18,7 @@ describe('service healthcheck', () => {
     it('should return data from api', async () => {
       fakeServiceApi.get('/ping').reply(200, 'pong')
 
-      const output = await healthcheck()
+      const output = await healthCheck()
       expect(output).toEqual('OK')
     })
   })
@@ -27,7 +27,7 @@ describe('service healthcheck', () => {
     it('should throw error from api', async () => {
       fakeServiceApi.get('/ping').thrice().reply(500)
 
-      await expect(healthcheck()).rejects.toThrow('Internal Server Error')
+      await expect(healthCheck()).rejects.toThrow('Internal Server Error')
     })
   })
 
@@ -41,7 +41,7 @@ describe('service healthcheck', () => {
         .get('/ping')
         .reply(200, 'pong')
 
-      const response = await healthcheck()
+      const response = await healthCheck()
       expect(response).toEqual('OK')
     })
 
@@ -56,7 +56,7 @@ describe('service healthcheck', () => {
         .get('/ping')
         .reply(200, 'pong')
 
-      const response = await healthcheck()
+      const response = await healthCheck()
       expect(response).toEqual('OK')
     })
 
@@ -72,7 +72,7 @@ describe('service healthcheck', () => {
         .delay(10000)
         .reply(200, { failure: 'three' })
 
-      await expect(healthcheck()).rejects.toThrow('Response timeout of 1000ms exceeded')
+      await expect(healthCheck()).rejects.toThrow('Response timeout of 1500ms exceeded')
     })
   })
 })

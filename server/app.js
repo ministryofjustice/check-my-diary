@@ -11,7 +11,7 @@ const bodyParser = require('body-parser')
 const cookieSession = require('cookie-session')
 
 const cookieParser = require('cookie-parser')
-const healthcheckFactory = require('./services/healthcheck')
+const healthCheckFactory = require('./services/healthCheck')
 const loginRouter = require('./routes/login')
 const calendarRouter = require('./routes/calendar')
 const maintenance = require('./middleware/maintenance')
@@ -135,7 +135,7 @@ module.exports = function createApp({ signInService }) {
   app.use('/assets', express.static(path.join(__dirname, '../assets'), cacheControl))
   app.use('*/images', express.static(path.join(__dirname, '../assets/images'), cacheControl))
 
-  const healthcheck = healthcheckFactory(config.apis.hmppsAuth.url)
+  const healthcheck = healthCheckFactory(config.apis.hmppsAuth.url)
 
   // Add services to server
 

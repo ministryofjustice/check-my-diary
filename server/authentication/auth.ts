@@ -1,7 +1,8 @@
-const passport = require('passport')
-const { Strategy } = require('passport-oauth2')
-const config = require('../../config')
-const { generateOauthClientToken } = require('./oauth')
+import passport from 'passport'
+import { Strategy } from 'passport-oauth2'
+
+import config from '../../config'
+import { generateOauthClientToken } from './oauth'
 
 passport.serializeUser((user, done) => {
   // Not used but required for Passport
@@ -10,10 +11,11 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((user, done) => {
   // Not used but required for Passport
-  done(null, user)
+  done(null, user as Express.User)
 })
 
-function init(signInService) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function init({ signInService }: { signInService: any }): void {
   const strategy = new Strategy(
     {
       authorizationURL: `${config.apis.hmppsAuth.externalUrl}/oauth/authorize`,
@@ -35,4 +37,6 @@ function init(signInService) {
   passport.use(strategy)
 }
 
-module.exports.init = init
+export default {
+  init,
+}
