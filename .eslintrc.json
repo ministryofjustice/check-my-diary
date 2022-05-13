@@ -83,7 +83,10 @@
       }
     ],
     "comma-dangle": ["error", "always-multiline"],
-    "import/no-extraneous-dependencies": ["error", { "devDependencies": ["**/*.test.js", "**/*.test.ts"] }],
+    "import/no-extraneous-dependencies": [
+      "error",
+      { "devDependencies": ["**/*.test.js", "**/*.test.ts", "**/testutils/*.js"] }
+    ],
     "prettier/prettier": [
       "error",
       {

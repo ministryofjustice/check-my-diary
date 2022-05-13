@@ -27,6 +27,12 @@ module.exports = {
     database: get('DATABASE_NAME', 'check-my-diary'),
     sslEnabled: get('DB_SSL_ENABLED', 'false'),
   },
+  redis: {
+    host: get('REDIS_HOST', 'localhost', requiredInProduction),
+    port: parseInt(process.env.REDIS_PORT, 10) || 6379,
+    password: process.env.REDIS_AUTH_TOKEN,
+    tls_enabled: get('REDIS_TLS_ENABLED', 'false'),
+  },
   apis: {
     hmppsAuth: {
       url: get('API_AUTH_ENDPOINT_URL', get('NOMIS_AUTH_URL', 'http://localhost:9191/auth')),
