@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken'
 import { Response } from 'superagent'
 
 import { getRequests, stubFor } from './wiremock'
+import tokenVerification from './tokenVerification'
 
 const createToken = () => {
   const payload = {
@@ -104,7 +105,7 @@ const token = () =>
 
 export default {
   getLoginUrl,
-  stubLogin: (): Promise<[Response, Response, Response, Response]> =>
-    Promise.all([favicon(), redirect(), logout(), token()]),
+  stubLogin: (): Promise<[Response, Response, Response, Response, Response]> =>
+    Promise.all([favicon(), redirect(), logout(), token(), tokenVerification.stubVerifyToken()]),
   stubAuthPing: ping,
 }

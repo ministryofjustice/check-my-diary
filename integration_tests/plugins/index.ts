@@ -2,8 +2,8 @@ import auth from '../mockApis/auth'
 import { resetStubs } from '../mockApis/wiremock'
 
 import prisonOfficerApi from '../mockApis/prisonOfficerApi'
-
 import notificationService from '../mockApis/notificationService'
+import tokenVerification from '../mockApis/tokenVerification'
 
 import db from '../db/db'
 
@@ -14,6 +14,7 @@ export default (on: (string, Record) => void): void => {
     ...db,
     ...notificationService,
     ...prisonOfficerApi,
+    ...tokenVerification,
     stubNotifications: () =>
       Promise.all([
         notificationService.stubNotificationPreferencesGet(),

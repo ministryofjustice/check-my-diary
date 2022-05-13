@@ -60,6 +60,7 @@ generic-service:
     WEB_SESSION_TIMEOUT_IN_MINUTES: "20"
     DB_SSL_ENABLED: "true"
     REDIS_TLS_ENABLED: "true"
+    TOKEN_VERIFICATION_ENABLED: "true"
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
