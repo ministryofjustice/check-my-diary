@@ -1,6 +1,4 @@
-const { v4: uuidv4 } = require('uuid')
 const express = require('express')
-const helmet = require('helmet')
 const noCache = require('nocache')
 const csurf = require('csurf')
 const path = require('path')
@@ -8,8 +6,6 @@ const moment = require('moment')
 const compression = require('compression')
 const passport = require('passport')
 const bodyParser = require('body-parser')
-const cookieSession = require('cookie-session')
-const cookieParser = require('cookie-parser')
 
 const { setUpHealthChecks } = require('./middleware/setUpHealthChecks')
 const loginRouter = require('./routes/login')
@@ -37,6 +33,9 @@ const testMode = process.env.NODE_ENV === 'test'
 
 const { appendUserErrorMessage } = require('./helpers/utilities')
 const { NOT_FOUND_ERROR } = require('./helpers/errorConstants')
+const { ejsSetup } = require('./utils/ejsSetup')
+const { setUpWebSecurity } = require('./middleware/setUpWebSecurity')
+const { setUpWebSession } = require('./middleware/setUpWebSession')
 
 if (config.rejectUnauthorized) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = config.rejectUnauthorized
@@ -46,52 +45,17 @@ if (config.rejectUnauthorized) {
 module.exports = function createApp({ signInService }) {
   const app = express()
 
-  auth.init(signInService)
-
   app.set('json spaces', 2)
-
-  // Configure Express for running behind proxies
-  // https://expressjs.com/en/guide/behind-proxies.html
   app.set('trust proxy', true)
-
-  // View Engine Configuration
-  app.set('views', path.join(__dirname, '../server/views'))
-  app.set('view engine', 'ejs')
-
-  // Server Configuration
   app.set('port', config.port || 3005)
 
-  // Secure code best practice - see:
-  // 1. https://expressjs.com/en/advanced/best-practice-security.html,
-  // 2. https://www.npmjs.com/package/helmet
-  app.use(helmet({ contentSecurityPolicy: false })) // compatible with helmet 3.x
-  app.use(helmet.referrerPolicy({ policy: 'same-origin' }))
+  app.use(setUpHealthChecks())
+  app.use(setUpWebSecurity())
+  app.use(setUpWebSession())
 
-  app.use((req, res, next) => {
-    const headerName = 'X-Request-Id'
-    const oldValue = req.get(headerName)
-    const id = oldValue === undefined ? uuidv4() : oldValue
+  auth.init(signInService)
 
-    res.set(headerName, id)
-    req.id = id
-
-    next()
-  })
-
-  app.use(cookieParser())
-
-  app.use(
-    cookieSession({
-      name: 'session',
-      keys: [config.session.secret],
-      maxAge: 60 * 60 * 1000,
-      secure: config.https,
-      httpOnly: true,
-      signed: true,
-      overwrite: true,
-      sameSite: 'lax',
-    }),
-  )
+  ejsSetup(app, path)
 
   app.use(passport.initialize())
   app.use(passport.session())
@@ -143,8 +107,6 @@ module.exports = function createApp({ signInService }) {
     userAuthenticationService,
   })
 
-  app.use(setUpHealthChecks())
-
   app.use('*', maintenance)
 
   // GovUK Template Configuration
@@ -167,13 +129,6 @@ module.exports = function createApp({ signInService }) {
 
   // token refresh
   app.use(tokenRefresh(signInService))
-
-  // Update a value in the cookie so that the set-cookie will be sent.
-  // Only changes every minute so that it's not sent with every request.
-  app.use((req, res, next) => {
-    req.session.nowInMinutes = Math.floor(Date.now() / 60e3)
-    next()
-  })
 
   const authLogoutUrl = `${config.apis.hmppsAuth.externalUrl}/logout?client_id=${config.apis.hmppsAuth.apiClientId}&redirect_uri=${config.app.url}`
 
