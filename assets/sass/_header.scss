@@ -1,8 +1,8 @@
 // adapted from DPS
 .dps-header {
-  padding: 0 0 0 0;
+  padding: 8px 0 5px 0;
   background-color: govuk-colour('black');
-  height: 60px;
+  height: 72px;
   @include govuk-media-query($from: tablet) {
     height: 60px;
     padding: 5px 0 5px 0;
@@ -18,7 +18,7 @@
   &__logo {
     @include govuk-responsive-margin(2, 'right');
     position: relative;
-    top: 15px;
+    top: 12px;
     fill: govuk-colour('white');
     @include govuk-media-query($from: tablet) {
       top: -2px;
@@ -29,6 +29,14 @@
     @include govuk-responsive-padding(3, 'right');
     display: flex;
     align-items: center;
+
+    &__service-name {
+      @include govuk-font(19, $weight: bold);
+
+      @include govuk-media-query($from: desktop) {
+        @include govuk-font(24);
+      }
+    }
   }
 
   &__link {
@@ -131,5 +139,4 @@
 
 .mobile-menu {
   position: relative;
-  top: -10px;
 }
