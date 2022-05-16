@@ -23,7 +23,7 @@ yarn-error.log
 *secrets*.yml
 !helm_deploy/check-my-diary/templates/secrets.yaml
 !helm_deploy/secrets-example.yaml
-test-results
+test_results
 integration_tests/videos
 integration_tests/screenshots
 dist
