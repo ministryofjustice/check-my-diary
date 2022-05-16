@@ -20,4 +20,4 @@ generic-service:
     API_AUTH_ENDPOINT_URL: "https://sign-in-dev.hmpps.service.justice.gov.uk/auth"
     HMPPS_COOKIE_DOMAIN: check-my-diary-dev.prison.service.justice.gov.uk
     CHECK_MY_DIARY_URL: https://check-my-diary-dev.prison.service.justice.gov.uk
-    TOKENVERIFICATION_API_URL: https://token-verification-api-dev.prison.service.justice.gov.uk
+    TOKEN_VERIFICATION_API_URL: https://token-verification-api-dev.prison.service.justice.gov.uk
