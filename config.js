@@ -48,6 +48,17 @@ module.exports = {
       apiClientId: get('API_CLIENT_ID', 'my-diary', requiredInProduction),
       apiClientSecret: get('API_CLIENT_SECRET', 'clientsecret', requiredInProduction),
     },
+    tokenVerification: {
+      url: get('TOKEN_VERIFICATION_API_URL', 'http://localhost:8100', requiredInProduction),
+      timeout: {
+        response: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000)),
+        deadline: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_DEADLINE', 5000)),
+      },
+      agent: {
+        timeout: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000)),
+      },
+      enabled: get('TOKEN_VERIFICATION_ENABLED', 'false') === 'true',
+    },
   },
   app: {
     production,
