@@ -21,5 +21,6 @@ export default (on: (string, Record) => void): void => {
         notificationService.stubNotificationUpdate(),
         notificationService.stubNotificationGet(),
       ]),
+    stubLoginPage: auth.redirect,
   })
 }

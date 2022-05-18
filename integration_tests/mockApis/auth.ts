@@ -1,13 +1,13 @@
 import jwt from 'jsonwebtoken'
 import { Response } from 'superagent'
 
-import { getRequests, stubFor } from './wiremock'
+import { getMatchingRequests, stubFor } from './wiremock'
 import tokenVerification from './tokenVerification'
 
-const createToken = () => {
+const createToken = (name = 'Sarah Itag') => {
   const payload = {
     sub: 'ITAG_USER',
-    name: 'SARAH ITAG',
+    name,
     scope: ['read', 'write'],
     auth_source: 'nomis',
     authorities: [],
@@ -19,10 +19,12 @@ const createToken = () => {
 }
 
 const getLoginUrl = () =>
-  getRequests().then((data) => {
+  getMatchingRequests({
+    method: 'GET',
+    urlPath: '/auth/oauth/authorize',
+  }).then((data) => {
     const { requests } = data.body
-    const stateParam = requests[0].request.queryParams.state
-    const stateValue = stateParam ? stateParam.values[0] : requests[1].request.queryParams.state.values[0]
+    const stateValue = requests[requests.length - 1].queryParams.state.values[0]
     return `/login/callback?code=codexxxx&state=${stateValue}`
   })
 
@@ -79,7 +81,7 @@ const logout = () =>
     },
   })
 
-const token = () =>
+const token = (name = 'Sarah Itag') =>
   stubFor({
     request: {
       method: 'POST',
@@ -92,7 +94,7 @@ const token = () =>
         Location: 'http://localhost:3007/login/callback?code=codexxxx&state=stateyyyy',
       },
       jsonBody: {
-        access_token: createToken(),
+        access_token: createToken(name),
         token_type: 'bearer',
         refresh_token: 'refresh',
         sub: 'TEST_USER',
@@ -108,4 +110,6 @@ export default {
   stubLogin: (): Promise<[Response, Response, Response, Response, Response]> =>
     Promise.all([favicon(), redirect(), logout(), token(), tokenVerification.stubVerifyToken()]),
   stubAuthPing: ping,
+  redirect,
+  token,
 }
