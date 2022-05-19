@@ -2,7 +2,8 @@
 .dps-header {
   padding: 8px 0 5px 0;
   background-color: govuk-colour('black');
-  height: 72px;
+  min-height: 72px;
+  overflow: auto;
   @include govuk-media-query($from: tablet) {
     height: 60px;
     padding: 5px 0 5px 0;
@@ -77,8 +78,8 @@
       height: 100%;
       align-items: center;
       border-right: 1px solid govuk-colour('white');
-      margin-right: 12px;
-      padding-right: 12px;
+      margin-right: 8px;
+      padding-right: 8px;
 
       @include govuk-media-query($from: tablet) {
         margin-bottom: 0;
@@ -112,7 +113,7 @@
 .float-right {
   float: right;
   width: auto !important;
-  padding: 0 5px 0 5px;
+  padding: 0;
   @include govuk-media-query($from: tablet) {
     padding: 5px;
   }
