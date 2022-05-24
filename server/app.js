@@ -148,13 +148,15 @@ module.exports = function createApp({ signInService }) {
     })(req, res, next),
   )
 
-  app.use('/logout', async (req, res) => {
+  app.use('/logout', async (req, res, next) => {
     if (req.user) {
       await userAuthenticationService.updateSessionExpiryDateTime(req.user.username)
 
-      req.logout()
-    }
-    res.redirect(authLogoutUrl)
+      req.logout((err) => {
+        if (err) return next(err)
+        return res.redirect(authLogoutUrl)
+      })
+    } else res.redirect(authLogoutUrl)
   })
 
   // Routing
