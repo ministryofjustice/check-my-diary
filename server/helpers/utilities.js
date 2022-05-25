@@ -157,7 +157,7 @@ const hmppsAuthMFAUser = (token) => {
 
 const getSnoozeUntil = (rawSnoozeUntil) => {
   const snoozeUntil = moment(rawSnoozeUntil)
-  return snoozeUntil.isAfter(moment()) ? snoozeUntil.add(1, 'day').format('dddd, Do MMMM YYYY') : ''
+  return snoozeUntil.isAfter(moment()) ? snoozeUntil.add(1, 'day').format('DD MMMM YYYY') : ''
 }
 
 const appendUserErrorMessage = (error, userMessage = GENERAL_ERROR) => Object.assign(error, { userMessage })

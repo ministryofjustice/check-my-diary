@@ -11,6 +11,7 @@ const {
 const validate = require('../middleware/validate')
 const notificationMiddleware = require('../middleware/notificationMiddleware')
 const { NONE } = require('../helpers/constants')
+const { getSnoozeUntil } = require('../helpers/utilities')
 
 function serviceUnavailable(req, res) {
   logger.error('Service unavailable')
@@ -66,7 +67,7 @@ router.get('/manage', async (req, res, next) => {
       locals: { csrfToken, errors = null },
     } = res
     const { notificationService } = app.get('DataServices')
-    const { preference = NONE } = await notificationService.getPreferences(token)
+    const { snoozeUntil: rawSnoozeUntil, preference = NONE } = await notificationService.getPreferences(token)
     const notificationsEnabled = preference !== NONE
     logger.info('GET notifications view')
 
@@ -74,6 +75,7 @@ router.get('/manage', async (req, res, next) => {
       errors,
       csrfToken,
       notificationsEnabled,
+      snoozeUntil: notificationsEnabled ? getSnoozeUntil(rawSnoozeUntil) : '',
       employeeName,
       authUrl,
     })
