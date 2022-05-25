@@ -126,10 +126,12 @@ describe('getSnoozeUntil', () => {
     dateNow.mockRestore()
   })
   it('should return a formatted date string if the date is in the future', () => {
-    expect(getSnoozeUntil(new Date('4/2/1994'))).toEqual('Sunday, 3rd April 1994')
+    expect(getSnoozeUntil(new Date('4/2/1994'))).toEqual('3 April 1994')
+    expect(getSnoozeUntil(new Date('9/17/1994'))).toEqual('18 September 1994')
   })
   it('should return an empty string if the date is in the past', () => {
-    expect(getSnoozeUntil(new Date('26/2/1994'))).toEqual('')
+    expect(getSnoozeUntil(new Date('6/14/1993'))).toEqual('')
+    expect(getSnoozeUntil(new Date('1/1/1994'))).toEqual('')
   })
   it('should return an empty string if the date is undefined', () => {
     expect(getSnoozeUntil()).toEqual('')
