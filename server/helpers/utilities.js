@@ -30,7 +30,7 @@ function getAuthErrorDescription(error) {
   )
   let type =
     'Service temporarily unavailable. Please try again later. If this issue persists, please contact the Helpdesk on 0800 917 5148.'
-  if (error !== null && error.message !== '') {
+  if (error.message !== '') {
     if (error.message.includes('No Sms or Email address returned for QuantumId')) {
       type =
         'You have not been setup on Check My Diary. Please contact us via: checkmydiary@digital.justice.gov.uk if you would like to be included.'
@@ -138,7 +138,7 @@ const processDay = (day) => {
   const today = dateMoment.isSame(moment(), 'day')
   const format = 'hh:mm:ss'
   const details = rawTasks.filter(
-    ({ displayType, start }) => displayedTasks.includes(displayType) && !moment(start, format).isSame('00:00:00'),
+    ({ displayType, start }) => displayedTasks.includes(displayType) && moment(start).format(format) !== '00:00:00',
   )
   // const sortedDetails = details.sort(d => d.start)
   details.forEach((detail) => {

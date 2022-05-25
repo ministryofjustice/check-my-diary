@@ -1,0 +1,49 @@
+<%- include ('../helpers/helpers') -%>
+
+<!DOCTYPE html>
+<html lang="en" class="govuk-template">
+  <head>
+    <%- include ('../partials/head', { title: 'Manage your notifications' } ) -%>
+  </head>
+  <body class="govuk-template__body">
+
+  <%- include ('../partials/header') -%>
+
+  <div class="govuk-width-container">
+
+    <main id="main-content" role="main" class="govuk-!-padding-bottom-9">
+      <a href="/" class="govuk-back-link">Back to shift detail</a>
+      <h1 class="govuk-heading-l">Manage your notifications</h1>
+      <p class="govuk-body">You can be notified by email when this service has been updated with any change to your shift detail.</p>
+      <% if (notificationsEnabled) { %>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            <p class="govuk-body">You receive notifications
+              <a href="/notifications/settings#TODO/receiving-notifications" class="govuk-!-padding-left-1">Change</a>
+            </p>
+          </div>
+        </div>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            <p class="govuk-body">
+              <a href="/pause-notifications#TODO">Pause notifications</a>
+            </p>
+          </div>
+        </div>
+      <% } else { %>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            <p class="govuk-body">You do not receive notifications
+              <a href="/notifications/settings#TODO/receiving-notifications">Change</a>
+            </p>
+          </div>
+        </div>
+      <% } %>
+    </main>
+
+  </div>
+
+  <%- include ('../partials/footer') -%>
+
+  </body>
+</html>

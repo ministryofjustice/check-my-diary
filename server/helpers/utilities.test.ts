@@ -40,37 +40,62 @@ describe('configureCalendar', () => {
 describe('processDay', () => {
   let detail1: Details
   let detail2: Details
-  let day: CalendarDay
+  let detail3: Details
+  let day1: CalendarDay
+  let day2: CalendarDay
   beforeEach(() => {
     detail1 = {
       displayTypeTime: '2020-08-03T07:15:00',
       displayType: 'DAY_START',
       finishDuration: null,
+
+      // TODO: seems to be confusion here;
+      //  detail contents seem to be wrong - e.g. from real run:
+      // {
+      //   "activity": "Rest Day",
+      //   "start": "2021-11-07T00:00:00",
+      //   "end": "2021-11-07T00:00:00",
+      //   "parentType": "SHIFT",
+      //   "displayType": null,
+      //   "displayTypeTime": null,
+      //   "finishDuration": null
+      // }
     }
     detail2 = {
       displayTypeTime: '2020-08-03T17:00:00',
       displayType: 'DAY_FINISH',
       finishDuration: '8h 45m',
     }
-    day = {
+    detail3 = {
+      displayTypeTime: '2020-08-04T00:00:00',
+      displayType: 'ALL_DAY',
+      finishDuration: '24h',
+    }
+    day1 = {
       date: '2020-08-03',
       fullDayType: 'Shift',
       details: [detail2, detail1],
     }
-    processDay(day)
+    day2 = {
+      date: '2020-08-04',
+      fullDayType: 'Shift',
+      details: [detail3],
+    }
+    processDay(day1)
+    processDay(day2)
   })
   it('should set the date text', () => {
-    expect(day.dateText).toBe('3')
+    expect(day1.dateText).toBe('3')
   })
   it('should set the date day text', () => {
-    expect(day.dateDayText).toBe('Monday 3rd')
+    expect(day1.dateDayText).toBe('Monday 3rd')
   })
   it('should set the activity text for the details', () => {
     expect(detail1.activity).toBe('Start 07:15')
     expect(detail2.activity).toBe('Finish 17:00')
   })
   it('should order the details by displayTypeTime', () => {
-    expect(day.details).toEqual([detail1, detail2])
+    expect(day1.details).toEqual([detail1, detail2])
   })
 })
 
