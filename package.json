@@ -160,11 +160,11 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-no-only-tests": "^2.6.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "husky": "^7.0.4",
+    "husky": "^8.0.1",
     "jest": "^27.5.1",
     "jest-html-reporter": "^3.5.0",
     "jest-junit": "^13.2.0",
-    "lint-staged": "^12.4.1",
+    "lint-staged": "^12.4.2",
     "mocha": "^10.0.0",
     "mocha-junit-reporter": "^2.0.2",
     "nock": "^13.2.4",
@@ -173,6 +173,6 @@
     "sass": "^1.52.1",
     "supertest": "^6.2.3",
     "ts-jest": "^27.1.5",
-    "typescript": "^4.6.4"
+    "typescript": "^4.7.2"
   }
 }
