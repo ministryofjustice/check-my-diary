@@ -56,7 +56,7 @@ export default {
       },
     }),
 
-  stubNotificationPreferencesGet: (): SuperAgentRequest =>
+  stubNotificationPreferencesGet: (body?: object): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
@@ -67,7 +67,7 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        jsonBody: {
+        jsonBody: body || {
           snoozeUntil: moment().add(3, 'days').format('YYYY-MM-DD'),
           preference: 'SMS',
           sms: '01189998819991197253',

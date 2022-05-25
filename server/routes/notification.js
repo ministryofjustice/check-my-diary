@@ -1,5 +1,4 @@
 const router = require('express').Router()
-
 const { check } = require('express-validator')
 
 const logger = require('../../log')
@@ -11,12 +10,9 @@ const {
 } = require('../middleware/postNotificationSettingsMiddleware')
 const validate = require('../middleware/validate')
 const notificationMiddleware = require('../middleware/notificationMiddleware')
+const { NONE } = require('../helpers/constants')
+const { getSnoozeUntil } = require('../helpers/utilities')
 
-/**
- * Service unavailable
- * @param req
- * @param res
- */
 function serviceUnavailable(req, res) {
   logger.error('Service unavailable')
   res.render('pages/index', {
@@ -58,5 +54,34 @@ router
     postNotificationMiddleware,
     notificationMiddleware,
   )
+
+router.get('/manage', async (req, res, next) => {
+  try {
+    const {
+      user: { employeeName, token },
+      app,
+      authUrl,
+    } = req
+
+    const {
+      locals: { csrfToken, errors = null },
+    } = res
+    const { notificationService } = app.get('DataServices')
+    const { snoozeUntil: rawSnoozeUntil, preference = NONE } = await notificationService.getPreferences(token)
+    const notificationsEnabled = preference !== NONE
+    logger.info('GET notifications view')
+
+    return res.render('pages/manage-your-notifications', {
+      errors,
+      csrfToken,
+      notificationsEnabled,
+      snoozeUntil: notificationsEnabled ? getSnoozeUntil(rawSnoozeUntil) : '',
+      employeeName,
+      authUrl,
+    })
+  } catch (error) {
+    return next(error)
+  }
+})
 
 module.exports = router
