@@ -27,7 +27,7 @@ context('A staff member can view their notification settings', () => {
     })
 
     cy.visit('/notifications/manage')
-    const page = Page.verifyOnPage(NotificationManagePage)
+    Page.verifyOnPage(NotificationManagePage)
 
     cy.contains('You receive notifications')
   })
@@ -36,7 +36,7 @@ context('A staff member can view their notification settings', () => {
     cy.task('stubNotificationPreferencesGet', { preference: 'NONE' })
 
     cy.visit('/notifications/manage')
-    const page = Page.verifyOnPage(NotificationManagePage)
+    Page.verifyOnPage(NotificationManagePage)
 
     cy.contains('You do not receive notifications')
   })
@@ -49,7 +49,7 @@ context('A staff member can view their notification settings', () => {
     })
 
     cy.visit('/notifications/manage')
-    const page = Page.verifyOnPage(NotificationManagePage)
+    Page.verifyOnPage(NotificationManagePage)
 
     cy.contains(`Notifications will start again on ${moment().add(4, 'days').format('DD MMMM YYYY')}`)
   })
