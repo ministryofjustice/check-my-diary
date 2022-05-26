@@ -51,6 +51,6 @@ context('A staff member can view their notification settings', () => {
     cy.visit('/notifications/manage')
     Page.verifyOnPage(NotificationManagePage)
 
-    cy.contains(`Notifications will start again on ${moment().add(4, 'days').format('DD MMMM YYYY')}`)
+    cy.contains(`Notifications will start again on ${moment().add(4, 'days').format('D MMMM YYYY')}`)
   })
 })
