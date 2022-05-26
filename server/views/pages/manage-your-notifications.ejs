@@ -18,9 +18,7 @@
       <% if (notificationsEnabled && snoozeUntil) { %>
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-two-thirds">
-            <p class="govuk-body govuk-!-margin-bottom-2">You have paused your notifications
-              <a href="/notifications/settings#TODO/receiving-notifications" class="govuk-!-padding-left-1">Change</a>
-            </p>
+            <p class="govuk-body govuk-!-margin-bottom-2">You have paused your notifications</p>
             <p class="govuk-body">Notifications will start again on <%= snoozeUntil %>.</p>
 
             <form method="post" action="/notifications/resume" novalidate>
