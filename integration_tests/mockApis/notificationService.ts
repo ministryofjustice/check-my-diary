@@ -1,6 +1,6 @@
 import { SuperAgentRequest } from 'superagent'
 import moment from 'moment'
-import { stubFor } from './wiremock'
+import { getMatchingRequests, stubFor } from './wiremock'
 
 const fakeShiftNotifications = [
   {
@@ -88,4 +88,12 @@ export default {
         },
       },
     }),
+
+  verifySnooze: async () =>
+    (
+      await getMatchingRequests({
+        method: 'PUT',
+        url: '/preferences/notifications/snooze',
+      })
+    ).body.requests,
 }

@@ -23,5 +23,6 @@ export default (on: (string, Record) => void): void => {
       ]),
     stubLoginPage: auth.redirect,
     stubNotificationPreferencesGet: (arg) => notificationService.stubNotificationPreferencesGet(arg),
+    verifySnooze: () => notificationService.verifySnooze(),
   })
 }

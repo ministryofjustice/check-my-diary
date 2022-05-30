@@ -30,6 +30,32 @@ context('A staff member can view their notification settings', () => {
     Page.verifyOnPage(NotificationManagePage)
 
     cy.contains('You receive notifications')
+    cy.contains('Pause notifications').click()
+
+    cy.contains('How long do you want to pause notifications for')
+    cy.contains('Confirm').click()
+    cy.contains('Enter a number')
+    cy.contains('Select a period of time')
+
+    cy.get('input[name="pauseValue"]').type('12')
+    cy.contains('Confirm').click()
+    cy.contains('Select a period of time')
+    cy.get('input[name="pauseValue"]').should('have.value', '12')
+
+    cy.get('input[name="pauseValue"]').clear()
+    cy.get('select[name="pauseUnit"]').select('Days')
+    cy.contains('Confirm').click()
+    cy.contains('Enter a number')
+    cy.get('select[name="pauseUnit"] option:selected').should('have.text', 'Days')
+
+    cy.get('input[name="pauseValue"]').type('12')
+    cy.contains('Confirm').click()
+
+    Page.verifyOnPage(NotificationManagePage)
+    cy.task('verifySnooze').then((requests) => {
+      expect(requests).to.have.length(1)
+      expect(requests[0].body).eq(`{"snoozeUntil":"${moment().add(12, 'days').format('YYYY-MM-DD')}"}`)
+    })
   })
 
   it('Manage your notifications - not set', () => {
