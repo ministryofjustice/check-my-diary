@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const { check } = require('express-validator')
-const moment = require('moment')
+const { formatISO, add } = require('date-fns')
 
 const logger = require('../../log')
 const postNotificationMiddleware = require('../middleware/postNotificationMiddleware')
@@ -118,6 +118,12 @@ const getPauseMiddleware = async (req, res, next) => {
   }
 }
 
+function getFormattedFutureDate(pauseUnit, pauseValue) {
+  const duration = {}
+  duration[pauseUnit] = pauseValue
+  return formatISO(add(new Date(), duration), { representation: 'date' })
+}
+
 const postPauseMiddleware = async (req, res, next) => {
   try {
     const {
@@ -132,8 +138,8 @@ const postPauseMiddleware = async (req, res, next) => {
       const {
         notificationService: { updateSnooze },
       } = app.get('DataServices')
-      await updateSnooze(token, moment().add(pauseValue, pauseUnit).format('YYYY-MM-DD'))
-      res.redirect('/notifications/manage')
+      await updateSnooze(token, getFormattedFutureDate(pauseUnit, pauseValue))
+      return res.redirect('/notifications/manage')
     }
 
     req.query = { pauseUnit, pauseValue }

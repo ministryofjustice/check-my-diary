@@ -2,6 +2,7 @@ import moment from 'moment'
 import NotificationSettingsPage from '../pages/notificationSettings'
 import NotificationManagePage from '../pages/notificationManage'
 import Page from '../pages/page'
+import NotificationPausePage from '../pages/notificationPause'
 
 context('A staff member can view their notification settings', () => {
   beforeEach(() => {
@@ -27,29 +28,30 @@ context('A staff member can view their notification settings', () => {
     })
 
     cy.visit('/notifications/manage')
-    Page.verifyOnPage(NotificationManagePage)
+    const page = Page.verifyOnPage(NotificationManagePage)
 
     cy.contains('You receive notifications')
-    cy.contains('Pause notifications').click()
+    page.pause().click()
 
-    cy.contains('How long do you want to pause notifications for')
-    cy.contains('Confirm').click()
+    const pausePage = Page.verifyOnPage(NotificationPausePage)
+
+    pausePage.submit()
     cy.contains('Enter a number')
     cy.contains('Select a period of time')
 
-    cy.get('input[name="pauseValue"]').type('12')
-    cy.contains('Confirm').click()
+    pausePage.pauseValue().type('12')
+    pausePage.submit()
     cy.contains('Select a period of time')
-    cy.get('input[name="pauseValue"]').should('have.value', '12')
+    pausePage.pauseValue().should('have.value', '12')
 
-    cy.get('input[name="pauseValue"]').clear()
-    cy.get('select[name="pauseUnit"]').select('Days')
-    cy.contains('Confirm').click()
+    pausePage.pauseValue().clear()
+    pausePage.pauseUnit().select('Days')
+    pausePage.submit()
     cy.contains('Enter a number')
-    cy.get('select[name="pauseUnit"] option:selected').should('have.text', 'Days')
+    pausePage.pauseUnitSelected().should('have.text', 'Days')
 
-    cy.get('input[name="pauseValue"]').type('12')
-    cy.contains('Confirm').click()
+    pausePage.pauseValue().type('12')
+    pausePage.submit()
 
     Page.verifyOnPage(NotificationManagePage)
     cy.task('verifySnooze').then((requests) => {
