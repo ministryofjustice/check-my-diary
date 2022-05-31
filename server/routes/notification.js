@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const { check } = require('express-validator')
+const { formatISO, add } = require('date-fns')
 
 const logger = require('../../log')
 const postNotificationMiddleware = require('../middleware/postNotificationMiddleware')
@@ -55,7 +56,9 @@ router
     notificationMiddleware,
   )
 
-router.get('/manage', async (req, res, next) => {
+// ///////////////////////////// new routers:
+
+const getManageMiddleware = async (req, res, next) => {
   try {
     const {
       user: { employeeName, token },
@@ -69,7 +72,6 @@ router.get('/manage', async (req, res, next) => {
     const { notificationService } = app.get('DataServices')
     const { snoozeUntil: rawSnoozeUntil, preference = NONE } = await notificationService.getPreferences(token)
     const notificationsEnabled = preference !== NONE
-    logger.info('GET notifications view')
 
     return res.render('pages/manage-your-notifications', {
       errors,
@@ -82,6 +84,85 @@ router.get('/manage', async (req, res, next) => {
   } catch (error) {
     return next(error)
   }
-})
+}
+router.get('/manage', getManageMiddleware)
+
+const getPauseMiddleware = async (req, res, next) => {
+  try {
+    const {
+      user: { employeeName, token },
+      query: { pauseUnit, pauseValue },
+      app,
+      authUrl,
+    } = req
+
+    const {
+      locals: { csrfToken, errors = null },
+    } = res
+    const { notificationService } = app.get('DataServices')
+    const { snoozeUntil: rawSnoozeUntil, preference = NONE } = await notificationService.getPreferences(token)
+    const notificationsEnabled = preference !== NONE
+
+    return res.render('pages/pause-notifications', {
+      errors,
+      csrfToken,
+      notificationsEnabled,
+      snoozeUntil: notificationsEnabled ? getSnoozeUntil(rawSnoozeUntil) : '',
+      employeeName,
+      authUrl,
+      pauseUnit,
+      pauseValue,
+    })
+  } catch (error) {
+    return next(error)
+  }
+}
+
+function getFormattedFutureDate(pauseUnit, pauseValue) {
+  const duration = {}
+  duration[pauseUnit] = pauseValue
+  return formatISO(add(new Date(), duration), { representation: 'date' })
+}
+
+const postPauseMiddleware = async (req, res, next) => {
+  try {
+    const {
+      user: { token },
+      app,
+      body: { pauseUnit, pauseValue },
+    } = req
+    const {
+      locals: { errors = null },
+    } = res
+    if (!errors || errors.length === 0) {
+      const {
+        notificationService: { updateSnooze },
+      } = app.get('DataServices')
+      await updateSnooze(token, getFormattedFutureDate(pauseUnit, pauseValue))
+      return res.redirect('/notifications/manage')
+    }
+
+    req.query = { pauseUnit, pauseValue }
+    return next()
+  } catch (error) {
+    const message = 'Pause notifications failed. Please try again.'
+    logger.error(error, message)
+    res.locals.error = [message]
+    return next()
+  }
+}
+
+router
+  .route('/pause')
+  .get(getPauseMiddleware)
+  .post(
+    [
+      check('pauseValue', 'Enter a number').exists({ checkFalsy: true }).isInt({ min: 1, max: 99 }),
+      check('pauseUnit', 'Select a period of time').exists({ checkFalsy: true }).isIn(['days', 'weeks', 'months']),
+    ],
+    validate,
+    postPauseMiddleware,
+    getPauseMiddleware,
+  )
 
 module.exports = router

@@ -2,6 +2,7 @@ import moment from 'moment'
 import NotificationSettingsPage from '../pages/notificationSettings'
 import NotificationManagePage from '../pages/notificationManage'
 import Page from '../pages/page'
+import NotificationPausePage from '../pages/notificationPause'
 
 context('A staff member can view their notification settings', () => {
   beforeEach(() => {
@@ -27,9 +28,36 @@ context('A staff member can view their notification settings', () => {
     })
 
     cy.visit('/notifications/manage')
-    Page.verifyOnPage(NotificationManagePage)
+    const page = Page.verifyOnPage(NotificationManagePage)
 
     cy.contains('You receive notifications')
+    page.pause().click()
+
+    const pausePage = Page.verifyOnPage(NotificationPausePage)
+
+    pausePage.submit()
+    cy.contains('Enter a number')
+    cy.contains('Select a period of time')
+
+    pausePage.pauseValue().type('12')
+    pausePage.submit()
+    cy.contains('Select a period of time')
+    pausePage.pauseValue().should('have.value', '12')
+
+    pausePage.pauseValue().clear()
+    pausePage.pauseUnit().select('Days')
+    pausePage.submit()
+    cy.contains('Enter a number')
+    pausePage.pauseUnitSelected().should('have.text', 'Days')
+
+    pausePage.pauseValue().type('12')
+    pausePage.submit()
+
+    Page.verifyOnPage(NotificationManagePage)
+    cy.task('verifySnooze').then((requests) => {
+      expect(requests).to.have.length(1)
+      expect(requests[0].body).eq(`{"snoozeUntil":"${moment().add(12, 'days').format('YYYY-MM-DD')}"}`)
+    })
   })
 
   it('Manage your notifications - not set', () => {
