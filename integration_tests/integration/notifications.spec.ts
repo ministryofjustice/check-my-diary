@@ -16,7 +16,8 @@ context('A staff member can view their notifications', () => {
   })
 
   it('Notification page is visible', () => {
-    cy.get('p').contains('Get notifications to your email or phone')
+    cy.contains('Manage your notifications').click()
+    cy.get('p').contains('You can be notified by email')
   })
 
   it('Notifications are visible', () => {
@@ -27,7 +28,8 @@ context('A staff member can view their notifications', () => {
   })
 
   it('Notifications banner is visible', () => {
-    cy.get('h2').contains('Your notifications are paused until ')
-    cy.get('button').contains('Resume notifications')
+    cy.contains('Manage your notifications').click()
+    cy.get('p').contains('You have paused your notifications')
+    cy.get('button').contains('Resume notifications now')
   })
 })
