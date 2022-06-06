@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
   <head>
-    <%- include ('../partials/head') -%>
+    <%- include ('../partials/head', { title: 'Your notifications' } ) -%>
   </head>
   <body class="govuk-template__body">
 
@@ -12,26 +12,20 @@
   <div class="govuk-width-container">
 
     <main id="main-content" role="main">
-      <div class="tabs-wrapper">
-        <ul class="tabs">
-          <li ><a href="/calendar">Calendar</a></li>
-          <li><a class="active" href="">Notifications</a>
-          </li>
-        </ul>
-      </div>
+      <a href="/" class="govuk-back-link">Back to your shift detail</a>
+      <h1 class="govuk-heading-l">Your notifications</h1>
+      <p class="govuk-body">
+        <a href="/notifications/manage" class="govuk-!-padding-left-1">Manage your notifications</a>
+      </p>
+
       <div id="notifications" class="govuk-grid-row">
-        <% if (notificationsEnabled && snoozeUntil) { %>
-          <%- include ('../partials/snooze-banner') -%>
-        <% } %>
         <div class="govuk-grid-column-two-thirds">
           <div class="govuk-notifications">
             <ul>
               <% if (data != null && data.length > 0) { %>
                 <% data.forEach(function(notification){ %>
                   <li>
-                    <span class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0"> <%= getRelativeModifiedDate(moment, notification.shiftModified) %>
-
-                    </p>
+                    <span class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0"> <%= getRelativeModifiedDate(moment, notification.shiftModified) %></span>
                     <p class="govuk-body govuk-!-font-size-16"><%= notification.description %></p>
                   </li>
                 <% }) %>
@@ -43,21 +37,6 @@
           <% } %>
 
         </div>
-        <div class="govuk-grid-column-one-third">
-
-            <section class="govuk-!-padding-2 govuk-!-padding-bottom-6">
-
-              <p class="govuk-body">Get notifications to your email or phone</p>
-              <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/notifications/settings">Notification settings</a>
-
-            </section>
-            <% if (notificationsEnabled ) { %>
-              <%- include ('../partials/pause-notifcations') -%>
-            <% } %>
-          <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
-
-        </div>
-
       </div>
 
     </main>
