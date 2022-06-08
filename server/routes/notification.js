@@ -3,7 +3,6 @@ const { check, validationResult } = require('express-validator')
 const { formatISO, add } = require('date-fns')
 
 const logger = require('../../log')
-const postNotificationMiddleware = require('../middleware/postNotificationMiddleware')
 const notificationSettingsMiddleware = require('../middleware/notificationSettingsMiddleware')
 const {
   postNotificationSettingsMiddleware,

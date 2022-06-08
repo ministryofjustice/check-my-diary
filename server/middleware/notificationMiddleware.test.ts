@@ -1,7 +1,6 @@
 import type { Request, Response } from 'express'
 import moment from 'moment'
 import notificationMiddleware from './notificationMiddleware'
-import { NONE, SMS } from '../helpers/constants'
 import type { Notification } from '../services/notifications.types'
 
 import utilities from '../helpers/utilities'
