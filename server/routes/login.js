@@ -29,7 +29,6 @@ const postLogin = async (req, res) => {
 
     if (userAuthenticationDetails === null || userAuthenticationDetails.length === 0) {
       userNotSignedUpMessage = true
-      throw new Error(`Error : No Sms or Email address returned for QuantumId : ${req.user.username}`)
     }
 
     const quantumAddresses = config.quantumAddresses.split(',')

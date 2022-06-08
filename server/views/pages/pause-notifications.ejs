@@ -18,26 +18,28 @@
           <div class="govuk-grid-column-two-thirds">
 
             <section class="govuk-!-padding-2">
-              <% if(errors && errors.length > 0){ %>
-                <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+              <% if (isErrors(errors)){ %>
+                <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary">
+                  <h2 class="govuk-error-summary__title" id="error-summary-title">
+                    There is a problem
+                  </h2>
                   <div class="govuk-error-summary__body">
                     <ul class="govuk-list govuk-error-summary__list">
-                      <% errors.forEach((error) => { %>
-                        <li>
-                          <%= error %>
-                        </li>
+                      <% errors.array({ onlyFirstError: true }).forEach((error) => { %>
+                        <li><a href="#<%= error.param %>"><%= error.msg %></a></li>
                       <% }) %>
                     </ul>
                   </div>
                 </div>
               <% } %>
               <form method="post">
-                <div class="govuk-form-group">
+                <div class="govuk-form-group<% if (isError(errors, 'pauseValue')) { %> govuk-form-group--error<% } %>">
                   <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                   <label for="pauseValue" class="govuk-label">Enter a number</label>
-                  <input class="govuk-input govuk-input--width-2 govuk-!-margin-right-2" type="number" id="pauseValue" name="pauseValue" min="1" max="99" maxlength="2" value="<%= pauseValue %>" />
+                  <input class="govuk-input govuk-input--width-2 govuk-!-margin-right-2" id="pauseValue" name="pauseValue" maxlength="2" value="<%= pauseValue %>" />
                 </div>
-                <div class="govuk-form-group">
+
+                <div class="govuk-form-group<% if (isError(errors, 'pauseUnit')) { %> govuk-form-group--error<% } %>">
                   <label for="pauseUnit" class="govuk-label">Select a period of time</label>
                   <select class="govuk-select" id="pauseUnit" name="pauseUnit" required>
                     <option value="Select" <% if (!pauseUnit) { %>selected<% } %>>Select</option>
@@ -46,6 +48,7 @@
                     <option value="months" <% if (pauseUnit === 'months') { %>selected<% } %>>Months</option>
                   </select>
                 </div>
+
                 <button class="govuk-button govuk-!-margin-right-2" data-module="govuk-button" type="submit">
                   Confirm
                 </button>
