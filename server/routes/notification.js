@@ -1,15 +1,13 @@
 const router = require('express').Router()
-const { check } = require('express-validator')
+const { check, validationResult } = require('express-validator')
 const { formatISO, add } = require('date-fns')
 
 const logger = require('../../log')
-const postNotificationMiddleware = require('../middleware/postNotificationMiddleware')
 const notificationSettingsMiddleware = require('../middleware/notificationSettingsMiddleware')
 const {
   postNotificationSettingsMiddleware,
   postNotificationSettingsValidationRules,
 } = require('../middleware/postNotificationSettingsMiddleware')
-const validate = require('../middleware/validate')
 const notificationMiddleware = require('../middleware/notificationMiddleware')
 const { NONE } = require('../helpers/constants')
 const { getSnoozeUntil } = require('../helpers/utilities')
@@ -43,18 +41,7 @@ router.post('/resume', async (req, res) => {
   }
 })
 
-router
-  .route('/')
-  .get(notificationMiddleware)
-  .post(
-    [
-      check('pauseValue', 'Must be a number under 100').exists({ checkFalsy: true }).isInt({ min: 1, max: 99 }),
-      check('pauseUnit', 'Must be selected').exists({ checkFalsy: true }).isIn(['days', 'weeks', 'months']),
-    ],
-    validate,
-    postNotificationMiddleware,
-    notificationMiddleware,
-  )
+router.route('/').get(notificationMiddleware)
 
 // ///////////////////////////// new routers:
 
@@ -97,7 +84,7 @@ const getPauseMiddleware = async (req, res, next) => {
     } = req
 
     const {
-      locals: { csrfToken, errors = null },
+      locals: { csrfToken, errors },
     } = res
     const { notificationService } = app.get('DataServices')
     const { snoozeUntil: rawSnoozeUntil, preference = NONE } = await notificationService.getPreferences(token)
@@ -126,15 +113,15 @@ function getFormattedFutureDate(pauseUnit, pauseValue) {
 
 const postPauseMiddleware = async (req, res, next) => {
   try {
+    const errors = validationResult(req)
+    res.locals.errors = errors
     const {
       user: { token },
       app,
       body: { pauseUnit, pauseValue },
     } = req
-    const {
-      locals: { errors = null },
-    } = res
-    if (!errors || errors.length === 0) {
+
+    if (errors.errors.length === 0) {
       const {
         notificationService: { updateSnooze },
       } = app.get('DataServices')
@@ -157,10 +144,10 @@ router
   .get(getPauseMiddleware)
   .post(
     [
-      check('pauseValue', 'Enter a number').exists({ checkFalsy: true }).isInt({ min: 1, max: 99 }),
+      check('pauseValue', 'Enter a number').exists({ checkFalsy: true }).isInt(),
+      check('pauseValue', 'Enter a number above 0').isInt({ min: 1, max: 99 }),
       check('pauseUnit', 'Select a period of time').exists({ checkFalsy: true }).isIn(['days', 'weeks', 'months']),
     ],
-    validate,
     postPauseMiddleware,
     getPauseMiddleware,
   )

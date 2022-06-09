@@ -45,6 +45,13 @@ context('A staff member can view their notification settings', () => {
     pausePage.pauseValue().should('have.value', '12')
 
     pausePage.pauseValue().clear()
+    pausePage.pauseValue().type('0')
+    pausePage.submit()
+    cy.contains('Enter a number above 0')
+    cy.contains('Select a period of time')
+    pausePage.pauseValue().should('have.value', '0')
+
+    pausePage.pauseValue().clear()
     pausePage.pauseUnit().select('Days')
     pausePage.submit()
     cy.contains('Enter a number')
