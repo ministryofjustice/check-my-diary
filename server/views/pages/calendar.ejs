@@ -11,6 +11,22 @@
     <div class="govuk-width-container">
 
       <main id="main-content" role="main">
+
+        <% if (showBanner) { %>
+          <div class="govuk-notification-banner govuk-!-margin-top-4 govuk-!-width-three-quarters" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+            <div class="govuk-notification-banner__header">
+              <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                Important
+              </h2>
+            </div>
+            <div class="govuk-notification-banner__content">
+              <p>You will soon only be able to receive notifications by email. We will remove the option to receive texts.</p>
+              <p>You must <a class="govuk-notification-banner__link" href="/notifications/settings">change your notification settings</a> to email now.
+              </p>
+            </div>
+          </div>
+        <% } %>
+
         <div class="tabs-wrapper">
           <ul class="tabs">
             <li><a class="active" href="">Calendar</a></li>

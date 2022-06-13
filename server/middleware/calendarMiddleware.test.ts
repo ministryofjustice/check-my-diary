@@ -1,5 +1,6 @@
 import calendarMiddleware from './calendarMiddleware'
 import utilities from '../helpers/utilities'
+import { EMAIL } from '../helpers/constants'
 
 jest.mock('../helpers/utilities', () => ({
   configureCalendar: jest.fn(),
@@ -18,10 +19,14 @@ describe('calendar middleware', () => {
   const csrfToken = 'tomato'
   const getCalendarMonthMock = jest.fn()
   const countUnprocessedNotificationsMock = jest.fn()
+  const notificationPreferencesMock = jest.fn()
   const app = {
     get: () => ({
       calendarService: { getCalendarMonth: getCalendarMonthMock },
-      notificationService: { countUnprocessedNotifications: countUnprocessedNotificationsMock },
+      notificationService: {
+        countUnprocessedNotifications: countUnprocessedNotificationsMock,
+        getPreferences: notificationPreferencesMock,
+      },
     }),
   }
   let req
@@ -29,10 +34,12 @@ describe('calendar middleware', () => {
   const calendarData = ['sausages']
   const returnCalendarData = ['bacon']
   const notificationCount = 42
+  const preferences = { preference: EMAIL }
   beforeEach(async () => {
     configureCalendar.mockReturnValue(returnCalendarData)
     getCalendarMonthMock.mockResolvedValue(calendarData)
     countUnprocessedNotificationsMock.mockResolvedValue(notificationCount)
+    notificationPreferencesMock.mockResolvedValue(preferences)
     res = { render: renderMock, locals: { csrfToken } }
     req = {
       authUrl,

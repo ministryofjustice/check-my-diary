@@ -2,6 +2,7 @@ import moment from 'moment'
 import CalendarPage from '../pages/calendarPage'
 import CalendarDetailPage from '../pages/calendarDetailPage'
 import Page from '../pages/page'
+import NotificationSettingsPage from '../pages/notificationSettings'
 
 context('A staff member can view their calendar', () => {
   before(() => {
@@ -13,6 +14,10 @@ context('A staff member can view their calendar', () => {
     cy.task('stubLogin')
     cy.task('stubShifts')
     cy.task('stubNotificationCount')
+    cy.task('stubNotificationPreferencesGet', {
+      preference: 'EMAIL',
+      email: 'me@gmail.com',
+    })
     cy.login()
 
     Page.verifyOnPageTitle(CalendarPage, moment().format('MMMM YYYY'))
@@ -70,5 +75,19 @@ context('A staff member can view their calendar', () => {
     nightShiftPage.previousDay().should('contain.text', 'Friday, 6th').click()
 
     Page.verifyOnPageTitle(CalendarDetailPage, 'Friday, 6th March 2020')
+  })
+
+  it('Warning banner is shown for non-email users', () => {
+    cy.get('.govuk-notification-banner').should('not.exist')
+    cy.task('stubNotificationPreferencesGet', { preference: 'SMS', sms: '01234567890' })
+    cy.visit('/')
+
+    cy.get('.govuk-notification-banner').contains('You will soon only be able to receive notifications by email')
+    cy.get('.govuk-notification-banner__link').click()
+    Page.verifyOnPage(NotificationSettingsPage)
+
+    cy.task('stubNotificationPreferencesGet', { preference: 'NONE' })
+    cy.visit('/')
+    cy.get('.govuk-notification-banner').should('be.visible')
   })
 })

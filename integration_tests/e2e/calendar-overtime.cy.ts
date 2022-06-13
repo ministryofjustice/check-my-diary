@@ -13,6 +13,10 @@ context('A staff member can view their overtime calendar', () => {
     cy.task('stubLogin')
     cy.task('stubShifts')
     cy.task('stubNotificationCount')
+    cy.task('stubNotificationPreferencesGet', {
+      preference: 'EMAIL',
+      email: 'me@gmail.com',
+    })
     cy.login()
 
     Page.verifyOnPageTitle(CalendarPage, moment().format('MMMM YYYY'))

@@ -12,6 +12,10 @@ context('Sign in functionality', () => {
     cy.task('reset')
     cy.task('stubShifts')
     cy.task('stubNotificationCount')
+    cy.task('stubNotificationPreferencesGet', {
+      preference: 'EMAIL',
+      email: 'me@gmail.com',
+    })
   })
 
   it('Root (/) redirects to the auth sign in page if not signed in', () => {
