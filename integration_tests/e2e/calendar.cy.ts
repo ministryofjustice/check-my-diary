@@ -84,7 +84,7 @@ context('A staff member can view their calendar', () => {
 
     cy.get('.govuk-notification-banner').contains('You will soon only be able to receive notifications by email')
     cy.get('.govuk-notification-banner__link').click()
-    const page = Page.verifyOnPage(NotificationSettingsPage)
+    Page.verifyOnPage(NotificationSettingsPage)
 
     cy.task('stubNotificationPreferencesGet', { preference: 'NONE' })
     cy.visit('/')
