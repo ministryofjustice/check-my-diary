@@ -33,7 +33,7 @@ describe('post notification settings middleware', () => {
   describe('with "email" selected', () => {
     describe('and no validation errors', () => {
       beforeEach(async () => {
-        req.body = { inputEmail: emailText, inputMobile: mobileNumber, contactMethod: EMAIL }
+        req.body = { inputEmail: emailText, notificationRequired: 'Yes' }
         validationResultMock.mockReturnValueOnce({ isEmpty: () => true })
         await postNotificationSettingsMiddleware(req, res, nextMock)
       })
@@ -56,10 +56,10 @@ describe('post notification settings middleware', () => {
       })
     })
     describe('and validation errors', () => {
-      const errors = 'sausage'
+      const errors = { isEmpty: () => false, mapped: () => 'sausage' }
       beforeEach(async () => {
-        req.body = { inputEmail: emailText, inputMobile: '', contactMethod: EMAIL }
-        validationResultMock.mockReturnValueOnce({ isEmpty: () => false, mapped: () => errors })
+        req.body = { inputEmail: emailText, notificationRequired: 'Yes' }
+        validationResultMock.mockReturnValueOnce(errors)
         await postNotificationSettingsMiddleware(req, res, nextMock)
       })
       it('should validate the params', () => {
@@ -80,7 +80,6 @@ describe('post notification settings middleware', () => {
           employeeName,
           contactMethod: EMAIL,
           inputEmail: emailText,
-          inputMobile: '',
         })
 
         // expect(renderMock.mock.calls[0][0]).toBe({})
@@ -92,7 +91,7 @@ describe('post notification settings middleware', () => {
   })
   describe('with "none" selected', () => {
     beforeEach(async () => {
-      req.body = { inputEmail: emailText, inputMobile: mobileNumber, contactMethod: NONE }
+      req.body = { inputEmail: emailText, notificationRequired: 'No' }
       validationResultMock.mockReturnValueOnce({ isEmpty: () => true })
       await postNotificationSettingsMiddleware(req, res, nextMock)
     })
@@ -103,7 +102,7 @@ describe('post notification settings middleware', () => {
   })
   describe('with "none" selected', () => {
     beforeEach(async () => {
-      req.body = { inputEmail: emailText, inputMobile: mobileNumber, contactMethod: NONE }
+      req.body = { inputEmail: emailText, notificationRequired: 'No' }
       validationResultMock.mockReturnValueOnce({ isEmpty: () => true })
       await postNotificationSettingsMiddleware(req, res, nextMock)
     })

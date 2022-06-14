@@ -40,7 +40,6 @@ describe('notification settings middleware', () => {
         employeeName,
         contactMethod: SMS,
         inputEmail: '',
-        inputMobile: mobileNumber,
         errors: null,
       })
     })
@@ -57,15 +56,14 @@ describe('notification settings middleware', () => {
       expect(getPreferencesMock).toHaveBeenCalledTimes(1)
       expect(getPreferencesMock).toHaveBeenCalledWith(token)
     })
-    it('should render the page reflecting a "none" notifications type', () => {
+    it('should render the page reflecting no notifications type', () => {
       expect(renderMock).toHaveBeenCalledTimes(1)
       expect(renderMock).toHaveBeenCalledWith('pages/notification-settings', {
         authUrl,
         csrfToken,
         employeeName,
-        contactMethod: NONE,
+        contactMethod: '',
         inputEmail: '',
-        inputMobile: '',
         errors: null,
       })
     })

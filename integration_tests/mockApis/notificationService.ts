@@ -75,6 +75,32 @@ export default {
       },
     }),
 
+  stubNotificationPreferencesGet404: (): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: '/preferences/notifications',
+      },
+      response: {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      },
+    }),
+
+  stubNotificationPreferencesSet: (): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'PUT',
+        urlPattern: '/preferences/notifications/details',
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    }),
+
   stubNotificationUpdate: (): SuperAgentRequest =>
     stubFor({
       request: {
@@ -94,6 +120,14 @@ export default {
       await getMatchingRequests({
         method: 'PUT',
         url: '/preferences/notifications/snooze',
+      })
+    ).body.requests,
+
+  verifyDetails: async () =>
+    (
+      await getMatchingRequests({
+        method: 'PUT',
+        url: '/preferences/notifications/details',
       })
     ).body.requests,
 }
