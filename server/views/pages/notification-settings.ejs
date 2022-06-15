@@ -13,7 +13,7 @@
       <a href="/notifications/manage" class="govuk-back-link">Back</a>
 
       <main id="main-content" role="main">
-        <form action="/notifications/settings" method="POST">
+        <form action="/notifications/settings" method="POST" novalidate>
           <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
               <h1 class="govuk-fieldset__heading">
@@ -59,7 +59,7 @@
             <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-contactMethod-conditional">
               <div class="govuk-form-group<% if (isError(errors, 'inputEmail')) { %> govuk-form-group--error<% } %>">
                 <label class="govuk-label" for="inputEmail">
-                  Enter your mail address
+                  Enter your email address
                 </label>
                 <input class="govuk-input govuk-!-width-one-third" id="inputEmail" name="inputEmail" type="email" spellcheck="false" autocomplete="email" maxlength="256" value="<%= inputEmail %>">
               </div>

@@ -33,20 +33,20 @@ context('A staff member can view their notification settings', () => {
     page.inputEmail().clear()
     page.submit()
 
-    cy.contains('Enter your email address')
+    page.errorSummary().contains('Enter your email address')
     page.radio('Yes').should('be.checked')
 
     cy.task('stubNotificationPreferencesGet404')
     cy.visit('/notifications/settings')
     page.submit()
 
-    cy.contains('Select if you want to receive notifications')
+    page.errorSummary().contains('Select if you want to receive notifications')
 
     page.radio('Yes').click()
-    page.inputEmail().type('address@invalid')
+    page.inputEmail().type('address-invalid')
     page.submit()
 
-    cy.contains('Enter an email address in the correct format, like name@example.com')
+    page.errorSummary().contains('Enter an email address in the correct format, like name@example.com')
 
     page.inputEmail().clear().type('address@domain.com')
     page.submit()
