@@ -3,7 +3,6 @@ import NotificationSettingsPage from '../pages/notificationSettings'
 import NotificationManagePage from '../pages/notificationManage'
 import Page from '../pages/page'
 import NotificationPausePage from '../pages/notificationPause'
-import NotificationPage from '../pages/notification'
 
 context('A staff member can view their notification settings', () => {
   beforeEach(() => {
