@@ -36,7 +36,7 @@
                 <div class="govuk-form-group<% if (isError(errors, 'pauseValue')) { %> govuk-form-group--error<% } %>">
                   <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                   <label for="pauseValue" class="govuk-label">Enter a number</label>
-                  <input class="govuk-input govuk-input--width-2 govuk-!-margin-right-2" id="pauseValue" name="pauseValue" type="number" maxlength="2" value="<%= pauseValue %>" />
+                  <input class="govuk-input govuk-input--width-2 govuk-!-margin-right-2" id="pauseValue" name="pauseValue" maxlength="2" value="<%= pauseValue %>" />
                 </div>
 
                 <div class="govuk-form-group<% if (isError(errors, 'pauseUnit')) { %> govuk-form-group--error<% } %>">

@@ -3,7 +3,6 @@ import NotificationSettingsPage from '../pages/notificationSettings'
 import NotificationManagePage from '../pages/notificationManage'
 import Page from '../pages/page'
 import NotificationPausePage from '../pages/notificationPause'
-import NotificationPage from '../pages/notification'
 
 context('A staff member can view their notification settings', () => {
   beforeEach(() => {
@@ -51,7 +50,7 @@ context('A staff member can view their notification settings', () => {
     page.inputEmail().clear().type('address@domain.com')
     page.submit()
 
-    Page.verifyOnPage(NotificationPage)
+    Page.verifyOnPage(NotificationManagePage)
     cy.task('verifyDetails').then((requests) => {
       expect(requests).to.have.length(1)
       expect(requests[0].body).eq(`{"preference":"EMAIL","email":"address@domain.com","sms":""}`)
