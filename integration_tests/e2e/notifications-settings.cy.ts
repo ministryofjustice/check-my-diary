@@ -51,7 +51,7 @@ context('A staff member can view their notification settings', () => {
     page.inputEmail().clear().type('address@domain.com')
     page.submit()
 
-    Page.verifyOnPage(NotificationPage)
+    Page.verifyOnPage(NotificationManagePage)
     cy.task('verifyDetails').then((requests) => {
       expect(requests).to.have.length(1)
       expect(requests[0].body).eq(`{"preference":"EMAIL","email":"address@domain.com","sms":""}`)

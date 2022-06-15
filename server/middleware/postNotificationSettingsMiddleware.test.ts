@@ -45,7 +45,7 @@ describe('post notification settings middleware', () => {
       })
       it('should call the redirect function once', () => {
         expect(redirectMock).toHaveBeenCalledTimes(1)
-        expect(redirectMock).toHaveBeenCalledWith('/notifications')
+        expect(redirectMock).toHaveBeenCalledWith('/notifications/manage')
       })
       it('should not call the render function', () => {
         expect(renderMock).not.toHaveBeenCalled()
@@ -80,8 +80,6 @@ describe('post notification settings middleware', () => {
           contactMethod: EMAIL,
           inputEmail: emailText,
         })
-
-        // expect(renderMock.mock.calls[0][0]).toBe({})
       })
       it('should not call the next function', () => {
         expect(nextMock).not.toHaveBeenCalled()

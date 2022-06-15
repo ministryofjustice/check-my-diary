@@ -41,7 +41,7 @@ const postNotificationSettingsMiddleware = async (req, res, next) => {
       notificationRequired === 'Yes' ? EMAIL : NONE,
       notificationRequired === 'Yes' ? inputEmail : '',
     )
-    return res.redirect('/notifications')
+    return res.redirect('/notifications/manage')
   } catch (error) {
     return next(appendUserErrorMessage(error, NOTIFICATION_SETTINGS_POST_ERROR))
   }
