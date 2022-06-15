@@ -1,5 +1,3 @@
-const logger = require('../../log')
-const { NONE } = require('../helpers/constants')
 const { appendUserErrorMessage } = require('../helpers/utilities')
 const { NOTIFICATION_SETTINGS_ERROR } = require('../helpers/errorConstants')
 

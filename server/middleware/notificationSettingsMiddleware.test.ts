@@ -1,6 +1,6 @@
 import type { Response } from 'express'
 import notificationSettingsMiddleware from './notificationSettingsMiddleware'
-import { NONE, SMS } from '../helpers/constants'
+import { SMS } from '../helpers/constants'
 import { AppRequest } from '../helpers/utilities.types'
 
 describe('notification settings middleware', () => {
@@ -10,7 +10,6 @@ describe('notification settings middleware', () => {
   const csrfToken = 'courgette'
   const authUrl = 'carrot'
   const employeeName = 'fennel'
-  const mobileNumber = '404040404'
 
   const getPreferencesMock = jest.fn()
   const app = { get: () => ({ notificationService: { getPreferences: getPreferencesMock } }) }

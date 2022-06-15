@@ -1,22 +1,8 @@
-const { body, validationResult } = require('express-validator')
+const { validationResult } = require('express-validator')
 const logger = require('../../log')
 const { NONE, EMAIL } = require('../helpers/constants')
 const { appendUserErrorMessage } = require('../helpers/utilities')
 const { NOTIFICATION_SETTINGS_POST_ERROR } = require('../helpers/errorConstants')
-
-const NOTIFICATION_REQUIRED = 'notificationRequired'
-
-const validationRules = () => {
-  return [
-    body(NOTIFICATION_REQUIRED, 'Select if you want to receive notifications').isIn(['Yes', 'No']),
-
-    body('inputEmail', 'Enter your email address').if(body(NOTIFICATION_REQUIRED).equals('Yes')).notEmpty(),
-
-    body('inputEmail', 'Enter an email address in the correct format, like name@example.com')
-      .if(body(NOTIFICATION_REQUIRED).equals('Yes'))
-      .isEmail(),
-  ]
-}
 
 const postNotificationSettingsMiddleware = async (req, res, next) => {
   try {
@@ -54,7 +40,6 @@ const postNotificationSettingsMiddleware = async (req, res, next) => {
       token,
       notificationRequired === 'Yes' ? EMAIL : NONE,
       notificationRequired === 'Yes' ? inputEmail : '',
-      '',
     )
     return res.redirect('/notifications')
   } catch (error) {
@@ -62,4 +47,4 @@ const postNotificationSettingsMiddleware = async (req, res, next) => {
   }
 }
 
-module.exports = { postNotificationSettingsMiddleware, postNotificationSettingsValidationRules: validationRules }
+module.exports = { postNotificationSettingsMiddleware }

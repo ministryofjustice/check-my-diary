@@ -60,7 +60,7 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        urlPattern: '/preferences/notifications',
+        urlPattern: '/preferences/notifications2',
       },
       response: {
         status: 200,
@@ -79,7 +79,7 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        urlPattern: '/preferences/notifications',
+        urlPattern: '/preferences/notifications2',
       },
       response: {
         status: 404,

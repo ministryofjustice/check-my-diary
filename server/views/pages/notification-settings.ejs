@@ -10,60 +10,60 @@
 
     <div class="govuk-width-container">
 
-      <a href="/notifications" class="govuk-back-link">Back</a>
+      <a href="/notifications/manage" class="govuk-back-link">Back</a>
 
       <main id="main-content" role="main">
         <form action="/notifications/settings" method="POST">
-          <fieldset class="govuk-fieldset" aria-describedby="contactMethod-conditional-hint">
-              <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                <h1 class="govuk-fieldset__heading">
-                  Do you want to receive notifications?
-                </h1>
-              </legend>
+          <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h1 class="govuk-fieldset__heading">
+                Do you want to receive notifications?
+              </h1>
+            </legend>
 
-              <% if (isErrors(errors)){ %>
-                <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary">
-                  <h2 class="govuk-error-summary__title" id="error-summary-title">
-                    There is a problem
-                  </h2>
-                  <div class="govuk-error-summary__body">
-                    <ul class="govuk-list govuk-error-summary__list">
-                      <% errors.array({ onlyFirstError: true }).forEach((error) => { %>
-                        <li><a href="#<%= error.param %>"><%= error.msg %></a></li>
-                      <% }) %>
-                    </ul>
-                  </div>
-                </div>
-              <% } %>
-
-              <div class="govuk-form-group<% if (isError(errors, 'notificationRequired')) { %> govuk-form-group--error<% } %>">
-                <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
-
-                  <div class="govuk-radios__item govuk-!-display-inline">
-                    <input class="govuk-radios__input" id="contactMethod-conditional" name="notificationRequired" type="radio" value="Yes" data-aria-controls="conditional-contactMethod-conditional" <% if(contactMethod === 'EMAIL') { %>checked<% } %>>
-                    <label class="govuk-label govuk-radios__label" for="contactMethod-conditional">
-                      Yes
-                    </label>
-                  </div>
-
-                  <div class="govuk-radios__item govuk-!-display-inline">
-                    <input class="govuk-radios__input" id="contactMethod-conditional-3" name="notificationRequired" type="radio" value="No" <% if(contactMethod === 'NONE') { %>checked<% } %>>
-                    <label class="govuk-label govuk-radios__label" for="contactMethod-conditional-3">
-                      No
-                    </label>
-                  </div>
-
+            <% if (isErrors(errors)){ %>
+              <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary">
+                <h2 class="govuk-error-summary__title" id="error-summary-title">
+                  There is a problem
+                </h2>
+                <div class="govuk-error-summary__body">
+                  <ul class="govuk-list govuk-error-summary__list">
+                    <% errors.array({ onlyFirstError: true }).forEach((error) => { %>
+                      <li><a href="#<%= error.param %>"><%= error.msg %></a></li>
+                    <% }) %>
+                  </ul>
                 </div>
               </div>
+            <% } %>
 
-              <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-contactMethod-conditional">
-                <div class="govuk-form-group<% if (isError(errors, 'inputEmail')) { %> govuk-form-group--error<% } %>">
-                  <label class="govuk-label" for="inputEmail">
-                    Enter your mail address
+            <div class="govuk-form-group<% if (isError(errors, 'notificationRequired')) { %> govuk-form-group--error<% } %>">
+              <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
+
+                <div class="govuk-radios__item govuk-!-display-inline-block govuk-!-margin-bottom-0">
+                  <input class="govuk-radios__input" id="notificationRequired" name="notificationRequired" type="radio" value="Yes" data-aria-controls="conditional-contactMethod-conditional" <% if(contactMethod === 'EMAIL') { %>checked<% } %>>
+                  <label class="govuk-label govuk-radios__label" for="notificationRequired">
+                    Yes
                   </label>
-                  <input class="govuk-input govuk-!-width-one-third" id="inputEmail" name="inputEmail" type="email" spellcheck="false" autocomplete="email" maxlength="256" value="<%= inputEmail %>">
                 </div>
+
+                <div class="govuk-radios__item govuk-!-display-inline-block govuk-!-margin-bottom-0">
+                  <input class="govuk-radios__input" id="notificationRequired-2" name="notificationRequired" type="radio" value="No" <% if(contactMethod === 'NONE') { %>checked<% } %>>
+                  <label class="govuk-label govuk-radios__label" for="notificationRequired-2">
+                    No
+                  </label>
+                </div>
+
               </div>
+            </div>
+
+            <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-contactMethod-conditional">
+              <div class="govuk-form-group<% if (isError(errors, 'inputEmail')) { %> govuk-form-group--error<% } %>">
+                <label class="govuk-label" for="inputEmail">
+                  Enter your mail address
+                </label>
+                <input class="govuk-input govuk-!-width-one-third" id="inputEmail" name="inputEmail" type="email" spellcheck="false" autocomplete="email" maxlength="256" value="<%= inputEmail %>">
+              </div>
+            </div>
           </fieldset>
           <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
           <button type="submit" class="govuk-button govuk-!-margin-right-2">

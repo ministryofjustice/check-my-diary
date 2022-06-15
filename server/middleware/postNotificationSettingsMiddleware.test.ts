@@ -17,7 +17,6 @@ describe('post notification settings middleware', () => {
   const authUrl = 'carrot'
   const employeeName = 'fennel'
   const emailText = 'checkmydiary@digital.justice.gov.uk'
-  const mobileNumber = '404040404'
 
   const updatePreferencesMock = jest.fn()
   const app = { get: () => ({ notificationService: { updatePreferences: updatePreferencesMock } }) }
@@ -42,7 +41,7 @@ describe('post notification settings middleware', () => {
       })
       it('should update the preferences by calling the "updatePreferences" method on the "notificationService"', () => {
         expect(updatePreferencesMock).toHaveBeenCalledTimes(1)
-        expect(updatePreferencesMock).toHaveBeenCalledWith(token, EMAIL, emailText, '')
+        expect(updatePreferencesMock).toHaveBeenCalledWith(token, EMAIL, emailText)
       })
       it('should call the redirect function once', () => {
         expect(redirectMock).toHaveBeenCalledTimes(1)
@@ -97,7 +96,7 @@ describe('post notification settings middleware', () => {
     })
     it('should update the preferences', () => {
       expect(updatePreferencesMock).toHaveBeenCalledTimes(1)
-      expect(updatePreferencesMock).toHaveBeenCalledWith(token, NONE, '', '')
+      expect(updatePreferencesMock).toHaveBeenCalledWith(token, NONE, '')
     })
   })
   describe('with "none" selected', () => {
@@ -108,7 +107,7 @@ describe('post notification settings middleware', () => {
     })
     it('should update the preferences', () => {
       expect(updatePreferencesMock).toHaveBeenCalledTimes(1)
-      expect(updatePreferencesMock).toHaveBeenCalledWith(token, NONE, '', '')
+      expect(updatePreferencesMock).toHaveBeenCalledWith(token, NONE, '')
     })
   })
 })

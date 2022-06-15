@@ -1,13 +1,10 @@
 const router = require('express').Router()
-const { check, validationResult } = require('express-validator')
+const { check, validationResult, body } = require('express-validator')
 const { formatISO, add } = require('date-fns')
 
 const logger = require('../../log')
 const notificationSettingsMiddleware = require('../middleware/notificationSettingsMiddleware')
-const {
-  postNotificationSettingsMiddleware,
-  postNotificationSettingsValidationRules,
-} = require('../middleware/postNotificationSettingsMiddleware')
+const { postNotificationSettingsMiddleware } = require('../middleware/postNotificationSettingsMiddleware')
 const notificationMiddleware = require('../middleware/notificationMiddleware')
 const { NONE } = require('../helpers/constants')
 const { getSnoozeUntil } = require('../helpers/utilities')
@@ -23,7 +20,18 @@ function serviceUnavailable(req, res) {
 router
   .route('/settings')
   .get(notificationSettingsMiddleware)
-  .post(postNotificationSettingsValidationRules(), postNotificationSettingsMiddleware)
+  .post(
+    [
+      body('notificationRequired', 'Select if you want to receive notifications').isIn(['Yes', 'No']),
+
+      body('inputEmail', 'Enter your email address').if(body('notificationRequired').equals('Yes')).notEmpty(),
+
+      body('inputEmail', 'Enter an email address in the correct format, like name@example.com')
+        .if(body('notificationRequired').equals('Yes'))
+        .isEmail(),
+    ],
+    postNotificationSettingsMiddleware,
+  )
 
 router.post('/resume', async (req, res) => {
   try {
@@ -42,8 +50,6 @@ router.post('/resume', async (req, res) => {
 })
 
 router.route('/').get(notificationMiddleware)
-
-// ///////////////////////////// new routers:
 
 const getManageMiddleware = async (req, res, next) => {
   try {

@@ -1,6 +1,6 @@
 const axios = require('axios')
 const moment = require('moment')
-const getSanitisedError = require('../sanitisedError')
+const getSanitisedError = require('../sanitisedError').default
 
 const logger = require('../../log')
 const baseUrl = require('../../config').cmdApi.url
@@ -27,7 +27,7 @@ const notificationService = {
 
   getPreferences(accessToken) {
     return axios
-      .get(`${baseUrl}/preferences/notifications`, {
+      .get(`${baseUrl}/preferences/notifications2`, {
         headers: {
           authorization: `Bearer ${accessToken}`,
         },
@@ -42,12 +42,12 @@ const notificationService = {
       })
   },
 
-  updatePreferences(accessToken, preference = 'none', email = '', sms = '') {
-    logger.info(`updatePreferences to ${preference}, hasEmail: ${!!email}, hasSms: ${!!sms}`)
+  updatePreferences(accessToken, preference = 'none', email = '') {
+    logger.info(`updatePreferences to ${preference}, hasEmail: ${!!email}`)
     return axios
       .put(
         `${baseUrl}/preferences/notifications/details`,
-        { preference, email, sms },
+        { preference, email, sms: '' },
         {
           headers: {
             authorization: `Bearer ${accessToken}`,
