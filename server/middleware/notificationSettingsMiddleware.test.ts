@@ -1,6 +1,6 @@
 import type { Response } from 'express'
 import notificationSettingsMiddleware from './notificationSettingsMiddleware'
-import { NONE, SMS } from '../helpers/constants'
+import { SMS } from '../helpers/constants'
 import { AppRequest } from '../helpers/utilities.types'
 
 describe('notification settings middleware', () => {
@@ -10,7 +10,6 @@ describe('notification settings middleware', () => {
   const csrfToken = 'courgette'
   const authUrl = 'carrot'
   const employeeName = 'fennel'
-  const mobileNumber = '404040404'
 
   const getPreferencesMock = jest.fn()
   const app = { get: () => ({ notificationService: { getPreferences: getPreferencesMock } }) }
@@ -40,7 +39,6 @@ describe('notification settings middleware', () => {
         employeeName,
         contactMethod: SMS,
         inputEmail: '',
-        inputMobile: mobileNumber,
         errors: null,
       })
     })
@@ -57,15 +55,14 @@ describe('notification settings middleware', () => {
       expect(getPreferencesMock).toHaveBeenCalledTimes(1)
       expect(getPreferencesMock).toHaveBeenCalledWith(token)
     })
-    it('should render the page reflecting a "none" notifications type', () => {
+    it('should render the page reflecting no notifications type', () => {
       expect(renderMock).toHaveBeenCalledTimes(1)
       expect(renderMock).toHaveBeenCalledWith('pages/notification-settings', {
         authUrl,
         csrfToken,
         employeeName,
-        contactMethod: NONE,
+        contactMethod: '',
         inputEmail: '',
-        inputMobile: '',
         errors: null,
       })
     })

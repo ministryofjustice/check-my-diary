@@ -3,6 +3,7 @@ import NotificationSettingsPage from '../pages/notificationSettings'
 import NotificationManagePage from '../pages/notificationManage'
 import Page from '../pages/page'
 import NotificationPausePage from '../pages/notificationPause'
+import NotificationPage from '../pages/notification'
 
 context('A staff member can view their notification settings', () => {
   beforeEach(() => {
@@ -14,14 +15,50 @@ context('A staff member can view their notification settings', () => {
     cy.login()
   })
 
-  it('Current notification setting is selected', () => {
-    cy.visit('/notifications/settings')
+  it('Notification setting validation with existing email', () => {
+    cy.task('stubNotificationPreferencesGet', {
+      preference: 'EMAIL',
+      email: 'me@gmail.com',
+    })
+    cy.task('stubNotificationPreferencesSet')
+
+    cy.visit('/notifications/manage')
+    Page.verifyOnPage(NotificationManagePage)
+    cy.contains('Change').click()
     const page = Page.verifyOnPage(NotificationSettingsPage)
 
-    page.checkText('01189998819991197253')
+    page.radio('Yes').should('be.checked')
+    page.checkText('me@gmail.com')
+
+    page.inputEmail().clear()
+    page.submit()
+
+    cy.contains('Enter your email address')
+    page.radio('Yes').should('be.checked')
+
+    cy.task('stubNotificationPreferencesGet404')
+    cy.visit('/notifications/settings')
+    page.submit()
+
+    cy.contains('Select if you want to receive notifications')
+
+    page.radio('Yes').click()
+    page.inputEmail().type('address@invalid')
+    page.submit()
+
+    cy.contains('Enter an email address in the correct format, like name@example.com')
+
+    page.inputEmail().clear().type('address@domain.com')
+    page.submit()
+
+    Page.verifyOnPage(NotificationPage)
+    cy.task('verifyDetails').then((requests) => {
+      expect(requests).to.have.length(1)
+      expect(requests[0].body).eq(`{"preference":"EMAIL","email":"address@domain.com","sms":""}`)
+    })
   })
 
-  it('Manage your notifications - set', () => {
+  it('Manage your notifications - set and pause', () => {
     cy.task('stubNotificationPreferencesGet', {
       preference: 'EMAIL',
       email: 'me@gmail.com',

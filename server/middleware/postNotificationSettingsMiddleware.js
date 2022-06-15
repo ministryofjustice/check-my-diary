@@ -1,17 +1,8 @@
-const { body, validationResult } = require('express-validator')
+const { validationResult } = require('express-validator')
 const logger = require('../../log')
-const { NONE, EMAIL, SMS } = require('../helpers/constants')
+const { NONE, EMAIL } = require('../helpers/constants')
 const { appendUserErrorMessage } = require('../helpers/utilities')
 const { NOTIFICATION_SETTINGS_POST_ERROR } = require('../helpers/errorConstants')
-
-const validationRules = () => {
-  const contactMethod = 'contactMethod'
-  return [
-    body(contactMethod, 'Must select one option').isIn([NONE, EMAIL, SMS]),
-    body('inputEmail', 'Must be a valid email address').if(body(contactMethod).equals(EMAIL)).isEmail(),
-    body('inputMobile', 'Must be a valid mobile number').if(body(contactMethod).equals(SMS)).isMobilePhone('en-GB'),
-  ]
-}
 
 const postNotificationSettingsMiddleware = async (req, res, next) => {
   try {
@@ -23,17 +14,19 @@ const postNotificationSettingsMiddleware = async (req, res, next) => {
       app,
       authUrl,
       user: { token, employeeName },
-      body: { contactMethod = NONE, inputEmail = '', inputMobile = '' },
+      body: { notificationRequired = '', inputEmail = '' },
     } = req
     const {
       locals: { csrfToken },
     } = res
+    // eslint-disable-next-line no-nested-ternary
+    const contactMethod = notificationRequired === 'Yes' ? EMAIL : notificationRequired === 'No' ? NONE : ''
+
     if (!errors.isEmpty()) {
       return res.render('pages/notification-settings', {
-        errors: errors.mapped(),
+        errors,
         contactMethod,
         inputEmail,
-        inputMobile,
         employeeName,
         csrfToken,
         authUrl,
@@ -42,11 +35,11 @@ const postNotificationSettingsMiddleware = async (req, res, next) => {
     const {
       notificationService: { updatePreferences },
     } = app.get('DataServices')
+
     await updatePreferences(
       token,
-      contactMethod,
-      contactMethod === EMAIL ? inputEmail : '',
-      contactMethod === SMS ? inputMobile : '',
+      notificationRequired === 'Yes' ? EMAIL : NONE,
+      notificationRequired === 'Yes' ? inputEmail : '',
     )
     return res.redirect('/notifications')
   } catch (error) {
@@ -54,4 +47,4 @@ const postNotificationSettingsMiddleware = async (req, res, next) => {
   }
 }
 
-module.exports = { postNotificationSettingsMiddleware, postNotificationSettingsValidationRules: validationRules }
+module.exports = { postNotificationSettingsMiddleware }

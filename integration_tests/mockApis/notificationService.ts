@@ -60,7 +60,7 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        urlPattern: '/preferences/notifications',
+        urlPattern: '/preferences/notifications2',
       },
       response: {
         status: 200,
@@ -71,6 +71,32 @@ export default {
           snoozeUntil: moment().add(3, 'days').format('YYYY-MM-DD'),
           preference: 'SMS',
           sms: '01189998819991197253',
+        },
+      },
+    }),
+
+  stubNotificationPreferencesGet404: (): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: '/preferences/notifications2',
+      },
+      response: {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      },
+    }),
+
+  stubNotificationPreferencesSet: (): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'PUT',
+        urlPattern: '/preferences/notifications/details',
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
         },
       },
     }),
@@ -94,6 +120,14 @@ export default {
       await getMatchingRequests({
         method: 'PUT',
         url: '/preferences/notifications/snooze',
+      })
+    ).body.requests,
+
+  verifyDetails: async () =>
+    (
+      await getMatchingRequests({
+        method: 'PUT',
+        url: '/preferences/notifications/details',
       })
     ).body.requests,
 }

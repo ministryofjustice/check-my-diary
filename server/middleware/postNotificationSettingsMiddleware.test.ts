@@ -17,7 +17,6 @@ describe('post notification settings middleware', () => {
   const authUrl = 'carrot'
   const employeeName = 'fennel'
   const emailText = 'checkmydiary@digital.justice.gov.uk'
-  const mobileNumber = '404040404'
 
   const updatePreferencesMock = jest.fn()
   const app = { get: () => ({ notificationService: { updatePreferences: updatePreferencesMock } }) }
@@ -33,7 +32,7 @@ describe('post notification settings middleware', () => {
   describe('with "email" selected', () => {
     describe('and no validation errors', () => {
       beforeEach(async () => {
-        req.body = { inputEmail: emailText, inputMobile: mobileNumber, contactMethod: EMAIL }
+        req.body = { inputEmail: emailText, notificationRequired: 'Yes' }
         validationResultMock.mockReturnValueOnce({ isEmpty: () => true })
         await postNotificationSettingsMiddleware(req, res, nextMock)
       })
@@ -42,7 +41,7 @@ describe('post notification settings middleware', () => {
       })
       it('should update the preferences by calling the "updatePreferences" method on the "notificationService"', () => {
         expect(updatePreferencesMock).toHaveBeenCalledTimes(1)
-        expect(updatePreferencesMock).toHaveBeenCalledWith(token, EMAIL, emailText, '')
+        expect(updatePreferencesMock).toHaveBeenCalledWith(token, EMAIL, emailText)
       })
       it('should call the redirect function once', () => {
         expect(redirectMock).toHaveBeenCalledTimes(1)
@@ -56,10 +55,10 @@ describe('post notification settings middleware', () => {
       })
     })
     describe('and validation errors', () => {
-      const errors = 'sausage'
+      const errors = { isEmpty: () => false, mapped: () => 'sausage' }
       beforeEach(async () => {
-        req.body = { inputEmail: emailText, inputMobile: '', contactMethod: EMAIL }
-        validationResultMock.mockReturnValueOnce({ isEmpty: () => false, mapped: () => errors })
+        req.body = { inputEmail: emailText, notificationRequired: 'Yes' }
+        validationResultMock.mockReturnValueOnce(errors)
         await postNotificationSettingsMiddleware(req, res, nextMock)
       })
       it('should validate the params', () => {
@@ -80,7 +79,6 @@ describe('post notification settings middleware', () => {
           employeeName,
           contactMethod: EMAIL,
           inputEmail: emailText,
-          inputMobile: '',
         })
 
         // expect(renderMock.mock.calls[0][0]).toBe({})
@@ -92,24 +90,24 @@ describe('post notification settings middleware', () => {
   })
   describe('with "none" selected', () => {
     beforeEach(async () => {
-      req.body = { inputEmail: emailText, inputMobile: mobileNumber, contactMethod: NONE }
+      req.body = { inputEmail: emailText, notificationRequired: 'No' }
       validationResultMock.mockReturnValueOnce({ isEmpty: () => true })
       await postNotificationSettingsMiddleware(req, res, nextMock)
     })
     it('should update the preferences', () => {
       expect(updatePreferencesMock).toHaveBeenCalledTimes(1)
-      expect(updatePreferencesMock).toHaveBeenCalledWith(token, NONE, '', '')
+      expect(updatePreferencesMock).toHaveBeenCalledWith(token, NONE, '')
     })
   })
   describe('with "none" selected', () => {
     beforeEach(async () => {
-      req.body = { inputEmail: emailText, inputMobile: mobileNumber, contactMethod: NONE }
+      req.body = { inputEmail: emailText, notificationRequired: 'No' }
       validationResultMock.mockReturnValueOnce({ isEmpty: () => true })
       await postNotificationSettingsMiddleware(req, res, nextMock)
     })
     it('should update the preferences', () => {
       expect(updatePreferencesMock).toHaveBeenCalledTimes(1)
-      expect(updatePreferencesMock).toHaveBeenCalledWith(token, NONE, '', '')
+      expect(updatePreferencesMock).toHaveBeenCalledWith(token, NONE, '')
     })
   })
 })

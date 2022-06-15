@@ -1,5 +1,6 @@
 const axios = require('axios')
 const moment = require('moment')
+const getSanitisedError = require('../sanitisedError').default
 
 const logger = require('../../log')
 const baseUrl = require('../../config').cmdApi.url
@@ -14,7 +15,7 @@ const notificationService = {
       })
       .then((response) => response.data)
       .catch((error) => {
-        logger.error(`notificationService getNotifications : ${error}`)
+        logger.error(getSanitisedError(error), 'notificationService getNotifications')
         throw error
       })
   },
@@ -26,24 +27,27 @@ const notificationService = {
 
   getPreferences(accessToken) {
     return axios
-      .get(`${baseUrl}/preferences/notifications`, {
+      .get(`${baseUrl}/preferences/notifications2`, {
         headers: {
           authorization: `Bearer ${accessToken}`,
         },
       })
       .then((response) => response.data)
       .catch((error) => {
-        logger.error(`notificationService getPreferences : ${error}`)
+        if (error.response.status === 404) {
+          return {}
+        }
+        logger.error(getSanitisedError(error), 'notificationService getPreference')
         throw error
       })
   },
 
-  updatePreferences(accessToken, preference = 'none', email = '', sms = '') {
-    logger.info(`updatePreferences to ${preference}, hasEmail: ${!!email}, hasSms: ${!!sms}`)
+  updatePreferences(accessToken, preference = 'none', email = '') {
+    logger.info(`updatePreferences to ${preference}, hasEmail: ${!!email}`)
     return axios
       .put(
         `${baseUrl}/preferences/notifications/details`,
-        { preference, email, sms },
+        { preference, email, sms: '' },
         {
           headers: {
             authorization: `Bearer ${accessToken}`,
@@ -51,7 +55,7 @@ const notificationService = {
         },
       )
       .catch((error) => {
-        logger.error(`notificationService updatePreferences : ${error}`)
+        logger.error(getSanitisedError(error), 'notificationService updatePreferences')
         throw error
       })
   },
@@ -69,7 +73,7 @@ const notificationService = {
         },
       )
       .catch((error) => {
-        logger.error(`notificationService updateSnooze : ${error}`)
+        logger.error(getSanitisedError(error), 'notificationService updateSnooze')
         throw error
       })
   },
