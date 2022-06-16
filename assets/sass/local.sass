@@ -66,3 +66,7 @@
 
 main
   @include govuk-responsive-margin(6, "bottom")
+
+.hide-mobile
+  @include govuk-media-query($until: tablet)
+    display: none !important

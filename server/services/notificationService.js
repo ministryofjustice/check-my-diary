@@ -42,7 +42,7 @@ const notificationService = {
       })
   },
 
-  updatePreferences(accessToken, preference = 'none', email = '') {
+  updatePreferences(accessToken, preference, email) {
     logger.info(`updatePreferences to ${preference}, hasEmail: ${!!email}`)
     return axios
       .put(

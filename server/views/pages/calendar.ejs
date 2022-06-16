@@ -61,7 +61,11 @@
               <li class="calendar-item calendar-header"><%= day %></li>
             <% }); %>
             <% data.forEach(({ today=false, fullDayType, fullDayTypeDescription, date, dateText, dateDayText, details }) => { %>
-            <li <% if (today) { %> id="today" <% } %> class="calendar-item <%= getTypeClass(fullDayType) %> <% if (details === undefined)  { %>no-day hide-0-to-1024 <%}%> ">
+            <li class="calendar-item <%= getTypeClass(fullDayType) %> <% if (details === undefined)  { %>no-day hide-0-to-1024 <%}%> ">
+                <%# Disable focussing on today only if banner shown AND on mobile device  %>
+                <% if (today) { %>
+                  <span id="today"<% if (showBanner) { %> class="hide-mobile"<% } %> ></span>
+                <% } %>
                 <% if (fullDayType !== 'no-day')  { %>
                   <a href="/details/<%=date%>" tabindex="-1">
                       <div class="hide-1024-up" tabindex="0">
@@ -92,7 +96,7 @@
           </ul>
         <% }  %>
         <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-        <div class="govuk-clearfix govuk-!-margin-bottom-8"> </div>
+        <div class="govuk-clearfix"> </div>
       </main>
     </div>
     <%- include ('../partials/footer') -%>
