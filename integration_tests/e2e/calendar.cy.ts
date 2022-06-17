@@ -77,7 +77,7 @@ context('A staff member can view their calendar', () => {
     Page.verifyOnPageTitle(CalendarDetailPage, 'Friday, 6th March 2020')
   })
 
-  it('Warning banner is shown for non-email users', () => {
+  it('Warning banner is shown for sms users', () => {
     cy.get('.govuk-notification-banner').should('not.exist')
     cy.task('stubNotificationPreferencesGet', { preference: 'SMS', sms: '01234567890' })
     cy.visit('/')
@@ -88,6 +88,6 @@ context('A staff member can view their calendar', () => {
 
     cy.task('stubNotificationPreferencesGet', { preference: 'NONE' })
     cy.visit('/')
-    cy.get('.govuk-notification-banner').should('be.visible')
+    cy.get('.govuk-notification-banner').should('not.exist')
   })
 })
