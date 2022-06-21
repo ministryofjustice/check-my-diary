@@ -53,7 +53,7 @@ RUN curl https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem > /app/root
 
 COPY --from=build --chown=appuser:appgroup /app .
 
-EXPOSE 3000
+EXPOSE 3000 3001
 ENV PORT=3000
 ENV NODE_ENV='production'
 USER 2000

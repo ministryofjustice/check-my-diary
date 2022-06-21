@@ -37,6 +37,12 @@ generic-service:
     timeoutSeconds: 30
     failureThreshold: 15
 
+  custommetrics:
+    enabled: true
+    scrapeInterval: 15s
+    metricsPath: /metrics
+    metricsPort: 3001
+
   affinity:
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
