@@ -36,6 +36,7 @@ const { NOT_FOUND_ERROR } = require('./helpers/errorConstants')
 const { ejsSetup } = require('./utils/ejsSetup')
 const { setUpWebSecurity } = require('./middleware/setUpWebSecurity')
 const { setUpWebSession } = require('./middleware/setUpWebSession')
+const { metricsMiddleware } = require('./monitoring/metricsApp')
 
 if (config.rejectUnauthorized) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = config.rejectUnauthorized
@@ -49,6 +50,7 @@ module.exports = function createApp({ signInService }) {
   app.set('trust proxy', true)
   app.set('port', config.port || 3005)
 
+  app.use(metricsMiddleware)
   app.use(setUpHealthChecks())
   app.use(setUpWebSecurity())
   app.use(setUpWebSession())
