@@ -16,6 +16,7 @@ const requiredInProduction = { requireInProduction: true }
 const noFallbackInProduction = { noFallbackInProduction: true }
 
 module.exports = {
+  staticResourceCacheDuration: 20,
   session: {
     secret: get('SESSION_SECRET', 'app-insecure-default-session', requiredInProduction),
     expiryMinutes: Number(get('WEB_SESSION_TIMEOUT_IN_MINUTES', 20)),

@@ -1,13 +1,12 @@
 const express = require('express')
-const noCache = require('nocache')
 const csurf = require('csurf')
 const path = require('path')
 const moment = require('moment')
-const compression = require('compression')
 const passport = require('passport')
 const bodyParser = require('body-parser')
 
 const { setUpHealthChecks } = require('./middleware/setUpHealthChecks')
+const { setUpStaticResources } = require('./middleware/setUpStaticResources')
 const loginRouter = require('./routes/login')
 const calendarRouter = require('./routes/calendar')
 const maintenance = require('./middleware/maintenance')
@@ -66,8 +65,7 @@ module.exports = function createApp({ signInService }) {
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: true }))
 
-  // Resource Delivery Configuration
-  app.use(compression())
+  app.use(setUpStaticResources())
 
   // Cachebusting version string
   if (production) {
@@ -80,26 +78,6 @@ module.exports = function createApp({ signInService }) {
       return next()
     })
   }
-
-  //  Static Resources Configuration
-  const cacheControl = { maxAge: config.staticResourceCacheDuration * 1000 }
-
-  ;[
-    '/assets',
-    '/assets/stylesheets',
-    '/assets/js',
-    `/node_modules/govuk-frontend/govuk/assets`,
-    `/node_modules/govuk-frontend`,
-    `/node_modules/@ministryofjustice/frontend/`,
-  ].forEach((dir) => {
-    app.use('/assets', express.static(path.join(process.cwd(), dir), cacheControl))
-  })
-  ;['../node_modules/govuk_frontend_toolkit/images'].forEach((dir) => {
-    app.use('/assets/images/icons', express.static(path.join(__dirname, dir), cacheControl))
-  })
-
-  app.use('/assets', express.static(path.join(__dirname, '../assets'), cacheControl))
-  app.use('*/images', express.static(path.join(__dirname, '../assets/images'), cacheControl))
 
   // Add services to server
 
@@ -120,9 +98,6 @@ module.exports = function createApp({ signInService }) {
   }
 
   app.use(addTemplateVariables)
-
-  // Don't cache dynamic resources
-  app.use(noCache())
 
   // CSRF protection
   if (!testMode) {
