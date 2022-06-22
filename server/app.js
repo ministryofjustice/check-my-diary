@@ -3,7 +3,6 @@ const csurf = require('csurf')
 const path = require('path')
 const moment = require('moment')
 const passport = require('passport')
-const bodyParser = require('body-parser')
 
 const { setUpHealthChecks } = require('./middleware/setUpHealthChecks')
 const { setUpStaticResources } = require('./middleware/setUpStaticResources')
@@ -36,6 +35,7 @@ const { ejsSetup } = require('./utils/ejsSetup')
 const { setUpWebSecurity } = require('./middleware/setUpWebSecurity')
 const { setUpWebSession } = require('./middleware/setUpWebSession')
 const { metricsMiddleware } = require('./monitoring/metricsApp')
+const { setUpWebRequestParsing } = require('./middleware/setupRequestParsing')
 
 if (config.rejectUnauthorized) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = config.rejectUnauthorized
@@ -61,10 +61,7 @@ module.exports = function createApp({ signInService }) {
   app.use(passport.initialize())
   app.use(passport.session())
 
-  // Request Processing Configuration
-  app.use(bodyParser.json())
-  app.use(bodyParser.urlencoded({ extended: true }))
-
+  app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
 
   // Cachebusting version string
