@@ -1,8 +1,6 @@
 const express = require('express')
 const csurf = require('csurf')
 const path = require('path')
-const moment = require('moment')
-const passport = require('passport')
 
 const { setUpHealthChecks } = require('./middleware/setUpHealthChecks')
 const { setUpStaticResources } = require('./middleware/setUpStaticResources')
@@ -11,7 +9,6 @@ const calendarRouter = require('./routes/calendar')
 const maintenance = require('./middleware/maintenance')
 const contactUs = require('./middleware/contact-us')
 const notificationRouter = require('./routes/notification')
-const auth = require('./authentication/auth')
 const config = require('../config')
 const userAuthenticationService = require('./services/userAuthenticationService')
 
@@ -25,8 +22,6 @@ const csrfTokenMiddleware = require('./middleware/csrfTokenMiddleware')
 const errorsMiddleware = require('./middleware/errorsMiddleware')
 const calendarDetailMiddleware = require('./middleware/calendarDetailMiddleware')
 
-const version = moment.now().toString()
-const production = process.env.NODE_ENV === 'production'
 const testMode = process.env.NODE_ENV === 'test'
 
 const { appendUserErrorMessage } = require('./helpers/utilities')
@@ -36,6 +31,7 @@ const { setUpWebSecurity } = require('./middleware/setUpWebSecurity')
 const { setUpWebSession } = require('./middleware/setUpWebSession')
 const { metricsMiddleware } = require('./monitoring/metricsApp')
 const { setUpWebRequestParsing } = require('./middleware/setupRequestParsing')
+const { setUpAuth } = require('./middleware/setUpAuthentication')
 
 if (config.rejectUnauthorized) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = config.rejectUnauthorized
@@ -53,31 +49,12 @@ module.exports = function createApp({ signInService }) {
   app.use(setUpHealthChecks())
   app.use(setUpWebSecurity())
   app.use(setUpWebSession())
-
-  auth.init(signInService)
-
-  ejsSetup(app, path)
-
-  app.use(passport.initialize())
-  app.use(passport.session())
-
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
-
-  // Cachebusting version string
-  if (production) {
-    // Version only changes on reboot
-    app.locals.version = version
-  } else {
-    // Version changes every request
-    app.use((req, res, next) => {
-      res.locals.version = moment.now().toString()
-      return next()
-    })
-  }
+  ejsSetup(app, path)
+  app.use(setUpAuth(signInService))
 
   // Add services to server
-
   app.set('DataServices', {
     calendarService,
     notificationService,
@@ -89,13 +66,6 @@ module.exports = function createApp({ signInService }) {
   // GovUK Template Configuration
   app.locals.assetPath = '/assets/'
 
-  function addTemplateVariables(req, res, next) {
-    res.locals.user = req.user
-    next()
-  }
-
-  app.use(addTemplateVariables)
-
   // CSRF protection
   if (!testMode) {
     app.use(csurf())
@@ -103,35 +73,6 @@ module.exports = function createApp({ signInService }) {
 
   // token refresh
   app.use(tokenRefresh(signInService))
-
-  const authLogoutUrl = `${config.apis.hmppsAuth.externalUrl}/logout?client_id=${config.apis.hmppsAuth.apiClientId}&redirect_uri=${config.app.url}`
-
-  app.get('/autherror', (req, res) => {
-    res.status(401)
-    return res.render('autherror', {
-      authURL: authLogoutUrl,
-    })
-  })
-
-  app.get('/login', passport.authenticate('oauth2'))
-
-  app.get('/login/callback', (req, res, next) =>
-    passport.authenticate('oauth2', {
-      successReturnToOrRedirect: '/auth/login',
-      failureRedirect: '/autherror',
-    })(req, res, next),
-  )
-
-  app.use('/logout', async (req, res, next) => {
-    if (req.user) {
-      await userAuthenticationService.updateSessionExpiryDateTime(req.user.username)
-
-      req.logout((err) => {
-        if (err) return next(err)
-        return res.redirect(authLogoutUrl)
-      })
-    } else res.redirect(authLogoutUrl)
-  })
 
   // Routing
   app.use(authenticationMiddleware, csrfTokenMiddleware)
