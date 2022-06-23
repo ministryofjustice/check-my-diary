@@ -6,7 +6,6 @@ const { setUpHealthChecks } = require('./middleware/setUpHealthChecks')
 const { setUpStaticResources } = require('./middleware/setUpStaticResources')
 const loginRouter = require('./routes/login')
 const calendarRouter = require('./routes/calendar')
-const maintenance = require('./middleware/maintenance')
 const contactUs = require('./middleware/contact-us')
 const notificationRouter = require('./routes/notification')
 const config = require('../config')
@@ -32,6 +31,7 @@ const { setUpWebSession } = require('./middleware/setUpWebSession')
 const { metricsMiddleware } = require('./monitoring/metricsApp')
 const { setUpWebRequestParsing } = require('./middleware/setupRequestParsing')
 const { setUpAuth } = require('./middleware/setUpAuthentication')
+const { setUpMaintenance } = require('./middleware/setUpMaintenance')
 
 if (config.rejectUnauthorized) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = config.rejectUnauthorized
@@ -61,8 +61,6 @@ module.exports = function createApp({ signInService }) {
     userAuthenticationService,
   })
 
-  app.use('*', maintenance)
-
   // GovUK Template Configuration
   app.locals.assetPath = '/assets/'
 
@@ -76,6 +74,8 @@ module.exports = function createApp({ signInService }) {
 
   // Routing
   app.use(authenticationMiddleware, csrfTokenMiddleware)
+  app.use(setUpMaintenance())
+
   app.use('/auth', loginRouter)
   app.use(authHandlerMiddleware)
   app.use('/contact-us', contactUs)
