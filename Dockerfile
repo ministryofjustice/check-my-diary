@@ -1,7 +1,8 @@
 # Stage: base image
-FROM node:16.14-bullseye-slim as base
-ARG BUILD_NUMBER
-ARG GIT_REF
+FROM node:16.15-bullseye-slim as base
+
+ARG BUILD_NUMBER=1_0_0
+ARG GIT_REF=not-available
 
 LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
 
@@ -9,52 +10,66 @@ ENV TZ=Europe/London
 RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone
 
 RUN addgroup --gid 2000 --system appgroup && \
-    adduser --uid 2000 --system appuser --gid 2000
+        adduser --uid 2000 --system appuser --gid 2000
 
 WORKDIR /app
 
+# Cache breaking
+ENV BUILD_NUMBER ${BUILD_NUMBER:-1_0_0}
+
 RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y curl
+        apt-get upgrade -y && \
+        apt-get autoremove -y && \
+        rm -rf /var/lib/apt/lists/*
 
 # Stage: build assets
 FROM base as build
-ARG BUILD_NUMBER
-ARG GIT_REF
 
-RUN apt-get install -y make python wget gnupg gnupg1 gnupg2 \
-    && rm -rf /var/lib/apt/lists/*
+ARG BUILD_NUMBER=1_0_0
+ARG GIT_REF=not-available
+
+RUN apt-get update && \
+        apt-get install -y make python g++ curl
 
 COPY package*.json ./
 RUN CYPRESS_INSTALL_BINARY=0 npm ci --no-audit
 
 COPY . .
-
 RUN npm run build
 
-ENV BUILD_NUMBER ${BUILD_NUMBER:-1_0_0}
-ENV GIT_REF ${GIT_REF:-dummy}
 RUN export BUILD_NUMBER=${BUILD_NUMBER} && \
-    export GIT_REF=${GIT_REF} && \
-    npm run record-build-info
+        export GIT_REF=${GIT_REF} && \
+        npm run record-build-info
+
+# Install AWS RDS Root cert
+RUN curl https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem > /app/root.cert
 
 RUN npm prune --no-audit --production
 
 # Stage: copy production assets and dependencies
 FROM base
 
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get autoremove -y && \
-    rm -rf /var/lib/apt/lists/*
+COPY --from=build --chown=appuser:appgroup \
+        /app/package.json \
+        /app/package-lock.json \
+        ./
 
-# Install AWS RDS Root cert
-RUN curl https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem > /app/root.cert
+COPY --from=build --chown=appuser:appgroup \
+        /app/build-info.json ./dist/build-info.json
 
-COPY --from=build --chown=appuser:appgroup /app .
+COPY --from=build --chown=appuser:appgroup \
+        /app/assets ./assets
+
+COPY --from=build --chown=appuser:appgroup \
+        /app/dist ./dist
+
+COPY --from=build --chown=appuser:appgroup \
+        /app/node_modules ./node_modules
+
+COPY --from=build --chown=appuser:appgroup \
+        /app/root.cert .
 
 EXPOSE 3000 3001
-ENV PORT=3000
 ENV NODE_ENV='production'
 USER 2000
 
