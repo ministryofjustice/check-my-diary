@@ -5,6 +5,17 @@ import signInService from './signInService'
 const in15MinsDate = new Date('May 31, 2018 12:15:00')
 const in15Mins = in15MinsDate.getTime()
 
+let fakeOauthApi: nock.Scope
+
+beforeEach(() => {
+  fakeOauthApi = nock(config.apis.hmppsAuth.url)
+})
+
+afterEach(() => {
+  nock.abortPendingRequests()
+  nock.cleanAll()
+})
+
 describe('signInService', () => {
   const service = signInService()
   const time = new Date('May 31, 2018 12:00:00')
@@ -23,18 +34,21 @@ describe('signInService', () => {
     })
   })
 
+  describe('getMyMfaSettings', () => {
+    test('successfully get mfa details', async () => {
+      const responseData = {
+        backupVerified: true,
+        mobileVerified: false,
+        emailVerified: false,
+      }
+      fakeOauthApi.get('/api/user/me/mfa').reply(200, responseData)
+
+      const output = await service.getMyMfaSettings({ username: 'Bob', refreshToken: 'REFRESH_TOKEN-1' })
+      expect(output).toEqual(responseData)
+    })
+  })
+
   describe('getRefreshToken', () => {
-    let fakeOauthApi: nock.Scope
-
-    beforeEach(() => {
-      fakeOauthApi = nock(config.apis.hmppsAuth.url)
-    })
-
-    afterEach(() => {
-      nock.abortPendingRequests()
-      nock.cleanAll()
-    })
-
     test('successfully get token', async () => {
       const expectedBody = 'grant_type=refresh_token&refresh_token=REFRESH_TOKEN-1'
 

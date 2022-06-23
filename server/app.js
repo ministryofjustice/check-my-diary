@@ -59,6 +59,7 @@ module.exports = function createApp({ signInService }) {
     calendarService,
     notificationService,
     userAuthenticationService,
+    signInService,
   })
 
   // GovUK Template Configuration

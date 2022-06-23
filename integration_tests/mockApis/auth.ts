@@ -4,13 +4,13 @@ import { Response } from 'superagent'
 import { getMatchingRequests, stubFor } from './wiremock'
 import tokenVerification from './tokenVerification'
 
-const createToken = (name = 'Sarah Itag') => {
+const createToken = (username = 'ITAG_USER', authorities: string[] = []) => {
   const payload = {
-    sub: 'ITAG_USER',
-    name,
+    sub: username,
+    name: 'Sarah Itag',
     scope: ['read', 'write'],
     auth_source: 'nomis',
-    authorities: [],
+    authorities,
     jti: '83b50a10-cca6-41db-985f-e87efb303ddb',
     client_id: 'my-diary',
   }
@@ -81,7 +81,7 @@ const logout = () =>
     },
   })
 
-const token = (name = 'Sarah Itag') =>
+const token = (username = 'ITAG_USER', authorities: string[] = []) =>
   stubFor({
     request: {
       method: 'POST',
@@ -94,10 +94,10 @@ const token = (name = 'Sarah Itag') =>
         Location: 'http://localhost:3007/login/callback?code=codexxxx&state=stateyyyy',
       },
       jsonBody: {
-        access_token: createToken(name),
+        access_token: createToken(username, authorities),
         token_type: 'bearer',
         refresh_token: 'refresh',
-        sub: 'TEST_USER',
+        sub: username,
         expires_in: 600,
         scope: 'read write',
         internalUser: true,
@@ -105,11 +105,37 @@ const token = (name = 'Sarah Itag') =>
     },
   })
 
+const stubGetMyMfaSettings = ({ backupVerified, mobileVerified, emailVerified }) =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: '/auth/api/user/me/mfa',
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+      jsonBody: { backupVerified, mobileVerified, emailVerified },
+    },
+  })
+
+const stubLogin = (
+  arg: { username?: string; authorities?: string[] } = {},
+): Promise<[Response, Response, Response, Response, Response]> => {
+  const { username = 'ITAG_USER', authorities = [] } = arg
+  return Promise.all([
+    favicon(),
+    redirect(),
+    logout(),
+    token(username, authorities),
+    tokenVerification.stubVerifyToken(),
+  ])
+}
+
 export default {
   getLoginUrl,
-  stubLogin: (): Promise<[Response, Response, Response, Response, Response]> =>
-    Promise.all([favicon(), redirect(), logout(), token(), tokenVerification.stubVerifyToken()]),
+  stubLogin,
   stubAuthPing: ping,
   redirect,
   token,
+  stubGetMyMfaSettings,
 }
