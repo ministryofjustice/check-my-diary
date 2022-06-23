@@ -1,25 +1,23 @@
 import calendarMiddleware from './calendarMiddleware'
-import utilities from '../helpers/utilities'
 import { EMAIL } from '../helpers/constants'
 
-jest.mock('../helpers/utilities', () => ({
-  configureCalendar: jest.fn(),
-  processDay: jest.fn(() => true),
-  appendUserErrorMessage: jest.fn((error) => error),
-}))
-
-const configureCalendar = utilities.configureCalendar as jest.Mock
+jest.mock('jwt-decode', () => {
+  return () => ({ authorities: 'ROLE_MFA' })
+})
 
 describe('calendar middleware', () => {
   const renderMock = jest.fn()
   const nextMock = jest.fn()
-  const token = 'sausages'
+  const token = { replace: 'sausages' }
   const employeeName = 'Ray Parker Jr.'
   const authUrl = ''
   const csrfToken = 'tomato'
   const getCalendarMonthMock = jest.fn()
   const countUnprocessedNotificationsMock = jest.fn()
   const notificationPreferencesMock = jest.fn()
+  const getMyMfaSettingsMock = jest.fn()
+  const getUserAuthenticationDetailsMock = jest.fn()
+
   const app = {
     get: () => ({
       calendarService: { getCalendarMonth: getCalendarMonthMock },
@@ -27,21 +25,22 @@ describe('calendar middleware', () => {
         countUnprocessedNotifications: countUnprocessedNotificationsMock,
         getPreferences: notificationPreferencesMock,
       },
+      signInService: { getMyMfaSettings: getMyMfaSettingsMock },
+      userAuthenticationService: { getUserAuthenticationDetails: getUserAuthenticationDetailsMock },
     }),
   }
-  let req
-  let res
-  const calendarData = ['sausages']
-  const returnCalendarData = ['bacon']
+  const calendarData = [{ date: new Date(), details: [{ displayType: 'DAY_START', start: new Date() }] }]
   const notificationCount = 42
   const preferences = { preference: EMAIL }
+  const mfa = { newUser: true, existingUser: false, firstTimeUser: false }
   beforeEach(async () => {
-    configureCalendar.mockReturnValue(returnCalendarData)
     getCalendarMonthMock.mockResolvedValue(calendarData)
     countUnprocessedNotificationsMock.mockResolvedValue(notificationCount)
     notificationPreferencesMock.mockResolvedValue(preferences)
-    res = { render: renderMock, locals: { csrfToken } }
-    req = {
+    getMyMfaSettingsMock.mockResolvedValue(mfa)
+    getUserAuthenticationDetailsMock.mockResolvedValue([{ EmailAddress: 's@a.b' }])
+    const res = { render: renderMock, locals: { csrfToken } }
+    const req = {
       authUrl,
       user: { token, employeeName },
       body: { pauseUnit: 'days', pauseValue: 3 },
@@ -59,6 +58,11 @@ describe('calendar middleware', () => {
     })
     it('should get calendar data', () => {
       expect(getCalendarMonthMock).toHaveBeenCalledTimes(1)
+    })
+    it('should get banner info', () => {
+      expect(notificationPreferencesMock).toHaveBeenCalledTimes(1)
+      expect(getMyMfaSettingsMock).toHaveBeenCalledTimes(1)
+      expect(getUserAuthenticationDetailsMock).toHaveBeenCalledTimes(1)
     })
     it('should not call the next function', () => {
       expect(nextMock).not.toHaveBeenCalled()

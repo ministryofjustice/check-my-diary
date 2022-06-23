@@ -11,22 +11,21 @@ context('A staff member can view their calendar', () => {
   beforeEach(() => {
     cy.task('reset')
 
-    cy.task('stubLogin')
     cy.task('stubShifts')
     cy.task('stubNotificationCount')
-    cy.task('stubNotificationPreferencesGet', {
-      preference: 'EMAIL',
-      email: 'me@gmail.com',
-    })
+    cy.task('stubNotificationPreferencesGet', { preference: 'EMAIL', email: 'me@gmail.com' })
+    cy.task('stubGetMyMfaSettings', {})
+  })
+
+  it('A staff member can view their calendar', () => {
+    cy.task('stubLogin')
     cy.login()
 
     Page.verifyOnPageTitle(CalendarPage, moment().format('MMMM YYYY'))
     cy.visit('/calendar/2020-05-01')
     cy.get('[data-qa=previous]').click()
     cy.get('[data-qa=previous]').click()
-  })
 
-  it('A staff member can view their calendar', () => {
     const calendarPage = Page.verifyOnPageTitle(CalendarPage, moment('2020-03-01').format('MMMM YYYY'))
 
     const dayShift = calendarPage.day('2020-03-06')
@@ -40,6 +39,10 @@ context('A staff member can view their calendar', () => {
   })
 
   it('A staff member can drill into a day shift', () => {
+    cy.task('stubLogin')
+    cy.login()
+
+    cy.visit('/calendar/2020-03-01')
     const calendarPage = Page.verifyOnPageTitle(CalendarPage, moment('2020-03-01').format('MMMM YYYY'))
 
     const dayShift = calendarPage.day('2020-03-06')
@@ -51,6 +54,10 @@ context('A staff member can view their calendar', () => {
   })
 
   it('A staff member can drill into a night shift', () => {
+    cy.task('stubLogin')
+    cy.login()
+
+    cy.visit('/calendar/2020-03-01')
     const calendarPage = Page.verifyOnPageTitle(CalendarPage, moment('2020-03-01').format('MMMM YYYY'))
 
     const nightShift = calendarPage.day('2020-03-26')
@@ -63,6 +70,10 @@ context('A staff member can view their calendar', () => {
   })
 
   it('A staff member navigate to different days', () => {
+    cy.task('stubLogin')
+    cy.login()
+
+    cy.visit('/calendar/2020-03-01')
     const calendarPage = Page.verifyOnPageTitle(CalendarPage, moment('2020-03-01').format('MMMM YYYY'))
 
     const dayShift = calendarPage.day('2020-03-06')
@@ -77,7 +88,10 @@ context('A staff member can view their calendar', () => {
     Page.verifyOnPageTitle(CalendarDetailPage, 'Friday, 6th March 2020')
   })
 
-  it('Warning banner is shown for sms users', () => {
+  it('Warning banner is shown for sms users but not otherwise', () => {
+    cy.task('stubLogin')
+    cy.login()
+
     cy.get('.govuk-notification-banner').should('not.exist')
     cy.task('stubNotificationPreferencesGet', { preference: 'SMS', sms: '01234567890' })
     cy.visit('/')
@@ -89,5 +103,31 @@ context('A staff member can view their calendar', () => {
     cy.task('stubNotificationPreferencesGet', { preference: 'NONE' })
     cy.visit('/')
     cy.get('.govuk-notification-banner').should('not.exist')
+  })
+
+  it('Existing user banner is shown', () => {
+    cy.task('stubGetMyMfaSettings', { backupVerified: true, mobileVerified: true, emailVerified: true })
+    cy.task('stubLogin', { username: 'ITAG_USER', authorities: ['ROLE_CMD_MIGRATED_MFA'] })
+    cy.login()
+
+    cy.get('.govuk-notification-banner').contains(
+      'You no longer need to contact the support team to change these settings',
+    )
+  })
+
+  it('New user banner is shown', () => {
+    cy.task('stubGetMyMfaSettings', { backupVerified: true, mobileVerified: false, emailVerified: true })
+    cy.task('stubLogin', { username: 'AUTH_USER', authorities: ['ROLE_CMD_MIGRATED_MFA'] })
+    cy.login()
+
+    cy.get('.govuk-notification-banner').contains('Once signed in, you can change these settings')
+  })
+
+  it('First time user banner is shown', () => {
+    cy.task('stubGetMyMfaSettings', { backupVerified: false, mobileVerified: false, emailVerified: true })
+    cy.task('stubLogin', { username: 'AUTH_USER', authorities: ['ROLE_CMD_MIGRATED_MFA'] })
+    cy.login()
+
+    cy.get('.govuk-notification-banner').contains('You must add a backup personal email address or phone number')
   })
 })
