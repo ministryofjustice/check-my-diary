@@ -64,7 +64,7 @@ module.exports = {
   app: {
     production,
     mailTo: process.env.MAIL_TO || 'feedback@digital.justice.gov.uk',
-    url: process.env.CHECK_MY_DIARY_URL || `http://localhost:${process.env.PORT || 3005}`,
+    url: process.env.CHECK_MY_DIARY_URL || `http://localhost:${process.env.PORT || 3000}`,
   },
   maintenance: {
     start: process.env.MAINTENANCE_START,
@@ -80,7 +80,6 @@ module.exports = {
   cmdApi: {
     url: get('CMD_API_URL', 'http://localhost:9191'),
   },
-  port: get('PORT', 3005, requiredInProduction),
   domain: process.env.HMPPS_COOKIE_DOMAIN,
   sessionTimeout: process.env.WEB_SESSION_TIMEOUT_IN_MINUTES,
   quantumAddresses: get('QUANTUM_ADDRESS', '127.0.0.1', requiredInProduction),
