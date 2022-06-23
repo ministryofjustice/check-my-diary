@@ -1,6 +1,6 @@
 const moment = require('moment')
 const logger = require('../../log')
-const { appendUserErrorMessage, configureCalendar, processDay } = require('../helpers/utilities')
+const { appendUserErrorMessage, configureCalendar, processDay, hmppsAuthMFAUser } = require('../helpers/utilities')
 const { SMS } = require('../helpers/constants')
 
 const calendarMiddleware = async (req, res, next) => {
@@ -13,15 +13,35 @@ const calendarMiddleware = async (req, res, next) => {
 
   logger.info({ user: username, date }, 'GET calendar view')
 
-  const { calendarService, notificationService } = app.get('DataServices')
+  const { calendarService, notificationService, userAuthenticationService, signInService } = app.get('DataServices')
 
   try {
-    const notificationCount = await notificationService.countUnprocessedNotifications(token)
-    const { preference } = await notificationService.getPreferences(token)
-    const month = await calendarService.getCalendarMonth(date, token)
+    const isMfa = hmppsAuthMFAUser(token)
+
+    const [notificationCount, preferences, month, mfa, userAuthenticationDetails] = await Promise.all([
+      notificationService.countUnprocessedNotifications(token),
+      notificationService.getPreferences(token),
+      calendarService.getCalendarMonth(date, token),
+      isMfa ? signInService.getMyMfaSettings(token) : {},
+      isMfa ? userAuthenticationService.getUserAuthenticationDetails(username) : [],
+    ])
+
+    let mfaBanner = ''
+    if (isMfa) {
+      if (userAuthenticationDetails && userAuthenticationDetails.length > 0) {
+        mfaBanner = 'EXISTING_USER'
+      } else if (mfa.backupVerified || mfa.mobileVerified) {
+        mfaBanner = 'NEW_USER'
+      } else {
+        mfaBanner = 'FIRST_TIME_USER'
+      }
+    }
 
     month.forEach(processDay)
-    const showBanner = preference === SMS
+    const showBanner = {
+      notifications: preferences.preference === SMS,
+      mfa: mfaBanner,
+    }
     const data = configureCalendar(month)
     const currentMonthMoment = moment(date)
     const previousMonthMoment = currentMonthMoment.clone().subtract('1', 'M')

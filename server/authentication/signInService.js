@@ -40,7 +40,7 @@ function getOauthToken(requestSpec) {
     .set('content-type', 'application/x-www-form-urlencoded')
     .agent(keepaliveAgent)
     .retry(2, (err) => {
-      if (err) log.info(`Retry handler found API error with ${err.code} ${err.message}`)
+      if (err) log.info(`getOauthToken: Retry handler found API error with ${err.code} ${err.message}`)
       return undefined // retry handler only for logging retries, not to influence retry logic
     })
     .send(oauthRequest)
@@ -69,7 +69,25 @@ function signInService() {
       const refreshTime = fiveMinutesBefore(expiresIn)
       return { token, refreshToken, refreshTime }
     },
+
+    async getMyMfaSettings(token) {
+      const data = await getMfa(token)
+      return data.body
+    },
   }
+}
+
+function getMfa(token) {
+  return superagent
+    .get(`${config.apis.hmppsAuth.url}/api/user/me/mfa`)
+    .set('content-type', 'application/json')
+    .set('Authorization', `Bearer ${token}`)
+    .agent(keepaliveAgent)
+    .retry(2, (err) => {
+      if (err) log.info(`getMfa: Retry handler found API error with ${err.code} ${err.message}`)
+      return undefined // retry handler only for logging retries, not to influence retry logic
+    })
+    .timeout(timeoutSpec)
 }
 
 module.exports = signInService
