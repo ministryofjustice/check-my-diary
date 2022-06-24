@@ -22,6 +22,7 @@ export declare global {
       id: string
       authUrl?: string
       hmppsAuthMFAUser?: boolean
+      user: User
     }
   }
 }
