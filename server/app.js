@@ -5,7 +5,6 @@ const path = require('path')
 const { setUpHealthChecks } = require('./middleware/setUpHealthChecks')
 const { setUpStaticResources } = require('./middleware/setUpStaticResources')
 const loginRouter = require('./routes/login')
-const calendarRouter = require('./routes/calendar')
 const notificationRouter = require('./routes/notification')
 const config = require('../config')
 const userAuthenticationService = require('./services/userAuthenticationService')
@@ -81,11 +80,10 @@ module.exports = function createApp({ signInService }) {
   app.use('/auth', loginRouter)
   app.use(authHandlerMiddleware)
 
-  app.use('/calendar', calendarRouter)
   app.get('/details/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', calendarDetailMiddleware)
   app.use('/notifications', notificationRouter)
 
-  app.get('/', indexRouter(standardRouter()))
+  app.use('/', indexRouter(standardRouter()))
 
   app.use('*', (req, res, next) => {
     const error = new Error('Not found')

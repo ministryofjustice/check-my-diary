@@ -1,11 +1,12 @@
-import calendarMiddleware from './calendarMiddleware'
+import { Request, Response } from 'express'
+import CalendarController from './calendarController'
 import { EMAIL } from '../helpers/constants'
 
 jest.mock('jwt-decode', () => {
   return () => ({ authorities: 'ROLE_MFA' })
 })
 
-describe('calendar middleware', () => {
+describe('CalendarController', () => {
   const renderMock = jest.fn()
   const nextMock = jest.fn()
   const token = { replace: 'sausages' }
@@ -39,15 +40,15 @@ describe('calendar middleware', () => {
     notificationPreferencesMock.mockResolvedValue(preferences)
     getMyMfaSettingsMock.mockResolvedValue(mfa)
     getUserAuthenticationDetailsMock.mockResolvedValue([{ EmailAddress: 's@a.b' }])
-    const res = { render: renderMock, locals: { csrfToken } }
+    const res = { render: renderMock, locals: { csrfToken } } as unknown as Response
     const req = {
       authUrl,
       user: { token, employeeName },
       body: { pauseUnit: 'days', pauseValue: 3 },
       app,
       params: { date: '2001-01-01' },
-    }
-    await calendarMiddleware(req, res, nextMock)
+    } as unknown as Request
+    await new CalendarController().getDate(req, res, nextMock)
   })
   afterEach(() => {
     jest.resetAllMocks()
