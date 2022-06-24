@@ -6,7 +6,6 @@ const { setUpHealthChecks } = require('./middleware/setUpHealthChecks')
 const { setUpStaticResources } = require('./middleware/setUpStaticResources')
 const loginRouter = require('./routes/login')
 const calendarRouter = require('./routes/calendar')
-const contactUs = require('./middleware/contact-us')
 const notificationRouter = require('./routes/notification')
 const config = require('../config')
 const userAuthenticationService = require('./services/userAuthenticationService')
@@ -32,6 +31,8 @@ const { metricsMiddleware } = require('./monitoring/metricsApp')
 const { setUpWebRequestParsing } = require('./middleware/setupRequestParsing')
 const { setUpAuth } = require('./middleware/setUpAuthentication')
 const { setUpMaintenance } = require('./middleware/setUpMaintenance')
+const { standardRouter } = require('./routes/standardRouter')
+const { indexRouter } = require('./routes')
 
 if (config.rejectUnauthorized) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = config.rejectUnauthorized
@@ -79,11 +80,12 @@ module.exports = function createApp({ signInService }) {
 
   app.use('/auth', loginRouter)
   app.use(authHandlerMiddleware)
-  app.use('/contact-us', contactUs)
+
   app.use('/calendar', calendarRouter)
   app.get('/details/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', calendarDetailMiddleware)
   app.use('/notifications', notificationRouter)
-  app.get('/', (_req, res) => res.redirect('/calendar#today'))
+
+  app.get('/', indexRouter(standardRouter()))
 
   app.use('*', (req, res, next) => {
     const error = new Error('Not found')
