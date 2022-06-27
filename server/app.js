@@ -17,7 +17,6 @@ const notificationService = require('./services/notificationService')
 const authHandlerMiddleware = require('./middleware/authHandlerMiddleware')
 const csrfTokenMiddleware = require('./middleware/csrfTokenMiddleware')
 const errorsMiddleware = require('./middleware/errorsMiddleware')
-const calendarDetailMiddleware = require('./middleware/calendarDetailMiddleware')
 
 const testMode = process.env.NODE_ENV === 'test'
 
@@ -80,7 +79,6 @@ module.exports = function createApp({ signInService }) {
   app.use('/auth', loginRouter)
   app.use(authHandlerMiddleware)
 
-  app.get('/details/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', calendarDetailMiddleware)
   app.use('/notifications', notificationRouter)
 
   app.use('/', indexRouter(standardRouter()))

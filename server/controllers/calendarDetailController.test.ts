@@ -1,8 +1,7 @@
-import type { Response } from 'express'
-import calendarDetailMiddleware from './calendarDetailMiddleware'
+import type { Request, Response } from 'express'
+import CalendarDetailController from './calendarDetailController'
 
 import utilities from '../helpers/utilities'
-import { AppRequest } from '../helpers/utilities.types'
 
 jest.mock('../helpers/utilities', () => ({
   sortByDisplayType: jest.fn(() => true),
@@ -25,7 +24,7 @@ describe('calendar detail middleware', () => {
       calendarService: { getCalendarDay: getCalendarDayMock },
     }),
   }
-  let req: AppRequest
+  let req: Request
   let res: Response
   const startTime = '2020-07-08T10:00:00'
   const endTime = '2020-07-08T20:00:00'
@@ -39,7 +38,7 @@ describe('calendar detail middleware', () => {
       body: { pauseUnit: 'days', pauseValue: 3 },
       app,
       params: { date: '2001-01-01' },
-    } as unknown as AppRequest
+    } as unknown as Request
   })
   afterEach(() => {
     jest.resetAllMocks()
@@ -57,7 +56,7 @@ describe('calendar detail middleware', () => {
         details: detailsRestDay,
       }
       getCalendarDayMock.mockResolvedValue(calendarDataRestDay)
-      await calendarDetailMiddleware(req, res, nextMock)
+      await new CalendarDetailController().details(req, res, nextMock)
     })
     it('should request the day details', () => {
       expect(getCalendarDayMock).toHaveBeenCalledTimes(1)
@@ -108,14 +107,14 @@ describe('calendar detail middleware', () => {
       }
       processDetail.mockReturnValue(processReturn)
       getCalendarDayMock.mockResolvedValue(calendarDataRestDay)
-      await calendarDetailMiddleware(req, res, nextMock)
+      await new CalendarDetailController().details(req, res, nextMock)
     })
     it('should request the day details', () => {
       expect(getCalendarDayMock).toHaveBeenCalledTimes(1)
     })
     it('should try and sort the details', () => {
       expect(sortByDisplayType).toHaveBeenCalledTimes(1)
-      expect(sortByDisplayType).toHaveBeenCalledWith([{ start: startTime, end: endTime }], 'displayTypeTime')
+      expect(sortByDisplayType).toHaveBeenCalledWith([{ start: startTime, end: endTime }])
     })
     it('should try and process the details', () => {
       expect(processDetail).toHaveBeenCalledTimes(1)
