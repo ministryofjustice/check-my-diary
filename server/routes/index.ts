@@ -2,6 +2,7 @@ import type { RequestHandler, Router } from 'express'
 
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import calendarRouter from './calendarRouter'
+import calendarDetailRouter from './calendarDetailRouter'
 
 export function indexRouter(router: Router): Router {
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -16,6 +17,7 @@ export function indexRouter(router: Router): Router {
   })
 
   calendarRouter(router)
+  calendarDetailRouter(router)
   return router
 }
 
