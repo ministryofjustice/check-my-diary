@@ -2,6 +2,7 @@ import type { RequestHandler, Router } from 'express'
 
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import calendarRouter from './calendarRouter'
+import notificationRouter from './notificationRouter'
 import calendarDetailRouter from './calendarDetailRouter'
 
 export function indexRouter(router: Router): Router {
@@ -18,6 +19,8 @@ export function indexRouter(router: Router): Router {
 
   calendarRouter(router)
   calendarDetailRouter(router)
+  notificationRouter(router)
+
   return router
 }
 

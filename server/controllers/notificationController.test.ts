@@ -1,9 +1,9 @@
 import type { Request, Response } from 'express'
 import moment from 'moment'
-import notificationMiddleware from './notificationMiddleware'
 import type { Notification } from '../services/notifications.types'
 
 import utilities from '../helpers/utilities'
+import NotificationController from './notificationController'
 
 jest.mock('../helpers/utilities')
 const getSnoozeUntil = utilities.getSnoozeUntil as jest.Mock
@@ -39,7 +39,7 @@ describe('notification middleware', () => {
     jest.resetAllMocks()
   })
   beforeEach(async () => {
-    await notificationMiddleware(req, res, nextMock)
+    await new NotificationController().getNotifications(req, res, nextMock)
   })
   it('should get the users notifications', () => {
     expect(getNotificationsMock).toHaveBeenCalledTimes(1)
