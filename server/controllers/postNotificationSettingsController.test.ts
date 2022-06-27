@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 
-import { postNotificationSettingsMiddleware } from './postNotificationSettingsMiddleware'
+import PostNotificationSettingsController from './postNotificationSettingsController'
 
 import { EMAIL, NONE } from '../helpers/constants'
 
@@ -34,7 +34,7 @@ describe('post notification settings middleware', () => {
       beforeEach(async () => {
         req.body = { inputEmail: emailText, notificationRequired: 'Yes' }
         validationResultMock.mockReturnValueOnce({ isEmpty: () => true })
-        await postNotificationSettingsMiddleware(req, res, nextMock)
+        await new PostNotificationSettingsController().setSettings(req, res, nextMock)
       })
       it('should validate the params', () => {
         expect(validationResultMock).toHaveBeenCalledTimes(1)
@@ -55,11 +55,11 @@ describe('post notification settings middleware', () => {
       })
     })
     describe('and validation errors', () => {
-      const errors = { isEmpty: () => false, mapped: () => 'sausage' }
+      const errors = { isEmpty: () => false }
       beforeEach(async () => {
         req.body = { inputEmail: emailText, notificationRequired: 'Yes' }
         validationResultMock.mockReturnValueOnce(errors)
-        await postNotificationSettingsMiddleware(req, res, nextMock)
+        await new PostNotificationSettingsController().setSettings(req, res, nextMock)
       })
       it('should validate the params', () => {
         expect(validationResultMock).toHaveBeenCalledTimes(1)
@@ -90,7 +90,7 @@ describe('post notification settings middleware', () => {
     beforeEach(async () => {
       req.body = { inputEmail: emailText, notificationRequired: 'No' }
       validationResultMock.mockReturnValueOnce({ isEmpty: () => true })
-      await postNotificationSettingsMiddleware(req, res, nextMock)
+      await new PostNotificationSettingsController().setSettings(req, res, nextMock)
     })
     it('should update the preferences', () => {
       expect(updatePreferencesMock).toHaveBeenCalledTimes(1)
@@ -101,7 +101,7 @@ describe('post notification settings middleware', () => {
     beforeEach(async () => {
       req.body = { inputEmail: emailText, notificationRequired: 'No' }
       validationResultMock.mockReturnValueOnce({ isEmpty: () => true })
-      await postNotificationSettingsMiddleware(req, res, nextMock)
+      await new PostNotificationSettingsController().setSettings(req, res, nextMock)
     })
     it('should update the preferences', () => {
       expect(updatePreferencesMock).toHaveBeenCalledTimes(1)
