@@ -13,7 +13,7 @@
       <main id="main-content" role="main">
 
         <% if (showBanner.notifications || showBanner.mfa) { %>
-          <div class="govuk-notification-banner govuk-!-margin-top-4 govuk-!-width-three-quarters" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+          <div class="govuk-notification-banner govuk-!-margin-top-4 govuk-!-width-full" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
             <div class="govuk-notification-banner__header">
               <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
                 Important
@@ -21,37 +21,39 @@
             </div>
             <div class="govuk-notification-banner__content">
               <% if (showBanner.notifications) { %>
-                  <p>You will soon only be able to receive notifications by email. We will remove the option to receive texts.</p>
-                  <p>You must <a class="govuk-notification-banner__link" href="/notifications/settings">change your notification settings</a> to email now.
-                  </p>
+                You will soon only be able to receive notifications by email. We will remove the option to receive texts.
+                <br />
+                You must <a class="govuk-notification-banner__link" href="/notifications/settings">change your notification settings</a> to email now.
+                <br />
               <% } %>
-              <% if (showBanner.mfa === 'EXISTING_USER') { %>
-                <p>
-                  <%# Existing user (already uses CMD) %>
-                  You can manage your two-factor authentication settings on the <a
-                          class="govuk-notification-banner__link" href="<%= authUrl %>/account-details">Manage your details</a> page.
-                  You can also access this via the top bar.
-                  You no longer need to contact the support team to change these settings.
-                </p>
-              <% } %>
-              <% if (showBanner.mfa === 'NEW_USER') { %>
-                <p>
-                  <%# New user (DPS with 2FA) %>
-                  You can manage your two-factor authentication settings on the <a
-                          class="govuk-notification-banner__link" href="<%= authUrl %>/account-details">Manage your details</a> page.
-                  You can also access this via the top bar.
-                  Once signed in, you can change these settings from inside or outside an establishment.
-                </p>
-              <% } %>
-              <% if (showBanner.mfa === 'FIRST_TIME_USER') { %>
-                <p>
-                  <%# First-time user (DPS without 2FA) %>
-                  You need to set up two-factor authentication to help secure access to your account.
-                  You must add a backup personal email address or phone number on the <a
-                          class="govuk-notification-banner__link" href="<%= authUrl %>/account-details">Manage your details</a> page. We
-                  will use this to confirm it’s you signing in to your account.
-                </p>
-              <% } %>
+
+              <% switch (showBanner.mfa) {
+              case 'EXISTING_USER': %>
+                <%# Existing user (already uses CMD) %>
+                You can manage your two-factor authentication settings on the <a
+                        class="govuk-notification-banner__link" href="<%= authUrl %>/account-details">Manage your details</a> page.
+                You can also access this via the top bar.
+                You no longer need to contact the support team to change these settings.
+                <br />
+                <a class="govuk-link govuk-link--no-visited-state notification_dismiss_link" id="EXISTING_USER" href="#">Dismiss</a>
+              <% break;
+              case 'NEW_USER': %>
+                <%# New user (DPS with 2FA) %>
+                You can manage your two-factor authentication settings on the <a
+                        class="govuk-notification-banner__link" href="<%= authUrl %>/account-details">Manage your details</a> page.
+                You can also access this via the top bar.
+                Once signed in, you can change these settings from inside or outside an establishment.
+                <br />
+                <a class="govuk-link govuk-link--no-visited-state notification_dismiss_link" id="NEW_USER" href="#">Dismiss</a>
+              <% break;
+              case 'FIRST_TIME_USER':  %>
+                <%# First-time user (DPS without 2FA) %>
+                You need to set up two-factor authentication to help secure access to your account.
+                You must add a backup personal email address or phone number on the <a
+                        class="govuk-notification-banner__link" href="<%= authUrl %>/account-details">Manage your details</a> page.
+                We will use this to confirm it’s you signing in to your account.
+              <% break;
+              } %>
             </div>
           </div>
         <% } %>
@@ -124,10 +126,32 @@
             <% }); %>
           </ul>
         <% }  %>
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <input type="hidden" id="_csrf" name="_csrf" value="<%= csrfToken %>" />
         <div class="govuk-clearfix"> </div>
       </main>
     </div>
     <%- include ('../partials/footer') -%>
+    <script type="application/javascript">
+      $(".notification_dismiss_link").on('click', function(event) {
+        const $notification = $(".govuk-notification-banner");
+        const id = event.target.id;
+        const csrf = $("#_csrf").val();
+
+        $.ajax({
+          url: "/calendar/dismiss",
+          type: "POST",
+          headers: {
+            "X-CSRF-Token": csrf
+          },
+          data: { id }
+        })
+          .done(function() {
+            $notification.hide();
+          })
+          .fail(function() {
+            window.location = "/";
+          });
+      });
+    </script>
   </body>
 </html>

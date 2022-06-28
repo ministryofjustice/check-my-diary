@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express'
 import logger from '../../log'
 import { appendUserErrorMessage, configureCalendar, hmppsAuthMFAUser, processDay } from '../helpers/utilities'
 import { SMS } from '../helpers/constants'
+import { alreadyDismissed } from '../services/notificationCookieService'
 
 export default class CalendarController {
   async getDate(req: Request, res: Response, next: NextFunction) {
@@ -28,12 +29,19 @@ export default class CalendarController {
         isMfa ? userAuthenticationService.getUserAuthenticationDetails(username) : [],
       ])
 
+      const alreadyDismissedExisting = alreadyDismissed(req, 'EXISTING_USER')
+      const alreadyDismissedNew = alreadyDismissed(req, 'NEW_USER')
+
       let mfaBanner = ''
       if (isMfa) {
         if (userAuthenticationDetails && userAuthenticationDetails.length > 0) {
-          mfaBanner = 'EXISTING_USER'
+          if (!alreadyDismissedExisting) {
+            mfaBanner = 'EXISTING_USER'
+          }
         } else if (mfa.backupVerified || mfa.mobileVerified) {
-          mfaBanner = 'NEW_USER'
+          if (!alreadyDismissedNew) {
+            mfaBanner = 'NEW_USER'
+          }
         } else {
           mfaBanner = 'FIRST_TIME_USER'
         }

@@ -1,15 +1,16 @@
+import { format } from 'date-fns'
 import Page, { PageElement } from './page'
 
 export default class CalendarPage extends Page {
-  constructor(date: string) {
-    super(date)
+  constructor(date?: string) {
+    super(date || format(new Date(), 'MMMM yyyy'))
   }
-
-  notificationTab = (): PageElement => cy.get('a[href="/notifications"]')
 
   day = (date: string): PageElement => cy.get(`a[href="/details/${date}"]`)
 
-  nextMonth = (date: string): PageElement => cy.get(`a[href="/calendar/${date}"]`)
+  previousMonth = (): PageElement => cy.get(`a[data-qa="previous"]`)
 
-  previousMonth = (date: string): PageElement => cy.get(`a[href="/calendar/${date}"]`)
+  banner = (): PageElement => cy.get('.govuk-notification-banner')
+
+  notificationBannerLink = (): PageElement => cy.get('.govuk-notification-banner__link')
 }
