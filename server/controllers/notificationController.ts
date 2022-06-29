@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Application, NextFunction, Request, Response } from 'express'
 import moment from 'moment'
 import { validationResult } from 'express-validator'
 import { add, formatISO } from 'date-fns'
@@ -18,6 +18,14 @@ function serviceUnavailable(req: Request, res: Response) {
 function getFormattedFutureDate(pauseUnit: string, pauseValue: number) {
   const duration = { [pauseUnit]: pauseValue }
   return formatISO(add(new Date(), duration), { representation: 'date' })
+}
+
+async function getSnoozeAndNotificationSettings(app: Application, token: string) {
+  const { notificationService } = app.get('DataServices')
+  const { snoozeUntil: rawSnoozeUntil, preference = NONE } = await notificationService.getPreferences(token)
+  const notificationsEnabled = preference !== NONE
+  const snoozeUntil = notificationsEnabled ? getSnoozeUntil(rawSnoozeUntil) : ''
+  return { snoozeUntil, notificationsEnabled }
 }
 
 export default class NotificationController {
@@ -50,7 +58,7 @@ export default class NotificationController {
     }
   }
 
-  async resume(req: Request, res: Response, next: NextFunction) {
+  async resume(req: Request, res: Response) {
     try {
       const {
         user: { token },
@@ -77,15 +85,13 @@ export default class NotificationController {
       const {
         locals: { csrfToken, errors = null },
       } = res
-      const { notificationService } = app.get('DataServices')
-      const { snoozeUntil: rawSnoozeUntil, preference = NONE } = await notificationService.getPreferences(token)
-      const notificationsEnabled = preference !== NONE
+      const { snoozeUntil, notificationsEnabled } = await getSnoozeAndNotificationSettings(app, token)
 
       return res.render('pages/manage-your-notifications', {
         errors,
         csrfToken,
         notificationsEnabled,
-        snoozeUntil: notificationsEnabled ? getSnoozeUntil(rawSnoozeUntil) : '',
+        snoozeUntil,
         employeeName,
         authUrl,
       })
@@ -106,15 +112,14 @@ export default class NotificationController {
       const {
         locals: { csrfToken, errors },
       } = res
-      const { notificationService } = app.get('DataServices')
-      const { snoozeUntil: rawSnoozeUntil, preference = NONE } = await notificationService.getPreferences(token)
-      const notificationsEnabled = preference !== NONE
+
+      const { snoozeUntil, notificationsEnabled } = await getSnoozeAndNotificationSettings(app, token)
 
       return res.render('pages/pause-notifications', {
         errors,
         csrfToken,
         notificationsEnabled,
-        snoozeUntil: notificationsEnabled ? getSnoozeUntil(rawSnoozeUntil) : '',
+        snoozeUntil,
         employeeName,
         authUrl,
         pauseUnit,
@@ -130,21 +135,33 @@ export default class NotificationController {
       const errors = validationResult(req)
       res.locals.errors = errors
       const {
-        user: { token },
+        user: { employeeName, token },
         app,
         body: { pauseUnit, pauseValue },
+        authUrl,
       } = req
+      const {
+        locals: { csrfToken },
+      } = res
 
-      if (errors.isEmpty()) {
-        const {
-          notificationService: { updateSnooze },
-        } = app.get('DataServices')
-        await updateSnooze(token, getFormattedFutureDate(pauseUnit, pauseValue))
-        return res.redirect('/notifications/manage')
+      if (!errors.isEmpty()) {
+        const { snoozeUntil, notificationsEnabled } = await getSnoozeAndNotificationSettings(app, token)
+        return res.render('pages/pause-notifications', {
+          errors,
+          csrfToken,
+          notificationsEnabled,
+          snoozeUntil,
+          employeeName,
+          authUrl,
+          pauseUnit,
+          pauseValue,
+        })
       }
-
-      req.query = { pauseUnit, pauseValue }
-      return await new NotificationController().getPause(req, res, next)
+      const {
+        notificationService: { updateSnooze },
+      } = app.get('DataServices')
+      await updateSnooze(token, getFormattedFutureDate(pauseUnit, pauseValue))
+      return res.redirect('/notifications/manage')
     } catch (error) {
       const message = 'Pause notifications failed. Please try again.'
       logger.error(error, message)
