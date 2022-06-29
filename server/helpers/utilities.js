@@ -3,7 +3,6 @@ const crypto = require('crypto')
 const jwtDecode = require('jwt-decode')
 
 const log = require('../../log')
-const { GENERAL_ERROR } = require('./errorConstants')
 
 function getStartMonth() {
   return moment().startOf('month').format('YYYY-MM-DD')
@@ -160,8 +159,6 @@ const getSnoozeUntil = (rawSnoozeUntil) => {
   return snoozeUntil.isAfter(moment()) ? snoozeUntil.add(1, 'day').format('D MMMM YYYY') : ''
 }
 
-const appendUserErrorMessage = (error, userMessage = GENERAL_ERROR) => Object.assign(error, { userMessage })
-
 const processDetail = (detail, detailIndex, details) => {
   const { start, end, displayType, activity } = detail
   let startText = start ? moment(start).format('HH:mm') : ''
@@ -206,5 +203,4 @@ module.exports = {
   processDetail,
   hmppsAuthMFAUser,
   getSnoozeUntil,
-  appendUserErrorMessage,
 }

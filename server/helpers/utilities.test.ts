@@ -1,5 +1,4 @@
 import {
-  appendUserErrorMessage,
   configureCalendar,
   getSnoozeUntil,
   hmppsAuthMFAUser,
@@ -8,8 +7,7 @@ import {
   sortByDisplayType,
 } from './utilities'
 
-import { GENERAL_ERROR, NOT_FOUND_ERROR } from './errorConstants'
-import type { CalendarDay, Details, UserError } from './utilities.types'
+import type { CalendarDay, Details } from './utilities.types'
 
 jest.mock('jwt-decode', () => (token: string) => token)
 
@@ -135,30 +133,6 @@ describe('getSnoozeUntil', () => {
   })
   it('should return an empty string if the date is undefined', () => {
     expect(getSnoozeUntil()).toEqual('')
-  })
-})
-
-describe('appendUserErrorMessage', () => {
-  let mrsError: Error
-  let returnedValue: UserError
-  beforeEach(() => {
-    mrsError = new Error()
-  })
-  describe('with a specific error message', () => {
-    beforeEach(() => {
-      returnedValue = appendUserErrorMessage(mrsError, NOT_FOUND_ERROR)
-    })
-    it('should return the error', () => {
-      expect(returnedValue).toBe(mrsError)
-    })
-    it('should append a user error message', () => {
-      expect(returnedValue.userMessage).toEqual(NOT_FOUND_ERROR)
-    })
-  })
-  describe('with no specific error message', () => {
-    it('should append a general user error message', () => {
-      expect(appendUserErrorMessage(mrsError).userMessage).toEqual(GENERAL_ERROR)
-    })
   })
 })
 
