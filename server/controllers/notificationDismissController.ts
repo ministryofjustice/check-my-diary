@@ -1,16 +1,16 @@
 import { Request, Response } from 'express'
-import { markAsDismissed } from '../services/notificationCookieService'
 
 export default () => async (req: Request, res: Response) => {
-  const id = req.body?.id
+  const { app, xhr, body: { id } = {} } = req
+  const { notificationCookieService } = app.get('DataServices')
 
-  if (!req.xhr) return res.redirect('/')
+  if (!xhr) return res.redirect('/')
   if (!id) {
     res.status(400)
     return res.end()
   }
 
-  markAsDismissed(res, id)
+  notificationCookieService.markAsDismissed(res, id)
 
   res.status(200)
 

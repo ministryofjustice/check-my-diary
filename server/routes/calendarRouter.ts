@@ -4,7 +4,7 @@ import { getStartMonth } from '../helpers/utilities'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import CalendarController from '../controllers/calendarController'
 
-import notificationDismiss from '../middleware/notificationDismiss'
+import notificationDismissController from '../controllers/notificationDismissController'
 
 export default function calendarRouter(router: Router): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -14,7 +14,7 @@ export default function calendarRouter(router: Router): Router {
 
   get('/calendar', (req, res) => res.redirect(`/calendar/${getStartMonth()}`))
 
-  router.post('/calendar/dismiss', notificationDismiss())
+  router.post('/calendar/dismiss', notificationDismissController())
 
   return router
 }

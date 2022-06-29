@@ -28,25 +28,26 @@
               <% } %>
 
               <% switch (showBanner.mfa) {
-              case 'EXISTING_USER': %>
+              case mfaBannerType.EXISTING_USER: %>
                 <%# Existing user (already uses CMD) %>
                 You can manage your two-factor authentication settings on the <a
                         class="govuk-notification-banner__link" href="<%= authUrl %>/account-details">Manage your details</a> page.
                 You can also access this via the top bar.
                 You no longer need to contact the support team to change these settings.
                 <br />
-                <a class="govuk-link govuk-link--no-visited-state notification_dismiss_link" id="EXISTING_USER" href="#">Dismiss</a>
+                <p class="govuk-!-margin-top-2"><a class="govuk-link govuk-link--no-visited-state notification_dismiss_link" id="EXISTING_USER" href="#">Dismiss</a></p>
+
               <% break;
-              case 'NEW_USER': %>
+              case mfaBannerType.NEW_USER: %>
                 <%# New user (DPS with 2FA) %>
                 You can manage your two-factor authentication settings on the <a
                         class="govuk-notification-banner__link" href="<%= authUrl %>/account-details">Manage your details</a> page.
                 You can also access this via the top bar.
                 Once signed in, you can change these settings from inside or outside an establishment.
                 <br />
-                <a class="govuk-link govuk-link--no-visited-state notification_dismiss_link" id="NEW_USER" href="#">Dismiss</a>
+                <p class="govuk-!-margin-top-2"><a class="govuk-link govuk-link--no-visited-state notification_dismiss_link" id="NEW_USER" href="#">Dismiss</a></p>
               <% break;
-              case 'FIRST_TIME_USER':  %>
+              case mfaBannerType.FIRST_TIME_USER:  %>
                 <%# First-time user (DPS without 2FA) %>
                 You need to set up two-factor authentication to help secure access to your account.
                 You must add a backup personal email address or phone number on the <a
@@ -131,26 +132,28 @@
       </main>
     </div>
     <%- include ('../partials/footer') -%>
-    <script type="application/javascript">
-      $(".notification_dismiss_link").on('click', function(event) {
-        const $notification = $(".govuk-notification-banner");
+    <script type="text/javascript">
+      const links = document.getElementsByClassName("notification_dismiss_link")
+      if (links.length) links[0].addEventListener("click", function(event) {
+        const $notifications = document.getElementsByClassName("govuk-notification-banner");
         const id = event.target.id;
-        const csrf = $("#_csrf").val();
+        const csrf = document.getElementById("_csrf").getAttribute('value');
 
-        $.ajax({
-          url: "/calendar/dismiss",
-          type: "POST",
-          headers: {
-            "X-CSRF-Token": csrf
-          },
-          data: { id }
-        })
-          .done(function() {
-            $notification.hide();
-          })
-          .fail(function() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/calendar/dismiss");
+        xhr.setRequestHeader("X-CSRF-Token", csrf);
+        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function() {
+          if (this.status === 200) {
+            if (this.readyState === XMLHttpRequest.DONE && $notifications.length) {
+              $notifications[0].style.display="none";
+            }
+          } else {
             window.location = "/";
-          });
+          }
+        }
+        xhr.send(`{ "id": "${id}" }`);
       });
     </script>
   </body>

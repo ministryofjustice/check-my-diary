@@ -13,6 +13,7 @@ const authenticationMiddleware = require('./middleware/authenticationMiddleware'
 
 const calendarService = require('./services/calendarService')
 const notificationService = require('./services/notificationService')
+const notificationCookieService = require('./services/notificationCookieService')
 const authHandlerMiddleware = require('./middleware/authHandlerMiddleware')
 const { createErrorHandler } = require('./errorHandler')
 const { ejsSetup } = require('./utils/ejsSetup')
@@ -52,6 +53,7 @@ module.exports = function createApp({ signInService }) {
     notificationService,
     userAuthenticationService,
     signInService,
+    notificationCookieService,
   })
 
   // GovUK Template Configuration

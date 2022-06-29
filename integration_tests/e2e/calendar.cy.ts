@@ -13,7 +13,7 @@ context('A staff member can view their calendar', () => {
     cy.task('stubShifts')
     cy.task('stubNotificationCount')
     cy.task('stubNotificationPreferencesGet', { preference: 'EMAIL', email: 'me@gmail.com' })
-    cy.task('stubGetMyMfaSettings', {})
+    cy.task('stubGetMyMfaSettings', { backupVerified: false, mobileVerified: false, emailVerified: false })
   })
 
   it('A staff member can view their calendar', () => {
@@ -68,7 +68,7 @@ context('A staff member can view their calendar', () => {
     nightShiftPage.detailStartNight().should('contain', 'Start of night shift').should('contain', 'Night Duties')
   })
 
-  it('A staff member navigate to different days', () => {
+  it('A staff member navigates to different days', () => {
     cy.task('stubLogin')
     cy.login()
 
@@ -141,5 +141,15 @@ context('A staff member can view their calendar', () => {
     const calendarPage = Page.verifyOnPageTitle(CalendarPage)
     calendarPage.banner().contains('You must add a backup personal email address or phone number')
     calendarPage.banner().contains('Dismiss').should('not.exist')
+  })
+
+  it('Both SMS and MFA banner messages shown', () => {
+    cy.task('stubNotificationPreferencesGet', { preference: 'SMS', sms: '01234567890' })
+    cy.task('stubGetMyMfaSettings', { backupVerified: true, mobileVerified: false, emailVerified: true })
+    cy.task('stubLogin', { username: 'AUTH_USER', authorities: ['ROLE_CMD_MIGRATED_MFA'] })
+    cy.login()
+    const calendarPage = Page.verifyOnPageTitle(CalendarPage)
+    calendarPage.banner().contains('You can manage your two-factor authentication settings')
+    calendarPage.banner().contains('You will soon only be able to receive notifications by email')
   })
 })

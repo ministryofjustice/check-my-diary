@@ -9,8 +9,3 @@ export const markAsDismissed = (res: Response, id: string) => {
 }
 
 export const alreadyDismissed = (req: Request, id: string) => req.cookies && req.cookies[key(id)] === 'dismissed'
-
-export default {
-  markAsDismissed,
-  alreadyDismissed,
-}

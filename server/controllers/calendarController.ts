@@ -3,7 +3,9 @@ import { Request, Response, NextFunction } from 'express'
 import logger from '../../log'
 import { configureCalendar, hmppsAuthMFAUser, processDay } from '../helpers/utilities'
 import { SMS } from '../helpers/constants'
-import { alreadyDismissed } from '../services/notificationCookieService'
+import mfaBannerType from '../helpers/mfaBannerType'
+
+const { EXISTING_USER, NEW_USER, FIRST_TIME_USER } = mfaBannerType
 
 export default class CalendarController {
   async getDate(req: Request, res: Response, next: NextFunction) {
@@ -16,11 +18,17 @@ export default class CalendarController {
 
     logger.info({ user: username, date }, 'GET calendar view')
 
-    const { calendarService, notificationService, userAuthenticationService, signInService } = app.get('DataServices')
+    const {
+      calendarService,
+      notificationService,
+      userAuthenticationService,
+      signInService,
+      notificationCookieService,
+    } = app.get('DataServices')
 
     const isMfa = hmppsAuthMFAUser(token)
 
-    const [notificationCount, preferences, month, mfa, userAuthenticationDetails] = await Promise.all([
+    const [notificationCount, preferences, month, authMfa, userAuthenticationDetails] = await Promise.all([
       notificationService.countUnprocessedNotifications(token),
       notificationService.getPreferences(token),
       calendarService.getCalendarMonth(date, token),
@@ -28,28 +36,31 @@ export default class CalendarController {
       isMfa ? userAuthenticationService.getUserAuthenticationDetails(username) : [],
     ])
 
-    const alreadyDismissedExisting = alreadyDismissed(req, 'EXISTING_USER')
-    const alreadyDismissedNew = alreadyDismissed(req, 'NEW_USER')
+    const computeBanner = () => {
+      const alreadyDismissedExisting = notificationCookieService.alreadyDismissed(req, EXISTING_USER)
+      const alreadyDismissedNew = notificationCookieService.alreadyDismissed(req, NEW_USER)
 
-    let mfaBanner = ''
-    if (isMfa) {
+      if (!isMfa) {
+        return ''
+      }
       if (userAuthenticationDetails && userAuthenticationDetails.length > 0) {
         if (!alreadyDismissedExisting) {
-          mfaBanner = 'EXISTING_USER'
+          return EXISTING_USER
         }
-      } else if (mfa.backupVerified || mfa.mobileVerified) {
+      } else if (authMfa.backupVerified || authMfa.mobileVerified) {
         if (!alreadyDismissedNew) {
-          mfaBanner = 'NEW_USER'
+          return NEW_USER
         }
       } else {
-        mfaBanner = 'FIRST_TIME_USER'
+        return FIRST_TIME_USER
       }
+      return ''
     }
 
     month.forEach(processDay)
     const showBanner = {
       notifications: preferences.preference === SMS,
-      mfa: mfaBanner,
+      mfa: computeBanner(),
     }
     const data = configureCalendar(month)
     const currentMonthMoment = moment(date)
@@ -66,6 +77,7 @@ export default class CalendarController {
       employeeName,
       authUrl,
       showBanner,
+      mfaBannerType,
     })
   }
 }
