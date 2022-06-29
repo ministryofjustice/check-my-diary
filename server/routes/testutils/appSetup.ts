@@ -1,11 +1,13 @@
 import express, { Router, Express } from 'express'
-import bodyParser from 'body-parser'
-import path from 'path'
 import cookieSession from 'cookie-session'
-import { standardRouter } from '../standardRouter'
-import { indexRouter } from '../index'
+import createError from 'http-errors'
+import path from 'path'
 
-function appSetup(route: Router): Express {
+import { indexRouter } from '../index'
+import { createErrorHandler } from '../../errorHandler'
+import { standardRouter } from '../standardRouter'
+
+function appSetup(route: Router, production: boolean): Express {
   const app = express()
 
   app.set('views', path.join(__dirname, '../../views'))
@@ -20,14 +22,17 @@ function appSetup(route: Router): Express {
     }
     next()
   })
+
   app.use(cookieSession({ keys: [''] }))
-  app.use(bodyParser.json())
-  app.use(bodyParser.urlencoded({ extended: false }))
+  app.use(express.json())
+  app.use(express.urlencoded({ extended: true }))
   app.use('/', route)
+  app.use((req, res, next) => next(createError(404, 'Not found')))
+  app.use(createErrorHandler(production))
 
   return app
 }
 
-export default function appWithAllRoutes(): Express {
-  return appSetup(indexRouter(standardRouter()))
+export default function appWithAllRoutes({ production = false }: { production?: boolean }): Express {
+  return appSetup(indexRouter(standardRouter()), production)
 }

@@ -6,7 +6,6 @@ import utilities from '../helpers/utilities'
 jest.mock('../helpers/utilities', () => ({
   sortByDisplayType: jest.fn(() => true),
   processDetail: jest.fn(),
-  appendUserErrorMessage: jest.fn((error) => error),
 }))
 const processDetail = utilities.processDetail as jest.Mock
 const sortByDisplayType = utilities.sortByDisplayType as jest.Mock

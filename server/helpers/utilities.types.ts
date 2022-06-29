@@ -19,10 +19,6 @@ export interface CalendarDay {
   dateDayText?: string
 }
 
-export interface UserError extends Error {
-  userMessage: string
-}
-
 export interface AppRequest {
   app: Application
   authUrl: string
