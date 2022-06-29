@@ -1,5 +1,6 @@
 const express = require('express')
 const path = require('path')
+const createError = require('http-errors')
 
 const { setUpHealthChecks } = require('./middleware/setUpHealthChecks')
 const { setUpStaticResources } = require('./middleware/setUpStaticResources')
@@ -13,10 +14,7 @@ const authenticationMiddleware = require('./middleware/authenticationMiddleware'
 const calendarService = require('./services/calendarService')
 const notificationService = require('./services/notificationService')
 const authHandlerMiddleware = require('./middleware/authHandlerMiddleware')
-const errorsMiddleware = require('./middleware/errorsMiddleware')
-
-const { appendUserErrorMessage } = require('./helpers/utilities')
-const { NOT_FOUND_ERROR } = require('./helpers/errorConstants')
+const { createErrorHandler } = require('./errorHandler')
 const { ejsSetup } = require('./utils/ejsSetup')
 const { setUpWebSecurity } = require('./middleware/setUpWebSecurity')
 const { setUpWebSession } = require('./middleware/setUpWebSession')
@@ -71,13 +69,8 @@ module.exports = function createApp({ signInService }) {
 
   app.use('/', indexRouter(standardRouter()))
 
-  app.use('*', (req, res, next) => {
-    const error = new Error('Not found')
-    error.status = 404
-    next(appendUserErrorMessage(error, NOT_FOUND_ERROR))
-  })
-
-  app.use('*', errorsMiddleware)
+  app.use((req, res, next) => next(createError(404, 'Not found')))
+  app.use(createErrorHandler(process.env.NODE_ENV === 'production'))
 
   return app
 }
