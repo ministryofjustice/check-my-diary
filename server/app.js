@@ -8,8 +8,6 @@ const loginRouter = require('./routes/login')
 const config = require('../config')
 const userAuthenticationService = require('./services/userAuthenticationService')
 
-const tokenRefresh = require('./middleware/tokenRefresh')
-
 const notificationService = require('./services/notificationService')
 const notificationCookieService = require('./services/notificationCookieService')
 const { createErrorHandler } = require('./errorHandler')
@@ -53,9 +51,6 @@ module.exports = function createApp({ signInService, services }) {
 
   // GovUK Template Configuration
   app.locals.assetPath = '/assets/'
-
-  // token refresh
-  app.use(tokenRefresh(signInService))
 
   // CMD 2FA functionality - only if user hasn't gone through HMPPS Auth 2FA
   app.use('/auth', loginRouter)
