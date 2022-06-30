@@ -1,5 +1,4 @@
 import type { Request, Response } from 'express'
-import utilities from '../helpers/utilities'
 
 import config from '../../config'
 import auth from './auth'
@@ -7,8 +6,6 @@ import auth from './auth'
 jest.mock('jwt-decode', () => () => ({ name: 'Ned Nederlander' }))
 jest.mock('../helpers/utilities')
 jest.mock('../../config', () => ({ apis: { hmppsAuth: {} } }))
-
-const hmppsAuthMFAUser = utilities.hmppsAuthMFAUser as jest.Mock
 
 describe('authentication middleware', () => {
   const nextMock = jest.fn()
@@ -29,29 +26,16 @@ describe('authentication middleware', () => {
   describe('with an authenticated user', () => {
     beforeEach(() => {
       isAuthenticatedMock.mockReturnValueOnce(true)
-      hmppsAuthMFAUser.mockReturnValue(true)
       auth.authenticationMiddleware()(req, res, nextMock)
     })
     it('should call isAuthenticated', () => {
       expect(isAuthenticatedMock).toBeCalledTimes(1)
-    })
-    it('should call hmppsAuthMFAUser', () => {
-      expect(hmppsAuthMFAUser).toBeCalledTimes(1)
-      expect(hmppsAuthMFAUser).toBeCalledWith(token)
     })
     it('should call next', () => {
       expect(nextMock).toBeCalledTimes(1)
     })
     it('should not call redirect', () => {
       expect(redirectMock).not.toBeCalled()
-    })
-    it('should populate the req object', () => {
-      expect(req).toEqual({
-        authUrl,
-        hmppsAuthMFAUser: true,
-        isAuthenticated: isAuthenticatedMock,
-        user: { token, employeeName: 'Ned Nederlander' },
-      })
     })
   })
   describe('with an unauthenticated user', () => {
@@ -63,9 +47,6 @@ describe('authentication middleware', () => {
     })
     it('should call isAuthenticated', () => {
       expect(isAuthenticatedMock).toBeCalledTimes(1)
-    })
-    it('should not call', () => {
-      expect(hmppsAuthMFAUser).not.toBeCalled()
     })
     it('should not call next', () => {
       expect(nextMock).not.toBeCalled()
