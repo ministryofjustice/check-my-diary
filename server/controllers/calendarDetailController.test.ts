@@ -13,7 +13,7 @@ const sortByDisplayType = utilities.sortByDisplayType as jest.Mock
 
 describe('calendar detail middleware', () => {
   const renderMock = jest.fn()
-  const nextMock = jest.fn()
+  jest.fn()
   const token = 'sausages'
   const employeeName = 'Ray Parker Jr.'
   const authUrl = ''

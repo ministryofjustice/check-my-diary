@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { Request, Response, NextFunction } from 'express'
+import { Request, Response } from 'express'
 import logger from '../../log'
 import { configureCalendar, hmppsAuthMFAUser, processDay } from '../helpers/utilities'
 import { SMS } from '../helpers/constants'

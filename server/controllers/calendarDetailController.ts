@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import moment from 'moment'
 
 import { processDetail, sortByDisplayType } from '../helpers/utilities'
@@ -9,7 +9,6 @@ export default class CalendarDetailController {
 
   async details(req: Request, res: Response) {
     const {
-      app,
       user: { token, employeeName },
       params: { date },
       authUrl,
