@@ -2,6 +2,7 @@ import type { Request, Response } from 'express'
 import CalendarDetailController from './calendarDetailController'
 
 import utilities from '../helpers/utilities'
+import { CalendarService } from '../services'
 
 jest.mock('../helpers/utilities', () => ({
   sortByDisplayType: jest.fn(() => true),
@@ -12,17 +13,14 @@ const sortByDisplayType = utilities.sortByDisplayType as jest.Mock
 
 describe('calendar detail middleware', () => {
   const renderMock = jest.fn()
-  const nextMock = jest.fn()
+  jest.fn()
   const token = 'sausages'
   const employeeName = 'Ray Parker Jr.'
   const authUrl = ''
   const csrfToken = 'tomato'
   const getCalendarDayMock = jest.fn()
-  const app = {
-    get: () => ({
-      calendarService: { getCalendarDay: getCalendarDayMock },
-    }),
-  }
+  const app = {}
+  const calendarService: CalendarService = { getCalendarDay: getCalendarDayMock } as unknown as CalendarService
   let req: Request
   let res: Response
   const startTime = '2020-07-08T10:00:00'
@@ -55,7 +53,7 @@ describe('calendar detail middleware', () => {
         details: detailsRestDay,
       }
       getCalendarDayMock.mockResolvedValue(calendarDataRestDay)
-      await new CalendarDetailController().details(req, res, nextMock)
+      await new CalendarDetailController(calendarService).details(req, res)
     })
     it('should request the day details', () => {
       expect(getCalendarDayMock).toHaveBeenCalledTimes(1)
@@ -106,7 +104,7 @@ describe('calendar detail middleware', () => {
       }
       processDetail.mockReturnValue(processReturn)
       getCalendarDayMock.mockResolvedValue(calendarDataRestDay)
-      await new CalendarDetailController().details(req, res, nextMock)
+      await new CalendarDetailController(calendarService).details(req, res)
     })
     it('should request the day details', () => {
       expect(getCalendarDayMock).toHaveBeenCalledTimes(1)

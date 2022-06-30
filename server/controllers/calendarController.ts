@@ -1,14 +1,17 @@
 import moment from 'moment'
-import { Request, Response, NextFunction } from 'express'
+import { Request, Response } from 'express'
 import logger from '../../log'
 import { configureCalendar, hmppsAuthMFAUser, processDay } from '../helpers/utilities'
 import { SMS } from '../helpers/constants'
 import mfaBannerType from '../helpers/mfaBannerType'
+import type { CalendarService } from '../services'
 
 const { EXISTING_USER, NEW_USER, FIRST_TIME_USER } = mfaBannerType
 
 export default class CalendarController {
-  async getDate(req: Request, res: Response, next: NextFunction) {
+  constructor(private readonly calendarService: CalendarService) {}
+
+  async getDate(req: Request, res: Response) {
     const {
       app,
       user: { token, employeeName, username },
@@ -18,20 +21,15 @@ export default class CalendarController {
 
     logger.info({ user: username, date }, 'GET calendar view')
 
-    const {
-      calendarService,
-      notificationService,
-      userAuthenticationService,
-      signInService,
-      notificationCookieService,
-    } = app.get('DataServices')
+    const { notificationService, userAuthenticationService, signInService, notificationCookieService } =
+      app.get('DataServices')
 
     const isMfa = hmppsAuthMFAUser(token)
 
     const [notificationCount, preferences, month, authMfa, userAuthenticationDetails] = await Promise.all([
       notificationService.countUnprocessedNotifications(token),
       notificationService.getPreferences(token),
-      calendarService.getCalendarMonth(date, token),
+      this.calendarService.getCalendarMonth(date, token),
       isMfa ? signInService.getMyMfaSettings(token) : {},
       isMfa ? userAuthenticationService.getUserAuthenticationDetails(username) : [],
     ])

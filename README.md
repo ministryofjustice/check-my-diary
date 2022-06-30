@@ -140,3 +140,11 @@ are made and http://localhost:9191/__admin/mappings will show what stubs have be
 
 Follow instructions here:
 [Set up access to CSR](https://dsdmoj.atlassian.net/wiki/spaces/TI/pages/3564568692/Check+My+Diary+Onboarding)
+
+## Updating the CMD API types
+
+Run command:
+
+`npx openapi-typescript http://localhost:8080/v3/api-docs --output server/@types/cmdApi/index.d.ts`
+
+Eslint will not be happy - tidy up the generated file with Prettier.

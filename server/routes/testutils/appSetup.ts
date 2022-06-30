@@ -6,6 +6,7 @@ import path from 'path'
 import { indexRouter } from '../index'
 import { createErrorHandler } from '../../errorHandler'
 import { standardRouter } from '../standardRouter'
+import { services } from '../../services'
 
 function appSetup(route: Router, production: boolean, hmppsAuthMFAUser: boolean): Express {
   const app = express()
@@ -41,5 +42,5 @@ export default function appWithAllRoutes({
   production?: boolean
   hmppsAuthMFAUser?: boolean
 }): Express {
-  return appSetup(indexRouter(standardRouter()), production, hmppsAuthMFAUser)
+  return appSetup(indexRouter(standardRouter(), services()), production, hmppsAuthMFAUser)
 }

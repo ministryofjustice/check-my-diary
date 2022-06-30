@@ -11,7 +11,6 @@ const userAuthenticationService = require('./services/userAuthenticationService'
 const tokenRefresh = require('./middleware/tokenRefresh')
 const authenticationMiddleware = require('./middleware/authenticationMiddleware')
 
-const calendarService = require('./services/calendarService')
 const notificationService = require('./services/notificationService')
 const notificationCookieService = require('./services/notificationCookieService')
 const { createErrorHandler } = require('./errorHandler')
@@ -30,7 +29,7 @@ if (config.rejectUnauthorized) {
 }
 
 // eslint-disable-next-line no-shadow
-module.exports = function createApp({ signInService }) {
+module.exports = function createApp({ signInService, services }) {
   const app = express()
 
   app.set('json spaces', 2)
@@ -48,7 +47,6 @@ module.exports = function createApp({ signInService }) {
 
   // Add services to server
   app.set('DataServices', {
-    calendarService,
     notificationService,
     userAuthenticationService,
     signInService,
@@ -68,7 +66,7 @@ module.exports = function createApp({ signInService }) {
   // CMD 2FA functionality - only if user hasn't gone through HMPPS Auth 2FA
   app.use('/auth', loginRouter)
 
-  app.use('/', indexRouter(standardRouter()))
+  app.use('/', indexRouter(standardRouter(), services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(createErrorHandler(process.env.NODE_ENV === 'production'))

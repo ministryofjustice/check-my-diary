@@ -1,25 +1,25 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import moment from 'moment'
 
 import { processDetail, sortByDisplayType } from '../helpers/utilities'
+import type { CalendarService } from '../services'
 
 export default class CalendarDetailController {
-  async details(req: Request, res: Response, next: NextFunction) {
+  constructor(private readonly calendarService: CalendarService) {}
+
+  async details(req: Request, res: Response) {
     const {
-      app,
       user: { token, employeeName },
       params: { date },
       authUrl,
     } = req
-
-    const { calendarService } = app.get('DataServices')
 
     const {
       date: currentDate,
       fullDayType,
       fullDayTypeDescription,
       details: rawDetails,
-    } = await calendarService.getCalendarDay(date, token)
+    } = await this.calendarService.getCalendarDay(date, token)
     const todayMoment = moment(currentDate)
     const backLink = `/calendar/${todayMoment.clone().format('YYYY-MM-01')}`
     const yesterdayMoment = todayMoment.clone().subtract('1', 'd')
