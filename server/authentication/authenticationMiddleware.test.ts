@@ -12,8 +12,7 @@ describe('authentication middleware', () => {
   const redirectMock = jest.fn()
   const isAuthenticatedMock = jest.fn().mockReturnValue(false)
   const token = 'the singing bush'
-  const authUrl = 'www.gov.uk'
-  config.apis.hmppsAuth.url = authUrl
+  config.apis.hmppsAuth.url = 'www.gov.uk'
   let req: Request
   let res: Response
   beforeEach(() => {
