@@ -1,7 +1,13 @@
-const moment = require('moment')
-const logger = require('../../log')
+import moment from 'moment'
+import type { Request, Response, NextFunction } from 'express'
 
-const authHandler = async ({ hmppsAuthMFAUser, app, user: { username } }, res, next) => {
+import logger from '../../log'
+
+export default async function cmd2faSessionExpiry(
+  { hmppsAuthMFAUser, app, user: { username } }: Request,
+  res: Response,
+  next: NextFunction,
+) {
   try {
     if (hmppsAuthMFAUser) return next()
     const {
@@ -16,5 +22,3 @@ const authHandler = async ({ hmppsAuthMFAUser, app, user: { username } }, res, n
     return res.redirect('/auth/login')
   }
 }
-
-module.exports = authHandler

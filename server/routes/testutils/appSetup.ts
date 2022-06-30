@@ -7,7 +7,7 @@ import { indexRouter } from '../index'
 import { createErrorHandler } from '../../errorHandler'
 import { standardRouter } from '../standardRouter'
 
-function appSetup(route: Router, production: boolean): Express {
+function appSetup(route: Router, production: boolean, hmppsAuthMFAUser: boolean): Express {
   const app = express()
 
   app.set('views', path.join(__dirname, '../../views'))
@@ -20,6 +20,7 @@ function appSetup(route: Router, production: boolean): Express {
       token: 'token',
       username: 'user1',
     }
+    req.hmppsAuthMFAUser = hmppsAuthMFAUser
     next()
   })
 
@@ -33,6 +34,12 @@ function appSetup(route: Router, production: boolean): Express {
   return app
 }
 
-export default function appWithAllRoutes({ production = false }: { production?: boolean }): Express {
-  return appSetup(indexRouter(standardRouter()), production)
+export default function appWithAllRoutes({
+  production = false,
+  hmppsAuthMFAUser = false,
+}: {
+  production?: boolean
+  hmppsAuthMFAUser?: boolean
+}): Express {
+  return appSetup(indexRouter(standardRouter()), production, hmppsAuthMFAUser)
 }

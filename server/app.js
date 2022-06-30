@@ -14,7 +14,6 @@ const authenticationMiddleware = require('./middleware/authenticationMiddleware'
 const calendarService = require('./services/calendarService')
 const notificationService = require('./services/notificationService')
 const notificationCookieService = require('./services/notificationCookieService')
-const authHandlerMiddleware = require('./middleware/authHandlerMiddleware')
 const { createErrorHandler } = require('./errorHandler')
 const { ejsSetup } = require('./utils/ejsSetup')
 const { setUpWebSecurity } = require('./middleware/setUpWebSecurity')
@@ -66,8 +65,8 @@ module.exports = function createApp({ signInService }) {
   app.use(authenticationMiddleware)
   app.use(setUpMaintenance())
 
+  // CMD 2FA functionality - only if user hasn't gone through HMPPS Auth 2FA
   app.use('/auth', loginRouter)
-  app.use(authHandlerMiddleware)
 
   app.use('/', indexRouter(standardRouter()))
 
