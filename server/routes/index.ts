@@ -5,9 +5,12 @@ import calendarRouter from './calendarRouter'
 import notificationRouter from './notificationRouter'
 import calendarDetailRouter from './calendarDetailRouter'
 import type { Services } from '../services'
+import { setUpMaintenance } from '../middleware/setUpMaintenance'
 
 export function indexRouter(router: Router, services: Services): Router {
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
+
+  router.use(setUpMaintenance())
 
   get('/', (req, res) => res.redirect('/calendar#today'))
   get('/contact-us', (req, res) => {
