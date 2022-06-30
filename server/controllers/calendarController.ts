@@ -4,8 +4,7 @@ import logger from '../../log'
 import { configureCalendar, hmppsAuthMFAUser, processDay } from '../helpers/utilities'
 import { SMS } from '../helpers/constants'
 import mfaBannerType from '../helpers/mfaBannerType'
-import type { CalendarService } from '../services'
-import { NotificationService } from '../services'
+import type { CalendarService, NotificationService } from '../services'
 
 const { EXISTING_USER, NEW_USER, FIRST_TIME_USER } = mfaBannerType
 
