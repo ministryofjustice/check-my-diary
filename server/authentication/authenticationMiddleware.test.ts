@@ -2,7 +2,7 @@ import type { Request, Response } from 'express'
 import utilities from '../helpers/utilities'
 
 import config from '../../config'
-import authenticationMiddleware from './authenticationMiddleware'
+import auth from './auth'
 
 jest.mock('jwt-decode', () => () => ({ name: 'Ned Nederlander' }))
 jest.mock('../helpers/utilities')
@@ -30,7 +30,7 @@ describe('authentication middleware', () => {
     beforeEach(() => {
       isAuthenticatedMock.mockReturnValueOnce(true)
       hmppsAuthMFAUser.mockReturnValue(true)
-      authenticationMiddleware(req, res, nextMock)
+      auth.authenticationMiddleware()(req, res, nextMock)
     })
     it('should call isAuthenticated', () => {
       expect(isAuthenticatedMock).toBeCalledTimes(1)
@@ -59,7 +59,7 @@ describe('authentication middleware', () => {
     beforeEach(() => {
       req.originalUrl = originalUrl
       req.session = {} as unknown as Request['session']
-      authenticationMiddleware(req, res, nextMock)
+      auth.authenticationMiddleware()(req, res, nextMock)
     })
     it('should call isAuthenticated', () => {
       expect(isAuthenticatedMock).toBeCalledTimes(1)

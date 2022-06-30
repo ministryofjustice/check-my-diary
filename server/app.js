@@ -9,7 +9,6 @@ const config = require('../config')
 const userAuthenticationService = require('./services/userAuthenticationService')
 
 const tokenRefresh = require('./middleware/tokenRefresh')
-const authenticationMiddleware = require('./middleware/authenticationMiddleware')
 
 const notificationService = require('./services/notificationService')
 const notificationCookieService = require('./services/notificationCookieService')
@@ -20,7 +19,6 @@ const { setUpWebSession } = require('./middleware/setUpWebSession')
 const { metricsMiddleware } = require('./monitoring/metricsApp')
 const { setUpWebRequestParsing } = require('./middleware/setupRequestParsing')
 const { setUpAuth } = require('./middleware/setUpAuthentication')
-const { setUpMaintenance } = require('./middleware/setUpMaintenance')
 const { standardRouter } = require('./routes/standardRouter')
 const { indexRouter } = require('./routes')
 
@@ -58,10 +56,6 @@ module.exports = function createApp({ signInService, services }) {
 
   // token refresh
   app.use(tokenRefresh(signInService))
-
-  // Routing
-  app.use(authenticationMiddleware)
-  app.use(setUpMaintenance())
 
   // CMD 2FA functionality - only if user hasn't gone through HMPPS Auth 2FA
   app.use('/auth', loginRouter)

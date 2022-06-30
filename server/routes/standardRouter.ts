@@ -1,11 +1,14 @@
 import { Router } from 'express'
 import csurf from 'csurf'
 import cmd2faSessionExpiry from '../middleware/cmd2faSessionExpiry'
+import auth from '../authentication/auth'
 
 const testMode = process.env.NODE_ENV === 'test'
 
 export function standardRouter(): Router {
   const router = Router({ mergeParams: true })
+
+  router.use(auth.authenticationMiddleware())
 
   // check my diary 2FA specific session expiry
   router.use(cmd2faSessionExpiry)
