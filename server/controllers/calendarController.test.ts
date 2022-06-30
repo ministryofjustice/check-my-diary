@@ -99,7 +99,7 @@ describe('CalendarController', () => {
       getMyMfaSettingsMock.mockResolvedValue({ backupVerified: false, mobileVerified: true })
       getUserAuthenticationDetailsMock.mockResolvedValue([])
 
-      await new CalendarController(calendarService).getDate(req, res)
+      await new CalendarController(calendarService, notificationService).getDate(req, res)
       expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: true,
