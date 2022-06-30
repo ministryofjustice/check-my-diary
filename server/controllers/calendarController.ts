@@ -11,7 +11,7 @@ const { EXISTING_USER, NEW_USER, FIRST_TIME_USER } = mfaBannerType
 export default class CalendarController {
   constructor(private readonly calendarService: CalendarService) {}
 
-  async getDate(req: Request, res: Response, next: NextFunction) {
+  async getDate(req: Request, res: Response) {
     const {
       app,
       user: { token, employeeName, username },
