@@ -8,7 +8,6 @@ const loginRouter = require('./routes/login')
 const config = require('../config')
 const userAuthenticationService = require('./services/userAuthenticationService')
 
-const notificationService = require('./services/notificationService')
 const notificationCookieService = require('./services/notificationCookieService')
 const { createErrorHandler } = require('./errorHandler')
 const { ejsSetup } = require('./utils/ejsSetup')
@@ -43,7 +42,6 @@ module.exports = function createApp({ signInService, services }) {
 
   // Add services to server
   app.set('DataServices', {
-    notificationService,
     userAuthenticationService,
     signInService,
     notificationCookieService,

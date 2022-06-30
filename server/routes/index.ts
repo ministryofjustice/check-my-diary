@@ -23,7 +23,7 @@ export function indexRouter(router: Router, services: Services): Router {
 
   calendarRouter(router, services)
   calendarDetailRouter(router, services)
-  notificationRouter(router)
+  notificationRouter(router, services)
 
   return router
 }

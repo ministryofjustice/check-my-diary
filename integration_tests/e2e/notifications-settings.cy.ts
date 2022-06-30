@@ -14,7 +14,8 @@ context('A staff member can view their notification settings', () => {
     cy.login()
   })
 
-  it('Notification setting validation with existing email', () => {
+  // eslint-disable-next-line no-only-tests/no-only-tests
+  it.only('Notification setting validation with existing email', () => {
     cy.task('stubNotificationPreferencesGet', {
       preference: 'EMAIL',
       email: 'me@gmail.com',

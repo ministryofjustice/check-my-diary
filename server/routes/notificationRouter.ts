@@ -2,21 +2,21 @@ import { RequestHandler, Router } from 'express'
 import { body, check } from 'express-validator'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import NotificationSettingsController from '../controllers/notificationSettingsController'
-
 import PostNotificationSettingsController from '../controllers/postNotificationSettingsController'
 import NotificationController from '../controllers/notificationController'
+import type { Services } from '../services'
 
-export default function notificationRouter(router: Router): Router {
+export default function notificationRouter(router: Router, services: Services): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
   const postWithValidator = (path: string, handlers: Array<RequestHandler>, handler: RequestHandler) =>
     router.post(path, handlers, asyncMiddleware(handler))
 
-  const notificationController = new NotificationController()
-  const notificationSettingsController = new NotificationSettingsController()
-  const postNotificationSettingsController = new PostNotificationSettingsController()
+  const notificationController = new NotificationController(services.notificationService)
+  const notificationSettingsController = new NotificationSettingsController(services.notificationService)
+  const postNotificationSettingsController = new PostNotificationSettingsController(services.notificationService)
 
-  get('/notifications/settings', notificationSettingsController.getSettings)
+  get('/notifications/settings', (req, res) => notificationSettingsController.getSettings(req, res))
 
   postWithValidator(
     '/notifications/settings',
@@ -29,13 +29,13 @@ export default function notificationRouter(router: Router): Router {
         .if(body('notificationRequired').equals('Yes'))
         .isEmail(),
     ],
-    postNotificationSettingsController.setSettings,
+    (req, res) => postNotificationSettingsController.setSettings(req, res),
   )
 
-  post('/notifications/resume', notificationController.resume)
-  get('/notifications', notificationController.getNotifications)
-  get('/notifications/manage', notificationController.getManage)
-  get('/notifications/pause', notificationController.getPause)
+  post('/notifications/resume', (req, res) => notificationController.resume(req, res))
+  get('/notifications', (req, res) => notificationController.getNotifications(req, res))
+  get('/notifications/manage', (req, res) => notificationController.getManage(req, res))
+  get('/notifications/pause', (req, res) => notificationController.getPause(req, res))
   postWithValidator(
     '/notifications/pause',
     [
@@ -43,7 +43,7 @@ export default function notificationRouter(router: Router): Router {
       check('pauseValue', 'Enter a number above 0').isInt({ min: 1, max: 99 }),
       check('pauseUnit', 'Select a period of time').exists({ checkFalsy: true }).isIn(['days', 'weeks', 'months']),
     ],
-    notificationController.setPause,
+    (req, res) => notificationController.setPause(req, res),
   )
 
   return router
