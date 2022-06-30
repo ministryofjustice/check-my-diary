@@ -4,6 +4,7 @@ import type { Notification } from '../services/notifications.types'
 
 import utilities from '../helpers/utilities'
 import NotificationController from './notificationController'
+import { NotificationService } from '../services'
 
 jest.mock('../helpers/utilities')
 const getSnoozeUntil = utilities.getSnoozeUntil as jest.Mock
@@ -20,11 +21,7 @@ describe('notification middleware', () => {
   let notificationData: Notification[]
 
   const getNotificationsMock = jest.fn()
-  const app = {
-    get: () => ({
-      notificationService: { getNotifications: getNotificationsMock },
-    }),
-  }
+  const notificationService = { getNotifications: getNotificationsMock } as unknown as NotificationService
   let req: Request
   let res: Response
   const errors = null
@@ -32,14 +29,14 @@ describe('notification middleware', () => {
     getSnoozeUntil.mockReturnValue('')
     notificationData = [notification1, notification2]
     getNotificationsMock.mockResolvedValue(notificationData)
-    req = { user: { token, employeeName }, authUrl, body: {}, app } as unknown as Request
+    req = { user: { token, employeeName }, authUrl, body: {} } as unknown as Request
     res = { render: renderMock, locals: { csrfToken } } as unknown as Response
   })
   afterEach(() => {
     jest.resetAllMocks()
   })
   beforeEach(async () => {
-    await new NotificationController().getNotifications(req, res, nextMock)
+    await new NotificationController(notificationService).getNotifications(req, res)
   })
   it('should get the users notifications', () => {
     expect(getNotificationsMock).toHaveBeenCalledTimes(1)

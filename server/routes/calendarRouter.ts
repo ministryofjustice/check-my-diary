@@ -10,7 +10,7 @@ import notificationDismissController from '../controllers/notificationDismissCon
 export default function calendarRouter(router: Router, services: Services): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
-  const calendarController = new CalendarController(services.calendarService)
+  const calendarController = new CalendarController(services.calendarService, services.notificationService)
   get('/calendar/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', (req, res) => calendarController.getDate(req, res))
 
   get('/calendar', (req, res) => res.redirect(`/calendar/${getStartMonth()}`))

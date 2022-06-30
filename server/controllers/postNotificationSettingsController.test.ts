@@ -4,6 +4,7 @@ import { validationResult } from 'express-validator'
 import PostNotificationSettingsController from './postNotificationSettingsController'
 
 import { EMAIL, NONE } from '../helpers/constants'
+import { NotificationService } from '../services'
 
 jest.mock('express-validator')
 const validationResultMock = validationResult as unknown as jest.Mock
@@ -11,7 +12,6 @@ const validationResultMock = validationResult as unknown as jest.Mock
 describe('post notification settings middleware', () => {
   const renderMock = jest.fn()
   const redirectMock = jest.fn()
-  const nextMock = jest.fn()
   const token = 'aubergine'
   const csrfToken = 'courgette'
   const authUrl = 'carrot'
@@ -19,11 +19,11 @@ describe('post notification settings middleware', () => {
   const emailText = 'checkmydiary@digital.justice.gov.uk'
 
   const updatePreferencesMock = jest.fn()
-  const app = { get: () => ({ notificationService: { updatePreferences: updatePreferencesMock } }) }
+  const notificationService = { updatePreferences: updatePreferencesMock } as unknown as NotificationService
   let req: Request
   let res: Response
   beforeEach(() => {
-    req = { user: { token, employeeName }, authUrl, body: {}, app } as unknown as Request
+    req = { user: { token, employeeName }, authUrl, body: {} } as unknown as Request
     res = { render: renderMock, redirect: redirectMock, locals: { csrfToken } } as unknown as Response
   })
   afterEach(() => {
@@ -34,7 +34,7 @@ describe('post notification settings middleware', () => {
       beforeEach(async () => {
         req.body = { inputEmail: emailText, notificationRequired: 'Yes' }
         validationResultMock.mockReturnValueOnce({ isEmpty: () => true })
-        await new PostNotificationSettingsController().setSettings(req, res, nextMock)
+        await new PostNotificationSettingsController(notificationService).setSettings(req, res)
       })
       it('should validate the params', () => {
         expect(validationResultMock).toHaveBeenCalledTimes(1)
@@ -50,16 +50,13 @@ describe('post notification settings middleware', () => {
       it('should not call the render function', () => {
         expect(renderMock).not.toHaveBeenCalled()
       })
-      it('should not call the next function', () => {
-        expect(nextMock).not.toHaveBeenCalled()
-      })
     })
     describe('and validation errors', () => {
       const errors = { isEmpty: () => false }
       beforeEach(async () => {
         req.body = { inputEmail: emailText, notificationRequired: 'Yes' }
         validationResultMock.mockReturnValueOnce(errors)
-        await new PostNotificationSettingsController().setSettings(req, res, nextMock)
+        await new PostNotificationSettingsController(notificationService).setSettings(req, res)
       })
       it('should validate the params', () => {
         expect(validationResultMock).toHaveBeenCalledTimes(1)
@@ -81,16 +78,13 @@ describe('post notification settings middleware', () => {
           inputEmail: emailText,
         })
       })
-      it('should not call the next function', () => {
-        expect(nextMock).not.toHaveBeenCalled()
-      })
     })
   })
   describe('with "none" selected', () => {
     beforeEach(async () => {
       req.body = { inputEmail: emailText, notificationRequired: 'No' }
       validationResultMock.mockReturnValueOnce({ isEmpty: () => true })
-      await new PostNotificationSettingsController().setSettings(req, res, nextMock)
+      await new PostNotificationSettingsController(notificationService).setSettings(req, res)
     })
     it('should update the preferences', () => {
       expect(updatePreferencesMock).toHaveBeenCalledTimes(1)
@@ -101,7 +95,7 @@ describe('post notification settings middleware', () => {
     beforeEach(async () => {
       req.body = { inputEmail: emailText, notificationRequired: 'No' }
       validationResultMock.mockReturnValueOnce({ isEmpty: () => true })
-      await new PostNotificationSettingsController().setSettings(req, res, nextMock)
+      await new PostNotificationSettingsController(notificationService).setSettings(req, res)
     })
     it('should update the preferences', () => {
       expect(updatePreferencesMock).toHaveBeenCalledTimes(1)

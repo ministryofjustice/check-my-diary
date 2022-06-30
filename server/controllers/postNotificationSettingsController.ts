@@ -1,17 +1,19 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 
 import { EMAIL, NONE } from '../helpers/constants'
 import logger from '../../log'
+import type { NotificationService } from '../services'
 
 export default class PostNotificationSettingsController {
-  async setSettings(req: Request, res: Response, next: NextFunction) {
+  constructor(private readonly notificationService: NotificationService) {}
+
+  async setSettings(req: Request, res: Response) {
     logger.info('POST notifications settings')
 
     // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req)
     const {
-      app,
       authUrl,
       user: { token, employeeName },
       body: { notificationRequired = '', inputEmail = '' },
@@ -32,11 +34,8 @@ export default class PostNotificationSettingsController {
         authUrl,
       })
     }
-    const {
-      notificationService: { updatePreferences },
-    } = app.get('DataServices')
 
-    await updatePreferences(
+    await this.notificationService.updatePreferences(
       token,
       notificationRequired === 'Yes' ? EMAIL : NONE,
       notificationRequired === 'Yes' ? inputEmail : '',

@@ -1,16 +1,17 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
+import type { NotificationService } from '../services'
 
 export default class NotificationSettingsController {
-  async getSettings(req: Request, res: Response, next: NextFunction) {
+  constructor(private readonly notificationService: NotificationService) {}
+
+  async getSettings(req: Request, res: Response) {
     const {
       user: { employeeName, token },
       authUrl,
-      app,
     } = req
-    const {
-      notificationService: { getPreferences },
-    } = app.get('DataServices')
-    const { preference: contactMethod = '', email: inputEmail = '' } = await getPreferences(token)
+    const { preference: contactMethod = '', email: inputEmail = '' } = await this.notificationService.getPreferences(
+      token,
+    )
 
     return res.render('pages/notification-settings', {
       errors: null,
