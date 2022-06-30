@@ -24,7 +24,10 @@
                 You will soon only be able to receive notifications by email. We will remove the option to receive texts.
                 <br />
                 You must <a class="govuk-notification-banner__link" href="/notifications/settings">change your notification settings</a> to email now.
-                <br />
+                <% if (showBanner.mfa === mfaBannerType.FIRST_TIME_USER) { %>
+                  <br />
+                  <br />
+                <% } %>
               <% } %>
 
               <% switch (showBanner.mfa) {

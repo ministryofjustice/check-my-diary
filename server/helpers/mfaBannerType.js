@@ -1,9 +1,0 @@
-const EXISTING_USER = 'EXISTING_USER'
-const NEW_USER = 'NEW_USER'
-const FIRST_TIME_USER = 'FIRST_TIME_USER'
-
-module.exports = Object.freeze({
-  EXISTING_USER,
-  NEW_USER,
-  FIRST_TIME_USER,
-})

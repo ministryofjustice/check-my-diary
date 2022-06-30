@@ -145,11 +145,11 @@ context('A staff member can view their calendar', () => {
 
   it('Both SMS and MFA banner messages shown', () => {
     cy.task('stubNotificationPreferencesGet', { preference: 'SMS', sms: '01234567890' })
-    cy.task('stubGetMyMfaSettings', { backupVerified: true, mobileVerified: false, emailVerified: true })
+    cy.task('stubGetMyMfaSettings', { backupVerified: false, mobileVerified: false, emailVerified: true })
     cy.task('stubLogin', { username: 'AUTH_USER', authorities: ['ROLE_CMD_MIGRATED_MFA'] })
     cy.login()
     const calendarPage = Page.verifyOnPageTitle(CalendarPage)
-    calendarPage.banner().contains('You can manage your two-factor authentication settings')
     calendarPage.banner().contains('You will soon only be able to receive notifications by email')
+    calendarPage.banner().contains('You must add a backup personal email address or phone number')
   })
 })

@@ -5,6 +5,8 @@ import mfaBannerType from '../helpers/mfaBannerType'
 import { markAsDismissed, alreadyDismissed } from '../services/notificationCookieService'
 import { CalendarService, NotificationService } from '../services'
 
+const { EXISTING_USER, NEW_USER, FIRST_TIME_USER } = mfaBannerType
+
 const rolesMock = jest.fn()
 jest.mock('jwt-decode', () => {
   return () => rolesMock()
@@ -80,7 +82,7 @@ describe('CalendarController', () => {
   })
 
   describe('with banners', () => {
-    it('should show the SMS banner', async () => {
+    it('should show the SMS banner, overriding the EXISTING_USER banner', async () => {
       notificationPreferencesMock.mockResolvedValue({ preference: SMS })
       getMyMfaSettingsMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
       getUserAuthenticationDetailsMock.mockResolvedValue([{ EmailAddress: 's@a.b' }])
@@ -89,7 +91,19 @@ describe('CalendarController', () => {
       expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: true,
-        mfa: mfaBannerType.EXISTING_USER,
+        mfa: '',
+      })
+    })
+    it('should show the SMS banner, overriding the NEW_USER banner', async () => {
+      notificationPreferencesMock.mockResolvedValue({ preference: SMS })
+      getMyMfaSettingsMock.mockResolvedValue({ backupVerified: false, mobileVerified: true })
+      getUserAuthenticationDetailsMock.mockResolvedValue([])
+
+      await new CalendarController(calendarService).getDate(req, res)
+      expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
+      expect(renderMock.mock.calls[0][1].showBanner).toEqual({
+        notifications: true,
+        mfa: '',
       })
     })
     it('should show the EXISTING_USER banner', async () => {
@@ -101,7 +115,7 @@ describe('CalendarController', () => {
       expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: false,
-        mfa: mfaBannerType.EXISTING_USER,
+        mfa: EXISTING_USER,
       })
     })
     it('should show the NEW_USER banner', async () => {
@@ -113,7 +127,7 @@ describe('CalendarController', () => {
       expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: false,
-        mfa: mfaBannerType.NEW_USER,
+        mfa: NEW_USER,
       })
     })
     it('should show the FIRST_TIME_USER banner', async () => {
@@ -125,7 +139,7 @@ describe('CalendarController', () => {
       expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: false,
-        mfa: mfaBannerType.FIRST_TIME_USER,
+        mfa: FIRST_TIME_USER,
       })
     })
     it('should show nothing for users without the role', async () => {

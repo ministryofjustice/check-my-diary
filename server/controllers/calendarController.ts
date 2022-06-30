@@ -36,6 +36,8 @@ export default class CalendarController {
       isMfa ? userAuthenticationService.getUserAuthenticationDetails(username) : [],
     ])
 
+    const notifications = preferences.preference === SMS
+
     const computeBanner = () => {
       const alreadyDismissedExisting = notificationCookieService.alreadyDismissed(req, EXISTING_USER)
       const alreadyDismissedNew = notificationCookieService.alreadyDismissed(req, NEW_USER)
@@ -44,11 +46,11 @@ export default class CalendarController {
         return ''
       }
       if (userAuthenticationDetails && userAuthenticationDetails.length > 0) {
-        if (!alreadyDismissedExisting) {
+        if (!alreadyDismissedExisting && !notifications) {
           return EXISTING_USER
         }
       } else if (authMfa.backupVerified || authMfa.mobileVerified) {
-        if (!alreadyDismissedNew) {
+        if (!alreadyDismissedNew && !notifications) {
           return NEW_USER
         }
       } else {
@@ -59,7 +61,7 @@ export default class CalendarController {
 
     month.forEach(processDay)
     const showBanner = {
-      notifications: preferences.preference === SMS,
+      notifications,
       mfa: computeBanner(),
     }
     const data = configureCalendar(month)
