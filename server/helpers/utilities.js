@@ -8,10 +8,6 @@ function getStartMonth() {
   return moment().startOf('month').format('YYYY-MM-DD')
 }
 
-function getEndDate(startDate) {
-  return moment(startDate).endOf('month').format('YYYY-MM-DD')
-}
-
 function get2faCode() {
   return Math.floor(Math.random() * 899999 + 100000)
 }
@@ -192,7 +188,6 @@ const processDetail = (detail, detailIndex, details) => {
 
 module.exports = {
   getStartMonth,
-  getEndDate,
   get2faCode,
   getAuthErrorDescription,
   createTwoFactorAuthenticationHash,
