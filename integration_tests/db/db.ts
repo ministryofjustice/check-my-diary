@@ -1,5 +1,7 @@
 import fs from 'fs'
-import db from '../../server/database'
+import knex from '../../server/database'
+
+const db = knex()
 
 const deleteRows = (table) => db(table).del()
 

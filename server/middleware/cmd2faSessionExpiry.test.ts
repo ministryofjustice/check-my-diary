@@ -1,17 +1,21 @@
 import type { Request, Response } from 'express'
-import cmd2faSessionExpiry from './cmd2faSessionExpiry'
+import type { UserAuthenticationService } from '../services'
+import CmdSessionExpiry from './cmd2faSessionExpiry'
 
 describe('auth handler middleware', () => {
   const nextMock = jest.fn()
   const redirectMock = jest.fn()
   const getSessionExpiryDateTimeMock = jest.fn()
-  const app = { get: () => ({ userAuthenticationService: { getSessionExpiryDateTime: getSessionExpiryDateTimeMock } }) }
+  const userAuthenticationService = {
+    getSessionExpiryDateTime: getSessionExpiryDateTimeMock,
+  } as unknown as UserAuthenticationService
+  const cmdSessionExpiry = new CmdSessionExpiry(userAuthenticationService)
   const username = 'Agrajag'
   let req: Request
   let res: Response
 
   beforeEach(() => {
-    req = { app, user: { username } } as unknown as Request
+    req = { user: { username } } as unknown as Request
     res = { redirect: redirectMock } as unknown as Response
     jest.spyOn(Date, 'now').mockImplementation(() => new Date('1979-10-12T08:28:00.000Z').getTime())
   })
@@ -21,7 +25,7 @@ describe('auth handler middleware', () => {
   describe('with an "hmppsAuthMFAUser" user', () => {
     beforeEach(async () => {
       req.hmppsAuthMFAUser = true
-      await cmd2faSessionExpiry(req, res, nextMock)
+      await cmdSessionExpiry.cmd2faSessionExpiry(req, res, nextMock)
     })
     it('should not redirect', () => {
       expect(redirectMock).not.toHaveBeenCalled()
@@ -33,7 +37,7 @@ describe('auth handler middleware', () => {
   describe('with a current session', () => {
     beforeEach(async () => {
       getSessionExpiryDateTimeMock.mockResolvedValueOnce([{ SessionExpiryDateTime: '1979-10-12T08:29:00.000Z' }])
-      await cmd2faSessionExpiry(req, res, nextMock)
+      await cmdSessionExpiry.cmd2faSessionExpiry(req, res, nextMock)
     })
     it('should call "getSessionExpiryDate" with the username', () => {
       expect(getSessionExpiryDateTimeMock).toHaveBeenCalledTimes(1)
@@ -49,7 +53,7 @@ describe('auth handler middleware', () => {
   describe('with an expired session', () => {
     beforeEach(async () => {
       getSessionExpiryDateTimeMock.mockResolvedValueOnce([{ SessionExpiryDateTime: '1979-10-12T08:27:00.000Z' }])
-      await cmd2faSessionExpiry(req, res, nextMock)
+      await cmdSessionExpiry.cmd2faSessionExpiry(req, res, nextMock)
     })
     it('should call "getSessionExpiryDate" with the username', () => {
       expect(getSessionExpiryDateTimeMock).toHaveBeenCalledTimes(1)
@@ -66,7 +70,7 @@ describe('auth handler middleware', () => {
   describe('with no session found', () => {
     beforeEach(async () => {
       getSessionExpiryDateTimeMock.mockResolvedValueOnce([{ SessionExpiryDateTime: null }])
-      await cmd2faSessionExpiry(req, res, nextMock)
+      await cmdSessionExpiry.cmd2faSessionExpiry(req, res, nextMock)
     })
     it('should not call "getSessionExpiryDate" with the username', () => {
       expect(getSessionExpiryDateTimeMock).toHaveBeenCalledTimes(1)
@@ -85,7 +89,7 @@ describe('auth handler middleware', () => {
     beforeEach(async () => {
       mockError = new Error('tum ti tum ti tum')
       getSessionExpiryDateTimeMock.mockRejectedValueOnce(mockError)
-      await cmd2faSessionExpiry(req, res, nextMock)
+      await cmdSessionExpiry.cmd2faSessionExpiry(req, res, nextMock)
     })
     it('should redirect to the 2fa route', () => {
       expect(redirectMock).toHaveBeenCalledTimes(1)

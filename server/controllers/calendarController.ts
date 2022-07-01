@@ -5,6 +5,7 @@ import { configureCalendar, hmppsAuthMFAUser, processDay } from '../helpers/util
 import { SMS } from '../helpers/constants'
 import mfaBannerType from '../helpers/mfaBannerType'
 import type { CalendarService, NotificationService, NotificationCookieService } from '../services'
+import { UserAuthenticationService } from '../services'
 
 const { EXISTING_USER, NEW_USER, FIRST_TIME_USER } = mfaBannerType
 
@@ -13,6 +14,7 @@ export default class CalendarController {
     private readonly calendarService: CalendarService,
     private readonly notificationService: NotificationService,
     private readonly notificationCookieService: NotificationCookieService,
+    private readonly userAuthenticationService: UserAuthenticationService,
   ) {}
 
   async getDate(req: Request, res: Response) {
@@ -25,7 +27,7 @@ export default class CalendarController {
 
     logger.info({ user: username, date }, 'GET calendar view')
 
-    const { userAuthenticationService, signInService } = app.get('DataServices')
+    const { signInService } = app.get('DataServices')
 
     const isMfa = hmppsAuthMFAUser(token)
 
@@ -34,7 +36,7 @@ export default class CalendarController {
       this.notificationService.getPreferences(token),
       this.calendarService.getCalendarMonth(date, token),
       isMfa ? signInService.getMyMfaSettings(token) : {},
-      isMfa ? userAuthenticationService.getUserAuthenticationDetails(username) : [],
+      isMfa ? this.userAuthenticationService.getUserAuthenticationDetails(username) : [],
     ])
 
     const notifications = preferences.preference === SMS

@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express'
+import { Request, Response, Router } from 'express'
 import { NotifyClient } from 'notifications-node-client'
 import ipRangeCheck from 'ip-range-check'
 
@@ -6,7 +6,7 @@ import logError from '../logError'
 import log from '../../log'
 import config from '../../config'
 import utilities from '../helpers/utilities'
-import userAuthenticationService from '../services/userAuthenticationService'
+import type { UserAuthenticationService } from '../services'
 
 const processError = (error: Error, req: Request, res: Response, userNotSignedUpMessage: boolean) => {
   const data = {
@@ -25,7 +25,7 @@ const processError = (error: Error, req: Request, res: Response, userNotSignedUp
   res.render('pages/index', data)
 }
 
-export default function loginRouter(): Router {
+export default function loginRouter(userAuthenticationService: UserAuthenticationService): Router {
   const router = Router()
   const {
     notify: { url, clientKey, smsTemplateId, emailTemplateId },
