@@ -1,21 +1,22 @@
 import { Router } from 'express'
 import csurf from 'csurf'
-import cmd2faSessionExpiry from '../middleware/cmd2faSessionExpiry'
 import auth from '../authentication/auth'
 import populateCurrentUser from '../middleware/populateCurrentUser'
 import loginRouter from './login'
+import { UserAuthenticationService } from '../services'
+import CmdSessionExpiry from '../middleware/cmd2faSessionExpiry'
 
 const testMode = process.env.NODE_ENV === 'test'
 
-export function standardRouter(): Router {
+export function standardRouter(userAuthenticationService: UserAuthenticationService): Router {
   const router = Router({ mergeParams: true })
 
   router.use(auth.authenticationMiddleware())
   router.use(populateCurrentUser())
 
   // CMD 2FA functionality - only if user hasn't gone through HMPPS Auth 2FA
-  router.use('/auth', loginRouter())
-  router.use(cmd2faSessionExpiry)
+  router.use('/auth', loginRouter(userAuthenticationService))
+  router.use((req, res, next) => new CmdSessionExpiry(userAuthenticationService).cmd2faSessionExpiry(req, res, next))
 
   // CSRF protection
   if (!testMode) {

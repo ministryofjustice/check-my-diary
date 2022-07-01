@@ -36,7 +36,7 @@ module.exports = function createApp({ signInService, services }) {
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
   ejsSetup(app, path)
-  app.use(setUpAuth(signInService))
+  app.use(setUpAuth(signInService, services.userAuthenticationService))
 
   // Add services to server
   app.set('DataServices', {
@@ -47,7 +47,7 @@ module.exports = function createApp({ signInService, services }) {
   // GovUK Template Configuration
   app.locals.assetPath = '/assets/'
 
-  app.use('/', indexRouter(standardRouter(), services))
+  app.use('/', indexRouter(standardRouter(services.userAuthenticationService), services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(createErrorHandler(process.env.NODE_ENV === 'production'))

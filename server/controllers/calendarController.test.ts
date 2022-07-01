@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import CalendarController from './calendarController'
 import { EMAIL, SMS } from '../helpers/constants'
 import mfaBannerType from '../helpers/mfaBannerType'
-import { CalendarService, NotificationCookieService, NotificationService } from '../services'
+import { CalendarService, NotificationCookieService, NotificationService, UserAuthenticationService } from '../services'
 
 const { EXISTING_USER, NEW_USER, FIRST_TIME_USER } = mfaBannerType
 
@@ -27,7 +27,6 @@ const getUserAuthenticationDetailsMock = jest.fn()
 const app = {
   get: () => ({
     signInService: { getMyMfaSettings: getMyMfaSettingsMock },
-    userAuthenticationService: { getUserAuthenticationDetails: getUserAuthenticationDetailsMock },
   }),
 }
 const res = { render: renderMock, locals: { csrfToken } } as unknown as Response
@@ -43,6 +42,11 @@ const notificationService = {
   getPreferences: notificationPreferencesMock,
 } as unknown as NotificationService
 const notificationCookieService = new NotificationCookieService()
+const userAuthenticationService = {
+  getUserAuthenticationDetails: getUserAuthenticationDetailsMock,
+} as unknown as UserAuthenticationService
+const calendarController = () =>
+  new CalendarController(calendarService, notificationService, notificationCookieService, userAuthenticationService)
 
 beforeEach(() => {
   rolesMock.mockReturnValue({ authorities: ['ROLE_MFA'] })
@@ -59,7 +63,7 @@ describe('CalendarController', () => {
       getMyMfaSettingsMock.mockResolvedValue({ newUser: true, existingUser: false, firstTimeUser: false })
       getUserAuthenticationDetailsMock.mockResolvedValue([{ EmailAddress: 's@a.b' }])
 
-      await new CalendarController(calendarService, notificationService, notificationCookieService).getDate(req, res)
+      await calendarController().getDate(req, res)
     })
     it('should get the notification count', () => {
       expect(countUnprocessedNotificationsMock).toHaveBeenCalledTimes(1)
@@ -86,7 +90,7 @@ describe('CalendarController', () => {
       getMyMfaSettingsMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
       getUserAuthenticationDetailsMock.mockResolvedValue([{ EmailAddress: 's@a.b' }])
 
-      await new CalendarController(calendarService, notificationService, notificationCookieService).getDate(req, res)
+      await calendarController().getDate(req, res)
       expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: true,
@@ -98,7 +102,7 @@ describe('CalendarController', () => {
       getMyMfaSettingsMock.mockResolvedValue({ backupVerified: false, mobileVerified: true })
       getUserAuthenticationDetailsMock.mockResolvedValue([])
 
-      await new CalendarController(calendarService, notificationService, notificationCookieService).getDate(req, res)
+      await calendarController().getDate(req, res)
       expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: true,
@@ -110,7 +114,7 @@ describe('CalendarController', () => {
       getMyMfaSettingsMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
       getUserAuthenticationDetailsMock.mockResolvedValue([{ EmailAddress: 's@a.b' }])
 
-      await new CalendarController(calendarService, notificationService, notificationCookieService).getDate(req, res)
+      await calendarController().getDate(req, res)
       expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: false,
@@ -122,7 +126,7 @@ describe('CalendarController', () => {
       getMyMfaSettingsMock.mockResolvedValue({ backupVerified: true, mobileVerified: false })
       getUserAuthenticationDetailsMock.mockResolvedValue([])
 
-      await new CalendarController(calendarService, notificationService, notificationCookieService).getDate(req, res)
+      await calendarController().getDate(req, res)
       expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: false,
@@ -134,7 +138,7 @@ describe('CalendarController', () => {
       getMyMfaSettingsMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
       getUserAuthenticationDetailsMock.mockResolvedValue([])
 
-      await new CalendarController(calendarService, notificationService, notificationCookieService).getDate(req, res)
+      await calendarController().getDate(req, res)
       expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: false,
@@ -147,7 +151,7 @@ describe('CalendarController', () => {
       getMyMfaSettingsMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
       getUserAuthenticationDetailsMock.mockResolvedValue([])
 
-      await new CalendarController(calendarService, notificationService, notificationCookieService).getDate(req, res)
+      await calendarController().getDate(req, res)
       expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: false,
@@ -161,7 +165,7 @@ describe('CalendarController', () => {
       getMyMfaSettingsMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
       getUserAuthenticationDetailsMock.mockResolvedValue([{ EmailAddress: 's@a.b' }])
 
-      await new CalendarController(calendarService, notificationService, notificationCookieService).getDate(req, res)
+      await calendarController().getDate(req, res)
       expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: false,
@@ -175,7 +179,7 @@ describe('CalendarController', () => {
       getMyMfaSettingsMock.mockResolvedValue({ backupVerified: false, mobileVerified: true })
       getUserAuthenticationDetailsMock.mockResolvedValue([])
 
-      await new CalendarController(calendarService, notificationService, notificationCookieService).getDate(req, res)
+      await calendarController().getDate(req, res)
       expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: false,

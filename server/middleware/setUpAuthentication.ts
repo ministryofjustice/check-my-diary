@@ -4,13 +4,16 @@ import passport from 'passport'
 import flash from 'connect-flash'
 import config from '../../config'
 import { init } from '../authentication/auth'
-import userAuthenticationService from '../services/userAuthenticationService'
+import UserAuthenticationService from '../services/userAuthenticationService'
 
 const router = express.Router()
 
-export function setUpAuth(signInService: {
-  getUser: (token: string, refreshToken: string, expiresIn: string, username: string) => never
-}): Router {
+export function setUpAuth(
+  signInService: {
+    getUser: (token: string, refreshToken: string, expiresIn: string, username: string) => never
+  },
+  userAuthenticationService: UserAuthenticationService,
+): Router {
   init(signInService)
 
   router.use(passport.initialize())
