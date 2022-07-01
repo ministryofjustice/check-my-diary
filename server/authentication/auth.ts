@@ -4,6 +4,7 @@ import { RequestHandler } from 'express'
 
 import config from '../../config'
 import generateOauthClientToken from './clientCredentials'
+import { TokenVerifier } from '../data/tokenVerification'
 
 passport.serializeUser((user, done) => {
   // Not used but required for Passport
@@ -15,11 +16,11 @@ passport.deserializeUser((user, done) => {
   done(null, user as Express.User)
 })
 
-export type AuthenticationMiddleware = () => RequestHandler
+export type AuthenticationMiddleware = (tokenVerifier: TokenVerifier) => RequestHandler
 
-const authenticationMiddleware: AuthenticationMiddleware = () => {
+const authenticationMiddleware: AuthenticationMiddleware = (verifyToken) => {
   return async (req, res, next) => {
-    if (req.isAuthenticated()) {
+    if (req.isAuthenticated() && (await verifyToken(req))) {
       return next()
     }
     req.session.returnTo = req.originalUrl
@@ -53,6 +54,6 @@ export function init(signInService: {
 }
 
 export default {
-  init,
   authenticationMiddleware,
+  init,
 }

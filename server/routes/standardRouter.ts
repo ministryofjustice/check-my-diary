@@ -2,6 +2,7 @@ import { Router } from 'express'
 import csurf from 'csurf'
 import auth from '../authentication/auth'
 import populateCurrentUser from '../middleware/populateCurrentUser'
+import tokenVerifier from '../data/tokenVerification'
 import loginRouter from './login'
 import { UserAuthenticationService } from '../services'
 import CmdSessionExpiry from '../middleware/cmd2faSessionExpiry'
@@ -11,7 +12,7 @@ const testMode = process.env.NODE_ENV === 'test'
 export function standardRouter(userAuthenticationService: UserAuthenticationService): Router {
   const router = Router({ mergeParams: true })
 
-  router.use(auth.authenticationMiddleware())
+  router.use(auth.authenticationMiddleware(tokenVerifier))
   router.use(populateCurrentUser())
 
   // CMD 2FA functionality - only if user hasn't gone through HMPPS Auth 2FA
