@@ -4,7 +4,7 @@ import logger from '../../log'
 import { configureCalendar, hmppsAuthMFAUser, processDay } from '../helpers/utilities'
 import { SMS } from '../helpers/constants'
 import mfaBannerType from '../helpers/mfaBannerType'
-import type { CalendarService, NotificationService } from '../services'
+import type { CalendarService, NotificationService, NotificationCookieService } from '../services'
 
 const { EXISTING_USER, NEW_USER, FIRST_TIME_USER } = mfaBannerType
 
@@ -12,6 +12,7 @@ export default class CalendarController {
   constructor(
     private readonly calendarService: CalendarService,
     private readonly notificationService: NotificationService,
+    private readonly notificationCookieService: NotificationCookieService,
   ) {}
 
   async getDate(req: Request, res: Response) {
@@ -24,7 +25,7 @@ export default class CalendarController {
 
     logger.info({ user: username, date }, 'GET calendar view')
 
-    const { userAuthenticationService, signInService, notificationCookieService } = app.get('DataServices')
+    const { userAuthenticationService, signInService } = app.get('DataServices')
 
     const isMfa = hmppsAuthMFAUser(token)
 
@@ -39,8 +40,8 @@ export default class CalendarController {
     const notifications = preferences.preference === SMS
 
     const computeBanner = () => {
-      const alreadyDismissedExisting = notificationCookieService.alreadyDismissed(req, EXISTING_USER)
-      const alreadyDismissedNew = notificationCookieService.alreadyDismissed(req, NEW_USER)
+      const alreadyDismissedExisting = this.notificationCookieService.alreadyDismissed(req, EXISTING_USER)
+      const alreadyDismissedNew = this.notificationCookieService.alreadyDismissed(req, NEW_USER)
 
       if (!isMfa) {
         return ''

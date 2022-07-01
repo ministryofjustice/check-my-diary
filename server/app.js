@@ -8,7 +8,6 @@ const loginRouter = require('./routes/login')
 const config = require('../config')
 const userAuthenticationService = require('./services/userAuthenticationService')
 
-const notificationCookieService = require('./services/notificationCookieService')
 const { createErrorHandler } = require('./errorHandler')
 const { ejsSetup } = require('./utils/ejsSetup')
 const { setUpWebSecurity } = require('./middleware/setUpWebSecurity')
@@ -44,7 +43,6 @@ module.exports = function createApp({ signInService, services }) {
   app.set('DataServices', {
     userAuthenticationService,
     signInService,
-    notificationCookieService,
   })
 
   // GovUK Template Configuration

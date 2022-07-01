@@ -1,11 +1,14 @@
 import { Request, Response } from 'express'
 
-const COOKIE_NAME = 'ui-notification-banner'
-const key = (id: string) => `${COOKIE_NAME}-${id}`
+export default class NotificationCookieService {
+  COOKIE_NAME = 'ui-notification-banner'
 
-export const markAsDismissed = (res: Response, id: string) => {
-  const oneYear = 52 * 24 * 3600000
-  return res.cookie(key(id), 'dismissed', { maxAge: oneYear, httpOnly: true })
+  key = (id: string) => `${this.COOKIE_NAME}-${id}`
+
+  public markAsDismissed = (res: Response, id: string) => {
+    const oneYear = 52 * 24 * 3600000
+    return res.cookie(this.key(id), 'dismissed', { maxAge: oneYear, httpOnly: true })
+  }
+
+  public alreadyDismissed = (req: Request, id: string) => req.cookies && req.cookies[this.key(id)] === 'dismissed'
 }
-
-export const alreadyDismissed = (req: Request, id: string) => req.cookies && req.cookies[key(id)] === 'dismissed'
