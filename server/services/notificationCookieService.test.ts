@@ -1,9 +1,10 @@
-import type { Response, Request } from 'express'
-import { markAsDismissed, alreadyDismissed } from './notificationCookieService'
+import type { Request, Response } from 'express'
+import NotificationCookieService from './notificationCookieService'
 
 describe('Notification cookie', () => {
   let res: Response
   let req: Request
+  const notificationCookieService = new NotificationCookieService()
 
   beforeEach(() => {
     res = { cookie: jest.fn() } as unknown as Response
@@ -11,7 +12,7 @@ describe('Notification cookie', () => {
   })
 
   it('should store cookie correctly', () => {
-    markAsDismissed(res, 'ID1')
+    notificationCookieService.markAsDismissed(res, 'ID1')
     expect(res.cookie).toHaveBeenCalledWith('ui-notification-banner-ID1', 'dismissed', {
       httpOnly: true,
       maxAge: 4492800000,
@@ -19,10 +20,10 @@ describe('Notification cookie', () => {
   })
 
   it('should find matching cookie', () => {
-    expect(alreadyDismissed(req, 'ID1')).toBeTruthy()
+    expect(notificationCookieService.alreadyDismissed(req, 'ID1')).toBeTruthy()
   })
 
   it('should NOT find matching cookie', () => {
-    expect(alreadyDismissed(req, 'ID2')).toBeFalsy()
+    expect(notificationCookieService.alreadyDismissed(req, 'ID2')).toBeFalsy()
   })
 })

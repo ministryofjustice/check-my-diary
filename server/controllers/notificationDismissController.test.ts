@@ -1,15 +1,13 @@
 import { Request, Response } from 'express'
-import notificationDismissFactory from './notificationDismissController'
+import { NotificationCookieService } from '../services'
+import NotificationDismissController from './notificationDismissController'
 
 describe('Notification dismiss', () => {
-  const notificationDismissController = notificationDismissFactory()
   const markAsDismissedMock = jest.fn()
-  const app = {
-    get: () => ({
-      notificationCookieService: { markAsDismissed: markAsDismissedMock },
-    }),
-  }
-  const req: Request = { app } as unknown as Request
+  const notificationCookieService = { markAsDismissed: markAsDismissedMock } as unknown as NotificationCookieService
+  const notificationDismissController = new NotificationDismissController(notificationCookieService)
+
+  const req: Request = {} as unknown as Request
   const res: Response = {
     status: jest.fn(),
     end: jest.fn(),
@@ -21,7 +19,7 @@ describe('Notification dismiss', () => {
   })
 
   it('should redirect when the request is not an ajax type request', async () => {
-    await notificationDismissController(req, res)
+    await notificationDismissController.dismiss(req, res)
 
     expect(res.redirect).toHaveBeenCalledWith('/')
   })
@@ -29,7 +27,7 @@ describe('Notification dismiss', () => {
   it('should respond with a bad request when there is missing post data', async () => {
     req.xhr = true
 
-    await notificationDismissController(req, res)
+    await notificationDismissController.dismiss(req, res)
 
     expect(res.status).toHaveBeenCalledWith(400)
     expect(res.end).toHaveBeenCalled()
@@ -39,7 +37,7 @@ describe('Notification dismiss', () => {
     req.xhr = true
     req.body = { id: 'data' }
 
-    await notificationDismissController(req, res)
+    await notificationDismissController.dismiss(req, res)
 
     expect(markAsDismissedMock).toHaveBeenCalledWith(res, 'data')
     expect(res.status).toHaveBeenCalledWith(200)
