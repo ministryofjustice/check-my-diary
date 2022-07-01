@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express'
-import NotifyClient from 'notifications-node-client'
+import { NotifyClient } from 'notifications-node-client'
 import ipRangeCheck from 'ip-range-check'
 
 import logError from '../logError'
@@ -25,7 +25,7 @@ const processError = (error: Error, req: Request, res: Response, userNotSignedUp
   res.render('pages/index', data)
 }
 
-export function loginRouter(): Router {
+export default function loginRouter(): Router {
   const router = Router()
   const {
     notify: { url, clientKey, smsTemplateId, emailTemplateId },
@@ -164,8 +164,4 @@ export function loginRouter(): Router {
   })
 
   return router
-}
-
-export default {
-  loginRouter,
 }

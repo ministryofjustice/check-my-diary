@@ -14,7 +14,7 @@ export function standardRouter(): Router {
   router.use(populateCurrentUser())
 
   // CMD 2FA functionality - only if user hasn't gone through HMPPS Auth 2FA
-  router.use('/auth', loginRouter)
+  router.use('/auth', loginRouter())
   router.use(cmd2faSessionExpiry)
 
   // CSRF protection
