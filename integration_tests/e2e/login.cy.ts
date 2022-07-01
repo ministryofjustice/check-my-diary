@@ -54,7 +54,7 @@ context('Sign in functionality', () => {
     cy.task('getLoginUrl').then(cy.request).its('body').should('contain', 'Check my diary')
   })
 
-  it.skip('Token verification failure takes user to sign in page', () => {
+  it('Token verification failure takes user to sign in page', () => {
     cy.task('stubLogin')
     cy.login()
     Page.verifyOnPageTitle(CalendarPage, moment().format('MMMM YYYY'))
@@ -64,7 +64,7 @@ context('Sign in functionality', () => {
     cy.request('/').its('body').should('contain', 'Sign in')
   })
 
-  it.skip('Token verification failure clears user session', () => {
+  it('Token verification failure clears user session', () => {
     cy.task('stubLogin')
     cy.login()
     const calendarPage = Page.verifyOnPageTitle(CalendarPage, moment().format('MMMM YYYY'))
@@ -74,7 +74,8 @@ context('Sign in functionality', () => {
     cy.request('/').its('body').should('contain', 'Sign in')
 
     cy.task('stubVerifyToken', true)
-    cy.task('token', 'Bobby Brown')
+    cy.task('stubGetMyMfaSettings', { backupVerified: false, mobileVerified: false, emailVerified: false })
+    cy.task('token', { username: 'BBROWN', employeeName: 'Bobby Brown', authorities: ['ROLE_CMD_MIGRATED_MFA'] })
     cy.login()
 
     calendarPage.headerUsername().contains('B. Brown')

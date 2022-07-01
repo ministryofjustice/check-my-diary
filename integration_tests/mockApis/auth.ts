@@ -4,10 +4,10 @@ import { Response } from 'superagent'
 import { getMatchingRequests, stubFor } from './wiremock'
 import tokenVerification from './tokenVerification'
 
-const createToken = (username = 'ITAG_USER', authorities: string[] = []) => {
+const createToken = (username = 'ITAG_USER', employeeName = 'Sarah Itag', authorities: string[] = []) => {
   const payload = {
     sub: username,
-    name: 'Sarah Itag',
+    name: employeeName,
     scope: ['read', 'write'],
     auth_source: 'nomis',
     authorities,
@@ -81,7 +81,15 @@ const logout = () =>
     },
   })
 
-const token = (username = 'ITAG_USER', authorities: string[] = []) =>
+const token = ({
+  username = 'ITAG_USER',
+  employeeName = 'Sarah Itag',
+  authorities = [],
+}: {
+  username: string
+  employeeName: string
+  authorities: string[]
+}) =>
   stubFor({
     request: {
       method: 'POST',
@@ -94,7 +102,7 @@ const token = (username = 'ITAG_USER', authorities: string[] = []) =>
         Location: 'http://localhost:3007/login/callback?code=codexxxx&state=stateyyyy',
       },
       jsonBody: {
-        access_token: createToken(username, authorities),
+        access_token: createToken(username, employeeName, authorities),
         token_type: 'bearer',
         refresh_token: 'refresh',
         sub: username,
@@ -119,14 +127,14 @@ const stubGetMyMfaSettings = ({ backupVerified, mobileVerified, emailVerified })
   })
 
 const stubLogin = (
-  arg: { username?: string; authorities?: string[] } = {},
+  arg: { username?: string; employeeName?: string; authorities?: string[] } = {},
 ): Promise<[Response, Response, Response, Response, Response]> => {
-  const { username = 'ITAG_USER', authorities = [] } = arg
+  const { username = 'ITAG_USER', employeeName = 'Sarah Itag', authorities = [] } = arg
   return Promise.all([
     favicon(),
     redirect(),
     logout(),
-    token(username, authorities),
+    token({ username, employeeName, authorities }),
     tokenVerification.stubVerifyToken(),
   ])
 }
