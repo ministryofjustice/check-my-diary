@@ -30,6 +30,12 @@ context('Sign in functionality', () => {
     Page.verifyOnPage(AuthSignInPage)
   })
 
+  it('Going to auth login page redirects to the auth sign in page if not signed in', () => {
+    cy.task('stubLoginPage')
+    cy.visit('/auth/login')
+    Page.verifyOnPage(AuthSignInPage)
+  })
+
   it('Sign out takes user to sign in page', () => {
     cy.task('stubLogin')
     cy.login()

@@ -4,7 +4,6 @@ const createError = require('http-errors')
 
 const { setUpHealthChecks } = require('./middleware/setUpHealthChecks')
 const { setUpStaticResources } = require('./middleware/setUpStaticResources')
-const loginRouter = require('./routes/login')
 const config = require('../config')
 const userAuthenticationService = require('./services/userAuthenticationService')
 
@@ -47,9 +46,6 @@ module.exports = function createApp({ signInService, services }) {
 
   // GovUK Template Configuration
   app.locals.assetPath = '/assets/'
-
-  // CMD 2FA functionality - only if user hasn't gone through HMPPS Auth 2FA
-  app.use('/auth', loginRouter)
 
   app.use('/', indexRouter(standardRouter(), services))
 

@@ -3,6 +3,7 @@ import csurf from 'csurf'
 import cmd2faSessionExpiry from '../middleware/cmd2faSessionExpiry'
 import auth from '../authentication/auth'
 import populateCurrentUser from '../middleware/populateCurrentUser'
+import loginRouter from './login'
 
 const testMode = process.env.NODE_ENV === 'test'
 
@@ -12,7 +13,8 @@ export function standardRouter(): Router {
   router.use(auth.authenticationMiddleware())
   router.use(populateCurrentUser())
 
-  // check my diary 2FA specific session expiry
+  // CMD 2FA functionality - only if user hasn't gone through HMPPS Auth 2FA
+  router.use('/auth', loginRouter)
   router.use(cmd2faSessionExpiry)
 
   // CSRF protection
