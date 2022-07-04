@@ -1,21 +1,30 @@
-require('dotenv').config()
+import 'dotenv/config'
 
 const production = process.env.NODE_ENV === 'production'
 
-const get = (name, fallback, { requireInProduction, noFallbackInProduction } = {}) => {
-  if (process.env[name]) return process.env[name]
+function get<T>(name: string, fallback: T, options = { requireInProduction: false }): T | string {
+  const envValue = process.env[name]
+  if (envValue) return envValue
 
-  if (production && noFallbackInProduction) return undefined
-
-  if (fallback !== undefined && !(production && requireInProduction)) return fallback
+  if (fallback !== undefined && !(production && options.requireInProduction)) return fallback
 
   throw new Error(`Missing env var ${name}`)
 }
 
-const requiredInProduction = { requireInProduction: true }
-const noFallbackInProduction = { noFallbackInProduction: true }
+const requiredInProduction = { requireInProduction: true, noFallbackInProduction: false }
 
-module.exports = {
+export class AgentConfig {
+  timeout: number
+
+  freeSocketTimeout: number
+
+  constructor(timeout = 10000, freeSocketTimeout = 30000) {
+    this.timeout = timeout
+    this.freeSocketTimeout = freeSocketTimeout
+  }
+}
+
+export default {
   staticResourceCacheDuration: 20,
   session: {
     secret: get('SESSION_SECRET', 'app-insecure-default-session', requiredInProduction),
@@ -30,7 +39,7 @@ module.exports = {
   },
   redis: {
     host: get('REDIS_HOST', 'localhost', requiredInProduction),
-    port: parseInt(process.env.REDIS_PORT, 10) || 6379,
+    port: parseInt(process.env.REDIS_PORT || '6379', 10),
     password: process.env.REDIS_AUTH_TOKEN,
     tls_enabled: get('REDIS_TLS_ENABLED', 'false'),
   },
@@ -42,10 +51,7 @@ module.exports = {
         response: Number(get('HMPPS_AUTH_TIMEOUT_RESPONSE', 30000)),
         deadline: Number(get('HMPPS_AUTH_TIMEOUT_DEADLINE', 35000)),
       },
-      agent: {
-        timeout: 10000,
-        freeSocketTimeout: 30000,
-      },
+      agent: new AgentConfig(),
       apiClientId: get('API_CLIENT_ID', 'my-diary', requiredInProduction),
       apiClientSecret: get('API_CLIENT_SECRET', 'clientsecret', requiredInProduction),
     },
@@ -55,9 +61,7 @@ module.exports = {
         response: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000)),
         deadline: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_DEADLINE', 5000)),
       },
-      agent: {
-        timeout: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000)),
-      },
+      agent: new AgentConfig(Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000))),
       enabled: get('TOKEN_VERIFICATION_ENABLED', 'false') === 'true',
     },
   },
@@ -71,7 +75,7 @@ module.exports = {
     end: process.env.MAINTENANCE_END,
   },
   notify: {
-    url: get('NOTIFY_URL', 'http://localhost:9191', noFallbackInProduction),
+    url: process.env.NOTIFY_URL || (!production && 'http://localhost:9191'),
     clientKey: get('NOTIFY_CLIENT_KEY', 'some_invalid_key', requiredInProduction),
     smsTemplateId: get('NOTIFY_SMS_TEMPLATE', 'not_sms', requiredInProduction),
     emailTemplateId: get('NOTIFY_EMAIL_TEMPLATE', 'not_email', requiredInProduction),

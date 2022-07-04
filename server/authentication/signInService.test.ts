@@ -27,7 +27,7 @@ describe('signInService', () => {
       }
       fakeOauthApi.get('/api/user/me/mfa').reply(200, responseData)
 
-      const output = await service.getMyMfaSettings({ username: 'Bob', refreshToken: 'REFRESH_TOKEN-1' })
+      const output = await service.getMyMfaSettings('REFRESH_TOKEN-1')
       expect(output).toEqual(responseData)
     })
   })

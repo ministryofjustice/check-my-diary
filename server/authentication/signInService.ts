@@ -1,31 +1,28 @@
-const superagent = require('superagent')
-const Agent = require('agentkeepalive')
-const { HttpsAgent } = require('agentkeepalive')
-const log = require('../../log')
-const config = require('../../config')
+import Agent, { HttpsAgent } from 'agentkeepalive'
+import superagent from 'superagent'
+
+import config from '../../config'
+import log from '../../log'
 
 const oauthUrl = `${config.apis.hmppsAuth.url}/oauth/token`
 const timeoutSpec = {
   response: config.apis.hmppsAuth.timeout.response,
   deadline: config.apis.hmppsAuth.timeout.deadline,
 }
+const keepaliveAgent = oauthUrl.startsWith('https')
+  ? new HttpsAgent(config.apis.hmppsAuth.agent)
+  : new Agent(config.apis.hmppsAuth.agent)
 
-const agentOptions = {
-  timeout: config.apis.hmppsAuth.agent.timeout,
-  freeSocketTimeout: config.apis.hmppsAuth.agent.freeSocketTimeout,
-}
-const keepaliveAgent = oauthUrl.startsWith('https') ? new HttpsAgent(agentOptions) : new Agent(agentOptions)
-
-function signInService() {
+export default function signInService() {
   return {
-    async getMyMfaSettings(token) {
+    async getMyMfaSettings(token: string) {
       const data = await getMfa(token)
       return data.body
     },
   }
 }
 
-function getMfa(token) {
+function getMfa(token: string) {
   return superagent
     .get(`${config.apis.hmppsAuth.url}/api/user/me/mfa`)
     .set('content-type', 'application/json')
@@ -37,5 +34,3 @@ function getMfa(token) {
     })
     .timeout(timeoutSpec)
 }
-
-module.exports = signInService
