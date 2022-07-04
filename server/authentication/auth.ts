@@ -28,10 +28,7 @@ const authenticationMiddleware: AuthenticationMiddleware = (verifyToken) => {
   }
 }
 
-export function init(signInService: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getUser: (token: string, refreshToken: string, expiresIn: string, username: string) => any
-}): void {
+export function init(): void {
   const strategy = new Strategy(
     {
       authorizationURL: `${config.apis.hmppsAuth.externalUrl}/oauth/authorize`,
@@ -42,11 +39,8 @@ export function init(signInService: {
       state: true,
       customHeaders: { Authorization: generateOauthClientToken() },
     },
-    // eslint-disable-next-line camelcase
-    (accessToken, refreshToken, { expires_in, sub }, profile, done) => {
-      const user = signInService.getUser(accessToken, refreshToken, expires_in, sub)
-
-      return done(null, user)
+    (token, refreshToken, params, profile, done) => {
+      return done(null, { token, username: params.user_name, authSource: params.auth_source, employeeName: undefined })
     },
   )
 
