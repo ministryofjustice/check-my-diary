@@ -2,7 +2,13 @@ import { Request, Response } from 'express'
 import CalendarController from './calendarController'
 import { EMAIL, SMS } from '../helpers/constants'
 import mfaBannerType from '../helpers/mfaBannerType'
-import { CalendarService, NotificationCookieService, NotificationService, UserAuthenticationService } from '../services'
+import {
+  CalendarService,
+  NotificationCookieService,
+  NotificationService,
+  UserAuthenticationService,
+  UserService,
+} from '../services'
 
 const { EXISTING_USER, NEW_USER, FIRST_TIME_USER } = mfaBannerType
 
@@ -22,18 +28,12 @@ const employeeName = 'Ray Parker Jr.'
 const authUrl = ''
 const csrfToken = 'tomato'
 const notificationPreferencesMock = jest.fn()
-const getMyMfaSettingsMock = jest.fn()
+const getUserMfaMock = jest.fn()
 const getUserAuthenticationDetailsMock = jest.fn()
-const app = {
-  get: () => ({
-    signInService: { getMyMfaSettings: getMyMfaSettingsMock },
-  }),
-}
 const res = { render: renderMock, locals: { csrfToken } } as unknown as Response
 const req = {
   authUrl,
   user: { token, employeeName },
-  app,
   params: { date: '2001-01-01' },
 } as unknown as Request
 const calendarService: CalendarService = { getCalendarMonth: getCalendarMonthMock } as unknown as CalendarService
@@ -45,8 +45,15 @@ const notificationCookieService = new NotificationCookieService()
 const userAuthenticationService = {
   getUserAuthenticationDetails: getUserAuthenticationDetailsMock,
 } as unknown as UserAuthenticationService
+const userService: UserService = { getUserMfa: getUserMfaMock } as unknown as UserService
 const calendarController = () =>
-  new CalendarController(calendarService, notificationService, notificationCookieService, userAuthenticationService)
+  new CalendarController(
+    calendarService,
+    notificationService,
+    notificationCookieService,
+    userAuthenticationService,
+    userService,
+  )
 
 beforeEach(() => {
   rolesMock.mockReturnValue({ authorities: ['ROLE_MFA'] })
@@ -60,7 +67,7 @@ describe('CalendarController', () => {
   describe('with valid data', () => {
     beforeEach(async () => {
       notificationPreferencesMock.mockResolvedValue({ preference: EMAIL })
-      getMyMfaSettingsMock.mockResolvedValue({ newUser: true, existingUser: false, firstTimeUser: false })
+      getUserMfaMock.mockResolvedValue({ backupVerified: false, emailVerified: true })
       getUserAuthenticationDetailsMock.mockResolvedValue([{ EmailAddress: 's@a.b' }])
 
       await calendarController().getDate(req, res)
@@ -73,7 +80,7 @@ describe('CalendarController', () => {
     })
     it('should get banner info', () => {
       expect(notificationPreferencesMock).toHaveBeenCalledTimes(1)
-      expect(getMyMfaSettingsMock).toHaveBeenCalledTimes(1)
+      expect(getUserMfaMock).toHaveBeenCalledTimes(1)
       expect(getUserAuthenticationDetailsMock).toHaveBeenCalledTimes(1)
     })
     it('should not call the next function', () => {
@@ -87,7 +94,7 @@ describe('CalendarController', () => {
   describe('with banners', () => {
     it('should show the SMS banner, overriding the EXISTING_USER banner', async () => {
       notificationPreferencesMock.mockResolvedValue({ preference: SMS })
-      getMyMfaSettingsMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
+      getUserMfaMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
       getUserAuthenticationDetailsMock.mockResolvedValue([{ EmailAddress: 's@a.b' }])
 
       await calendarController().getDate(req, res)
@@ -99,7 +106,7 @@ describe('CalendarController', () => {
     })
     it('should show the SMS banner, overriding the NEW_USER banner', async () => {
       notificationPreferencesMock.mockResolvedValue({ preference: SMS })
-      getMyMfaSettingsMock.mockResolvedValue({ backupVerified: false, mobileVerified: true })
+      getUserMfaMock.mockResolvedValue({ backupVerified: false, mobileVerified: true })
       getUserAuthenticationDetailsMock.mockResolvedValue([])
 
       await calendarController().getDate(req, res)
@@ -111,7 +118,7 @@ describe('CalendarController', () => {
     })
     it('should show the EXISTING_USER banner', async () => {
       notificationPreferencesMock.mockResolvedValue({ preference: EMAIL })
-      getMyMfaSettingsMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
+      getUserMfaMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
       getUserAuthenticationDetailsMock.mockResolvedValue([{ EmailAddress: 's@a.b' }])
 
       await calendarController().getDate(req, res)
@@ -123,7 +130,7 @@ describe('CalendarController', () => {
     })
     it('should show the NEW_USER banner', async () => {
       notificationPreferencesMock.mockResolvedValue({ preference: EMAIL })
-      getMyMfaSettingsMock.mockResolvedValue({ backupVerified: true, mobileVerified: false })
+      getUserMfaMock.mockResolvedValue({ backupVerified: true, mobileVerified: false })
       getUserAuthenticationDetailsMock.mockResolvedValue([])
 
       await calendarController().getDate(req, res)
@@ -135,7 +142,7 @@ describe('CalendarController', () => {
     })
     it('should show the FIRST_TIME_USER banner', async () => {
       notificationPreferencesMock.mockResolvedValue({ preference: EMAIL })
-      getMyMfaSettingsMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
+      getUserMfaMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
       getUserAuthenticationDetailsMock.mockResolvedValue([])
 
       await calendarController().getDate(req, res)
@@ -148,7 +155,7 @@ describe('CalendarController', () => {
     it('should show nothing for users without the role', async () => {
       rolesMock.mockReturnValue({ authorities: ['ROLE_OTHER'] })
       notificationPreferencesMock.mockResolvedValue({ preference: EMAIL })
-      getMyMfaSettingsMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
+      getUserMfaMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
       getUserAuthenticationDetailsMock.mockResolvedValue([])
 
       await calendarController().getDate(req, res)
@@ -162,7 +169,7 @@ describe('CalendarController', () => {
       req.cookies = {}
       req.cookies['ui-notification-banner-EXISTING_USER'] = 'dismissed'
       notificationPreferencesMock.mockResolvedValue({ preference: EMAIL })
-      getMyMfaSettingsMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
+      getUserMfaMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
       getUserAuthenticationDetailsMock.mockResolvedValue([{ EmailAddress: 's@a.b' }])
 
       await calendarController().getDate(req, res)
@@ -176,7 +183,7 @@ describe('CalendarController', () => {
       req.cookies = {}
       req.cookies['ui-notification-banner-NEW_USER'] = 'dismissed'
       notificationPreferencesMock.mockResolvedValue({ preference: EMAIL })
-      getMyMfaSettingsMock.mockResolvedValue({ backupVerified: false, mobileVerified: true })
+      getUserMfaMock.mockResolvedValue({ backupVerified: false, mobileVerified: true })
       getUserAuthenticationDetailsMock.mockResolvedValue([])
 
       await calendarController().getDate(req, res)

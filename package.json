@@ -127,6 +127,7 @@
     "querystring": "^0.2.1",
     "redis": "^4.1.1",
     "superagent": "^7.1.6",
+    "url-value-parser": "^2.1.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
