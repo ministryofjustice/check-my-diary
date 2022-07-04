@@ -7,6 +7,7 @@ import tokenVerification from './tokenVerification'
 const createToken = (username = 'ITAG_USER', employeeName = 'Sarah Itag', authorities: string[] = []) => {
   const payload = {
     sub: username,
+    user_name: username,
     name: employeeName,
     scope: ['read', 'write'],
     auth_source: 'nomis',
@@ -106,6 +107,7 @@ const token = ({
         token_type: 'bearer',
         refresh_token: 'refresh',
         sub: username,
+        user_name: username,
         expires_in: 600,
         scope: 'read write',
         internalUser: true,

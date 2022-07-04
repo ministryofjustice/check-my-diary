@@ -36,7 +36,7 @@ module.exports = function createApp({ signInService, services }) {
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
   ejsSetup(app, path)
-  app.use(setUpAuth(signInService, services.userAuthenticationService))
+  app.use(setUpAuth(services.userAuthenticationService))
 
   // Add services to server
   app.set('DataServices', {
