@@ -24,6 +24,15 @@ export class AgentConfig {
   }
 }
 
+export interface ApiConfig {
+  url: string
+  timeout: {
+    response: number
+    deadline: number
+  }
+  agent: AgentConfig
+}
+
 export default {
   staticResourceCacheDuration: 20,
   session: {

@@ -6,6 +6,7 @@ import { SMS } from '../helpers/constants'
 import mfaBannerType from '../helpers/mfaBannerType'
 import type { CalendarService, NotificationService, NotificationCookieService } from '../services'
 import { UserAuthenticationService } from '../services'
+import UserService from '../services/userService'
 
 const { EXISTING_USER, NEW_USER, FIRST_TIME_USER } = mfaBannerType
 
@@ -15,11 +16,11 @@ export default class CalendarController {
     private readonly notificationService: NotificationService,
     private readonly notificationCookieService: NotificationCookieService,
     private readonly userAuthenticationService: UserAuthenticationService,
+    private readonly userService: UserService,
   ) {}
 
   async getDate(req: Request, res: Response) {
     const {
-      app,
       user: { token, employeeName, username },
       params: { date },
       authUrl,
@@ -27,15 +28,13 @@ export default class CalendarController {
 
     logger.info({ user: username, date }, 'GET calendar view')
 
-    const { signInService } = app.get('DataServices')
-
     const isMfa = hmppsAuthMFAUser(token)
 
     const [notificationCount, preferences, month, authMfa, userAuthenticationDetails] = await Promise.all([
       this.notificationService.countUnprocessedNotifications(token),
       this.notificationService.getPreferences(token),
       this.calendarService.getCalendarMonth(date, token),
-      isMfa ? signInService.getMyMfaSettings(token) : {},
+      isMfa ? this.userService.getUserMfa(token) : { backupVerified: false, mobileVerified: false },
       isMfa ? this.userAuthenticationService.getUserAuthenticationDetails(username) : [],
     ])
 

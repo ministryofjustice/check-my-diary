@@ -21,8 +21,7 @@ if (config.rejectUnauthorized) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = config.rejectUnauthorized
 }
 
-// eslint-disable-next-line no-shadow
-module.exports = function createApp({ signInService, services }) {
+module.exports = function createApp(services) {
   const app = express()
 
   app.set('json spaces', 2)
@@ -41,7 +40,6 @@ module.exports = function createApp({ signInService, services }) {
   // Add services to server
   app.set('DataServices', {
     userAuthenticationService,
-    signInService,
   })
 
   // GovUK Template Configuration
