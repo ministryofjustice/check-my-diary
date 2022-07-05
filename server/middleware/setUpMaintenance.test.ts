@@ -1,5 +1,5 @@
 import type { Response, Request } from 'express'
-import { setUpMaintenance } from './setUpMaintenance'
+import setUpMaintenance from './setUpMaintenance'
 import config from '../../config'
 
 jest.mock('../../config', () => ({

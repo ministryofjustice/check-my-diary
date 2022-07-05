@@ -8,7 +8,7 @@ import UserAuthenticationService from '../services/userAuthenticationService'
 
 const router = express.Router()
 
-export function setUpAuth(userAuthenticationService: UserAuthenticationService): Router {
+export default function setUpAuth(userAuthenticationService: UserAuthenticationService): Router {
   init()
 
   router.use(passport.initialize())
@@ -50,8 +50,4 @@ export function setUpAuth(userAuthenticationService: UserAuthenticationService):
   })
 
   return router
-}
-
-export default {
-  setUpAuth,
 }

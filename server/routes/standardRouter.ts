@@ -9,7 +9,7 @@ import CmdSessionExpiry from '../middleware/cmd2faSessionExpiry'
 
 const testMode = process.env.NODE_ENV === 'test'
 
-export function standardRouter(userAuthenticationService: UserAuthenticationService): Router {
+export default function standardRouter(userAuthenticationService: UserAuthenticationService): Router {
   const router = Router({ mergeParams: true })
 
   router.use(auth.authenticationMiddleware(tokenVerifier))
@@ -32,8 +32,4 @@ export function standardRouter(userAuthenticationService: UserAuthenticationServ
   })
 
   return router
-}
-
-export default {
-  standardRouter,
 }

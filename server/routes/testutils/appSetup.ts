@@ -3,9 +3,9 @@ import cookieSession from 'cookie-session'
 import createError from 'http-errors'
 import path from 'path'
 
-import { indexRouter } from '../index'
-import { createErrorHandler } from '../../errorHandler'
-import { standardRouter } from '../standardRouter'
+import indexRouter from '../index'
+import createErrorHandler from '../../errorHandler'
+import standardRouter from '../standardRouter'
 import { services } from '../../services'
 import * as auth from '../../authentication/auth'
 
