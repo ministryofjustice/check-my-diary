@@ -3,7 +3,7 @@ import type { Application } from 'express'
 export interface Details {
   displayTypeTime?: string
   displayType?: string
-  finishDuration?: string | null
+  finishDuration?: number | null
   activity?: string
   start?: string
   end?: string

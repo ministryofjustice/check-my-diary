@@ -8,18 +8,21 @@ ul.calendar .calendar-item {
   width: 14%;
   list-style: none;
   border: 1px solid govuk-colour('mid-grey');
+  min-height: 360px;
+  overflow: auto;
 
   @include app-breakpoint {
-    float:none;
-    width: 80%;
+    float: none;
+    width: 100%;
     margin: auto auto 20px;
     border: none;
+    min-height: auto;
   }
 }
 
-@media(max-width:1023px){
-  .hide-0-to-1024{
-    display:none;
+@media(max-width: 1023px) {
+  .hide-0-to-1024 {
+    display: none;
   }
 }
 
@@ -45,14 +48,11 @@ ul.calendar {
   .training-internal,
   .training-external,
   .otherType,
-  .no-day,
-  .calendar-item a {
-    position: relative;
+  .no-day {
     text-decoration: none;
     color: govuk-colour('black');
-    height: 225px;
     @include app-breakpoint {
-      height: inherit;
+      height: auto;
     }
   }
 
@@ -84,8 +84,11 @@ ul.calendar {
     }
   }
 
-  .calendar-item.calendar-header {
+  .calendar-header {
     @include govuk-typography-weight-bold;
+    float: left;
+    width: 14%;
+    list-style: none;
     border: none;
     text-align: center;
 
@@ -98,32 +101,39 @@ ul.calendar {
     border: 1px solid govuk-colour('mid-grey');
   }
 
-  .calendar-item span{
+  .calendar-item span {
     display: block;
 
     &.day {
       padding-left: 5px;
       padding-top: 5px;
       padding-bottom: 5px;
-      background-color: govuk-colour('white');
+      min-height: 25px;
 
       @include app-breakpoint {
         @include govuk-font(19);
+        padding: 15px 10px 15px 10px;
       }
-
     }
 
-    &.line{
+    &.line {
       padding: 3px 0 3px 5px;
-      min-height:25px;
+      min-height: 15px;
+      overflow: auto;
       color: govuk-colour('black');
 
       @include app-breakpoint {
-        text-align: center;
-        padding: 15px 0 15px 0;
+        padding: 15px 10px 15px 10px;
         @include govuk-font(24);
       }
+    }
 
+    &.line-left {
+      float: left;
+    }
+
+    &.line-right {
+      float: right;
     }
 
     &.day_start {
@@ -150,17 +160,10 @@ ul.calendar {
       background-color: govuk-colour('black');
       color: govuk-colour('white');
     }
+  }
 
-    &.night_start, &.night_finish {
-      background-image: url("/assets/images/night-shift.PNG");
-      background-repeat: no-repeat;
-      background-size: 25px 20px;
-      background-position: top 0 right;
-
-      @include app-breakpoint {
-        background-size: 40px 35px;
-        background-position: top 2px right;
-      }
-    }
+  hr {
+    margin: 0 10px 20px 10px;
+    padding: 0 0 0 0;
   }
 }

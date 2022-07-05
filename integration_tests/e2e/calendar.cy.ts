@@ -1,5 +1,4 @@
 import CalendarPage from '../pages/calendarPage'
-import CalendarDetailPage from '../pages/calendarDetailPage'
 import Page from '../pages/page'
 import NotificationSettingsPage from '../pages/notificationSettings'
 
@@ -27,64 +26,74 @@ context('A staff member can view their calendar', () => {
 
     Page.verifyOnPageTitle(CalendarPage, 'March 2020')
 
-    const dayShift = calendarPage.day('2020-03-06')
-    dayShift.within(() => {
-      cy.get('span').eq(0).should('contain.text', 'Friday 6th')
-      cy.get('span').eq(1).contains('6')
-      cy.get('span').eq(2).contains('Start 07:45')
-      cy.get('span').eq(3).contains('Finish 19:30')
-      cy.get('span').eq(4).contains('10hrs 15mins')
+    calendarPage.day(1).within(() => {
+      cy.get('span.day').contains('Rest Day')
+      cy.get('span.line').should('not.exist')
+    })
+
+    calendarPage.day(2).within(() => {
+      cy.get('span.day').contains('Sick')
+      cy.get('span.line').should('not.exist')
+    })
+
+    calendarPage.day(5).within(() => {
+      cy.get('span.line').eq(0).contains('Start: 07:30')
+      cy.get('span.line').eq(0).contains('Duty Manager')
+      cy.get('span.line').eq(1).contains('Break: 12:30 - 13:30')
+      cy.get('span.line').eq(2).contains('Finish: 17:30')
+      cy.get('span.line').eq(2).contains('Duty Manager')
+      cy.get('span.line').eq(3).contains('9 hours')
+    })
+
+    calendarPage.day(6).within(() => {
+      cy.get('span.line').eq(0).contains('Start: 07:45')
+      cy.get('span.line').eq(0).contains('Training - Internal')
+      cy.get('span.line').eq(1).contains('Finish: 19:30')
+      cy.get('span.line').eq(1).contains('Training - Internal')
+      cy.get('span.line').eq(2).contains('10 hours 15 minutes')
+    })
+
+    calendarPage
+      .day(10)
+      .should('have.attr', 'class')
+      .then((clazz) => {
+        expect(clazz).to.contains('holiday')
+      })
+
+    calendarPage.day(10).within(() => {
+      cy.get('span.day').contains('Annual Leave')
+      cy.get('span.line')
+        .eq(0)
+        .within(() => {
+          cy.contains('Start: 07:30')
+          cy.get('span.line-right').should('not.exist')
+        })
+      cy.get('span.line').eq(1).contains('Break: 12:30 - 13:30')
+      cy.get('span.line').eq(2).contains('Finish: 17:30')
+      cy.get('span.line').eq(3).contains('9 hours')
     })
   })
 
-  it('A staff member can drill into a day shift', () => {
+  it('A staff member can see a day shift', () => {
     cy.task('stubLogin')
     cy.login()
 
     cy.visit('/calendar/2020-03-01')
     const calendarPage = Page.verifyOnPageTitle(CalendarPage, 'March 2020')
 
-    const dayShift = calendarPage.day('2020-03-06')
-    dayShift.click({ force: true })
-
-    const calendarDetailPage = Page.verifyOnPageTitle(CalendarDetailPage, 'Friday, 6th March 2020')
-    calendarDetailPage.detailStart().should('contain', 'Start of shift').should('contain', 'Training - Internal')
-    calendarDetailPage.detailFinish().should('contain.text', 'End of shift')
+    calendarPage.detailStart(6).should('contain', 'Start: 07:45').should('contain', 'Training - Internal')
+    calendarPage.detailFinish(6).should('contain.text', 'Finish: 19:30')
   })
 
-  it('A staff member can drill into a night shift', () => {
+  it('A staff member can see a night shift', () => {
     cy.task('stubLogin')
     cy.login()
 
     cy.visit('/calendar/2020-03-01')
     const calendarPage = Page.verifyOnPageTitle(CalendarPage, 'March 2020')
 
-    const nightShift = calendarPage.day('2020-03-26')
-    nightShift.click({ force: true })
-
-    // the title comes from the seed data, hence the jumping between dates
-    const nightShiftPage = Page.verifyOnPageTitle(CalendarDetailPage, 'Thursday, 26th March 2020')
-    nightShiftPage.detailFinish().should('contain.text', 'End of shift')
-    nightShiftPage.detailStartNight().should('contain', 'Start of night shift').should('contain', 'Night Duties')
-  })
-
-  it('A staff member navigates to different days', () => {
-    cy.task('stubLogin')
-    cy.login()
-
-    cy.visit('/calendar/2020-03-01')
-    const calendarPage = Page.verifyOnPageTitle(CalendarPage, 'March 2020')
-
-    const dayShift = calendarPage.day('2020-03-06')
-    dayShift.click({ force: true })
-
-    const calendarDetailPage = Page.verifyOnPageTitle(CalendarDetailPage, 'Friday, 6th March 2020')
-    calendarDetailPage.nextDay().should('contain.text', 'Saturday, 7th').click()
-    // the title comes from the seed data, hence the jumping between dates
-    const nightShiftPage = Page.verifyOnPageTitle(CalendarDetailPage, 'Saturday, 7th March 2020')
-    nightShiftPage.previousDay().should('contain.text', 'Friday, 6th').click()
-
-    Page.verifyOnPageTitle(CalendarDetailPage, 'Friday, 6th March 2020')
+    calendarPage.detailFinish(26).should('contain.text', 'Finish: 12:30')
+    calendarPage.detailStartNight(26).should('contain', 'Night shift start: 22:30').should('contain', 'Night Duties')
   })
 
   it('Warning banner is shown for sms users but not otherwise', () => {

@@ -4,6 +4,8 @@ const jwtDecode = require('jwt-decode')
 
 const log = require('../../log')
 
+const format = 'HH:mm:ss'
+
 function getStartMonth() {
   return moment().startOf('month').format('YYYY-MM-DD')
 }
@@ -64,19 +66,18 @@ const sortByDisplayType = (data) =>
   )
 
 const removeShiftDetails = (details) =>
-  details.filter(({ displayType }) => !['day_start', 'day_finish'].includes(displayType))
+  details.filter(
+    ({ start, end }) => moment(start).format(format) !== '00:00:00' || moment(end).format(format) !== '00:00:00',
+  )
 
 const humanizeNumber = (value, unit) => {
   if (value === 0) return ''
-  return `${value}${unit}${value > 1 ? 's' : ''}`
+  return `${value} ${unit}${value > 1 ? 's' : ''}`
 }
 
 const getDuration = (duration) => {
-  const displayTypeTimeRaw = moment.duration(duration, 'seconds')
-  return `${humanizeNumber(displayTypeTimeRaw.hours(), 'hr')} ${humanizeNumber(
-    displayTypeTimeRaw.minutes(),
-    'min',
-  )}`.trim()
+  const raw = moment.duration(duration, 'seconds')
+  return `${humanizeNumber(raw.hours(), 'hour')} ${humanizeNumber(raw.minutes(), 'minute')}`
 }
 
 const configureCalendarDay = (day) => {
@@ -90,9 +91,10 @@ const configureCalendarDay = (day) => {
 }
 
 const configureCalendar = (data, startDate = null) => {
-  if (data === undefined || data == null || data.length === 0) return null
+  if (data.length === 0) return null
+  data.forEach(processDay)
   sortByDate(data)
-  data.forEach((day) => configureCalendarDay(day))
+  data.forEach(configureCalendarDay)
   const startDateMoment = moment(startDate || data[0].date)
   const pad = startDateMoment.day()
   const noDay = { fullDayType: 'no-day' }
@@ -105,44 +107,82 @@ const configureCalendar = (data, startDate = null) => {
 }
 
 const getTaskText = (displayType) =>
-  ({
+  displayType &&
+  {
     DAY_START: 'Start',
     DAY_FINISH: 'Finish',
-    NIGHT_START: 'Start',
-    NIGHT_FINISH: 'Finish',
-    OVERTIME_DAY_START: 'Start',
-    OVERTIME_DAY_FINISH: 'Finish',
-    OVERTIME_NIGHT_START: 'Start',
-    OVERTIME_NIGHT_FINISH: 'Finish',
-  }[displayType])
+    NIGHT_START: 'Night shift start',
+    NIGHT_FINISH: 'Night shift finish',
+    OVERTIME_DAY_START: 'Overtime start',
+    OVERTIME_DAY_FINISH: 'Overtime finish',
+    OVERTIME_NIGHT_START: 'Overtime night shift start',
+    OVERTIME_NIGHT_FINISH: 'Overtime night shift finish',
+  }[displayType]
 
-const displayedTasks = [
-  'DAY_START',
-  'DAY_FINISH',
-  'NIGHT_START',
-  'NIGHT_FINISH',
-  'OVERTIME_DAY_START',
-  'OVERTIME_DAY_FINISH',
-  'OVERTIME_NIGHT_START',
-  'OVERTIME_NIGHT_FINISH',
+const fullDayActivities = [
+  // from cmd-api FullDayActivityType
+  { description: 'Rest Day', class: 'rest-day' },
+  { description: 'Annual Leave', class: 'absence' },
+  { description: 'Sick', class: 'illness' },
+  { description: 'Absence', class: 'absence' },
+  { description: 'Union Duties', class: 'tu-official' },
+  { description: 'Detached Duty', class: 'detached-duty' },
+  { description: 'TOIL', class: 'otherType' },
 ]
 
+const fullDayMatch = (desc) => {
+  const foundValue = fullDayActivities.find((a) => desc.startsWith(a.description))
+  return foundValue && foundValue.class
+}
+
+const unionFilter = (activity) =>
+  activity && (activity.startsWith('Union Duties') || activity.startsWith('Union Facility'))
+    ? 'Trade Union Official Duties'
+    : activity
+
 const processDay = (day) => {
-  const { date, details: rawTasks } = day
+  const { date, details, fullDayType } = day
   const dateMoment = moment(date)
   const today = dateMoment.isSame(moment(), 'day')
-  const format = 'hh:mm:ss'
-  const details = rawTasks.filter(
-    ({ displayType, start }) => displayedTasks.includes(displayType) && moment(start).format(format) !== '00:00:00',
-  )
-  // const sortedDetails = details.sort(d => d.start)
+
+  const isFullDay = fullDayType !== 'NONE' && fullDayType !== 'SHIFT' && fullDayType !== 'no-day'
+
+  let nightFinish = false
+
   details.forEach((detail) => {
-    const { displayType, displayTypeTime } = detail
-    const activity = `${getTaskText(displayType)} ${moment(displayTypeTime).format('HH:mm')}`
-    Object.assign(detail, { activity, displayType: displayType.toLowerCase() })
+    const { displayType, displayTypeTime, start, end, activity } = detail
+    const startText = start ? moment(start).format('HH:mm') : ''
+    const endText = end ? moment(end).format('HH:mm') : ''
+
+    if (displayType) {
+      const specialActivityColour = (!isFullDay && displayType.endsWith('START') && fullDayMatch(activity)) || ''
+      const showNightHr = nightFinish && displayType === 'NIGHT_START'
+      nightFinish = displayType === 'NIGHT_FINISH'
+      const durationColour = nightFinish
+        ? 'night_finish'
+        : (!isFullDay && displayType.endsWith('FINISH') && fullDayMatch(activity)) || ''
+      const activityText = `${getTaskText(displayType)}: ${moment(displayTypeTime).format('HH:mm')}`
+      Object.assign(detail, {
+        activity: activityText,
+        displayType: displayType.toLowerCase(),
+        activityDescription: unionFilter(activity),
+        specialActivityColour,
+        durationColour,
+        showNightHr,
+      })
+    } else {
+      const activityText = `${activity.startsWith('Break') ? 'Break' : activity}: ${startText} - ${endText}`
+      Object.assign(detail, { activity: activityText, displayType: '', displayTypeTime: start })
+    }
   })
   sortByDate(details, 'displayTypeTime')
-  Object.assign(day, { today, dateText: dateMoment.format('D'), dateDayText: dateMoment.format('dddd Do'), details })
+  Object.assign(day, {
+    today,
+    dateText: dateMoment.format('D'),
+    dateDayText: dateMoment.format('dddd D'),
+    details,
+    isFullDay,
+  })
 }
 
 const hmppsAuthMFAUser = (token) => {
@@ -155,37 +195,6 @@ const getSnoozeUntil = (rawSnoozeUntil) => {
   return snoozeUntil.isAfter(moment()) ? snoozeUntil.add(1, 'day').format('D MMMM YYYY') : ''
 }
 
-const processDetail = (detail, detailIndex, details) => {
-  const { start, end, displayType, activity } = detail
-  let startText = start ? moment(start).format('HH:mm') : ''
-  const endText = end ? moment(end).format('HH:mm') : ''
-  let processedActivity = activity
-  const processedDisplayType = displayType ? displayType.toLowerCase() : ''
-  if (['DAY_FINISH', 'OVERTIME_DAY_FINISH'].includes(displayType)) {
-    const lastDetail = detailIndex > 0 ? details[detailIndex - 1] : null
-    if (lastDetail && lastDetail.start === start) {
-      startText = ''
-      processedActivity = ''
-    } else {
-      return [
-        {
-          start: startText,
-          end: endText,
-          displayType: 'activity',
-          activity: processedActivity,
-        },
-        { displayType: processedDisplayType, end: endText },
-      ]
-    }
-  }
-  return {
-    start: startText,
-    end: endText,
-    displayType: processedDisplayType,
-    activity: processedActivity,
-  }
-}
-
 module.exports = {
   getStartMonth,
   get2faCode,
@@ -195,7 +204,6 @@ module.exports = {
   sortByDisplayType,
   configureCalendar,
   processDay,
-  processDetail,
   hmppsAuthMFAUser,
   getSnoozeUntil,
 }
