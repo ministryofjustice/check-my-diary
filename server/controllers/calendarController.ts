@@ -2,7 +2,7 @@ import moment from 'moment'
 import { Request, Response } from 'express'
 import logger from '../../log'
 import { configureCalendar, hmppsAuthMFAUser, processDay } from '../helpers/utilities'
-import { SMS } from '../helpers/constants'
+import NotificationType from '../helpers/NotificationType'
 import mfaBannerType from '../helpers/mfaBannerType'
 import type { CalendarService, NotificationService, NotificationCookieService } from '../services'
 import { UserAuthenticationService } from '../services'
@@ -38,7 +38,7 @@ export default class CalendarController {
       isMfa ? this.userAuthenticationService.getUserAuthenticationDetails(username) : [],
     ])
 
-    const notifications = preferences.preference === SMS
+    const notifications = preferences.preference === NotificationType.SMS
 
     const computeBanner = () => {
       const alreadyDismissedExisting = this.notificationCookieService.alreadyDismissed(req, EXISTING_USER)

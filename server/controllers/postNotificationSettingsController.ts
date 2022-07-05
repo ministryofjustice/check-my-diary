@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 
-import { EMAIL, NONE } from '../helpers/constants'
+import NotificationType from '../helpers/NotificationType'
 import logger from '../../log'
 import type { NotificationService } from '../services'
 
@@ -21,8 +21,13 @@ export default class PostNotificationSettingsController {
     const {
       locals: { csrfToken },
     } = res
-    // eslint-disable-next-line no-nested-ternary
-    const contactMethod = notificationRequired === 'Yes' ? EMAIL : notificationRequired === 'No' ? NONE : ''
+    const contactMethod =
+      // eslint-disable-next-line no-nested-ternary
+      notificationRequired === 'Yes'
+        ? NotificationType.EMAIL
+        : notificationRequired === 'No'
+        ? NotificationType.NONE
+        : ''
 
     if (!errors.isEmpty()) {
       return res.render('pages/notification-settings', {
@@ -37,7 +42,7 @@ export default class PostNotificationSettingsController {
 
     await this.notificationService.updatePreferences(
       token,
-      notificationRequired === 'Yes' ? EMAIL : NONE,
+      notificationRequired === 'Yes' ? NotificationType.EMAIL : NotificationType.NONE,
       notificationRequired === 'Yes' ? inputEmail : '',
     )
     return res.redirect('/notifications/manage')

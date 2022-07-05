@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express'
 import NotificationSettingsController from './notificationSettingsController'
-import { SMS } from '../helpers/constants'
+import NotificationType from '../helpers/NotificationType'
 import { NotificationService } from '../services'
 
 describe('notification settings middleware', () => {
@@ -24,7 +24,7 @@ describe('notification settings middleware', () => {
   })
   describe('with persisted preferences', () => {
     beforeEach(async () => {
-      getPreferencesMock.mockResolvedValue({ preference: SMS, email: '', sms: '404040404' })
+      getPreferencesMock.mockResolvedValue({ preference: NotificationType.SMS, email: '', sms: '404040404' })
       await new NotificationSettingsController(notificationService).getSettings(req, res)
     })
     it('should get the users notification preferences', () => {
@@ -37,7 +37,7 @@ describe('notification settings middleware', () => {
         authUrl,
         csrfToken,
         employeeName,
-        contactMethod: SMS,
+        contactMethod: NotificationType.SMS,
         inputEmail: '',
         errors: null,
       })

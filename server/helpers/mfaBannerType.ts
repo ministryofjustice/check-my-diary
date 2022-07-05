@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-shadow
 enum mfaBannerType {
   EXISTING_USER = 'EXISTING_USER',
   NEW_USER = 'NEW_USER',
