@@ -1,7 +1,7 @@
 import { createClient } from 'redis'
 
 import logger from '../../log'
-import config from '../../config'
+import config from '../config'
 
 export type RedisClient = ReturnType<typeof createClient>
 

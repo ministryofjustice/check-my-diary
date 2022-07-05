@@ -2,7 +2,7 @@ import { Pool, QueryConfig, QueryResult, QueryResultRow } from 'pg'
 import fs from 'fs'
 
 import logger from '../../../log'
-import config from '../../../config'
+import config from '../../config'
 
 export const pool = new Pool({
   user: config.db.username,

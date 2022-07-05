@@ -8,7 +8,7 @@ import axios from 'axios'
 import moment from 'moment'
 import getSanitisedError from '../sanitisedError'
 import logger from '../../log'
-import baseUrl from '../../config'
+import baseUrl from '../config'
 
 export default class NotificationService {
   public async getNotifications(

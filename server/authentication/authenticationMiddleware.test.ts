@@ -1,11 +1,11 @@
 import type { Request, Response } from 'express'
 
-import config from '../../config'
+import config from '../config'
 import auth from './auth'
 
 jest.mock('jwt-decode', () => () => ({ name: 'Ned Nederlander' }))
 jest.mock('../helpers/utilities')
-jest.mock('../../config', () => ({ apis: { hmppsAuth: {} } }))
+jest.mock('../config', () => ({ apis: { hmppsAuth: {} } }))
 
 describe('authentication middleware', () => {
   const nextMock = jest.fn()

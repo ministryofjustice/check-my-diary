@@ -2,7 +2,7 @@ import axios from 'axios'
 import moment from 'moment'
 import type { ShiftDto } from 'cmdApiClient'
 import logger from '../../log'
-import baseUrl from '../../config'
+import baseUrl from '../config'
 
 export default class CalendarService {
   public async getCalendarMonth(startDate: string, accessToken: string): Promise<Array<ShiftDto>> {

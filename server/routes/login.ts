@@ -4,7 +4,7 @@ import ipRangeCheck from 'ip-range-check'
 
 import logError from '../logError'
 import log from '../../log'
-import config from '../../config'
+import config from '../config'
 import utilities from '../helpers/utilities'
 import type { UserAuthenticationService } from '../services'
 

@@ -1,8 +1,8 @@
 import type { Response, Request } from 'express'
 import setUpMaintenance from './setUpMaintenance'
-import config from '../../config'
+import config from '../config'
 
-jest.mock('../../config', () => ({
+jest.mock('../config', () => ({
   maintenance: { start: '1979-10-12T07:28:00', end: '1979-10-12T14:28:00' },
 }))
 jest.mock('express', () => ({

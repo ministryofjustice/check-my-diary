@@ -1,4 +1,4 @@
-import config from '../../config'
+import config from '../config'
 
 export default function generateOauthClientToken(
   clientId: string = config.apis.hmppsAuth.apiClientId,

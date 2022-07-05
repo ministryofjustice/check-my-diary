@@ -1,6 +1,6 @@
 import nock from 'nock'
 
-import config from '../../config'
+import config from '../config'
 import HmppsAuthClient from './hmppsAuthClient'
 
 const token = { access_token: 'token-1', expires_in: 300 }

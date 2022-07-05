@@ -1,7 +1,7 @@
 import nock from 'nock'
 import { Request } from 'express'
 import verifyToken from './tokenVerification'
-import config from '../../config'
+import config from '../config'
 
 describe('token verification api tests', () => {
   let fakeApi: nock.Scope
