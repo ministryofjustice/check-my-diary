@@ -3,7 +3,7 @@ import { validationResult } from 'express-validator'
 
 import PostNotificationSettingsController from './postNotificationSettingsController'
 
-import { EMAIL, NONE } from '../helpers/constants'
+import NotificationType from '../helpers/NotificationType'
 import { NotificationService } from '../services'
 
 jest.mock('express-validator')
@@ -41,7 +41,7 @@ describe('post notification settings middleware', () => {
       })
       it('should update the preferences by calling the "updatePreferences" method on the "notificationService"', () => {
         expect(updatePreferencesMock).toHaveBeenCalledTimes(1)
-        expect(updatePreferencesMock).toHaveBeenCalledWith(token, EMAIL, emailText)
+        expect(updatePreferencesMock).toHaveBeenCalledWith(token, NotificationType.EMAIL, emailText)
       })
       it('should call the redirect function once', () => {
         expect(redirectMock).toHaveBeenCalledTimes(1)
@@ -74,7 +74,7 @@ describe('post notification settings middleware', () => {
           authUrl,
           csrfToken,
           employeeName,
-          contactMethod: EMAIL,
+          contactMethod: NotificationType.EMAIL,
           inputEmail: emailText,
         })
       })
@@ -88,7 +88,7 @@ describe('post notification settings middleware', () => {
     })
     it('should update the preferences', () => {
       expect(updatePreferencesMock).toHaveBeenCalledTimes(1)
-      expect(updatePreferencesMock).toHaveBeenCalledWith(token, NONE, '')
+      expect(updatePreferencesMock).toHaveBeenCalledWith(token, NotificationType.NONE, '')
     })
   })
   describe('with "none" selected', () => {
@@ -99,7 +99,7 @@ describe('post notification settings middleware', () => {
     })
     it('should update the preferences', () => {
       expect(updatePreferencesMock).toHaveBeenCalledTimes(1)
-      expect(updatePreferencesMock).toHaveBeenCalledWith(token, NONE, '')
+      expect(updatePreferencesMock).toHaveBeenCalledWith(token, NotificationType.NONE, '')
     })
   })
 })

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import CalendarController from './calendarController'
-import { EMAIL, SMS } from '../helpers/constants'
+import NotificationType from '../helpers/NotificationType'
 import mfaBannerType from '../helpers/mfaBannerType'
 import {
   CalendarService,
@@ -66,7 +66,7 @@ afterEach(() => {
 describe('CalendarController', () => {
   describe('with valid data', () => {
     beforeEach(async () => {
-      notificationPreferencesMock.mockResolvedValue({ preference: EMAIL })
+      notificationPreferencesMock.mockResolvedValue({ preference: NotificationType.EMAIL })
       getUserMfaMock.mockResolvedValue({ backupVerified: false, emailVerified: true })
       getUserAuthenticationDetailsMock.mockResolvedValue([{ EmailAddress: 's@a.b' }])
 
@@ -93,7 +93,7 @@ describe('CalendarController', () => {
 
   describe('with banners', () => {
     it('should show the SMS banner, overriding the EXISTING_USER banner', async () => {
-      notificationPreferencesMock.mockResolvedValue({ preference: SMS })
+      notificationPreferencesMock.mockResolvedValue({ preference: NotificationType.SMS })
       getUserMfaMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
       getUserAuthenticationDetailsMock.mockResolvedValue([{ EmailAddress: 's@a.b' }])
 
@@ -105,7 +105,7 @@ describe('CalendarController', () => {
       })
     })
     it('should show the SMS banner, overriding the NEW_USER banner', async () => {
-      notificationPreferencesMock.mockResolvedValue({ preference: SMS })
+      notificationPreferencesMock.mockResolvedValue({ preference: NotificationType.SMS })
       getUserMfaMock.mockResolvedValue({ backupVerified: false, mobileVerified: true })
       getUserAuthenticationDetailsMock.mockResolvedValue([])
 
@@ -117,7 +117,7 @@ describe('CalendarController', () => {
       })
     })
     it('should show the EXISTING_USER banner', async () => {
-      notificationPreferencesMock.mockResolvedValue({ preference: EMAIL })
+      notificationPreferencesMock.mockResolvedValue({ preference: NotificationType.EMAIL })
       getUserMfaMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
       getUserAuthenticationDetailsMock.mockResolvedValue([{ EmailAddress: 's@a.b' }])
 
@@ -129,7 +129,7 @@ describe('CalendarController', () => {
       })
     })
     it('should show the NEW_USER banner', async () => {
-      notificationPreferencesMock.mockResolvedValue({ preference: EMAIL })
+      notificationPreferencesMock.mockResolvedValue({ preference: NotificationType.EMAIL })
       getUserMfaMock.mockResolvedValue({ backupVerified: true, mobileVerified: false })
       getUserAuthenticationDetailsMock.mockResolvedValue([])
 
@@ -141,7 +141,7 @@ describe('CalendarController', () => {
       })
     })
     it('should show the FIRST_TIME_USER banner', async () => {
-      notificationPreferencesMock.mockResolvedValue({ preference: EMAIL })
+      notificationPreferencesMock.mockResolvedValue({ preference: NotificationType.EMAIL })
       getUserMfaMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
       getUserAuthenticationDetailsMock.mockResolvedValue([])
 
@@ -154,7 +154,7 @@ describe('CalendarController', () => {
     })
     it('should show nothing for users without the role', async () => {
       rolesMock.mockReturnValue({ authorities: ['ROLE_OTHER'] })
-      notificationPreferencesMock.mockResolvedValue({ preference: EMAIL })
+      notificationPreferencesMock.mockResolvedValue({ preference: NotificationType.EMAIL })
       getUserMfaMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
       getUserAuthenticationDetailsMock.mockResolvedValue([])
 
@@ -168,7 +168,7 @@ describe('CalendarController', () => {
     it('should show nothing when EXISTING_USER dismissed', async () => {
       req.cookies = {}
       req.cookies['ui-notification-banner-EXISTING_USER'] = 'dismissed'
-      notificationPreferencesMock.mockResolvedValue({ preference: EMAIL })
+      notificationPreferencesMock.mockResolvedValue({ preference: NotificationType.EMAIL })
       getUserMfaMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
       getUserAuthenticationDetailsMock.mockResolvedValue([{ EmailAddress: 's@a.b' }])
 
@@ -182,7 +182,7 @@ describe('CalendarController', () => {
     it('should show nothing when NEW_USER dismissed', async () => {
       req.cookies = {}
       req.cookies['ui-notification-banner-NEW_USER'] = 'dismissed'
-      notificationPreferencesMock.mockResolvedValue({ preference: EMAIL })
+      notificationPreferencesMock.mockResolvedValue({ preference: NotificationType.EMAIL })
       getUserMfaMock.mockResolvedValue({ backupVerified: false, mobileVerified: true })
       getUserAuthenticationDetailsMock.mockResolvedValue([])
 
