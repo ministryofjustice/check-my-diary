@@ -1,5 +1,5 @@
 import logger from '../../log'
-import config from '../../config'
+import config from '../config'
 import RestClient from './restClient'
 
 export interface UserMfa {

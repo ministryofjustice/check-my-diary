@@ -2,7 +2,7 @@ import type { Router } from 'express'
 import express from 'express'
 import passport from 'passport'
 import flash from 'connect-flash'
-import config from '../../config'
+import config from '../config'
 import { init } from '../authentication/auth'
 import UserAuthenticationService from '../services/userAuthenticationService'
 

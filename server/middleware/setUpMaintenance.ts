@@ -1,7 +1,7 @@
 import express, { Router } from 'express'
 import moment from 'moment'
 
-import config from '../../config'
+import config from '../config'
 
 export default function setUpMaintenance(): Router {
   const router = express.Router()

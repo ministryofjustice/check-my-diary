@@ -2,7 +2,7 @@ import passport from 'passport'
 import { Strategy } from 'passport-oauth2'
 import { RequestHandler } from 'express'
 
-import config from '../../config'
+import config from '../config'
 import generateOauthClientToken from './clientCredentials'
 import { TokenVerifier } from '../data/tokenVerification'
 

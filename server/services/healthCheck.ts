@@ -2,7 +2,7 @@ import promClient from 'prom-client'
 import { CommonHttpOption } from 'agentkeepalive'
 
 import { dbCheck, serviceCheckFactory } from '../data/healthCheck'
-import config from '../../config'
+import config from '../config'
 
 const db = () =>
   dbCheck()

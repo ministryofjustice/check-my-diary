@@ -1,7 +1,7 @@
 import superagent from 'superagent'
 import type { Request } from 'express'
 import getSanitisedError from '../sanitisedError'
-import config from '../../config'
+import config from '../config'
 import logger from '../../log'
 
 function getApiClientToken(token: string) {

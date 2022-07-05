@@ -3,7 +3,7 @@ import session from 'express-session'
 import connectRedis, { Client } from 'connect-redis'
 import express, { Router } from 'express'
 import { createRedisClient } from '../data/redisClient'
-import config from '../../config'
+import config from '../config'
 import logger from '../../log'
 
 const RedisStore = connectRedis(session)

@@ -1,6 +1,6 @@
 import knex, { Knex } from 'knex'
 import fs from 'fs'
-import config from '../../config'
+import config from '../config'
 
 export default (): Knex => {
   return knex({
