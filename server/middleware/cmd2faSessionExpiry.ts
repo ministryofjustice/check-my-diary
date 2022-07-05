@@ -1,6 +1,6 @@
 import moment from 'moment'
 import type { Request, Response, NextFunction } from 'express'
-import logger from '../../log'
+import logger from '../../logger'
 import type { UserAuthenticationService } from '../services'
 
 export default class CmdSessionExpiry {

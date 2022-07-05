@@ -1,7 +1,7 @@
 import axios from 'axios'
 import moment from 'moment'
 import type { ShiftDto } from 'cmdApiClient'
-import logger from '../../log'
+import logger from '../../logger'
 import baseUrl from '../config'
 
 export default class CalendarService {

@@ -3,7 +3,7 @@ import { NotifyClient } from 'notifications-node-client'
 import ipRangeCheck from 'ip-range-check'
 
 import logError from '../logError'
-import log from '../../log'
+import log from '../../logger'
 import config from '../config'
 import utilities from '../helpers/utilities'
 import type { UserAuthenticationService } from '../services'

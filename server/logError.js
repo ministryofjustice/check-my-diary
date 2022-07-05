@@ -1,4 +1,4 @@
-const log = require('../log')
+const log = require('../logger')
 
 const logError = (url, { response, stack, message }, msg) => {
   if (response) {

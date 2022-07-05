@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import jwtDecode from 'jwt-decode'
 
-import logger from '../../log'
+import logger from '../../logger'
 import config from '../config'
 import { hmppsAuthMFAUser } from '../helpers/utilities'
 

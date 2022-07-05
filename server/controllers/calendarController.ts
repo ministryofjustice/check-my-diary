@@ -1,6 +1,6 @@
 import moment from 'moment'
 import { Request, Response } from 'express'
-import logger from '../../log'
+import logger from '../../logger'
 import { configureCalendar, hmppsAuthMFAUser, processDay } from '../helpers/utilities'
 import NotificationType from '../helpers/NotificationType'
 import mfaBannerType from '../helpers/mfaBannerType'

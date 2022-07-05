@@ -3,7 +3,7 @@ import superagent from 'superagent'
 import Agent, { HttpsAgent, CommonHttpOption } from 'agentkeepalive'
 
 import { query } from './dataAccess/db'
-import logger from '../../log'
+import logger from '../../logger'
 
 export const dbCheck = () => query('SELECT 1 AS ok')
 

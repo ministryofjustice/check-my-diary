@@ -2,7 +2,7 @@ const moment = require('moment')
 const crypto = require('crypto')
 const jwtDecode = require('jwt-decode')
 
-const log = require('../../log')
+const log = require('../../logger')
 
 function getStartMonth() {
   return moment().startOf('month').format('YYYY-MM-DD')
