@@ -8,7 +8,7 @@ import logger from '../../log'
 
 const RedisStore = connectRedis(session)
 
-export function setUpWebSession(): Router {
+export default function setUpWebSession(): Router {
   const client = createRedisClient({ legacyMode: true })
   client.connect().catch((err: Error) => logger.error(`Error connecting to Redis`, err))
 
@@ -43,8 +43,4 @@ export function setUpWebSession(): Router {
   })
 
   return router
-}
-
-export default {
-  setUpWebSession,
 }

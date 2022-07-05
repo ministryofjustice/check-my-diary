@@ -5,9 +5,9 @@ import calendarRouter from './calendarRouter'
 import notificationRouter from './notificationRouter'
 import calendarDetailRouter from './calendarDetailRouter'
 import type { Services } from '../services'
-import { setUpMaintenance } from '../middleware/setUpMaintenance'
+import setUpMaintenance from '../middleware/setUpMaintenance'
 
-export function indexRouter(router: Router, services: Services): Router {
+export default function indexRouter(router: Router, services: Services): Router {
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   router.use(setUpMaintenance())
@@ -26,8 +26,4 @@ export function indexRouter(router: Router, services: Services): Router {
   notificationRouter(router, services)
 
   return router
-}
-
-export default {
-  indexRouter,
 }

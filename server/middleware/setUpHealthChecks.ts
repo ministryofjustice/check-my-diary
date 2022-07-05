@@ -1,8 +1,8 @@
 import express, { Router } from 'express'
 
-import { healthCheck } from '../services/healthCheck'
+import healthCheck from '../services/healthCheck'
 
-export function setUpHealthChecks(): Router {
+export default function setUpHealthChecks(): Router {
   const router = express.Router()
 
   router.get('/health', (req, res, next) => {
@@ -15,8 +15,4 @@ export function setUpHealthChecks(): Router {
   router.get('/ping', (req, res) => res.send({ status: 'UP' }))
 
   return router
-}
-
-export default {
-  setUpHealthChecks,
 }

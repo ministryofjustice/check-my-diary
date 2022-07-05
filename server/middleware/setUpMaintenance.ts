@@ -3,7 +3,7 @@ import moment from 'moment'
 
 import config from '../../config'
 
-export function setUpMaintenance(): Router {
+export default function setUpMaintenance(): Router {
   const router = express.Router()
 
   router.get('*', (req, res, next) => {
@@ -37,8 +37,4 @@ export function setUpMaintenance(): Router {
   })
 
   return router
-}
-
-export default {
-  setUpMaintenance,
 }

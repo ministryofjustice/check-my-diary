@@ -75,7 +75,7 @@ const apiChecks = [
     : []),
 ]
 
-export function healthCheck(callback: HealthCheckCallback, checks = apiChecks): void {
+export default function healthCheck(callback: HealthCheckCallback, checks = apiChecks): void {
   Promise.all(checks.map((fn) => fn())).then((checkResults) => {
     const allOk = checkResults.every((item) => item.status === 'ok')
 
@@ -91,8 +91,4 @@ export function healthCheck(callback: HealthCheckCallback, checks = apiChecks): 
 
     callback(addAppInfo(result))
   })
-}
-
-export default {
-  healthCheck,
 }
