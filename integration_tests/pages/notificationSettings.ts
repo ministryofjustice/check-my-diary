@@ -5,8 +5,6 @@ export default class NotificationSettingsPage extends Page {
     super('Do you want to receive notifications')
   }
 
-  errorSummary = (): PageElement => cy.get('.govuk-error-summary')
-
   checkText = (text: string) => {
     this.inputEmail().should('have.value', text)
   }

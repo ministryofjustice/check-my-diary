@@ -18,4 +18,6 @@ export default abstract class Page {
   manageDetails = (): PageElement => cy.get('[data-qa=manageDetails]')
 
   headerUsername = (): PageElement => cy.get('[data-test="logged-in-name"]')
+
+  errorSummary = (): PageElement => cy.get('.govuk-error-summary')
 }
