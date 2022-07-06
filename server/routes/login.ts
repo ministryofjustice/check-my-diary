@@ -60,6 +60,7 @@ export default function loginRouter(userAuthenticationService: UserAuthenticatio
             res,
             userNotSignedUpMessage,
           )
+          return
         }
 
         // eslint-disable-next-line no-shadow
@@ -75,6 +76,7 @@ export default function loginRouter(userAuthenticationService: UserAuthenticatio
             res,
             userNotSignedUpMessage,
           )
+          return
         }
 
         const emailEnabled = userAuthentication.UseEmailAddress
@@ -87,6 +89,7 @@ export default function loginRouter(userAuthenticationService: UserAuthenticatio
             res,
             userNotSignedUpMessage,
           )
+          return
         }
 
         const twofactorCode = utilities.get2faCode()
