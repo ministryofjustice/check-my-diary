@@ -68,6 +68,11 @@ generic-service:
     REDIS_TLS_ENABLED: "true"
     TOKEN_VERIFICATION_ENABLED: "true"
     APPLICATIONINSIGHTS_CONNECTION_STRING: "InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY);IngestionEndpoint=https://northeurope-0.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/"
+    TWO_FACT_AUTH_ON: "true"
+    REJECT_UNAUTHORIZED: "0"
+    NOTIFY_SMS_TEMPLATE: "0e9efabf-f4f8-4077-aa71-41b7b288740b"
+    NOTIFY_EMAIL_TEMPLATE: "48a98f49-189f-42f2-a97a-be9d65bcce9f"
+    QUANTUM_ADDRESS: "212.137.36.230/32,62.25.109.197/32,195.92.38.16/28,35.177.125.252,35.177.137.160,195.59.75.0/24,194.33.192.0/25,194.33.193.0/25,194.33.196.0/25,194.33.197.0/25,35.176.93.186/32"
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
