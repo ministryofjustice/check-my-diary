@@ -36,6 +36,12 @@ export default function loginRouter(userAuthenticationService: UserAuthenticatio
   const notifyEmailTemplate = emailTemplateId || ''
 
   const postLogin = async (req: Request, res: Response) => {
+    // break out for auth users - shouldn't have got to this page anyway
+    if (req.hmppsAuthMFAUser) {
+      res.redirect(`/calendar/${utilities.getStartMonth()}#today`)
+      return
+    }
+
     const ipAddress = req.get('x-forwarded-for') || req.socket.remoteAddress || ''
 
     let userNotSignedUpMessage = false
@@ -44,24 +50,18 @@ export default function loginRouter(userAuthenticationService: UserAuthenticatio
       const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
 
       if (userAuthenticationDetails === null || userAuthenticationDetails.length === 0) {
-        userNotSignedUpMessage = true
+        processError(
+          new Error(`Error : No Sms or Email address returned for QuantumId : ${req.user.username}`),
+          req,
+          res,
+          true,
+        )
+        return
       }
 
       const quantumAddresses = config.quantumAddresses.split(',')
-      if (
-        !utilities.hmppsAuthMFAUser(req.user.token) &&
-        config.twoFactorAuthOn === 'true' &&
-        !ipRangeCheck(ipAddress, quantumAddresses)
-      ) {
-        if (userAuthenticationDetails === null || userAuthenticationDetails.length === 0) {
-          processError(
-            new Error(`Error : No Sms or Email address returned for QuantumId : ${req.user.username}`),
-            req,
-            res,
-            userNotSignedUpMessage,
-          )
-          return
-        }
+      if (config.twoFactorAuthOn === 'true' && !ipRangeCheck(ipAddress, quantumAddresses)) {
+        userNotSignedUpMessage = false
 
         // eslint-disable-next-line no-shadow
         const userAuthentication = userAuthenticationDetails[0]
