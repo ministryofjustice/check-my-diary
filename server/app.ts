@@ -7,6 +7,7 @@ import setUpStaticResources from './middleware/setUpStaticResources'
 import userAuthenticationService from './services/userAuthenticationService'
 import createErrorHandler from './errorHandler'
 import ejsSetup from './utils/ejsSetup'
+import nunjucksSetup from './utils/nunjucksSetup'
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpWebSession from './middleware/setUpWebSession'
 import { metricsMiddleware } from './monitoring/metricsApp'
@@ -29,6 +30,8 @@ export default function createApp(services: Services) {
   app.use(setUpWebSession())
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
+
+  nunjucksSetup(app, path)
   ejsSetup(app, path)
   app.use(setUpAuth(services.userAuthenticationService))
 
@@ -36,9 +39,6 @@ export default function createApp(services: Services) {
   app.set('DataServices', {
     userAuthenticationService,
   })
-
-  // GovUK Template Configuration
-  app.locals.assetPath = '/assets/'
 
   app.use('/', indexRouter(standardRouter(services.userAuthenticationService), services))
 

@@ -1,0 +1,22 @@
+{% extends "govuk/template.njk" %}
+
+{% block head %}
+  {% include "./head.njk" %}
+{% endblock %}
+
+{% block pageTitle %}{{pageTitle | default(applicationName)}}{% endblock %}
+
+{% block header %}
+  {% include "./header.njk" %}
+{% endblock %}
+
+{% block bodyStart %}
+{% endblock %}
+
+{% block footer %}
+  {% include "./footer.njk" %}
+{% endblock %}
+
+{% block bodyEnd %}
+  {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
+{% endblock %}

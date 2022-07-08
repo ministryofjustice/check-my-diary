@@ -1,0 +1,56 @@
+<header class="dps-header" role="banner">
+  <div class="dps-header__container show-header-desktop">
+    <div class="dps-header__title float-left govuk-!-padding-top-2">
+      {% include "./crest-title.njk" %}
+    </div>
+    {% if employeeName %}
+      <nav aria-label="Account navigation">
+        <ul class="dps-header__navigation float-right">
+          <li class="dps-header__navigation__item govuk-!-padding-top-3 govuk-!-padding-bottom-2">
+            <a class="dps-header__link" href="/notifications">Notifications</a>
+          </li>
+          <li class="dps-header__navigation__item">
+            <a class="dps-header__link" href="<%= authUrl %>/account-details">
+              <span class="govuk-!-font-size-19" data-test="logged-in-name">{{ employeeName | initialiseName }}</span>
+              <br />
+              <span>Manage your details</span>
+            </a>
+          </li>
+          <li class="dps-header__navigation__item govuk-!-padding-top-3 govuk-!-padding-bottom-2">
+            <a class="dps-header__link" href="/logout">Sign out</a>
+          </li>
+        </ul>
+      </nav>
+    {% endif %}
+  </div>
+
+  <div class="dps-header__container show-header-mobile">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds govuk-!-display-inline mobile-title">
+        {% include "./crest-title.njk" %}
+      </div>
+      {% if employeeName %}
+        <div class="govuk-grid-column-one-third govuk-!-display-inline float-right govuk-!-padding-top-2 govuk-!-padding-right-4">
+          <a class="dps-header__link " href="<%= authUrl %>/account-details">
+            <span data-test="logged-in-name">{{ employeeName | initialiseName }}</span>
+          </a>
+        </div>
+      {% endif %}
+    </div>
+    {% if employeeName %}
+      <nav aria-label="Account navigation" >
+        <ul class="dps-header__navigation float-right mobile-menu">
+          <li class="dps-header__navigation__item">
+            <a class="dps-header__link" href="/notifications">Notifications</a>
+          </li>
+          <li class="dps-header__navigation__item">
+            <a class="dps-header__link" href="{{ authUrl }}/account-details">Manage your details</a>
+          </li>
+          <li class="dps-header__navigation__item">
+            <a class="dps-header__link" href="/logout">Sign out</a>
+          </li>
+        </ul>
+      </nav>
+    {% endif %}
+  </div>
+</header>

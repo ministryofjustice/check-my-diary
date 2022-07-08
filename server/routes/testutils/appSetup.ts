@@ -8,12 +8,14 @@ import createErrorHandler from '../../errorHandler'
 import standardRouter from '../standardRouter'
 import { services } from '../../services'
 import * as auth from '../../authentication/auth'
+import nunjucksSetup from '../../utils/nunjucksSetup'
+import ejsSetup from '../../utils/ejsSetup'
 
 function appSetup(route: Router, production: boolean, hmppsAuthMFAUser: boolean): Express {
   const app = express()
 
-  app.set('views', path.join(__dirname, '../../views'))
-  app.set('view engine', 'ejs')
+  nunjucksSetup(app, path)
+  ejsSetup(app, path)
 
   app.use((req, res, next) => {
     req.user = {
