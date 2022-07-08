@@ -2,6 +2,7 @@ import express, { Router, Express } from 'express'
 import cookieSession from 'cookie-session'
 import createError from 'http-errors'
 import path from 'path'
+import jsonwebtoken from 'jsonwebtoken'
 
 import indexRouter from '../index'
 import createErrorHandler from '../../errorHandler'
@@ -17,13 +18,17 @@ function appSetup(route: Router, production: boolean, hmppsAuthMFAUser: boolean)
   nunjucksSetup(app, path)
   ejsSetup(app, path)
 
+  const authUser = { name: 'first last', authorities: hmppsAuthMFAUser ? 'ROLE_CMD_MIGRATED_MFA' : 'ROLE_BOB' }
+  const token = jsonwebtoken.sign(authUser, 'ssshhh', { expiresIn: '1h' })
+
   app.use((req, res, next) => {
     req.user = {
-      employeeName: 'first last',
+      employeeName: authUser.name,
       authSource: 'nomis',
-      token: 'token',
+      token,
       username: 'user1',
     }
+    res.locals.user = req.user
     req.hmppsAuthMFAUser = hmppsAuthMFAUser
     next()
   })

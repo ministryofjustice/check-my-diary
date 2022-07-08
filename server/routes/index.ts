@@ -14,11 +14,7 @@ export default function indexRouter(router: Router, services: Services): Router 
 
   get('/', (req, res) => res.redirect('/calendar#today'))
   get('/contact-us', (req, res) => {
-    res.render('pages/contact-us', {
-      employeeName: req.user?.employeeName,
-      csrfToken: res.locals.csrfToken,
-      authUrl: req.authUrl,
-    })
+    res.render('pages/contact-us.njk')
   })
 
   calendarRouter(router, services)

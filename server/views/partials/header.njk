@@ -3,15 +3,15 @@
     <div class="dps-header__title float-left govuk-!-padding-top-2">
       {% include "./crest-title.njk" %}
     </div>
-    {% if employeeName %}
+    {% if user %}
       <nav aria-label="Account navigation">
         <ul class="dps-header__navigation float-right">
           <li class="dps-header__navigation__item govuk-!-padding-top-3 govuk-!-padding-bottom-2">
             <a class="dps-header__link" href="/notifications">Notifications</a>
           </li>
           <li class="dps-header__navigation__item">
-            <a class="dps-header__link" href="<%= authUrl %>/account-details">
-              <span class="govuk-!-font-size-19" data-test="logged-in-name">{{ employeeName | initialiseName }}</span>
+            <a class="dps-header__link" href="/account-details">
+              <span class="govuk-!-font-size-19" data-test="logged-in-name">{{ user.displayName | initialiseName }}</span>
               <br />
               <span>Manage your details</span>
             </a>
@@ -29,15 +29,15 @@
       <div class="govuk-grid-column-two-thirds govuk-!-display-inline mobile-title">
         {% include "./crest-title.njk" %}
       </div>
-      {% if employeeName %}
+      {% if user %}
         <div class="govuk-grid-column-one-third govuk-!-display-inline float-right govuk-!-padding-top-2 govuk-!-padding-right-4">
           <a class="dps-header__link " href="<%= authUrl %>/account-details">
-            <span data-test="logged-in-name">{{ employeeName | initialiseName }}</span>
+            <span data-test="logged-in-name">{{ user.displayName | initialiseName }}</span>
           </a>
         </div>
       {% endif %}
     </div>
-    {% if employeeName %}
+    {% if user %}
       <nav aria-label="Account navigation" >
         <ul class="dps-header__navigation float-right mobile-menu">
           <li class="dps-header__navigation__item">
