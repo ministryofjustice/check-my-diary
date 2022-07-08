@@ -99,5 +99,4 @@ export default {
   rejectUnauthorized: process.env.REJECT_UNAUTHORIZED,
   twoFactorAuthOn: process.env.TWO_FACT_AUTH_ON,
   https: production,
-  regions: get('REGIONS', '', requiredInProduction),
 }

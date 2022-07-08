@@ -1,11 +1,4 @@
-import {
-  configureCalendar,
-  getSnoozeUntil,
-  hmppsAuthMFAUser,
-  processDay,
-  processDetail,
-  sortByDisplayType,
-} from './utilities'
+import { configureCalendar, getSnoozeUntil, hmppsAuthMFAUser, processDay, sortByDisplayType } from './utilities'
 
 import type { CalendarDay, Details } from './utilities.types'
 
@@ -41,6 +34,7 @@ describe('processDay', () => {
   let detail3: Details
   let day1: CalendarDay
   let day2: CalendarDay
+  let dayNights: CalendarDay
   beforeEach(() => {
     detail1 = {
       displayTypeTime: '2020-08-03T07:15:00',
@@ -62,12 +56,12 @@ describe('processDay', () => {
     detail2 = {
       displayTypeTime: '2020-08-03T17:00:00',
       displayType: 'DAY_FINISH',
-      finishDuration: '8h 45m',
+      finishDuration: 8 * 3600 + 45 * 60,
     }
     detail3 = {
       displayTypeTime: '2020-08-04T00:00:00',
       displayType: 'ALL_DAY',
-      finishDuration: '24h',
+      finishDuration: 86400,
     }
     day1 = {
       date: '2020-08-03',
@@ -79,6 +73,30 @@ describe('processDay', () => {
       fullDayType: 'Shift',
       details: [detail3],
     }
+    dayNights = {
+      date: '2020-03-27',
+      fullDayType: 'SHIFT',
+      fullDayTypeDescription: 'Shift',
+      details: [
+        {
+          activity: 'Night Duties',
+          start: '2020-03-26T22:30:00',
+          end: '2020-03-27T04:30:00',
+          parentType: 'SHIFT',
+          displayType: 'NIGHT_FINISH',
+          displayTypeTime: '2020-03-27T04:30:00',
+          finishDuration: 32400,
+        },
+        {
+          activity: 'Night Duties',
+          start: '2020-03-27T22:45:00',
+          end: '2020-03-28T05:30:00',
+          parentType: 'SHIFT',
+          displayType: 'NIGHT_START',
+          displayTypeTime: '2020-03-27T22:45:00',
+        },
+      ],
+    }
     processDay(day1)
     processDay(day2)
   })
@@ -86,14 +104,44 @@ describe('processDay', () => {
     expect(day1.dateText).toBe('3')
   })
   it('should set the date day text', () => {
-    expect(day1.dateDayText).toBe('Monday 3rd')
+    expect(day1.dateDayText).toBe('Monday 3')
   })
   it('should set the activity text for the details', () => {
-    expect(detail1.activity).toBe('Start 07:15')
-    expect(detail2.activity).toBe('Finish 17:00')
+    expect(detail1.activity).toBe('Start: 07:15')
+    expect(detail2.activity).toBe('Finish: 17:00')
   })
   it('should order the details by displayTypeTime', () => {
     expect(day1.details).toEqual([detail1, detail2])
+  })
+  it('should display a line and duration in black for consecutive night shifts', () => {
+    processDay(dayNights)
+    expect(dayNights.details).toEqual([
+      {
+        activity: 'Night shift finish: 04:30',
+        activityDescription: 'Night Duties',
+        displayType: 'night_finish',
+        displayTypeTime: '2020-03-27T04:30:00',
+        end: '2020-03-27T04:30:00',
+        finishDuration: 32400,
+        parentType: 'SHIFT',
+        showNightHr: false,
+        start: '2020-03-26T22:30:00',
+        durationColour: 'night_finish',
+        specialActivityColour: '',
+      },
+      {
+        activity: 'Night shift start: 22:45',
+        activityDescription: 'Night Duties',
+        displayType: 'night_start',
+        displayTypeTime: '2020-03-27T22:45:00',
+        end: '2020-03-28T05:30:00',
+        parentType: 'SHIFT',
+        showNightHr: true,
+        start: '2020-03-27T22:45:00',
+        durationColour: '',
+        specialActivityColour: '',
+      },
+    ])
   })
 })
 
@@ -158,38 +206,80 @@ describe('sortByDisplayType', () => {
     })
   })
 })
+
+const processDetailWrapper = (detail: Details) => {
+  const day = { details: [detail], date: '2022-05-25', fullDayType: 'NONE' }
+  processDay(day)
+  return day.details[0]
+}
+
 describe('processDetail', () => {
   const activity = 'Bicycle Race'
-  const detail1 = { activity, start: '2020-07-08T10:00:00', end: '2020-07-08T16:30:00', displayType: 'DAY_START' }
-  const detail2a = { activity, start: '2020-07-08T10:00:00', end: '2020-07-08T16:30:00', displayType: 'DAY_FINISH' }
-  const detail2b = { activity, start: '2020-07-08T14:00:00', end: '2020-07-08T16:30:00', displayType: 'DAY_FINISH' }
+  const detail1 = {
+    activity,
+    start: '2020-07-08T10:00:00',
+    end: '2020-07-08T16:30:00',
+    displayType: 'DAY_START',
+    displayTypeTime: '2020-07-08T10:00:00',
+  }
+  const detail2a = {
+    activity,
+    start: '2020-07-08T10:00:00',
+    end: '2020-07-08T16:30:00',
+    displayType: 'DAY_FINISH',
+    displayTypeTime: '2020-07-08T16:30:00',
+  }
+  const detail2b = {
+    activity,
+    start: '2020-07-08T14:00:00',
+    end: '2020-07-08T16:30:00',
+    displayType: 'DAY_FINISH',
+    displayTypeTime: '2020-07-08T16:30:00',
+  }
   describe('with no overtime', () => {
     describe('with basic start data', () => {
       it('should produce readable time stamps', () => {
-        expect(processDetail(detail1, 0, [detail1, detail2a])).toEqual({
-          activity,
-          start: '10:00',
-          end: '16:30',
+        expect(processDetailWrapper(detail1)).toEqual({
+          activity: 'Start: 10:00',
+          activityDescription: activity,
+          start: '2020-07-08T10:00:00',
+          end: '2020-07-08T16:30:00',
           displayType: 'day_start',
+          displayTypeTime: '2020-07-08T10:00:00',
+          specialActivityColour: '',
+          durationColour: '',
+          showNightHr: false,
         })
       })
     })
     describe('with basic finish data', () => {
       it('should produce readable time stamps', () => {
-        expect(processDetail(detail2a, 1, [detail1, detail2a])).toEqual({
-          activity: '',
-          start: '',
-          end: '16:30',
+        expect(processDetailWrapper(detail2a)).toEqual({
+          activity: 'Finish: 16:30',
+          activityDescription: activity,
+          start: '2020-07-08T10:00:00',
+          end: '2020-07-08T16:30:00',
           displayType: 'day_finish',
+          displayTypeTime: '2020-07-08T16:30:00',
+          specialActivityColour: '',
+          durationColour: '',
+          showNightHr: false,
         })
       })
     })
     describe('with unique shift data in the finish data', () => {
       it('should return an array containing an activity detail and a finish detail', () => {
-        expect(processDetail(detail2b, 1, [detail1, detail2b])).toEqual([
-          { activity, start: '14:00', end: '16:30', displayType: 'activity' },
-          { end: '16:30', displayType: 'day_finish' },
-        ])
+        expect(processDetailWrapper(detail2b)).toEqual({
+          activity: 'Finish: 16:30',
+          activityDescription: activity,
+          start: '2020-07-08T14:00:00',
+          end: '2020-07-08T16:30:00',
+          displayType: 'day_finish',
+          displayTypeTime: '2020-07-08T16:30:00',
+          specialActivityColour: '',
+          durationColour: '',
+          showNightHr: false,
+        })
       })
     })
   })
@@ -200,45 +290,65 @@ describe('processDetail', () => {
       start: '2020-07-08T12:00:00',
       end: '2020-07-08T14:00:00',
       displayType: 'OVERTIME_DAY_START',
+      displayTypeTime: '2020-07-08T12:00:00',
     }
     const detail4a = {
       activity: activity2,
       start: '2020-07-08T12:00:00',
       end: '2020-07-08T14:00:00',
       displayType: 'OVERTIME_DAY_FINISH',
+      displayTypeTime: '2020-07-08T14:00:00',
     }
     const detail4b = {
       activity: activity2,
       start: '2020-07-08T13:00:00',
       end: '2020-07-08T14:00:00',
       displayType: 'OVERTIME_DAY_FINISH',
+      displayTypeTime: '2020-07-08T14:00:00',
     }
     describe('with basic overtime start data', () => {
       it('should produce readable time stamps', () => {
-        expect(processDetail(detail3, 1, [detail1, detail3, detail4a, detail2a])).toEqual({
-          activity: activity2,
-          start: '12:00',
-          end: '14:00',
+        expect(processDetailWrapper(detail3)).toEqual({
+          activity: 'Overtime start: 12:00',
+          activityDescription: activity2,
+          start: '2020-07-08T12:00:00',
+          end: '2020-07-08T14:00:00',
           displayType: 'overtime_day_start',
+          displayTypeTime: '2020-07-08T12:00:00',
+          specialActivityColour: '',
+          durationColour: '',
+          showNightHr: false,
         })
       })
     })
     describe('with basic overtime finish data', () => {
       it('should return an overtime finish detail', () => {
-        expect(processDetail(detail4a, 2, [detail1, detail3, detail4a, detail2a])).toEqual({
-          activity: '',
-          start: '',
-          end: '14:00',
+        expect(processDetailWrapper(detail4a)).toEqual({
+          activity: 'Overtime finish: 14:00',
+          activityDescription: activity2,
+          start: '2020-07-08T12:00:00',
+          end: '2020-07-08T14:00:00',
           displayType: 'overtime_day_finish',
+          displayTypeTime: '2020-07-08T14:00:00',
+          specialActivityColour: '',
+          durationColour: '',
+          showNightHr: false,
         })
       })
     })
     describe('with unique shift data in the overtime finish data', () => {
       it('should return an array containing an activity detail and an overtime finish detail', () => {
-        expect(processDetail(detail4b, 2, [detail1, detail3, detail4b, detail2a])).toEqual([
-          { activity: activity2, start: '13:00', end: '14:00', displayType: 'activity' },
-          { end: '14:00', displayType: 'overtime_day_finish' },
-        ])
+        expect(processDetailWrapper(detail4b)).toEqual({
+          activity: 'Overtime finish: 14:00',
+          activityDescription: activity2,
+          start: '2020-07-08T13:00:00',
+          end: '2020-07-08T14:00:00',
+          displayType: 'overtime_day_finish',
+          displayTypeTime: '2020-07-08T14:00:00',
+          specialActivityColour: '',
+          durationColour: '',
+          showNightHr: false,
+        })
       })
     })
   })

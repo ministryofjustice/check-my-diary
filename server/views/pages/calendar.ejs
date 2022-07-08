@@ -39,7 +39,6 @@
                 You no longer need to contact the support team to change these settings.
                 <br />
                 <p class="govuk-!-margin-top-2"><a class="govuk-link govuk-link--no-visited-state notification_dismiss_link" id="EXISTING_USER" href="#">Dismiss</a></p>
-
               <% break;
               case mfaBannerType.NEW_USER: %>
                 <%# New user (DPS with 2FA) %>
@@ -62,30 +61,22 @@
           </div>
         <% } %>
 
-        <div class="tabs-wrapper">
-          <ul class="tabs">
-            <li><a class="active" href="">Calendar</a></li>
-            <li>
-              <a href="/notifications">
-                Notifications
-                <% if (notificationCount != null && notificationCount > 0) { %>
-                  <span class="loud font-xsmall" style="background-color: #df3034;padding: 0 5px;color: white;">
-                    (<%= notificationCount %> new)
-                  </span>
-                <% } %>
-              </a>
-            </li>
-          </ul>
-        </div>
+        <h1 class="govuk-heading-m govuk-!-margin-top-3">Your shift detail</h1>
 
-        <div class="calendar-controls center-align govuk-!-margin-bottom-8">
-          <h1 class="govuk-heading-m govuk-!-margin-bottom-0" tabindex="0"><%=currentMonth%></h1>
-          <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/calendar/<%=previousMonth.link%>" data-qa="previous">
-            <%=previousMonth.text%>
-          </a>
-          <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 app-link-!-border" href="/calendar/<%=nextMonth.link%>">
-            <%=nextMonth.text%>
-          </a>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-third">
+            <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/calendar/<%=previousMonth.link%>" data-qa="previous">
+              < <%=previousMonth.text%>
+            </a>
+          </div>
+          <div class="govuk-grid-column-one-third">
+            <h1 class="govuk-heading-m govuk-!-margin-bottom-0 center-align" tabindex="0"><%=currentMonth%></h1>
+          </div>
+          <div class="govuk-grid-column-one-third right-align">
+            <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/calendar/<%=nextMonth.link%>">
+              <%=nextMonth.text%> >
+            </a>
+          </div>
         </div>
 
         <% if (data == null || data.length === 0) { %>
@@ -93,38 +84,53 @@
         <%} else { %>
           <ul class="calendar">
             <% getDays().forEach(day => { %>
-              <li class="calendar-item calendar-header"><%= day %></li>
+              <li class="calendar-header"><%= day %></li>
             <% }); %>
-            <% data.forEach(({ today=false, fullDayType, fullDayTypeDescription, date, dateText, dateDayText, details }) => { %>
-            <li class="calendar-item <%= getTypeClass(fullDayType) %> <% if (details === undefined)  { %>no-day hide-0-to-1024 <%}%> ">
+            <% data.forEach(({ today=false, fullDayType, fullDayTypeDescription, date, dateText, dateDayText, details, detailDetails, isFullDay }) => { %>
+            <li class="calendar-item <%= getTypeClass(fullDayType) %><% if (details === undefined) { %> no-day hide-0-to-1024<%}%>"  data-qa="<%= dateText %>">
                 <%# Disable focussing on today only if banner shown AND on mobile device  %>
                 <% if (today) { %>
                   <span id="today"<% if (showBanner.notifications || showBanner.mfa) { %> class="hide-mobile"<% } %> ></span>
                 <% } %>
-                <% if (fullDayType !== 'no-day')  { %>
-                  <a href="/details/<%=date%>" tabindex="-1">
+                <% if (fullDayType !== 'no-day') { %>
+
                       <div class="hide-1024-up" tabindex="0">
-                        <span class="day govuk-!-font-weight-bold">
-                          <%= dateDayText %>
+                        <span class="day">
+                          <span class="line-left govuk-!-font-weight-bold"><%= dateDayText %></span>
+                          <% if (isFullDay) { %>
+                            <span class="line-right"><%= fullDayTypeDescription %></span>
+                          <% } %>
                         </span>
                       </div>
                       <div class="hide-0-to-1024" tabindex="0">
-                        <span class="day govuk-!-font-weight-bold">
-                          <%= dateText %>
+                        <span class="day">
+                          <span class="line-left govuk-!-font-weight-bold"><%= dateText %></span>
+                          <% if (isFullDay) { %>
+                            <span class="line-right"><%= fullDayTypeDescription %></span>
+                          <% } %>
                         </span>
                       </div>
+
                       <div tabindex="0">
-                        <% if (fullDayType !== 'NONE' && fullDayType !== 'SHIFT') { %>
-                          <span class="line"><%= fullDayTypeDescription %></span>
-                        <% } %>
-                        <% details !== null && details.forEach(({ displayType, activity, finishDuration }) => { %>
-                          <span class="line <%= displayType %>"><%= activity %></span>
+                        <% details !== null &&
+                        details.forEach(({ displayType, activity, finishDuration, activityDescription, specialActivityColour, durationColour, showNightHr }) => { %>
+                          <% if (specialActivityColour) { %>
+                            <span class="line <%= specialActivityColour %>"><%= activityDescription %></span>
+                          <% } %>
+                          <span class="line <%= displayType %>">
+                            <% if (showNightHr) { %>
+                              <hr />
+                            <% } %>
+                            <span class="line-left"><%= activity %></span>
+                            <% if (activityDescription && activityDescription !== fullDayTypeDescription) { %>
+                              <span class="line-right <%= displayType %>"><%= activityDescription %></span>
+                            <% } %>
+                          </span>
                           <% if (finishDuration) { %>
-                              <span class="line"><%= finishDuration %></span>
+                            <span class="line <%= durationColour %>"><%= finishDuration %></span>
                           <% } %>
                         <% }) %>
                       </div>
-                  </a>
                 <% } %>
               </li>
             <% }); %>
