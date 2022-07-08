@@ -21,9 +21,11 @@ function appSetup(route: Router, production: boolean, hmppsAuthMFAUser: boolean)
     req.user = {
       employeeName: 'first last',
       authSource: 'nomis',
-      token: 'token',
+      token:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6ImZpcnN0IGxhc3QiLCJpYXQiOjE1MTYyMzkwMjIsImF1dGhvcml0aWVzIjoiUk9MRV9NRkEifQ.-oYWVIbTyzjcrd9XqG5zyh5nf9G_zcLrXy2BxCphexM',
       username: 'user1',
     }
+    res.locals.user = req.user
     req.hmppsAuthMFAUser = hmppsAuthMFAUser
     next()
   })

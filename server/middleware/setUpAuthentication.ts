@@ -15,7 +15,8 @@ export default function setUpAuth(userAuthenticationService: UserAuthenticationS
   router.use(passport.session())
   router.use(flash())
 
-  const authLogoutUrl = `${config.apis.hmppsAuth.externalUrl}/logout?client_id=${config.apis.hmppsAuth.apiClientId}&redirect_uri=${config.app.url}`
+  const authUrl = config.apis.hmppsAuth.externalUrl
+  const authLogoutUrl = `${authUrl}/logout?client_id=${config.apis.hmppsAuth.apiClientId}&redirect_uri=${config.app.url}`
 
   router.get('/autherror', (req, res) => {
     res.status(401)
@@ -42,6 +43,10 @@ export default function setUpAuth(userAuthenticationService: UserAuthenticationS
         return req.session.destroy(() => res.redirect(authLogoutUrl))
       })
     } else res.redirect(authLogoutUrl)
+  })
+
+  router.use('/account-details', (req, res) => {
+    res.redirect(`${authUrl}/account-details`)
   })
 
   router.use((req, res, next) => {

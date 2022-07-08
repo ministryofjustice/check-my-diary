@@ -14,7 +14,10 @@ export default function populateCurrentUser(): RequestHandler {
         } = req
         req.authUrl = config.apis.hmppsAuth.url
         req.hmppsAuthMFAUser = hmppsAuthMFAUser(token)
-        req.user.employeeName = (jwtDecode(token) as { name: string }).name
+        const employeeName = (jwtDecode(token) as { name: string }).name
+        req.user.employeeName = employeeName
+        // also copy into res.locals.user to grab out in nunjucks templates
+        res.locals.user = { displayName: employeeName, ...res.locals.user }
       }
       next()
     } catch (error) {
