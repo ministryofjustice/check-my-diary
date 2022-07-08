@@ -16,3 +16,7 @@ generic-service:
     HMPPS_COOKIE_DOMAIN: check-my-diary-dev.prison.service.justice.gov.uk
     CHECK_MY_DIARY_URL: https://check-my-diary-dev.prison.service.justice.gov.uk
     TOKEN_VERIFICATION_API_URL: https://token-verification-api-dev.prison.service.justice.gov.uk
+
+generic-prometheus-alerts:
+  rdsAlertsDatabases:
+    cloud-platform-13962204fd879828: "check my diary"
