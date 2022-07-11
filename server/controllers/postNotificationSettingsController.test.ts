@@ -13,9 +13,6 @@ describe('post notification settings middleware', () => {
   const renderMock = jest.fn()
   const redirectMock = jest.fn()
   const token = 'aubergine'
-  const csrfToken = 'courgette'
-  const authUrl = 'carrot'
-  const employeeName = 'fennel'
   const emailText = 'checkmydiary@digital.justice.gov.uk'
 
   const updatePreferencesMock = jest.fn()
@@ -23,8 +20,8 @@ describe('post notification settings middleware', () => {
   let req: Request
   let res: Response
   beforeEach(() => {
-    req = { user: { token, employeeName }, authUrl, body: {} } as unknown as Request
-    res = { render: renderMock, redirect: redirectMock, locals: { csrfToken } } as unknown as Response
+    req = { user: { token }, body: {} } as unknown as Request
+    res = { render: renderMock, redirect: redirectMock } as unknown as Response
   })
   afterEach(() => {
     jest.resetAllMocks()
@@ -69,11 +66,8 @@ describe('post notification settings middleware', () => {
       })
       it('should call the render function', () => {
         expect(renderMock).toHaveBeenCalledTimes(1)
-        expect(renderMock).toHaveBeenCalledWith('pages/notification-settings', {
+        expect(renderMock).toHaveBeenCalledWith('pages/notification-settings.njk', {
           errors,
-          authUrl,
-          csrfToken,
-          employeeName,
           contactMethod: NotificationType.EMAIL,
           inputEmail: emailText,
         })

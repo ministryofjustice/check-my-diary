@@ -14,13 +14,9 @@ export default class PostNotificationSettingsController {
     // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req)
     const {
-      authUrl,
-      user: { token, employeeName },
+      user: { token },
       body: { notificationRequired = '', inputEmail = '' },
     } = req
-    const {
-      locals: { csrfToken },
-    } = res
     const contactMethod =
       // eslint-disable-next-line no-nested-ternary
       notificationRequired === 'Yes'
@@ -30,13 +26,10 @@ export default class PostNotificationSettingsController {
         : ''
 
     if (!errors.isEmpty()) {
-      return res.render('pages/notification-settings', {
+      return res.render('pages/notification-settings.njk', {
         errors,
         contactMethod,
         inputEmail,
-        employeeName,
-        csrfToken,
-        authUrl,
       })
     }
 

@@ -1,4 +1,6 @@
 import { Request, Response } from 'express'
+import { validationResult } from 'express-validator'
+
 import type { NotificationService } from '../services'
 
 export default class NotificationSettingsController {
@@ -6,20 +8,16 @@ export default class NotificationSettingsController {
 
   async getSettings(req: Request, res: Response) {
     const {
-      user: { employeeName, token },
-      authUrl,
+      user: { token },
     } = req
     const { preference: contactMethod = '', email: inputEmail = '' } = await this.notificationService.getPreferences(
       token,
     )
 
-    return res.render('pages/notification-settings', {
-      errors: null,
+    return res.render('pages/notification-settings.njk', {
+      errors: validationResult(req),
       contactMethod,
       inputEmail,
-      employeeName,
-      csrfToken: res.locals.csrfToken,
-      authUrl,
     })
   }
 }

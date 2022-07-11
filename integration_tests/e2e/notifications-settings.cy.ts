@@ -32,7 +32,7 @@ context('A staff member can view their notification settings', () => {
     page.inputEmail().clear()
     page.submit()
 
-    page.errorSummary().contains('Enter your email address')
+    page.errorSummary().contains('Email address cannot be blank')
     page.radio('Yes').should('be.checked')
 
     cy.task('stubNotificationPreferencesGet404')
