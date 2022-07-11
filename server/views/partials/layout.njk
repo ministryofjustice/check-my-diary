@@ -4,7 +4,7 @@
   {% include "./head.njk" %}
 {% endblock %}
 
-{% block pageTitle %}{{pageTitle | default(applicationName)}}{% endblock %}
+{% block pageTitle %}{{ pageTitle | default(applicationName) }}{% endblock %}
 
 {% block header %}
   {% include "./header.njk" %}
@@ -19,4 +19,6 @@
 
 {% block bodyEnd %}
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
+  <script src="/assets/govuk/all.js"></script>
+  <script src="/assets/govukFrontendInit.js"></script>
 {% endblock %}

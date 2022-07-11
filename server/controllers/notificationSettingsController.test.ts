@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express'
+import { validationResult } from 'express-validator'
 import NotificationSettingsController from './notificationSettingsController'
 import NotificationType from '../helpers/NotificationType'
 import { NotificationService } from '../services'
@@ -7,17 +8,14 @@ describe('notification settings middleware', () => {
   const renderMock = jest.fn()
   const nextMock = jest.fn()
   const token = 'aubergine'
-  const csrfToken = 'courgette'
-  const authUrl = 'carrot'
-  const employeeName = 'fennel'
 
   const getPreferencesMock = jest.fn()
   const notificationService = { getPreferences: getPreferencesMock } as unknown as NotificationService
   let req: Request
   let res: Response
   beforeEach(() => {
-    req = { user: { token, employeeName }, authUrl, body: {} } as unknown as Request
-    res = { render: renderMock, locals: { csrfToken } } as unknown as Response
+    req = { user: { token }, body: {} } as unknown as Request
+    res = { render: renderMock } as unknown as Response
   })
   afterEach(() => {
     jest.resetAllMocks()
@@ -33,13 +31,10 @@ describe('notification settings middleware', () => {
     })
     it('should render the page with the correct values', () => {
       expect(renderMock).toHaveBeenCalledTimes(1)
-      expect(renderMock).toHaveBeenCalledWith('pages/notification-settings', {
-        authUrl,
-        csrfToken,
-        employeeName,
+      expect(renderMock).toHaveBeenCalledWith('pages/notification-settings.njk', {
         contactMethod: NotificationType.SMS,
         inputEmail: '',
-        errors: null,
+        errors: validationResult(req),
       })
     })
     it('should not call the next function', () => {
@@ -57,13 +52,10 @@ describe('notification settings middleware', () => {
     })
     it('should render the page reflecting no notifications type', () => {
       expect(renderMock).toHaveBeenCalledTimes(1)
-      expect(renderMock).toHaveBeenCalledWith('pages/notification-settings', {
-        authUrl,
-        csrfToken,
-        employeeName,
+      expect(renderMock).toHaveBeenCalledWith('pages/notification-settings.njk', {
         contactMethod: '',
         inputEmail: '',
-        errors: null,
+        errors: validationResult(req),
       })
     })
     it('should not call the next function', () => {

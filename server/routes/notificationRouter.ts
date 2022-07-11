@@ -23,7 +23,7 @@ export default function notificationRouter(router: Router, services: Services): 
     [
       body('notificationRequired', 'Select if you want to receive notifications').isIn(['Yes', 'No']),
 
-      body('inputEmail', 'Enter your email address').if(body('notificationRequired').equals('Yes')).notEmpty(),
+      body('inputEmail', 'Email address cannot be blank').if(body('notificationRequired').equals('Yes')).notEmpty(),
 
       body('inputEmail', 'Enter an email address in the correct format, like name@example.com')
         .if(body('notificationRequired').equals('Yes'))

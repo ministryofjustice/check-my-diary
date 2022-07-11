@@ -1,0 +1,88 @@
+{% extends "../partials/layout.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+`
+{% set pageTitle = applicationName + " - Do you want to receive notifications?" %}
+
+{% block beforeContent %}
+  <a href="/notifications/manage" class="govuk-back-link">Back</a>
+{% endblock %}
+
+{% block content %}
+  <main id="main-content" role="main">
+    <form action="/notifications/settings" method="POST" novalidate>
+      <fieldset class="govuk-fieldset">
+        {% if not errors.isEmpty() %}
+          {{ govukErrorSummary({
+            titleText: 'There is a problem',
+            errorList: errors | mapErrors,
+            attributes: { 'data-qa-errors': true }
+          }) }}
+        {% endif %}
+
+        {% set emailHtml %}
+          {{ govukInput({
+            id: "inputEmail",
+            name: "inputEmail",
+            type: "email",
+            value: inputEmail,
+            autocomplete: "email",
+            spellcheck: false,
+            classes: "govuk-!-width-one-half",
+            label: {
+              text: "Email address"
+            },
+            errorMessage: errors | findError('inputEmail'),
+            attributes: {
+              maxlength: "256"
+            }
+          }) }}
+        {% endset -%}
+
+        {{ govukRadios({
+          idPrefix: "notificationRequired",
+          name: "notificationRequired",
+          fieldset: {
+            legend: {
+              text: "Do you want to receive notifications?",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            }
+          },
+          errorMessage: errors | findError('notificationRequired'),
+          items: [
+            {
+              value: "Yes",
+              text: "Yes",
+              checked: contactMethod == 'EMAIL',
+              conditional: {
+                html: emailHtml
+              }
+            },
+            {
+              value: "No",
+              text: "No",
+              checked: contactMethod == 'NONE'
+            }
+          ]
+        }) }}
+
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: "Confirm"
+        }) }}
+        {{ govukButton({
+          text: "Cancel",
+          href: '/notifications/manage',
+          classes: "govuk-button--secondary",
+          attributes: { 'data-test': 'cancel-button' }
+        }) }}
+      </div>
+      </fieldset>
+    </form>
+  </main>
+{% endblock %}
