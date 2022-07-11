@@ -1,5 +1,4 @@
 import type { Request, Response } from 'express'
-import moment from 'moment'
 import type { Notification } from '../services/notifications.types'
 
 import utilities from '../helpers/utilities'
@@ -47,13 +46,9 @@ describe('notification middleware', () => {
   })
   it('should render the page with the correct values', () => {
     expect(renderMock).toHaveBeenCalledTimes(1)
-    expect(renderMock).toHaveBeenCalledWith('pages/notifications', {
+    expect(renderMock).toHaveBeenCalledWith('pages/notifications.njk', {
       errors,
       data: notificationData,
-      csrfToken,
-      moment,
-      employeeName,
-      authUrl,
     })
   })
   it('should not call the next function', () => {
