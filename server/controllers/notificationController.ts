@@ -11,24 +11,19 @@ export default class NotificationController {
 
   async getNotifications(req: Request, res: Response) {
     const {
-      user: { employeeName, token },
-      authUrl,
+      user: { token },
     } = req
 
     const {
-      locals: { csrfToken, errors = null },
+      locals: { errors = null },
     } = res
     const data = await this.notificationService.getNotifications(token)
 
     data.sort(({ shiftModified: first }, { shiftModified: second }) => moment(second).diff(moment(first)))
 
-    return res.render('pages/notifications', {
+    return res.render('pages/notifications.njk', {
       errors,
       data,
-      csrfToken,
-      moment,
-      employeeName,
-      authUrl,
     })
   }
 
@@ -111,11 +106,14 @@ export default class NotificationController {
         pauseValue,
       })
     }
-    await this.notificationService.updateSnooze(token, this.getFormattedFutureDate(pauseUnit, pauseValue))
+    await this.notificationService.updateSnooze(
+      token,
+      NotificationController.getFormattedFutureDate(pauseUnit, pauseValue),
+    )
     return res.redirect('/notifications/manage')
   }
 
-  private getFormattedFutureDate(pauseUnit: string, pauseValue: number) {
+  private static getFormattedFutureDate(pauseUnit: string, pauseValue: number) {
     const duration = { [pauseUnit]: pauseValue }
     return formatISO(add(new Date(), duration), { representation: 'date' })
   }

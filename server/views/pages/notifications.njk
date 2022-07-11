@@ -1,0 +1,37 @@
+{% extends "../partials/layout.njk" %}
+{% from "../macros/summary.njk" import summary %}
+
+{% set pageTitle = applicationName + " - Your notifications" %}
+
+{% block beforeContent %}
+  <a href="/" class="govuk-back-link">Back to your shift detail</a>
+{% endblock %}
+
+{% block content %}
+  <main id="main-content" role="main">
+    <h1 class="govuk-heading-l">Your notifications</h1>
+    <p class="govuk-body">
+      <a href="/notifications/manage" class="govuk-!-padding-left-1">Manage your notifications</a>
+    </p>
+
+    <div id="notifications" class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-notifications">
+          <ul>
+            {% for notification in data %}
+              <li>
+                <span
+                  class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0" data-test="shift-modified">{{ notification.shiftModified | getRelativeModifiedDate }}</span>
+                <p class="govuk-body govuk-!-font-size-16">{{ notification.description }}</p>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% if not data | length %}
+          {{ summary('There are no notifications to show for this account.') }}
+        {% endif %}
+      </div>
+    </div>
+
+  </main>
+{% endblock %}

@@ -2,25 +2,29 @@ import { SuperAgentRequest } from 'superagent'
 import moment from 'moment'
 import { getMatchingRequests, stubFor } from './wiremock'
 
+const hours = moment().add(-8, 'hours').format('YYYY-MM-DDTHH:mm:SS.000Z')
+const days = moment().add(-4, 'days').format('YYYY-MM-DDTHH:mm:SS.000Z')
+const months = moment().add(-2, 'month').format('YYYY-MM-DDTHH:mm:SS.000Z')
+const years = moment().add(-3, 'years').format('YYYY-MM-DDTHH:mm:SS.000Z')
 const fakeShiftNotifications = [
   {
     description: 'Your activity on Wednesday 29 May 2019 at 17:00 - 17:30 has changed to [Paternity Leave].',
-    shiftModified: '2019-05-29T13:53:01.000Z',
+    shiftModified: hours,
     processed: true,
   },
   {
     description: 'Your activity on Wednesday 29 May 2019 at 15:00 - 17:00 has changed to [FMI Training].',
-    shiftModified: '2019-05-29T13:46:19.000Z',
+    shiftModified: days,
     processed: true,
   },
   {
     description: 'Your activity on Wednesday 29 May 2019 at 17:00 - 17:30 has changed to [Late Roll (OSG)].',
-    shiftModified: '2019-05-29T13:43:37.000Z',
+    shiftModified: months,
     processed: true,
   },
   {
     description: 'Your activity on Wednesday 29 May 2019 at 15:00 - 17:00 has changed to [FMI Training].',
-    shiftModified: '2019-05-29T13:36:43.000Z',
+    shiftModified: years,
     processed: true,
   },
 ]
@@ -41,7 +45,7 @@ export default {
       },
     }),
 
-  stubNotificationGet: (): SuperAgentRequest =>
+  stubNotificationGet: (body?: object): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
@@ -52,7 +56,7 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        jsonBody: fakeShiftNotifications,
+        jsonBody: body || fakeShiftNotifications,
       },
     }),
 
