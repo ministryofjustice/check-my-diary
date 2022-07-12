@@ -31,7 +31,7 @@ describe('maintenance middleware', () => {
     jest.useRealTimers()
   })
 
-  describe('with a current maintenance period', () => {
+  describe.only('with a current maintenance period', () => {
     beforeEach(() => {
       maintenance(req, res, nextMock)
     })
