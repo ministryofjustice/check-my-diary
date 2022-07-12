@@ -1,4 +1,4 @@
-import moment from 'moment'
+import { formatDistanceToNowStrict } from 'date-fns'
 
 export function initialiseName(fullName: string): string | null {
   // this check is for the authError page
@@ -9,5 +9,5 @@ export function initialiseName(fullName: string): string | null {
 }
 
 export function getRelativeModifiedDate(modifiedDate: string): string {
-  return moment(modifiedDate).fromNow()
+  return formatDistanceToNowStrict(new Date(modifiedDate), { addSuffix: true })
 }

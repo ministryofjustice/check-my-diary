@@ -1,4 +1,5 @@
-import moment from 'moment'
+import { format } from 'date-fns'
+
 import CalendarPage from '../pages/calendarPage'
 import Page from '../pages/page'
 
@@ -18,13 +19,13 @@ context('A staff member can view their overtime calendar', () => {
     })
     cy.login()
 
-    Page.verifyOnPageTitle(CalendarPage, moment().format('MMMM YYYY'))
+    Page.verifyOnPageTitle(CalendarPage, format(Date.now(), 'MMMM yyyy'))
     cy.visit('/calendar/2020-04-01')
     cy.get('[data-qa=previous]').click()
   })
 
   it('A staff member can view their overtime calendar', () => {
-    const calendarPage = Page.verifyOnPageTitle(CalendarPage, moment('2020-03-01').format('MMMM YYYY'))
+    const calendarPage = Page.verifyOnPageTitle(CalendarPage, 'March 2020')
 
     calendarPage.day(7).within(() => {
       cy.get('span.day').eq(0).contains('Saturday 7')
