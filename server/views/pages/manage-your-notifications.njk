@@ -1,0 +1,55 @@
+{% extends "../partials/layout.njk" %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = applicationName + " - Manage your notifications" %}
+
+{% block beforeContent %}
+  {{ govukBackLink({ href: "/", text: "Back to your shift detail" }) }}
+{% endblock %}
+
+{% block content %}
+
+  <main id="main-content" role="main">
+    <h1 class="govuk-heading-l">Manage your notifications</h1>
+    <p class="govuk-body">You can be notified by email when this service has been updated with any change to your shift
+      detail.</p>
+    {% if notificationsEnabled and snoozeUntil %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <p class="govuk-body govuk-!-margin-bottom-2">You have paused your notifications</p>
+          <p class="govuk-body">Notifications will start again on {{ snoozeUntil }}.</p>
+
+          <form method="post" action="/notifications/resume" novalidate>
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+            {{ govukButton({ text: "Resume notifications now" }) }}
+          </form>
+        </div>
+      </div>
+      {% elif notificationsEnabled %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <p class="govuk-body">You receive notifications
+            <a href="/notifications/settings" class="govuk-!-padding-left-1 govuk-link">Change</a>
+          </p>
+        </div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <p class="govuk-body">
+            <a href="/notifications/pause" class="govuk-link">Pause notifications</a>
+          </p>
+        </div>
+      </div>
+    {% else %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <p class="govuk-body">You do not receive notifications
+            <a href="/notifications/settings" class="govuk-link">Change</a>
+          </p>
+        </div>
+      </div>
+    {% endif %}
+  </main>
+{% endblock %}
+
