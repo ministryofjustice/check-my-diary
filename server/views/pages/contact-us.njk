@@ -1,9 +1,10 @@
 {% extends "../partials/layout.njk" %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
 {% set pageTitle = applicationName + " - Contact us" %}
 
 {% block beforeContent %}
-  <a href="/" class="govuk-back-link">Back</a>
+  {{ govukBackLink({ href: "/" }) }}
 {% endblock %}
 
 {% block content %}

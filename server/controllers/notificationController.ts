@@ -35,24 +35,12 @@ export default class NotificationController {
     res.redirect('back')
   }
 
-  async getManage(req: Request, res: Response) {
-    const {
-      user: { employeeName, token },
-      authUrl,
-    } = req
-
-    const {
-      locals: { csrfToken, errors = null },
-    } = res
+  async getManage({ user: { token } }: Request, res: Response) {
     const { snoozeUntil, notificationsEnabled } = await this.getSnoozeAndNotificationSettings(token)
 
-    return res.render('pages/manage-your-notifications', {
-      errors,
-      csrfToken,
+    return res.render('pages/manage-your-notifications.njk', {
       notificationsEnabled,
       snoozeUntil,
-      employeeName,
-      authUrl,
     })
   }
 
