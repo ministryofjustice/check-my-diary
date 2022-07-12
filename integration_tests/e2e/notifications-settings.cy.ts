@@ -100,7 +100,7 @@ context('A staff member can view their notification settings', () => {
     Page.verifyOnPage(NotificationManagePage)
     cy.task('verifySnooze').then((requests) => {
       expect(requests).to.have.length(1)
-      expect(requests[0].body).eq(`{"snoozeUntil":"${addDays(Date.now(), 12).toISOString().split('T')[0]}"}`)
+      expect(requests[0].body).eq(`{"snoozeUntil":"${addDays(new Date(), 12).toISOString().split('T')[0]}"}`)
     })
   })
 
@@ -116,13 +116,13 @@ context('A staff member can view their notification settings', () => {
   it('Manage your notifications - paused', () => {
     cy.task('stubNotificationPreferencesGet', {
       preference: 'EMAIL',
-      snoozeUntil: addDays(Date.now(), 3).toISOString().split('T')[0],
+      snoozeUntil: addDays(new Date(), 3).toISOString().split('T')[0],
       email: 'me@gmail.com',
     })
 
     cy.visit('/notifications/manage')
     Page.verifyOnPage(NotificationManagePage)
 
-    cy.contains(`Notifications will start again on ${format(addDays(Date.now(), 4), 'd MMMM yyyy')}`)
+    cy.contains(`Notifications will start again on ${format(addDays(new Date(), 4), 'd MMMM yyyy')}`)
   })
 })
