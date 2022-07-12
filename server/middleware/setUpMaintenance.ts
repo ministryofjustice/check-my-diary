@@ -1,5 +1,5 @@
 import express, { Router } from 'express'
-import moment from 'moment'
+import { differenceInSeconds, format } from 'date-fns'
 
 import config from '../config'
 
@@ -13,20 +13,17 @@ export default function setUpMaintenance(): Router {
       } = config
 
       if (start && end) {
-        const maintenanceStartDateTime = moment(start, 'YYYY-MM-DD HH:mm:ss')
-        const maintenanceEndDateTime = moment(end, 'YYYY-MM-DD HH:mm:ss')
-        const currentDateTime = moment()
+        const maintenanceStartDateTime = new Date(start)
+        const maintenanceEndDateTime = new Date(end)
+        const currentDateTime = new Date()
         if (
-          currentDateTime.isSameOrAfter(maintenanceStartDateTime) &&
-          currentDateTime.isSameOrBefore(maintenanceEndDateTime)
+          differenceInSeconds(currentDateTime, maintenanceStartDateTime) > 0 &&
+          differenceInSeconds(currentDateTime, maintenanceEndDateTime) < 0
         ) {
-          const formatString = 'HH:mm on dddd Do MMMM'
-          return res.render('pages/maintenance', {
-            startDateTime: maintenanceStartDateTime.format(formatString),
-            endDateTime: maintenanceEndDateTime.format(formatString),
-            csrfToken: res.locals.csrfToken,
-            employeeName: req.user?.employeeName,
-            authUrl: req.authUrl,
+          const formatString = "HH:mm 'on' EEEE do MMMM"
+          return res.render('pages/maintenance.njk', {
+            startDateTime: format(maintenanceStartDateTime, formatString),
+            endDateTime: format(maintenanceEndDateTime, formatString),
           })
         }
       }

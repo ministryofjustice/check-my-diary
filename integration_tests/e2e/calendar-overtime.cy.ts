@@ -19,7 +19,7 @@ context('A staff member can view their overtime calendar', () => {
     })
     cy.login()
 
-    Page.verifyOnPageTitle(CalendarPage, format(Date.now(), 'MMMM yyyy'))
+    Page.verifyOnPageTitle(CalendarPage, format(new Date(), 'MMMM yyyy'))
     cy.visit('/calendar/2020-04-01')
     cy.get('[data-qa=previous]').click()
   })

@@ -17,30 +17,29 @@ describe('maintenance middleware', () => {
 
   const nextMock = jest.fn()
   const renderMock = jest.fn()
-  const csrfToken = 'SQUIRREL!'
   let res: Response
   let req: Request
   beforeEach(() => {
-    res = { render: renderMock, locals: { csrfToken } } as unknown as Response
-    req = { authUrl: 'someurl', user: { username: 'user', employeeName: 'employee' } } as unknown as Request
-    jest.spyOn(Date, 'now').mockImplementation(() => new Date('1979-10-12T08:50:00.000Z').getTime())
+    res = { render: renderMock } as unknown as Response
+    req = { user: { username: 'user' } } as unknown as Request
+
+    jest.useFakeTimers('modern')
+    jest.setSystemTime(new Date('1979-10-12T08:50:00.000Z'))
   })
   afterEach(() => {
     jest.resetAllMocks()
+    jest.useRealTimers()
   })
 
-  describe('with a current maintenance period', () => {
+  describe.only('with a current maintenance period', () => {
     beforeEach(() => {
       maintenance(req, res, nextMock)
     })
     it('should render the maintenance page', () => {
       expect(renderMock).toHaveBeenCalledTimes(1)
-      expect(renderMock).toHaveBeenCalledWith('pages/maintenance', {
+      expect(renderMock).toHaveBeenCalledWith('pages/maintenance.njk', {
         startDateTime: '07:28 on Friday 12th October',
         endDateTime: '14:28 on Friday 12th October',
-        csrfToken,
-        employeeName: 'employee',
-        authUrl: 'someurl',
       })
     })
     it('should not call next', () => {
