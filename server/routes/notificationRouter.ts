@@ -27,6 +27,7 @@ export default function notificationRouter(router: Router, services: Services): 
 
       body('inputEmail', 'Enter an email address in the correct format, like name@example.com')
         .if(body('notificationRequired').equals('Yes'))
+        .if(body('inputEmail').notEmpty())
         .isEmail(),
     ],
     (req, res) => postNotificationSettingsController.setSettings(req, res),
@@ -39,8 +40,8 @@ export default function notificationRouter(router: Router, services: Services): 
   postWithValidator(
     '/notifications/pause',
     [
-      check('pauseValue', 'Enter a number').exists({ checkFalsy: true }).isInt(),
-      check('pauseValue', 'Enter a number above 0').isInt({ min: 1, max: 99 }),
+      check('pauseValue', 'Enter a number').exists({ checkFalsy: true }).bail().isInt(),
+      check('pauseValue', 'Enter a number above 0').if(check('pauseValue').isInt()).isInt({ min: 1, max: 99 }),
       check('pauseUnit', 'Select a period of time').exists({ checkFalsy: true }).isIn(['days', 'weeks', 'months']),
     ],
     (req, res) => notificationController.setPause(req, res),

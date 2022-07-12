@@ -12,9 +12,6 @@ describe('notification middleware', () => {
   const renderMock = jest.fn()
   const nextMock = jest.fn()
   const token = 'aubergine'
-  const csrfToken = 'courgette'
-  const authUrl = 'carrot'
-  const employeeName = 'fennel'
   const notification1 = { shiftModified: '2020-08-24' }
   const notification2 = { shiftModified: '2020-08-26' }
   let notificationData: Notification[]
@@ -23,13 +20,12 @@ describe('notification middleware', () => {
   const notificationService = { getNotifications: getNotificationsMock } as unknown as NotificationService
   let req: Request
   let res: Response
-  const errors = null
   beforeEach(() => {
     getSnoozeUntil.mockReturnValue('')
     notificationData = [notification1, notification2]
     getNotificationsMock.mockResolvedValue(notificationData)
-    req = { user: { token, employeeName }, authUrl, body: {} } as unknown as Request
-    res = { render: renderMock, locals: { csrfToken } } as unknown as Response
+    req = { user: { token }, body: {} } as unknown as Request
+    res = { render: renderMock } as unknown as Response
   })
   afterEach(() => {
     jest.resetAllMocks()
@@ -46,10 +42,7 @@ describe('notification middleware', () => {
   })
   it('should render the page with the correct values', () => {
     expect(renderMock).toHaveBeenCalledTimes(1)
-    expect(renderMock).toHaveBeenCalledWith('pages/notifications.njk', {
-      errors,
-      data: notificationData,
-    })
+    expect(renderMock).toHaveBeenCalledWith('pages/notifications.njk', { data: notificationData })
   })
   it('should not call the next function', () => {
     expect(nextMock).not.toHaveBeenCalled()

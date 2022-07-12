@@ -1,0 +1,92 @@
+{% extends "../partials/layout.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+{% set pageTitle = applicationName + " - How long do you want to pause notifications for?" %}
+
+{% block beforeContent %}
+  {{ govukBackLink({ href: "/notifications/manage" }) }}
+{% endblock %}
+
+{% block content %}
+  <main id="main-content" role="main">
+    <h1 class="govuk-heading-l">How long do you want to pause notifications for?</h1>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+
+        <section class="govuk-!-padding-2">
+          {% if not errors.isEmpty() %}
+            {{ govukErrorSummary({
+              titleText: 'There is a problem',
+              errorList: errors | mapErrors,
+              attributes: { 'data-qa-errors': true }
+            }) }}
+          {% endif %}
+
+          <form method="post" novalidate>
+            {{ govukInput({
+              id: "pauseValue",
+              name: "pauseValue",
+              value: pauseValue,
+              classes: "govuk-input--width-2 govuk-!-margin-right-2",
+              label: {
+                text: "Enter a number"
+              },
+              errorMessage: errors | findError('pauseValue'),
+              attributes: {
+                maxlength: "2"
+              }
+            }) }}
+
+            {{ govukSelect({
+              id: "pauseUnit",
+              name: "pauseUnit",
+              label: {
+                text: "Select a period of time"
+              },
+              value: pauseUnit,
+              items: [
+                {
+                  value: "Select",
+                  text: "Select"
+                },
+                {
+                  value: "days",
+                  text: "Days"
+                },
+                {
+                  value: "weeks",
+                  text: "Weeks"
+                },
+                {
+                  value: "months",
+                  text: "Months"
+                }
+              ],
+              errorMessage: errors | findError('pauseUnit')
+            }) }}
+
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+            <div class="govuk-button-group">
+              {{ govukButton({
+                text: "Confirm"
+              }) }}
+              {{ govukButton({
+                id: "snoozeClear",
+                text: "Cancel",
+                type: "reset",
+                href: '/notifications/manage',
+                classes: "govuk-button--secondary",
+                attributes: { 'data-test': 'cancel-button' }
+              }) }}
+            </div>
+          </form>
+        </section>
+      </div>
+    </div>
+  </main>
+{% endblock %}
