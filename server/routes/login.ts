@@ -17,12 +17,11 @@ const processError = (error: Error, req: Request, res: Response, userNotSignedUp
     authError: true,
     showUserNotSignedUpMessage: userNotSignedUpMessage,
     authErrorText: utilities.getAuthErrorDescription(error),
-    csrfToken: res.locals.csrfToken,
   }
 
   logError(req.url, data, 'Login failure')
 
-  res.render('pages/index', data)
+  res.render('pages/index.njk', data)
 }
 
 export default function loginRouter(userAuthenticationService: UserAuthenticationService): Router {
