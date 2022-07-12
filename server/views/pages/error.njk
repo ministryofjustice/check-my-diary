@@ -1,0 +1,11 @@
+{% extends "../partials/layout.njk" %}
+
+{% block content %}
+  <main id="main-container" role="main">
+    <h1 class="govuk-heading-l">{{ message }}</h1>
+
+    <p class="govuk-caption-l govuk-!-margin-bottom-6">{{ status }}</p>
+
+    <p class="govuk-body">{{ stack }}</p>
+  </main>
+{% endblock %}
