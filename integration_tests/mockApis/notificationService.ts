@@ -1,11 +1,12 @@
 import { SuperAgentRequest } from 'superagent'
-import moment from 'moment'
+import { addDays, subDays, subHours, subMonths, subYears } from 'date-fns'
 import { getMatchingRequests, stubFor } from './wiremock'
 
-const hours = moment().add(-8, 'hours').format('YYYY-MM-DDTHH:mm:SS.000Z')
-const days = moment().add(-4, 'days').format('YYYY-MM-DDTHH:mm:SS.000Z')
-const months = moment().add(-2, 'month').format('YYYY-MM-DDTHH:mm:SS.000Z')
-const years = moment().add(-3, 'years').format('YYYY-MM-DDTHH:mm:SS.000Z')
+const now = Date.now()
+const hours = subHours(now, 8.1).toISOString()
+const days = subDays(now, 4.1).toISOString()
+const months = subMonths(now, 2.1).toISOString()
+const years = subYears(now, 3.1).toISOString()
 const fakeShiftNotifications = [
   {
     description: 'Your activity on Wednesday 29 May 2019 at 17:00 - 17:30 has changed to [Paternity Leave].',
@@ -72,7 +73,7 @@ export default {
           'Content-Type': 'application/json',
         },
         jsonBody: body || {
-          snoozeUntil: moment().add(3, 'days').format('YYYY-MM-DD'),
+          snoozeUntil: addDays(now, 3).toISOString().split('T')[0],
           preference: 'SMS',
           sms: '01189998819991197253',
         },

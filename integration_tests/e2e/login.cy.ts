@@ -1,4 +1,5 @@
-import moment from 'moment'
+import { format } from 'date-fns'
+
 import Page from '../pages/page'
 import CalendarPage from '../pages/calendarPage'
 import AuthSignInPage from '../pages/authSignIn'
@@ -40,7 +41,7 @@ context('Sign in functionality', () => {
   it('Sign out takes user to sign in page', () => {
     cy.task('stubLogin')
     cy.login()
-    Page.verifyOnPageTitle(CalendarPage, moment().format('MMMM YYYY'))
+    Page.verifyOnPageTitle(CalendarPage, format(Date.now(), 'MMMM yyyy'))
 
     // can't do a visit here as cypress requires only one domain
     cy.request('/logout').its('body').should('contain', 'Sign in')
@@ -58,7 +59,7 @@ context('Sign in functionality', () => {
   it('Token verification failure takes user to sign in page', () => {
     cy.task('stubLogin')
     cy.login()
-    Page.verifyOnPageTitle(CalendarPage, moment().format('MMMM YYYY'))
+    Page.verifyOnPageTitle(CalendarPage, format(Date.now(), 'MMMM yyyy'))
     cy.task('stubVerifyToken', false)
 
     // can't do a visit here as cypress requires only one domain
@@ -68,7 +69,7 @@ context('Sign in functionality', () => {
   it('Token verification failure clears user session', () => {
     cy.task('stubLogin')
     cy.login()
-    const calendarPage = Page.verifyOnPageTitle(CalendarPage, moment().format('MMMM YYYY'))
+    const calendarPage = Page.verifyOnPageTitle(CalendarPage, format(Date.now(), 'MMMM yyyy'))
     cy.task('stubVerifyToken', false)
 
     // can't do a visit here as cypress requires only one domain
@@ -85,7 +86,7 @@ context('Sign in functionality', () => {
   it('User is signed in and header contains name', () => {
     cy.task('stubLogin')
     cy.login()
-    const calendarPage = Page.verifyOnPageTitle(CalendarPage, moment().format('MMMM YYYY'))
+    const calendarPage = Page.verifyOnPageTitle(CalendarPage, format(Date.now(), 'MMMM yyyy'))
     calendarPage.headerUsername().contains('S. Itag')
   })
 
@@ -105,7 +106,7 @@ context('Sign in functionality', () => {
     cy.request('/auth/login')
     cy.task('getLoginUrl').then((url: string) => cy.visit(url))
 
-    const calendarPage = Page.verifyOnPageTitle(CalendarPage, moment().format('MMMM YYYY'))
+    const calendarPage = Page.verifyOnPageTitle(CalendarPage, format(Date.now(), 'MMMM yyyy'))
     calendarPage.headerUsername().contains('S. Itag')
   })
 })

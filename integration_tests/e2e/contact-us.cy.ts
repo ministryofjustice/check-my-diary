@@ -1,4 +1,5 @@
-import moment from 'moment'
+import { format } from 'date-fns'
+
 import Page from '../pages/page'
 import CalendarPage from '../pages/calendarPage'
 import ContactUsPage from '../pages/contactUsPage'
@@ -18,7 +19,7 @@ context('Contact us functionality', () => {
   it('Link on pages takes user to contact us', () => {
     cy.task('stubLogin')
     cy.login()
-    Page.verifyOnPageTitle(CalendarPage, moment().format('MMMM YYYY'))
+    Page.verifyOnPageTitle(CalendarPage, format(Date.now(), 'MMMM yyyy'))
     cy.get('#contactUsLink').click()
     Page.verifyOnPage(ContactUsPage)
   })
