@@ -20,7 +20,7 @@ export default function setUpAuth(userAuthenticationService: UserAuthenticationS
 
   router.get('/autherror', (req, res) => {
     res.status(401)
-    return res.render('autherror', {
+    return res.render('autherror.njk', {
       authURL: authLogoutUrl,
     })
   })

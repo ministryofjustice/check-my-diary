@@ -16,4 +16,9 @@ context('A staff member can view their notifications', () => {
     cy.visit('/notifications', { failOnStatusCode: false })
     cy.get('h1').contains('Request failed with status code 404')
   })
+
+  it('Auth error page can be rendered', () => {
+    cy.visit('/autherror', { failOnStatusCode: false })
+    cy.get('h1').contains('Authorisation Error')
+  })
 })
