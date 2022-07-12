@@ -2,30 +2,25 @@ import { SuperAgentRequest } from 'superagent'
 import { addDays, subDays, subHours, subMonths, subYears } from 'date-fns'
 import { getMatchingRequests, stubFor } from './wiremock'
 
-const now = Date.now()
-const hours = subHours(now, 8.1).toISOString()
-const days = subDays(now, 4.1).toISOString()
-const months = subMonths(now, 2.1).toISOString()
-const years = subYears(now, 3.1).toISOString()
-const fakeShiftNotifications = [
+const fakeShiftNotifications = () => [
   {
     description: 'Your activity on Wednesday 29 May 2019 at 17:00 - 17:30 has changed to [Paternity Leave].',
-    shiftModified: hours,
+    shiftModified: subHours(new Date(), 8).toISOString(),
     processed: true,
   },
   {
     description: 'Your activity on Wednesday 29 May 2019 at 15:00 - 17:00 has changed to [FMI Training].',
-    shiftModified: days,
+    shiftModified: subDays(new Date(), 4).toISOString(),
     processed: true,
   },
   {
     description: 'Your activity on Wednesday 29 May 2019 at 17:00 - 17:30 has changed to [Late Roll (OSG)].',
-    shiftModified: months,
+    shiftModified: subMonths(new Date(), 2).toISOString(),
     processed: true,
   },
   {
     description: 'Your activity on Wednesday 29 May 2019 at 15:00 - 17:00 has changed to [FMI Training].',
-    shiftModified: years,
+    shiftModified: subYears(new Date(), 3).toISOString(),
     processed: true,
   },
 ]
@@ -42,7 +37,7 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        jsonBody: fakeShiftNotifications,
+        jsonBody: fakeShiftNotifications(),
       },
     }),
 
@@ -57,7 +52,7 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        jsonBody: body || fakeShiftNotifications,
+        jsonBody: body || fakeShiftNotifications(),
       },
     }),
 
@@ -73,7 +68,7 @@ export default {
           'Content-Type': 'application/json',
         },
         jsonBody: body || {
-          snoozeUntil: addDays(now, 3).toISOString().split('T')[0],
+          snoozeUntil: addDays(new Date(), 3).toISOString().split('T')[0],
           preference: 'SMS',
           sms: '01189998819991197253',
         },
