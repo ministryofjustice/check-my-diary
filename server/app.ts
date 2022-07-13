@@ -35,11 +35,6 @@ export default function createApp(services: Services) {
   ejsSetup(app, path)
   app.use(setUpAuth(services.userAuthenticationService))
 
-  // Add services to server
-  app.set('DataServices', {
-    userAuthenticationService,
-  })
-
   app.use('/', indexRouter(standardRouter(services.userAuthenticationService), services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
