@@ -9,28 +9,15 @@ import type { NotificationService } from '../services'
 export default class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
 
-  async getNotifications(req: Request, res: Response) {
-    const {
-      user: { token },
-    } = req
-
-    const {
-      locals: { errors = null },
-    } = res
+  async getNotifications({ user: { token } }: Request, res: Response) {
     const data = await this.notificationService.getNotifications(token)
 
     data.sort(({ shiftModified: first }, { shiftModified: second }) => moment(second).diff(moment(first)))
 
-    return res.render('pages/notifications.njk', {
-      errors,
-      data,
-    })
+    return res.render('pages/notifications.njk', { data })
   }
 
-  async resume(req: Request, res: Response) {
-    const {
-      user: { token },
-    } = req
+  async resume({ user: { token } }: Request, res: Response) {
     await this.notificationService.resumeNotifications(token)
     res.redirect('back')
   }
@@ -46,24 +33,18 @@ export default class NotificationController {
 
   async getPause(req: Request, res: Response) {
     const {
-      user: { employeeName, token },
+      user: { token },
       query: { pauseUnit, pauseValue },
-      authUrl,
     } = req
-
-    const {
-      locals: { csrfToken, errors },
-    } = res
 
     const { snoozeUntil, notificationsEnabled } = await this.getSnoozeAndNotificationSettings(token)
 
-    return res.render('pages/pause-notifications', {
+    const errors = validationResult(req)
+
+    return res.render('pages/pause-notifications.njk', {
       errors,
-      csrfToken,
       notificationsEnabled,
       snoozeUntil,
-      employeeName,
-      authUrl,
       pauseUnit,
       pauseValue,
     })
@@ -71,25 +52,17 @@ export default class NotificationController {
 
   async setPause(req: Request, res: Response) {
     const errors = validationResult(req)
-    res.locals.errors = errors
     const {
-      user: { employeeName, token },
+      user: { token },
       body: { pauseUnit, pauseValue },
-      authUrl,
     } = req
-    const {
-      locals: { csrfToken },
-    } = res
 
     if (!errors.isEmpty()) {
       const { snoozeUntil, notificationsEnabled } = await this.getSnoozeAndNotificationSettings(token)
-      return res.render('pages/pause-notifications', {
+      return res.render('pages/pause-notifications.njk', {
         errors,
-        csrfToken,
         notificationsEnabled,
         snoozeUntil,
-        employeeName,
-        authUrl,
         pauseUnit,
         pauseValue,
       })

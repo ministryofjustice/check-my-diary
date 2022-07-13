@@ -19,7 +19,7 @@ context('Contact us functionality', () => {
   it('Link on pages takes user to contact us', () => {
     cy.task('stubLogin')
     cy.login()
-    Page.verifyOnPageTitle(CalendarPage, format(Date.now(), 'MMMM yyyy'))
+    Page.verifyOnPageTitle(CalendarPage, format(new Date(), 'MMMM yyyy'))
     cy.get('#contactUsLink').click()
     Page.verifyOnPage(ContactUsPage)
   })
