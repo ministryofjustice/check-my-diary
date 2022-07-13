@@ -4,7 +4,6 @@ import createError from 'http-errors'
 
 import setUpHealthChecks from './middleware/setUpHealthChecks'
 import setUpStaticResources from './middleware/setUpStaticResources'
-import userAuthenticationService from './services/userAuthenticationService'
 import createErrorHandler from './errorHandler'
 import ejsSetup from './utils/ejsSetup'
 import nunjucksSetup from './utils/nunjucksSetup'
@@ -34,11 +33,6 @@ export default function createApp(services: Services) {
   nunjucksSetup(app, path)
   ejsSetup(app, path)
   app.use(setUpAuth(services.userAuthenticationService))
-
-  // Add services to server
-  app.set('DataServices', {
-    userAuthenticationService,
-  })
 
   app.use('/', indexRouter(standardRouter(services.userAuthenticationService), services))
 
