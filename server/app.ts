@@ -4,7 +4,6 @@ import createError from 'http-errors'
 
 import setUpHealthChecks from './middleware/setUpHealthChecks'
 import setUpStaticResources from './middleware/setUpStaticResources'
-import userAuthenticationService from './services/userAuthenticationService'
 import createErrorHandler from './errorHandler'
 import ejsSetup from './utils/ejsSetup'
 import nunjucksSetup from './utils/nunjucksSetup'
