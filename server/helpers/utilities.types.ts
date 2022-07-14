@@ -8,13 +8,16 @@ export interface Details {
   start?: string
   end?: string
   parentType?: string
+  lineLeftText?: string
+  lineRightText?: string
 }
 
 export interface CalendarDay {
+  activity?: string
   date?: string
-  fullDayType: string
+  fullDayType?: string
   fullDayTypeDescription?: string
-  details?: Details[]
+  details: Details[]
   dateText?: string
   dateDayText?: string
 }

@@ -17,7 +17,9 @@ jest.mock('jwt-decode', () => {
   return () => rolesMock()
 })
 
-const calendarData = [{ date: new Date(), details: [{ displayType: 'DAY_START', start: new Date() }] }]
+const calendarData = [
+  { date: new Date(), details: [{ activity: 'Duty Manager', displayType: 'DAY_START', start: new Date() }] },
+]
 const notificationCount = 42
 const getCalendarMonthMock = jest.fn()
 const countUnprocessedNotificationsMock = jest.fn()
