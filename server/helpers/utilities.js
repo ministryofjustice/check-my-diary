@@ -65,37 +65,24 @@ const sortByDisplayType = (data) =>
     },
   )
 
-const removeShiftDetails = (details) =>
-  details.filter(
-    ({ start, end }) => moment(start).format(format) !== '00:00:00' || moment(end).format(format) !== '00:00:00',
-  )
-
 const humanizeNumber = (value, unit) => {
   if (value === 0) return ''
   return `${value} ${unit}${value > 1 ? 's' : ''}`
 }
 
 const getDuration = (duration) => {
+  if (!duration) {
+    return duration
+  }
   const raw = moment.duration(duration, 'seconds')
   return `${humanizeNumber(raw.hours(), 'hour')} ${humanizeNumber(raw.minutes(), 'minute')}`
 }
 
-const configureCalendarDay = (day) => {
-  const { fullDayType, details } = day
-  sortByDisplayType(details)
-  details.forEach(
-    (detail) => detail.finishDuration && Object.assign(detail, { finishDuration: getDuration(detail.finishDuration) }),
-  )
-  if (!['SHIFT', 'SECONDMENT', 'TRAINING_EXTERNAL', 'TRAINING_INTERNAL', 'TOIL'].includes(fullDayType))
-    Object.assign(day, { details: removeShiftDetails(details) })
-}
-
 const configureCalendar = (data, startDate = null) => {
   if (data.length === 0) return null
-  data.forEach(processDay)
-  sortByDate(data)
-  data.forEach(configureCalendarDay)
-  const startDateMoment = moment(startDate || data[0].date)
+  const processedData = data.map(processDay)
+  sortByDate(processedData)
+  const startDateMoment = moment(startDate || processedData[0].date)
   const pad = startDateMoment.day()
   const noDay = { fullDayType: 'no-day' }
   const prePad = new Array(pad).fill(noDay)
@@ -103,7 +90,7 @@ const configureCalendar = (data, startDate = null) => {
   const totalCalendarSize = Math.ceil(monthPadTotal / 7) * 7
   const postPad = new Array(totalCalendarSize - monthPadTotal).fill(noDay)
 
-  return [...prePad, ...data, ...postPad]
+  return [...prePad, ...processedData, ...postPad]
 }
 
 const getTaskText = (displayType) =>
@@ -125,10 +112,37 @@ const fullDayActivities = [
   { description: 'Annual Leave', class: 'absence' },
   { description: 'Sick', class: 'illness' },
   { description: 'Absence', class: 'absence' },
+  { description: 'Authorised Absence', class: 'absence' },
   { description: 'Union Duties', class: 'tu-official' },
+  { description: 'Union Facility', class: 'tu-official' },
   { description: 'Detached Duty', class: 'detached-duty' },
   { description: 'TOIL', class: 'otherType' },
 ]
+
+const getTypeClass = (type, isFullDay) => {
+  if (type === 'no-day') {
+    return type
+  }
+  if (!isFullDay) {
+    return ''
+  }
+  return (
+    {
+      REST_DAY: 'rest-day',
+      HOLIDAY: 'holiday',
+      ILLNESS: 'illness',
+      ABSENCE: 'absence',
+      NONE: 'no-day',
+      SHIFT: 'shift',
+      DETACHED_DUTY: 'detached-duty',
+      SECONDMENT: 'detached-duty',
+      TU_OFFICIALS_LEAVE_DAYS: 'tu-official',
+      TU_OFFICIALS_LEAVE_HOURS: 'tu-official',
+      TRAINING_EXTERNAL: 'training-external',
+      TRAINING_INTERNAL: 'training-internal',
+    }[type] || 'otherType'
+  )
+}
 
 const fullDayMatch = (desc) => {
   const foundValue = fullDayActivities.find((a) => desc.startsWith(a.description))
@@ -141,48 +155,69 @@ const unionFilter = (activity) =>
     : activity
 
 const processDay = (day) => {
-  const { date, details, fullDayType } = day
+  const { date, details, fullDayType, fullDayTypeDescription } = day
   const dateMoment = moment(date)
   const today = dateMoment.isSame(moment(), 'day')
 
-  const isFullDay = fullDayType !== 'NONE' && fullDayType !== 'SHIFT' && fullDayType !== 'no-day'
+  const isFullDay =
+    fullDayType !== 'NONE' &&
+    fullDayType !== 'SHIFT' &&
+    !details.some((detail) => detail.displayType === 'NIGHT_FINISH')
 
   let nightFinish = false
 
-  details.forEach((detail) => {
-    const { displayType, displayTypeTime, start, end, activity } = detail
-    const startText = start ? moment(start).format('HH:mm') : ''
-    const endText = end ? moment(end).format('HH:mm') : ''
+  const processedDetails = details
+    .filter(
+      ({ start, end }) =>
+        !(isFullDay && moment(start).format(format) === '00:00:00' && moment(end).format(format) === '00:00:00'),
+    )
+    .map((detail) => {
+      const { displayType, displayTypeTime, start, end, activity } = detail
+      const startText = start ? moment(start).format('HH:mm') : ''
+      const endText = end ? moment(end).format('HH:mm') : ''
 
-    if (displayType) {
-      const specialActivityColour = (!isFullDay && displayType.endsWith('START') && fullDayMatch(activity)) || ''
-      const showNightHr = nightFinish && displayType === 'NIGHT_START'
-      nightFinish = displayType === 'NIGHT_FINISH'
-      const durationColour = nightFinish
-        ? 'night_finish'
-        : (!isFullDay && displayType.endsWith('FINISH') && fullDayMatch(activity)) || ''
-      const activityText = `${getTaskText(displayType)}: ${moment(displayTypeTime).format('HH:mm')}`
-      Object.assign(detail, {
-        activity: activityText,
-        displayType: displayType.toLowerCase(),
-        activityDescription: unionFilter(activity),
-        specialActivityColour,
-        durationColour,
-        showNightHr,
-      })
-    } else {
-      const activityText = `${activity.startsWith('Break') ? 'Break' : activity}: ${startText} - ${endText}`
-      Object.assign(detail, { activity: activityText, displayType: '', displayTypeTime: start })
-    }
-  })
-  sortByDate(details, 'displayTypeTime')
-  Object.assign(day, {
+      if (displayType) {
+        const specialActivityColour = (!isFullDay && displayType.endsWith('START') && fullDayMatch(activity)) || ''
+        const specialActivityStartEndColour =
+          ((displayType.endsWith('START') || displayType.endsWith('FINISH')) && fullDayMatch(activity)) || ''
+        const showNightHr = nightFinish && displayType === 'NIGHT_START'
+        nightFinish = displayType === 'NIGHT_FINISH'
+        const durationColour = nightFinish
+          ? 'night_finish'
+          : (!isFullDay && displayType.endsWith('FINISH') && fullDayMatch(activity)) || ''
+        return {
+          ...detail,
+          lineLeftText: `${getTaskText(displayType)}: ${moment(displayTypeTime).format('HH:mm')}`,
+          lineRightText: specialActivityStartEndColour ? '' : unionFilter(activity),
+          displayType: specialActivityStartEndColour || displayType.toLowerCase(),
+          activityDescription: unionFilter(activity),
+          finishDuration: getDuration(detail.finishDuration),
+          specialActivityColour,
+          durationColour,
+          showNightHr,
+        }
+      }
+
+      return {
+        ...detail,
+        lineLeftText: `${activity.startsWith('Break') ? 'Break' : activity}: ${startText} - ${endText}`,
+        displayType: '',
+        displayTypeTime: start,
+      }
+    })
+
+  sortByDisplayType(processedDetails)
+
+  return {
+    ...day,
     today,
     dateText: dateMoment.format('D'),
     dateDayText: dateMoment.format('dddd D'),
-    details,
+    details: processedDetails,
     isFullDay,
-  })
+    fullDayType: getTypeClass(fullDayType, isFullDay),
+    fullDayTypeDescription: unionFilter(fullDayTypeDescription),
+  }
 }
 
 const hmppsAuthMFAUser = (token) => {

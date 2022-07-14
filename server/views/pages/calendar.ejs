@@ -64,15 +64,15 @@
         <h1 class="govuk-heading-m govuk-!-margin-top-3">Your shift detail</h1>
 
         <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-third">
+          <div class="strict-grid-column-one-third">
             <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/calendar/<%=previousMonth.link%>" data-qa="previous">
               < <%=previousMonth.text%>
             </a>
           </div>
-          <div class="govuk-grid-column-one-third">
+          <div class="strict-grid-column-one-third">
             <h1 class="govuk-heading-m govuk-!-margin-bottom-0 center-align" tabindex="0"><%=currentMonth%></h1>
           </div>
-          <div class="govuk-grid-column-one-third right-align">
+          <div class="strict-grid-column-one-third right-align">
             <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="/calendar/<%=nextMonth.link%>">
               <%=nextMonth.text%> >
             </a>
@@ -87,7 +87,7 @@
               <li class="calendar-header"><%= day %></li>
             <% }); %>
             <% data.forEach(({ today=false, fullDayType, fullDayTypeDescription, date, dateText, dateDayText, details, detailDetails, isFullDay }) => { %>
-            <li class="calendar-item <%= getTypeClass(fullDayType) %><% if (details === undefined) { %> no-day hide-0-to-1024<%}%>"  data-qa="<%= dateText %>">
+            <li class="calendar-item <%= fullDayType %><% if (details === undefined) { %> no-day hide-0-to-1024<%}%>"  data-qa="<%= dateText %>">
                 <%# Disable focussing on today only if banner shown AND on mobile device  %>
                 <% if (today) { %>
                   <span id="today"<% if (showBanner.notifications || showBanner.mfa) { %> class="hide-mobile"<% } %> ></span>
@@ -113,7 +113,7 @@
 
                       <div tabindex="0">
                         <% details !== null &&
-                        details.forEach(({ displayType, activity, finishDuration, activityDescription, specialActivityColour, durationColour, showNightHr }) => { %>
+                        details.forEach(({ displayType, lineLeftText, lineRightText, finishDuration, activityDescription, specialActivityColour, durationColour, showNightHr }) => { %>
                           <% if (specialActivityColour) { %>
                             <span class="line <%= specialActivityColour %>"><%= activityDescription %></span>
                           <% } %>
@@ -121,9 +121,9 @@
                             <% if (showNightHr) { %>
                               <hr />
                             <% } %>
-                            <span class="line-left"><%= activity %></span>
-                            <% if (activityDescription && activityDescription !== fullDayTypeDescription) { %>
-                              <span class="line-right <%= displayType %>"><%= activityDescription %></span>
+                            <span class="line-left"><%= lineLeftText %></span>
+                            <% if (lineRightText) { %>
+                              <span class="line-right <%= displayType %>"><%= lineRightText %></span>
                             <% } %>
                           </span>
                           <% if (finishDuration) { %>

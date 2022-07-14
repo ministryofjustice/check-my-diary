@@ -5,26 +5,28 @@ import type { CalendarDay, Details } from './utilities.types'
 jest.mock('jwt-decode', () => (token: string) => token)
 
 describe('configureCalendar', () => {
-  const none = { date: '2020-08-03', fullDayType: 'None', details: [] }
-  const rest = { date: '2020-08-02', fullDayType: 'Rest Day', details: [] }
+  const none = { date: '2020-08-03', activity: 'act-3', details: [] }
+  const rest = { date: '2020-08-02', activity: 'act-2', details: [] }
   const noDay = { fullDayType: 'no-day' }
-  let shift: CalendarDay
-  let returnedData: CalendarDay[] | null
+  const shift: CalendarDay = { date: '2020-08-01', activity: 'act-1', details: [] }
+  let returnedData: CalendarDay[]
   beforeEach(() => {
-    shift = { date: '2020-08-01', fullDayType: 'Shift', details: [] }
-    returnedData = configureCalendar([none, rest, shift, ...new Array(28).fill(none)])
+    returnedData = configureCalendar([none, rest, shift, ...new Array(28).fill(none)]) as CalendarDay[]
   })
   it('should return an array of objects', () => {
-    expect(returnedData).toEqual(expect.arrayContaining([none, shift, rest, noDay]))
+    expect(returnedData).toHaveLength(42)
   })
   it('should prepend the "no day" elements to the start of the array', () => {
-    expect(returnedData?.slice(0, 6)).toEqual(new Array(6).fill(noDay))
+    expect(returnedData.slice(0, 6)).toEqual(new Array(6).fill(noDay))
   })
   it('should append the "no day" elements to the end of the array', () => {
-    expect(returnedData?.slice(-5)).toEqual(new Array(5).fill(noDay))
+    expect(returnedData.slice(-5)).toEqual(new Array(5).fill(noDay))
   })
   it('should order the array elements by date', () => {
-    expect(returnedData?.slice(6, 36)).toEqual([shift, rest, ...new Array(28).fill(none)])
+    expect(returnedData[6].date).toEqual('2020-08-01')
+    expect(returnedData[7].date).toEqual('2020-08-02')
+    expect(returnedData[8].date).toEqual('2020-08-03')
+    expect(returnedData[9].date).toEqual('2020-08-03')
   })
 })
 
@@ -37,43 +39,34 @@ describe('processDay', () => {
   let dayNights: CalendarDay
   beforeEach(() => {
     detail1 = {
+      activity: 'Duty Manager',
       displayTypeTime: '2020-08-03T07:15:00',
       displayType: 'DAY_START',
       finishDuration: null,
-
-      // TODO: seems to be confusion here;
-      //  detail contents seem to be wrong - e.g. from real run:
-      // {
-      //   "activity": "Rest Day",
-      //   "start": "2021-11-07T00:00:00",
-      //   "end": "2021-11-07T00:00:00",
-      //   "parentType": "SHIFT",
-      //   "displayType": null,
-      //   "displayTypeTime": null,
-      //   "finishDuration": null
-      // }
     }
     detail2 = {
+      activity: 'Duty Manager',
       displayTypeTime: '2020-08-03T17:00:00',
       displayType: 'DAY_FINISH',
       finishDuration: 8 * 3600 + 45 * 60,
     }
     detail3 = {
+      activity: 'Duty Manager',
       displayTypeTime: '2020-08-04T00:00:00',
       displayType: 'ALL_DAY',
       finishDuration: 86400,
     }
-    day1 = {
+    const day1Input = {
       date: '2020-08-03',
       fullDayType: 'Shift',
       details: [detail2, detail1],
     }
-    day2 = {
+    const day2Input = {
       date: '2020-08-04',
       fullDayType: 'Shift',
       details: [detail3],
     }
-    dayNights = {
+    const dayNightsInput = {
       date: '2020-03-27',
       fullDayType: 'SHIFT',
       fullDayTypeDescription: 'Shift',
@@ -97,8 +90,9 @@ describe('processDay', () => {
         },
       ],
     }
-    processDay(day1)
-    processDay(day2)
+    day1 = processDay(day1Input)
+    day2 = processDay(day2Input)
+    dayNights = processDay(dayNightsInput)
   })
   it('should set the date text', () => {
     expect(day1.dateText).toBe('3')
@@ -106,23 +100,21 @@ describe('processDay', () => {
   it('should set the date day text', () => {
     expect(day1.dateDayText).toBe('Monday 3')
   })
-  it('should set the activity text for the details', () => {
-    expect(detail1.activity).toBe('Start: 07:15')
-    expect(detail2.activity).toBe('Finish: 17:00')
-  })
-  it('should order the details by displayTypeTime', () => {
-    expect(day1.details).toEqual([detail1, detail2])
+  it('should set the activity text for the details and order by displayTypeTime', () => {
+    expect(day1.details[0].lineLeftText).toBe('Start: 07:15')
+    expect(day1.details[1].lineLeftText).toBe('Finish: 17:00')
   })
   it('should display a line and duration in black for consecutive night shifts', () => {
-    processDay(dayNights)
     expect(dayNights.details).toEqual([
       {
-        activity: 'Night shift finish: 04:30',
+        activity: 'Night Duties',
+        lineLeftText: 'Night shift finish: 04:30',
+        lineRightText: 'Night Duties',
         activityDescription: 'Night Duties',
         displayType: 'night_finish',
         displayTypeTime: '2020-03-27T04:30:00',
         end: '2020-03-27T04:30:00',
-        finishDuration: 32400,
+        finishDuration: '9 hours ',
         parentType: 'SHIFT',
         showNightHr: false,
         start: '2020-03-26T22:30:00',
@@ -130,7 +122,9 @@ describe('processDay', () => {
         specialActivityColour: '',
       },
       {
-        activity: 'Night shift start: 22:45',
+        activity: 'Night Duties',
+        lineLeftText: 'Night shift start: 22:45',
+        lineRightText: 'Night Duties',
         activityDescription: 'Night Duties',
         displayType: 'night_start',
         displayTypeTime: '2020-03-27T22:45:00',
@@ -209,8 +203,7 @@ describe('sortByDisplayType', () => {
 
 const processDetailWrapper = (detail: Details) => {
   const day = { details: [detail], date: '2022-05-25', fullDayType: 'NONE' }
-  processDay(day)
-  return day.details[0]
+  return processDay(day).details[0]
 }
 
 describe('processDetail', () => {
@@ -240,7 +233,9 @@ describe('processDetail', () => {
     describe('with basic start data', () => {
       it('should produce readable time stamps', () => {
         expect(processDetailWrapper(detail1)).toEqual({
-          activity: 'Start: 10:00',
+          lineLeftText: 'Start: 10:00',
+          lineRightText: activity,
+          activity,
           activityDescription: activity,
           start: '2020-07-08T10:00:00',
           end: '2020-07-08T16:30:00',
@@ -255,7 +250,9 @@ describe('processDetail', () => {
     describe('with basic finish data', () => {
       it('should produce readable time stamps', () => {
         expect(processDetailWrapper(detail2a)).toEqual({
-          activity: 'Finish: 16:30',
+          lineLeftText: 'Finish: 16:30',
+          lineRightText: activity,
+          activity,
           activityDescription: activity,
           start: '2020-07-08T10:00:00',
           end: '2020-07-08T16:30:00',
@@ -270,7 +267,9 @@ describe('processDetail', () => {
     describe('with unique shift data in the finish data', () => {
       it('should return an array containing an activity detail and a finish detail', () => {
         expect(processDetailWrapper(detail2b)).toEqual({
-          activity: 'Finish: 16:30',
+          lineLeftText: 'Finish: 16:30',
+          lineRightText: activity,
+          activity,
           activityDescription: activity,
           start: '2020-07-08T14:00:00',
           end: '2020-07-08T16:30:00',
@@ -309,7 +308,9 @@ describe('processDetail', () => {
     describe('with basic overtime start data', () => {
       it('should produce readable time stamps', () => {
         expect(processDetailWrapper(detail3)).toEqual({
-          activity: 'Overtime start: 12:00',
+          lineLeftText: 'Overtime start: 12:00',
+          lineRightText: activity2,
+          activity: activity2,
           activityDescription: activity2,
           start: '2020-07-08T12:00:00',
           end: '2020-07-08T14:00:00',
@@ -324,7 +325,9 @@ describe('processDetail', () => {
     describe('with basic overtime finish data', () => {
       it('should return an overtime finish detail', () => {
         expect(processDetailWrapper(detail4a)).toEqual({
-          activity: 'Overtime finish: 14:00',
+          lineLeftText: 'Overtime finish: 14:00',
+          lineRightText: activity2,
+          activity: activity2,
           activityDescription: activity2,
           start: '2020-07-08T12:00:00',
           end: '2020-07-08T14:00:00',
@@ -339,7 +342,9 @@ describe('processDetail', () => {
     describe('with unique shift data in the overtime finish data', () => {
       it('should return an array containing an activity detail and an overtime finish detail', () => {
         expect(processDetailWrapper(detail4b)).toEqual({
-          activity: 'Overtime finish: 14:00',
+          lineLeftText: 'Overtime finish: 14:00',
+          lineRightText: activity2,
+          activity: activity2,
           activityDescription: activity2,
           start: '2020-07-08T13:00:00',
           end: '2020-07-08T14:00:00',

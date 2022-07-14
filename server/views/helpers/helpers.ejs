@@ -5,20 +5,6 @@
    */
   getDays = () => ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-  getTypeClass = type => ({
-      'REST_DAY': 'rest-day',
-      'HOLIDAY': 'holiday',
-      'ILLNESS': 'illness',
-      'ABSENCE' : 'absence',
-      'NONE': 'no-day',
-      'SHIFT': 'shift',
-      'DETACHED_DUTY': 'detached-duty',
-      'TU_OFFICIALS_LEAVE_DAYS': 'tu-official',
-      'TU_OFFICIALS_LEAVE_HOURS': 'tu-official',
-      'TRAINING_EXTERNAL': 'training-external',
-      'TRAINING_INTERNAL': 'training-internal',
-    }[type] || 'otherType');
-
   forenameToInitial = (name) => {
       if (!name) return null
       return `${name.charAt()}. ${name.split(' ').pop()}`

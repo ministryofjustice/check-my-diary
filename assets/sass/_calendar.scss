@@ -40,7 +40,6 @@ ul.calendar {
 
   .rest-day,
   .holiday,
-  .shift,
   .illness,
   .absence,
   .detached-duty,
@@ -50,33 +49,38 @@ ul.calendar {
   .otherType,
   .no-day {
     text-decoration: none;
-    color: govuk-colour('black');
     @include app-breakpoint {
       height: auto;
     }
   }
 
   .rest-day {
+    color: govuk-colour('white');
     background-color: govuk-colour('orange');
   }
 
   .holiday, .absence, .training-external, .training-internal, .otherType {
+    color: govuk-colour('black');
     background-color: govuk-colour('yellow');
   }
 
   .illness {
+    color: govuk-colour('white');
     background-color: govuk-colour('light-green');
   }
 
   .detached-duty {
+    color: govuk-colour('white');
     background-color: govuk-colour('brown');
   }
 
   .tu-official {
+    color: govuk-colour('white');
     background-color: govuk-colour('pink');
   }
 
   .no-day {
+    color: govuk-colour('black');
     background-color: govuk-colour('light-grey');
 
     @include app-breakpoint {
@@ -120,7 +124,6 @@ ul.calendar {
       padding: 3px 0 3px 5px;
       min-height: 15px;
       overflow: auto;
-      color: govuk-colour('black');
 
       @include app-breakpoint {
         padding: 15px 10px 15px 10px;
@@ -166,4 +169,9 @@ ul.calendar {
     margin: 0 10px 20px 10px;
     padding: 0 0 0 0;
   }
+}
+
+.strict-grid-column-one-third {
+  width: 33%;
+  float: left;
 }
