@@ -33,9 +33,7 @@ describe('configureCalendar', () => {
 describe('processDay', () => {
   let detail1: Details
   let detail2: Details
-  let detail3: Details
   let day1: CalendarDay
-  let day2: CalendarDay
   let dayNights: CalendarDay
   beforeEach(() => {
     detail1 = {
@@ -50,21 +48,10 @@ describe('processDay', () => {
       displayType: 'DAY_FINISH',
       finishDuration: 8 * 3600 + 45 * 60,
     }
-    detail3 = {
-      activity: 'Duty Manager',
-      displayTypeTime: '2020-08-04T00:00:00',
-      displayType: 'ALL_DAY',
-      finishDuration: 86400,
-    }
     const day1Input = {
       date: '2020-08-03',
       fullDayType: 'Shift',
       details: [detail2, detail1],
-    }
-    const day2Input = {
-      date: '2020-08-04',
-      fullDayType: 'Shift',
-      details: [detail3],
     }
     const dayNightsInput = {
       date: '2020-03-27',
@@ -91,7 +78,6 @@ describe('processDay', () => {
       ],
     }
     day1 = processDay(day1Input)
-    day2 = processDay(day2Input)
     dayNights = processDay(dayNightsInput)
   })
   it('should set the date text', () => {
