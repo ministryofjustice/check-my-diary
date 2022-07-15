@@ -6,12 +6,10 @@ import baseUrl from '../config'
 
 export default class CalendarService {
   public async getCalendarMonth(startDate: string, accessToken: string): Promise<Array<ShiftDto>> {
-    return this.getCalendarData(moment(startDate).format('YYYY-MM-01'), this.getEndDate(startDate), accessToken)
-  }
-
-  public async getCalendarDay(startDate: string, accessToken: string): Promise<ShiftDto> {
-    return this.getCalendarMonth(startDate, accessToken).then((month: Array<ShiftDto>) =>
-      month.find(({ date }) => startDate === date),
+    return this.getCalendarData(
+      moment(startDate).format('YYYY-MM-01'),
+      CalendarService.getEndDate(startDate),
+      accessToken,
     )
   }
 
@@ -29,7 +27,7 @@ export default class CalendarService {
       })
   }
 
-  private getEndDate(startDate: string): string {
+  private static getEndDate(startDate: string): string {
     return moment(startDate).endOf('month').format('YYYY-MM-DD')
   }
 }

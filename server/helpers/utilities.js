@@ -110,6 +110,8 @@ const fullDayActivities = [
   // from cmd-api FullDayActivityType
   { description: 'Rest Day', class: 'rest-day' },
   { description: 'Annual Leave', class: 'absence' },
+  { description: 'Training - Internal', class: 'training-internal' },
+  { description: 'Training - External', class: 'training-external' },
   { description: 'Sick', class: 'illness' },
   { description: 'Absence', class: 'absence' },
   { description: 'Authorised Absence', class: 'absence' },
@@ -140,6 +142,8 @@ const getTypeClass = (type, isFullDay) => {
       TU_OFFICIALS_LEAVE_HOURS: 'tu-official',
       TRAINING_EXTERNAL: 'training-external',
       TRAINING_INTERNAL: 'training-internal',
+      NIGHT_FINISH: 'night_finish',
+      OVERTIME_NIGHT_FINISH: 'overtime_night_finish',
     }[type] || 'otherType'
   )
 }
@@ -180,10 +184,10 @@ const processDay = (day) => {
         const specialActivityColour = (!isFullDay && displayType.endsWith('START') && fullDayMatch(activity)) || ''
         const specialActivityStartEndColour =
           ((displayType.endsWith('START') || displayType.endsWith('FINISH')) && fullDayMatch(activity)) || ''
-        const showNightHr = nightFinish && displayType === 'NIGHT_START'
-        nightFinish = displayType === 'NIGHT_FINISH'
+        const showNightHr = nightFinish && displayType === 'NIGHT_START' // dont show a <hr> for night overtime because the start/end colours are different
+        nightFinish = displayType === 'NIGHT_FINISH' || displayType === 'OVERTIME_NIGHT_FINISH'
         const durationColour = nightFinish
-          ? 'night_finish'
+          ? getTypeClass(displayType, true)
           : (!isFullDay && displayType.endsWith('FINISH') && fullDayMatch(activity)) || ''
         return {
           ...detail,
