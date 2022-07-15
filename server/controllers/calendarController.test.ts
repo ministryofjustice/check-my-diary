@@ -82,7 +82,7 @@ describe('CalendarController', () => {
     })
     it('should get banner info', () => {
       expect(notificationPreferencesMock).toHaveBeenCalledTimes(1)
-      expect(getUserMfaMock).toHaveBeenCalledTimes(1)
+      expect(getUserMfaMock).not.toHaveBeenCalled()
       expect(getUserAuthenticationDetailsMock).toHaveBeenCalledTimes(1)
     })
     it('should not call the next function', () => {
@@ -136,6 +136,7 @@ describe('CalendarController', () => {
       getUserAuthenticationDetailsMock.mockResolvedValue([])
 
       await calendarController().getDate(req, res)
+      expect(getUserMfaMock).toHaveBeenCalledWith(token)
       expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: false,

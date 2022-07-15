@@ -8,7 +8,7 @@ context('A staff member can view their notifications', () => {
     cy.task('stubLogin')
     cy.task('stubShifts')
     cy.task('stubNotificationCount')
-
+    cy.task('stubGetMyMfaSettings', { backupVerified: true, mobileVerified: true, emailVerified: true })
     cy.login()
   })
 

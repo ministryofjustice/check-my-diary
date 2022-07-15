@@ -7,6 +7,7 @@ import log from '../../log'
 import config from '../config'
 import utilities from '../helpers/utilities'
 import type { UserAuthenticationService } from '../services'
+import sanitiseError from '../sanitisedError'
 
 const processError = (error: Error, req: Request, res: Response) => {
   const data = {
@@ -111,8 +112,9 @@ export default function loginRouter(userAuthenticationService: UserAuthenticatio
         res.redirect(`/calendar/${utilities.getStartMonth()}#today`)
       }
     } catch (error) {
-      log.error(error, `Unexpected login error, user = ${res.locals.user}`)
-      next(error)
+      const sanitisedError = sanitiseError(error)
+      log.error(sanitisedError, `Unexpected login error, user = ${res.locals.user}`)
+      next(sanitisedError)
     }
   }
 

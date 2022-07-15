@@ -14,6 +14,7 @@ context('Contact us functionality', () => {
     cy.task('stubShifts')
     cy.task('stubNotificationCount')
     cy.task('stubNotificationPreferencesGet', {})
+    cy.task('stubGetMyMfaSettings', { backupVerified: true, mobileVerified: true, emailVerified: true })
   })
 
   it('Link on pages takes user to contact us', () => {
