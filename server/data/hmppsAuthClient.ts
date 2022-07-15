@@ -1,4 +1,3 @@
-import logger from '../../log'
 import config from '../config'
 import RestClient from './restClient'
 
@@ -14,7 +13,6 @@ export default class HmppsAuthClient {
   }
 
   getMfa(token: string): Promise<UserMfa> {
-    logger.info(`Getting mfa details: calling HMPPS Auth`)
     return HmppsAuthClient.restClient(token).get({ path: '/api/user/me/mfa' }) as Promise<UserMfa>
   }
 }

@@ -154,7 +154,7 @@ describe('CalendarController', () => {
         mfa: FIRST_TIME_USER,
       })
     })
-    it('should show nothing for users without the role', async () => {
+    it('should show banner for non-existing users without the role', async () => {
       rolesMock.mockReturnValue({ authorities: ['ROLE_OTHER'] })
       notificationPreferencesMock.mockResolvedValue({ preference: NotificationType.EMAIL })
       getUserMfaMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
@@ -164,7 +164,7 @@ describe('CalendarController', () => {
       expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: false,
-        mfa: '',
+        mfa: FIRST_TIME_USER,
       })
     })
     it('should show nothing when EXISTING_USER dismissed', async () => {

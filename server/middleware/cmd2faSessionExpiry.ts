@@ -13,9 +13,8 @@ export default class CmdSessionExpiry {
   ) {
     try {
       if (hmppsAuthMFAUser) return next()
-      const userSessionExpiryDateTime = (await this.userAuthenticationService.getSessionExpiryDateTime(username)) || [
-        {},
-      ]
+      const userSessionExpiryDateTime = await this.userAuthenticationService.getSessionExpiryDateTime(username)
+      if (userSessionExpiryDateTime.length === 0) return next()
       const [{ SessionExpiryDateTime }] = userSessionExpiryDateTime
       if (SessionExpiryDateTime && moment().isBefore(moment(SessionExpiryDateTime))) return next()
       return res.redirect('/auth/login')

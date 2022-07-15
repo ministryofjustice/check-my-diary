@@ -3,7 +3,6 @@ import { format } from 'date-fns'
 import Page from '../pages/page'
 import CalendarPage from '../pages/calendarPage'
 import AuthSignInPage from '../pages/authSignIn'
-import NotSignedUpPage from '../pages/notSignedUpPage'
 
 context('Sign in functionality', () => {
   before(() => {
@@ -18,6 +17,7 @@ context('Sign in functionality', () => {
       preference: 'EMAIL',
       email: 'me@gmail.com',
     })
+    cy.task('stubGetMyMfaSettings', { backupVerified: false, mobileVerified: false, emailVerified: false })
   })
 
   it('Root (/) redirects to the auth sign in page if not signed in', () => {
@@ -76,7 +76,6 @@ context('Sign in functionality', () => {
     cy.request('/').its('body').should('contain', 'Sign in')
 
     cy.task('stubVerifyToken', true)
-    cy.task('stubGetMyMfaSettings', { backupVerified: false, mobileVerified: false, emailVerified: false })
     cy.task('token', { username: 'BBROWN', employeeName: 'Bobby Brown', authorities: ['ROLE_CMD_MIGRATED_MFA'] })
     cy.login()
 
@@ -90,17 +89,16 @@ context('Sign in functionality', () => {
     calendarPage.headerUsername().contains('S. Itag')
   })
 
-  it('User is signed in and no auth role setup', () => {
+  it('Non CMD User is signed in and no auth role setup', () => {
     cy.task('stubLogin', { username: 'UNKNOWN' })
     cy.task('stubNotificationPreferencesGet', {})
     cy.login()
-    const page = NotSignedUpPage.verifyOnPage(NotSignedUpPage)
-    page.errorSummary().contains('You have not been setup on Check My Diary')
+    const page = Page.verifyOnPageTitle(CalendarPage, format(new Date(), 'MMMM yyyy'))
+    page.banner().contains('You need to set up two-factor authentication ')
   })
 
   it('Auth 2fa user sign in direct access to /auth/login should redirect', () => {
     cy.task('stubLogin', { username: 'AUTH_USER', authorities: ['ROLE_CMD_MIGRATED_MFA'] })
-    cy.task('stubGetMyMfaSettings', { backupVerified: false, mobileVerified: false, emailVerified: false })
     cy.task('stubNotificationPreferencesGet', {})
 
     cy.request('/auth/login')

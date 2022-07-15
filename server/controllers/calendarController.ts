@@ -34,8 +34,8 @@ export default class CalendarController {
       this.notificationService.countUnprocessedNotifications(token),
       this.notificationService.getPreferences(token),
       this.calendarService.getCalendarMonth(date, token),
-      isMfa ? this.userService.getUserMfa(token) : { backupVerified: false, mobileVerified: false },
-      isMfa ? this.userAuthenticationService.getUserAuthenticationDetails(username) : [],
+      this.userService.getUserMfa(token),
+      this.userAuthenticationService.getUserAuthenticationDetails(username),
     ])
 
     const notifications = preferences.preference === NotificationType.SMS
@@ -44,11 +44,8 @@ export default class CalendarController {
       const alreadyDismissedExisting = this.notificationCookieService.alreadyDismissed(req, EXISTING_USER)
       const alreadyDismissedNew = this.notificationCookieService.alreadyDismissed(req, NEW_USER)
 
-      if (!isMfa) {
-        return ''
-      }
-      if (userAuthenticationDetails && userAuthenticationDetails.length > 0) {
-        if (!alreadyDismissedExisting && !notifications) {
+      if (userAuthenticationDetails.length > 0) {
+        if (isMfa && !alreadyDismissedExisting && !notifications) {
           return EXISTING_USER
         }
       } else if (authMfa.backupVerified || authMfa.mobileVerified) {

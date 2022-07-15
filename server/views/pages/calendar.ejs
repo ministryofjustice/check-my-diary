@@ -33,28 +33,30 @@
               <% switch (showBanner.mfa) {
               case mfaBannerType.EXISTING_USER: %>
                 <%# Existing user (already uses CMD) %>
-                You can manage your two-factor authentication settings on the <a
+                You can manage your two-factor authentication (2FA) settings on the <a
                         class="govuk-notification-banner__link" href="<%= authUrl %>/account-details">Manage your details</a> page.
                 You can also access this via the top bar.
-                You no longer need to contact the support team to change these settings.
-                <br />
+                <p>You no longer need to contact the support team to change these settings.</p>
                 <p class="govuk-!-margin-top-2"><a class="govuk-link govuk-link--no-visited-state notification_dismiss_link" id="EXISTING_USER" href="#">Dismiss</a></p>
               <% break;
               case mfaBannerType.NEW_USER: %>
-                <%# New user (DPS with 2FA) %>
-                You can manage your two-factor authentication settings on the <a
+                <%# (existing DPS user with 2FA, new to CMD) %>
+                You can manage your two-factor authentication (2FA) settings on the <a
                         class="govuk-notification-banner__link" href="<%= authUrl %>/account-details">Manage your details</a> page.
-                You can also access this via the top bar.
-                Once signed in, you can change these settings from inside or outside an establishment.
-                <br />
+                <p>Once signed in, you can change these settings from inside or outside an establishment.</p>
+                <p>You can also receive emails when your shifts change. Set this up by entering your personal email address on the <a
+                          class="govuk-notification-banner__link" href="/notifications/settings">Notifications</a> page.</p>
+                <p>You can change your 2FA and notifications settings by following the links in the top bar.</p>
                 <p class="govuk-!-margin-top-2"><a class="govuk-link govuk-link--no-visited-state notification_dismiss_link" id="NEW_USER" href="#">Dismiss</a></p>
               <% break;
               case mfaBannerType.FIRST_TIME_USER:  %>
-                <%# First-time user (DPS without 2FA) %>
-                You need to set up two-factor authentication to help secure access to your account.
-                You must add a backup personal email address or phone number on the <a
-                        class="govuk-notification-banner__link" href="<%= authUrl %>/account-details">Manage your details</a> page.
-                We will use this to confirm it’s you signing in to your account.
+                <%# (existing DPS user without 2FA, new to CMD) %>
+                You need to set up two-factor authentication (2FA) to help secure access to your account.
+                <p>You must add a backup personal email address or phone number on the <a
+                          class="govuk-notification-banner__link" href="<%= authUrl %>/account-details">Manage your details</a> page.</p>
+                <p>We will use this to confirm it’s you signing in to your account. You will have to be outside the establishment to verify the email address or phone number.</p>
+                <p>You can also receive emails when your shifts change. Set this up by entering your personal email address on the <a
+                          class="govuk-notification-banner__link" href="/notifications/settings">Notifications</a> page.</p>
               <% break;
               } %>
             </div>

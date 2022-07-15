@@ -17,6 +17,7 @@ context('A staff member can view their overtime calendar', () => {
       preference: 'EMAIL',
       email: 'me@gmail.com',
     })
+    cy.task('stubGetMyMfaSettings', { backupVerified: false, mobileVerified: false, emailVerified: false })
     cy.login()
 
     Page.verifyOnPageTitle(CalendarPage, format(new Date(), 'MMMM yyyy'))
