@@ -46,11 +46,11 @@ context('A staff member can view their calendar', () => {
     })
 
     calendarPage.day(6).within(() => {
-      cy.get('span.line').eq(0).contains('Start: 07:45')
       cy.get('span.line').eq(0).contains('Training - Internal')
-      cy.get('span.line').eq(1).contains('Finish: 19:30')
-      cy.get('span.line').eq(1).contains('Training - Internal')
-      cy.get('span.line').eq(2).contains('10 hours 15 minutes')
+      cy.get('span.line').eq(1).contains('Start: 07:45')
+      cy.get('span.line').eq(1).should('not.contain', 'Training - Internal')
+      cy.get('span.line').eq(2).contains('Finish: 19:30')
+      cy.get('span.line').eq(3).contains('10 hours 15 minutes')
     })
 
     calendarPage
@@ -81,8 +81,8 @@ context('A staff member can view their calendar', () => {
     cy.visit('/calendar/2020-03-01')
     const calendarPage = Page.verifyOnPageTitle(CalendarPage, 'March 2020')
 
-    calendarPage.detailStart(6).should('contain', 'Start: 07:45').should('contain', 'Training - Internal')
-    calendarPage.detailFinish(6).should('contain.text', 'Finish: 19:30')
+    calendarPage.detailStart(17).should('contain', 'Start: 07:30')
+    calendarPage.detailFinish(17).should('contain.text', 'Finish: 12:45')
   })
 
   it('A staff member can see a night shift', () => {
