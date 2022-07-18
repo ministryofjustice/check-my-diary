@@ -30,40 +30,39 @@ export default class CalendarController {
 
     const isMfa = hmppsAuthMFAUser(token)
 
-    const [notificationCount, preferences, month, authMfa, userAuthenticationDetails] = await Promise.all([
+    const [notificationCount, preferences, month, userAuthenticationDetails] = await Promise.all([
       this.notificationService.countUnprocessedNotifications(token),
       this.notificationService.getPreferences(token),
       this.calendarService.getCalendarMonth(date, token),
-      isMfa ? this.userService.getUserMfa(token) : { backupVerified: false, mobileVerified: false },
-      isMfa ? this.userAuthenticationService.getUserAuthenticationDetails(username) : [],
+      this.userAuthenticationService.getUserAuthenticationDetails(username),
     ])
 
     const notifications = preferences.preference === NotificationType.SMS
 
-    const computeBanner = () => {
+    const computeBanner = async () => {
       const alreadyDismissedExisting = this.notificationCookieService.alreadyDismissed(req, EXISTING_USER)
       const alreadyDismissedNew = this.notificationCookieService.alreadyDismissed(req, NEW_USER)
 
-      if (!isMfa) {
-        return ''
-      }
-      if (userAuthenticationDetails && userAuthenticationDetails.length > 0) {
-        if (!alreadyDismissedExisting && !notifications) {
+      if (userAuthenticationDetails.length > 0) {
+        if (isMfa && !alreadyDismissedExisting && !notifications) {
           return EXISTING_USER
         }
-      } else if (authMfa.backupVerified || authMfa.mobileVerified) {
-        if (!alreadyDismissedNew && !notifications) {
-          return NEW_USER
-        }
       } else {
-        return FIRST_TIME_USER
+        const authMfa = await this.userService.getUserMfa(token)
+        if (authMfa.backupVerified || authMfa.mobileVerified) {
+          if (!alreadyDismissedNew && !notifications) {
+            return NEW_USER
+          }
+        } else {
+          return FIRST_TIME_USER
+        }
       }
       return ''
     }
 
     const showBanner = {
       notifications,
-      mfa: computeBanner(),
+      mfa: await computeBanner(),
     }
     const data = configureCalendar(month)
     const currentMonthMoment = moment(date)

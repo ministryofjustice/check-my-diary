@@ -143,9 +143,9 @@ context('A staff member can view their calendar', () => {
     calendarPage.banner().should('not.exist')
   })
 
-  it('First time user banner is shown', () => {
+  it('First time user banner is shown, no role', () => {
     cy.task('stubGetMyMfaSettings', { backupVerified: false, mobileVerified: false, emailVerified: true })
-    cy.task('stubLogin', { username: 'AUTH_USER', authorities: ['ROLE_CMD_MIGRATED_MFA'] })
+    cy.task('stubLogin', { username: 'AUTH_USER', authorities: [] })
     cy.login()
     const calendarPage = Page.verifyOnPageTitle(CalendarPage)
     calendarPage.banner().contains('You must add a backup personal email address or phone number')

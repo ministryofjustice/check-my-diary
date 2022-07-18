@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express'
+import { NextFunction, Request, Response, Router } from 'express'
 import { NotifyClient } from 'notifications-node-client'
 import ipRangeCheck from 'ip-range-check'
 
@@ -7,15 +7,15 @@ import log from '../../log'
 import config from '../config'
 import utilities from '../helpers/utilities'
 import type { UserAuthenticationService } from '../services'
+import sanitiseError from '../sanitisedError'
 
-const processError = (error: Error, req: Request, res: Response, userNotSignedUpMessage: boolean) => {
+const processError = (error: Error, req: Request, res: Response) => {
   const data = {
     response: res,
     stack: error.stack,
     message: req.user.username,
     id: req.user.username,
     authError: true,
-    showUserNotSignedUpMessage: userNotSignedUpMessage,
     authErrorText: utilities.getAuthErrorDescription(error),
   }
 
@@ -34,34 +34,20 @@ export default function loginRouter(userAuthenticationService: UserAuthenticatio
   const notifySmsTemplate = smsTemplateId || ''
   const notifyEmailTemplate = emailTemplateId || ''
 
-  const postLogin = async (req: Request, res: Response) => {
-    // break out for auth users - shouldn't have got to this page anyway
-    if (req.hmppsAuthMFAUser) {
+  const postLogin = async (req: Request, res: Response, next: NextFunction) => {
+    const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
+
+    // break out for auth users
+    if (req.hmppsAuthMFAUser || userAuthenticationDetails.length === 0) {
       res.redirect(`/calendar/${utilities.getStartMonth()}#today`)
       return
     }
 
     const ipAddress = req.get('x-forwarded-for') || req.socket.remoteAddress || ''
 
-    let userNotSignedUpMessage = false
-
     try {
-      const userAuthenticationDetails = await userAuthenticationService.getUserAuthenticationDetails(req.user.username)
-
-      if (userAuthenticationDetails === null || userAuthenticationDetails.length === 0) {
-        processError(
-          new Error(`Error : No Sms or Email address returned for QuantumId : ${req.user.username}`),
-          req,
-          res,
-          true,
-        )
-        return
-      }
-
       const quantumAddresses = config.quantumAddresses.split(',')
       if (config.twoFactorAuthOn === 'true' && !ipRangeCheck(ipAddress, quantumAddresses)) {
-        userNotSignedUpMessage = false
-
         // eslint-disable-next-line no-shadow
         const userAuthentication = userAuthenticationDetails[0]
 
@@ -73,7 +59,6 @@ export default function loginRouter(userAuthenticationService: UserAuthenticatio
             new Error(`Error : Sms or Email address null or empty for QuantumId : ${req.user.username}`),
             req,
             res,
-            userNotSignedUpMessage,
           )
           return
         }
@@ -86,7 +71,6 @@ export default function loginRouter(userAuthenticationService: UserAuthenticatio
             new Error(`Error : Sms or Email address both set to false for QuantumId : ${req.user.username}`),
             req,
             res,
-            userNotSignedUpMessage,
           )
           return
         }
@@ -128,7 +112,9 @@ export default function loginRouter(userAuthenticationService: UserAuthenticatio
         res.redirect(`/calendar/${utilities.getStartMonth()}#today`)
       }
     } catch (error) {
-      processError(error, req, res, userNotSignedUpMessage)
+      const sanitisedError = sanitiseError(error)
+      log.error(sanitisedError, `Unexpected login error, user = ${res.locals.user}`)
+      next(sanitisedError)
     }
   }
 
