@@ -606,6 +606,14 @@ export default [
         displayTypeTime: '2020-03-23T07:30:00',
         finishDuration: 32400,
       },
+      {
+        activity: 'CCTV',
+        start: '2020-03-23T23:30:00',
+        end: '2020-03-24T05:30:00',
+        parentType: 'OVERTIME',
+        displayType: 'OVERTIME_NIGHT_START',
+        displayTypeTime: '2020-03-23T23:30:00',
+      },
     ],
   },
   {
@@ -613,6 +621,14 @@ export default [
     fullDayType: 'SHIFT',
     fullDayTypeDescription: 'Shift',
     details: [
+      {
+        activity: 'CCTV',
+        start: '2020-03-23T23:30:00',
+        end: '2020-03-24T05:30:00',
+        parentType: 'OVERTIME',
+        displayType: 'OVERTIME_NIGHT_FINISH',
+        displayTypeTime: '2020-03-24T05:30:00',
+      },
       {
         activity: 'Duty Manager',
         start: '2020-03-24T07:30:00',
