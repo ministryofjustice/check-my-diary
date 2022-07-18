@@ -1,17 +1,16 @@
-import { configureCalendar, getSnoozeUntil, hmppsAuthMFAUser, processDay, sortByDisplayType } from './utilities'
+import utilities from './utilities'
+import createToken from '../routes/testutils/createToken'
 
 import type { CalendarDay, Details } from './utilities.types'
-
-jest.mock('jwt-decode', () => (token: string) => token)
 
 describe('configureCalendar', () => {
   const none = { date: '2020-08-03', activity: 'act-3', details: [] }
   const rest = { date: '2020-08-02', activity: 'act-2', details: [] }
   const noDay = { fullDayType: 'no-day' }
-  const shift: CalendarDay = { date: '2020-08-01', activity: 'act-1', details: [] }
+  const shift: CalendarDay = { date: '2020-08-01', activity: 'act-1', fullDayType: 'type', details: [] }
   let returnedData: CalendarDay[]
   beforeEach(() => {
-    returnedData = configureCalendar([none, rest, shift, ...new Array(28).fill(none)]) as CalendarDay[]
+    returnedData = utilities.configureCalendar([none, rest, shift, ...new Array(28).fill(none)]) as CalendarDay[]
   })
   it('should return an array of objects', () => {
     expect(returnedData).toHaveLength(42)
@@ -77,8 +76,8 @@ describe('processDay', () => {
         },
       ],
     }
-    day1 = processDay(day1Input)
-    dayNights = processDay(dayNightsInput)
+    day1 = utilities.processDay(day1Input)
+    dayNights = utilities.processDay(dayNightsInput)
   })
   it('should set the date text', () => {
     expect(day1.dateText).toBe('3')
@@ -130,16 +129,16 @@ describe('hmppsAuthMFAUser', () => {
     jest.resetAllMocks()
   })
   it('should return true if the user has the ROLE_MFA role', () => {
-    const token = { authorities: 'ROLE_MFA' }
-    expect(hmppsAuthMFAUser(token)).toEqual(true)
+    const token = createToken('username', 'employeeName', ['ROLE_MFA'])
+    expect(utilities.hmppsAuthMFAUser(token)).toEqual(true)
   })
   it('should return true if the user has the ROLE_CMD_MIGRATED_MFA role', () => {
-    const token = { authorities: 'ROLE_CMD_MIGRATED_MFA' }
-    expect(hmppsAuthMFAUser(token)).toEqual(true)
+    const token = createToken('username', 'employeeName', ['ROLE_CMD_MIGRATED_MFA'])
+    expect(utilities.hmppsAuthMFAUser(token)).toEqual(true)
   })
   it('should return false if the user does not have the ROLE_MFA or ROLE_CMD_MIGRATED_MFA roles', () => {
-    const token = { authorities: '' }
-    expect(hmppsAuthMFAUser(token)).toEqual(false)
+    const token = createToken('username', 'employeeName', [])
+    expect(utilities.hmppsAuthMFAUser(token)).toEqual(false)
   })
 })
 
@@ -152,36 +151,37 @@ describe('getSnoozeUntil', () => {
     dateNow.mockRestore()
   })
   it('should return a formatted date string if the date is in the future', () => {
-    expect(getSnoozeUntil(new Date('4/2/1994'))).toEqual('3 April 1994')
-    expect(getSnoozeUntil(new Date('9/17/1994'))).toEqual('18 September 1994')
+    expect(utilities.getSnoozeUntil(new Date('4/2/1994'))).toEqual('3 April 1994')
+    expect(utilities.getSnoozeUntil(new Date('9/17/1994'))).toEqual('18 September 1994')
   })
   it('should return an empty string if the date is in the past', () => {
-    expect(getSnoozeUntil(new Date('6/14/1993'))).toEqual('')
-    expect(getSnoozeUntil(new Date('1/1/1994'))).toEqual('')
+    expect(utilities.getSnoozeUntil(new Date('6/14/1993'))).toEqual('')
+    expect(utilities.getSnoozeUntil(new Date('1/1/1994'))).toEqual('')
   })
   it('should return an empty string if the date is undefined', () => {
-    expect(getSnoozeUntil()).toEqual('')
+    expect(utilities.getSnoozeUntil()).toEqual('')
   })
 })
 
 describe('sortByDisplayType', () => {
-  const detail1 = { displayTypeTime: '2020-08-03T07:30:00', displayType: 'line overtime_day_start' }
-  const detail2a = { displayTypeTime: '2020-08-03T12:25:00', displayType: 'line overtime_day_finish' }
-  const detail2b = { displayTypeTime: '2020-08-03T12:30:00', displayType: 'line overtime_day_finish' }
-  const detail3 = { displayTypeTime: '2020-08-03T12:30:00', displayType: 'day_start' }
-  const detail4 = { displayTypeTime: '2020-08-03T17:30:00', displayType: 'day_finish' }
+  const activity = 'dummy'
+  const detail1 = { displayTypeTime: '2020-08-03T07:30:00', displayType: 'line overtime_day_start', activity }
+  const detail2a = { displayTypeTime: '2020-08-03T12:25:00', displayType: 'line overtime_day_finish', activity }
+  const detail2b = { displayTypeTime: '2020-08-03T12:30:00', displayType: 'line overtime_day_finish', activity }
+  const detail3 = { displayTypeTime: '2020-08-03T12:30:00', displayType: 'day_start', activity }
+  const detail4 = { displayTypeTime: '2020-08-03T17:30:00', displayType: 'day_finish', activity }
 
   describe('with a dates out of order', () => {
     it('should return items in date order', () => {
       const initialArray = [detail3, detail1, detail4, detail2a]
-      sortByDisplayType(initialArray)
+      utilities.sortByDisplayType(initialArray)
       expect(initialArray).toEqual([detail1, detail2a, detail3, detail4])
     })
   })
   describe('with a start types before end types out of order', () => {
     it('should return items in date order, and prioritise none start display types', () => {
       const initialArray = [detail4, detail3, detail2b, detail1]
-      sortByDisplayType(initialArray)
+      utilities.sortByDisplayType(initialArray)
       expect(initialArray).toEqual([detail1, detail2b, detail3, detail4])
     })
   })
@@ -189,7 +189,7 @@ describe('sortByDisplayType', () => {
 
 const processDetailWrapper = (detail: Details) => {
   const day = { details: [detail], date: '2022-05-25', fullDayType: 'NONE' }
-  return processDay(day).details[0]
+  return utilities.processDay(day).details[0]
 }
 
 describe('processDetail', () => {

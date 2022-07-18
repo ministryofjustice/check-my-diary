@@ -14,9 +14,6 @@ const processError = (error: Error, req: Request, res: Response) => {
     response: res,
     stack: error.stack,
     message: req.user.username,
-    id: req.user.username,
-    authError: true,
-    authErrorText: utilities.getAuthErrorDescription(error),
   }
 
   logError(req.url, data, 'Login failure')
@@ -138,7 +135,7 @@ export default function loginRouter(userAuthenticationService: UserAuthenticatio
 
         res.redirect(`/calendar/${utilities.getStartMonth()}#today`)
       } else {
-        logError(req.url, { response: res, stack: {}, message: req.user.username }, '2FA failure: code does not match')
+        logError(req.url, { response: res, message: req.user.username }, '2FA failure: code does not match')
         res.render('pages/two-factor-auth', { authError: true, csrfToken: res.locals.csrfToken })
       }
     } catch (error) {

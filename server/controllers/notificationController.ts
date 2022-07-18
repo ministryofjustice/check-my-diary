@@ -3,7 +3,7 @@ import moment from 'moment'
 import { validationResult } from 'express-validator'
 import { add, formatISO } from 'date-fns'
 import NotificationType from '../helpers/NotificationType'
-import { getSnoozeUntil } from '../helpers/utilities'
+import utilities from '../helpers/utilities'
 import type { NotificationService } from '../services'
 
 export default class NotificationController {
@@ -83,7 +83,7 @@ export default class NotificationController {
     const { snoozeUntil: rawSnoozeUntil, preference = NotificationType.NONE } =
       await this.notificationService.getPreferences(token)
     const notificationsEnabled = preference !== NotificationType.NONE
-    const snoozeUntil = notificationsEnabled ? getSnoozeUntil(rawSnoozeUntil) : ''
+    const snoozeUntil = notificationsEnabled ? utilities.getSnoozeUntil(rawSnoozeUntil) : ''
     return { snoozeUntil, notificationsEnabled }
   }
 }

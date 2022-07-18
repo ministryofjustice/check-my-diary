@@ -1,7 +1,7 @@
 import moment from 'moment'
 import { Request, Response } from 'express'
 import logger from '../../log'
-import { configureCalendar, hmppsAuthMFAUser } from '../helpers/utilities'
+import utilities from '../helpers/utilities'
 import NotificationType from '../helpers/NotificationType'
 import mfaBannerType from '../helpers/mfaBannerType'
 import type { CalendarService, NotificationService, NotificationCookieService } from '../services'
@@ -28,7 +28,7 @@ export default class CalendarController {
 
     logger.info({ user: username, date }, 'GET calendar view')
 
-    const isMfa = hmppsAuthMFAUser(token)
+    const isMfa = utilities.hmppsAuthMFAUser(token)
 
     const [notificationCount, preferences, month, userAuthenticationDetails] = await Promise.all([
       this.notificationService.countUnprocessedNotifications(token),
@@ -64,7 +64,7 @@ export default class CalendarController {
       notifications,
       mfa: await computeBanner(),
     }
-    const data = configureCalendar(month)
+    const data = utilities.configureCalendar(month)
     const currentMonthMoment = moment(date)
     const previousMonthMoment = currentMonthMoment.clone().subtract('1', 'M')
     const nextMonthMoment = currentMonthMoment.clone().add('1', 'M')
