@@ -21,9 +21,8 @@ export default class CalendarController {
 
   async getDate(req: Request, res: Response) {
     const {
-      user: { token, employeeName, username },
+      user: { token, username },
       params: { date },
-      authUrl,
     } = req
 
     logger.info({ user: username, date }, 'GET calendar view')
