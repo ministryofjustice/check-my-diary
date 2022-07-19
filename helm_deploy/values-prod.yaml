@@ -1,8 +1,6 @@
 ---
 generic-service:
-  autoscaling:
-    minReplicas: 2
-    maxReplicas: 4
+  replicaCount: 4
 
   ingress:
     host: checkmydiary.service.justice.gov.uk
