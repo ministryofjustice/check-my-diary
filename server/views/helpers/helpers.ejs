@@ -1,16 +1,6 @@
 <%
-  /**
-   * Array of days in same order as the view
-   * @returns {string[]}
-   */
-  getDays = () => ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
   forenameToInitial = (name) => {
       if (!name) return null
       return `${name.charAt()}. ${name.split(' ').pop()}`
   }
-
-  isErrors = (errors) => errors && errors.errors.length > 0
-  isError = (errors, param) =>  errors && errors.mapped()[param]
-
 %>

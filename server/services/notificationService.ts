@@ -30,11 +30,6 @@ export default class NotificationService {
       })
   }
 
-  public async countUnprocessedNotifications(accessToken: string) {
-    const data = await this.getNotifications(accessToken, false, true)
-    return data.length
-  }
-
   public async getPreferences(accessToken: string): Promise<NotificationDto> {
     return axios
       .get(`${baseUrl.cmdApi.url}/preferences/notifications2`, {

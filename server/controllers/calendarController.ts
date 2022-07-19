@@ -30,8 +30,7 @@ export default class CalendarController {
 
     const isMfa = utilities.hmppsAuthMFAUser(token)
 
-    const [notificationCount, preferences, month, userAuthenticationDetails] = await Promise.all([
-      this.notificationService.countUnprocessedNotifications(token),
+    const [preferences, month, userAuthenticationDetails] = await Promise.all([
       this.notificationService.getPreferences(token),
       this.calendarService.getCalendarMonth(date, token),
       this.userAuthenticationService.getUserAuthenticationDetails(username),
@@ -68,16 +67,13 @@ export default class CalendarController {
     const currentMonth = new Date(date)
     const previousMonth = sub(currentMonth, { months: 1 })
     const nextMonth = add(currentMonth, { months: 1 })
-    return res.render('pages/calendar', {
+    return res.render('pages/calendar.njk', {
       ...res.locals,
-      notificationCount,
       tab: 'Calendar',
       currentMonth: format(currentMonth, 'MMMM yyyy'),
       previousMonth: { link: format(previousMonth, 'yyyy-MM-dd'), text: format(previousMonth, 'MMMM') },
       nextMonth: { link: format(nextMonth, 'yyyy-MM-dd'), text: format(nextMonth, 'MMMM') },
       data,
-      employeeName,
-      authUrl,
       showBanner,
       mfaBannerType,
     })
