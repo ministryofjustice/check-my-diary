@@ -24,9 +24,9 @@ const sortByDate = (data: CalendarDay[], dateField = 'date') =>
 const sortByDisplayType = (data: Details[]) =>
   data.sort(
     ({ displayTypeTime, displayType, start }, { displayTypeTime: compareDisplayTypeTime, start: compareStart }) => {
-      const date: string = displayTypeTime || start || ''
+      const date = displayTypeTime || start || ''
       const compareDate = compareDisplayTypeTime || compareStart || ''
-      const comparison = date?.localeCompare(compareDate)
+      const comparison = date.localeCompare(compareDate)
       if (comparison !== 0) return comparison
       return displayType && displayType.toLowerCase().includes('finish') ? -1 : 1
     },
@@ -37,7 +37,7 @@ const humanizeNumber = (value: number | undefined, unit: string) => {
   return `${value} ${unit}${value > 1 ? 's' : ''}`
 }
 
-const getDuration = (duration?: number | null) => {
+const getDuration = (duration: number) => {
   if (!duration) {
     return duration
   }
@@ -115,12 +115,12 @@ const getTypeClass = (type: string, isFullDay: boolean) => {
   )
 }
 
-const fullDayMatch = (desc?: string) => {
-  const foundValue = fullDayActivities.find((a) => desc?.startsWith(a.description))
+const fullDayMatch = (desc: string) => {
+  const foundValue = fullDayActivities.find((a) => desc.startsWith(a.description))
   return foundValue && foundValue.class
 }
 
-const unionFilter = (activity?: string) =>
+const unionFilter = (activity: string | undefined) =>
   activity && (activity.startsWith('Union Duties') || activity.startsWith('Union Facility'))
     ? 'Trade Union Official Duties'
     : activity
@@ -142,9 +142,9 @@ const processDay = (day: CalendarDay): CalendarDay => {
         !(
           isFullDay &&
           start &&
-          format(new Date(start as string), TIME_FORMAT) === '00:00:00' &&
+          format(new Date(start), TIME_FORMAT) === '00:00:00' &&
           end &&
-          format(new Date(end as string), TIME_FORMAT) === '00:00:00'
+          format(new Date(end), TIME_FORMAT) === '00:00:00'
         ),
     )
     .map((detail): Details => {
@@ -161,7 +161,7 @@ const processDay = (day: CalendarDay): CalendarDay => {
           : (!isFullDay && displayType.endsWith('FINISH') && fullDayMatch(activity)) || ''
         return {
           ...detail,
-          lineLeftText: `${getTaskText(displayType)}: ${format(new Date(displayTypeTime as string), 'HH:mm')}`,
+          lineLeftText: `${getTaskText(displayType)}: ${displayTypeTime && format(new Date(displayTypeTime), 'HH:mm')}`,
           lineRightText: specialActivityStartEndColour ? '' : unionFilter(activity),
           displayType: specialActivityStartEndColour || displayType.toLowerCase(),
           activityDescription: unionFilter(activity),

@@ -48,7 +48,7 @@ export default class NotificationService {
           return {}
         }
         const sanitisedError = getSanitisedError(error)
-        logger.error(getSanitisedError(error), 'notificationService getPreference')
+        logger.error(sanitisedError, 'notificationService getPreference')
         throw sanitisedError
       })
   }
@@ -71,7 +71,7 @@ export default class NotificationService {
       )
       .catch((error) => {
         const sanitisedError = getSanitisedError(error)
-        logger.error(getSanitisedError(error), 'notificationService updatePreferences')
+        logger.error(sanitisedError, 'notificationService updatePreferences')
         throw sanitisedError
       })
   }
@@ -93,7 +93,7 @@ export default class NotificationService {
       )
       .catch((error) => {
         const sanitisedError = getSanitisedError(error)
-        logger.error(getSanitisedError(error), 'notificationService updateSnooze')
+        logger.error(sanitisedError, 'notificationService updateSnooze')
         throw sanitisedError
       })
   }
