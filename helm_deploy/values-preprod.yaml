@@ -1,8 +1,6 @@
 ---
 generic-service:
-  autoscaling:
-    minReplicas: 1
-    maxReplicas: 2
+  replicaCount: 4
 
   ingress:
     host: check-my-diary-preprod.prison.service.justice.gov.uk
