@@ -1,13 +1,14 @@
 import axios from 'axios'
-import moment from 'moment'
 import type { ShiftDto } from 'cmdApiClient'
+import { endOfMonth, format } from 'date-fns'
 import logger from '../../log'
 import baseUrl from '../config'
+import getSanitisedError from '../sanitisedError'
 
 export default class CalendarService {
   public async getCalendarMonth(startDate: string, accessToken: string): Promise<Array<ShiftDto>> {
     return this.getCalendarData(
-      moment(startDate).format('YYYY-MM-01'),
+      format(new Date(startDate), 'yyyy-MM-01'),
       CalendarService.getEndDate(startDate),
       accessToken,
     )
@@ -22,12 +23,13 @@ export default class CalendarService {
       })
       .then(({ data }) => data)
       .catch((error) => {
-        logger.error(`CalendarService : getCalendarData(${startDate}, ${endDate}) Error : ${error}`)
-        throw error
+        const sanitisedError = getSanitisedError(error)
+        logger.error(sanitisedError, `CalendarService Error: getCalendarData(${startDate}, ${endDate})`)
+        throw sanitisedError
       })
   }
 
   private static getEndDate(startDate: string): string {
-    return moment(startDate).endOf('month').format('YYYY-MM-DD')
+    return format(endOfMonth(new Date(startDate)), 'yyyy-MM-dd')
   }
 }

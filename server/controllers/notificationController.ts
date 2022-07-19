@@ -1,5 +1,4 @@
 import { Request, Response } from 'express'
-import moment from 'moment'
 import { validationResult } from 'express-validator'
 import { add, formatISO } from 'date-fns'
 import NotificationType from '../helpers/NotificationType'
@@ -12,7 +11,7 @@ export default class NotificationController {
   async getNotifications({ user: { token } }: Request, res: Response) {
     const data = await this.notificationService.getNotifications(token)
 
-    data.sort(({ shiftModified: first }, { shiftModified: second }) => moment(second).diff(moment(first)))
+    data.sort(({ shiftModified: first }, { shiftModified: second }) => second.localeCompare(first))
 
     return res.render('pages/notifications.njk', { data })
   }
@@ -83,7 +82,7 @@ export default class NotificationController {
     const { snoozeUntil: rawSnoozeUntil, preference = NotificationType.NONE } =
       await this.notificationService.getPreferences(token)
     const notificationsEnabled = preference !== NotificationType.NONE
-    const snoozeUntil = notificationsEnabled ? utilities.getSnoozeUntil(rawSnoozeUntil) : ''
+    const snoozeUntil = notificationsEnabled && rawSnoozeUntil ? utilities.getSnoozeUntil(rawSnoozeUntil) : ''
     return { snoozeUntil, notificationsEnabled }
   }
 }

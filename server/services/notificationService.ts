@@ -5,7 +5,7 @@ import type {
   UpdateSnoozeUntilRequest,
 } from 'cmdApiClient'
 import axios from 'axios'
-import moment from 'moment'
+import { format } from 'date-fns'
 import getSanitisedError from '../sanitisedError'
 import logger from '../../log'
 import baseUrl from '../config'
@@ -24,8 +24,9 @@ export default class NotificationService {
       })
       .then((response) => response.data)
       .catch((error) => {
-        logger.error(getSanitisedError(error), 'notificationService getNotifications')
-        throw error
+        const sanitisedError = getSanitisedError(error)
+        logger.error(sanitisedError, 'notificationService getNotifications')
+        throw sanitisedError
       })
   }
 
@@ -46,8 +47,9 @@ export default class NotificationService {
         if (error.response.status === 404) {
           return {}
         }
+        const sanitisedError = getSanitisedError(error)
         logger.error(getSanitisedError(error), 'notificationService getPreference')
-        throw error
+        throw sanitisedError
       })
   }
 
@@ -68,8 +70,9 @@ export default class NotificationService {
         },
       )
       .catch((error) => {
+        const sanitisedError = getSanitisedError(error)
         logger.error(getSanitisedError(error), 'notificationService updatePreferences')
-        throw error
+        throw sanitisedError
       })
   }
 
@@ -89,13 +92,14 @@ export default class NotificationService {
         },
       )
       .catch((error) => {
+        const sanitisedError = getSanitisedError(error)
         logger.error(getSanitisedError(error), 'notificationService updateSnooze')
-        throw error
+        throw sanitisedError
       })
   }
 
   public async resumeNotifications(accessToken: string): Promise<UpdateNotificationDetailsRequest> {
     logger.info('resume notification')
-    return this.updateSnooze(accessToken, moment().format('YYYY-MM-DD'))
+    return this.updateSnooze(accessToken, format(new Date(), 'yyyy-MM-dd'))
   }
 }

@@ -113,7 +113,6 @@
     "ip-range-check": "^0.2.0",
     "jwt-decode": "^3.1.2",
     "knex": "^2.1.0",
-    "moment": "^2.29.4",
     "morgan": "^1.10.0",
     "nocache": "^3.0.4",
     "notifications-node-client": "^5.1.1",
@@ -140,7 +139,7 @@
     "@types/csurf": "^1.11.2",
     "@types/express-session": "^1.17.5",
     "@types/http-errors": "^1.8.2",
-    "@types/jest": "^27.5.2",
+    "@types/jest": "^28.1.6",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/node": "^16.11.43",
     "@types/nunjucks": "^3.2.1",
@@ -165,8 +164,8 @@
     "eslint-plugin-no-only-tests": "^2.6.0",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.1",
-    "jest": "^27.5.1",
-    "jest-html-reporter": "^3.5.0",
+    "jest": "^28.1.3",
+    "jest-html-reporter": "^3.6.0",
     "jest-junit": "^13.2.0",
     "jsonwebtoken": "^8.5.1",
     "lint-staged": "^13.0.3",
@@ -177,7 +176,7 @@
     "prettier": "^2.7.1",
     "sass": "^1.53.0",
     "supertest": "^6.2.4",
-    "ts-jest": "^27.1.5",
+    "ts-jest": "^28.0.7",
     "typescript": "^4.7.4"
   }
 }

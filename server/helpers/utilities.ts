@@ -1,14 +1,13 @@
-import moment from 'moment'
-import dateFns from 'date-fns'
+import { add, format, getDay, getDaysInMonth, intervalToDuration, isFuture, isToday, startOfMonth } from 'date-fns'
 
 import crypto from 'crypto'
 import jwtDecode from 'jwt-decode'
 import { CalendarDay, Details } from './utilities.types'
 
-const format = 'HH:mm:ss'
+const TIME_FORMAT = 'HH:mm:ss'
 
 function getStartMonth() {
-  return moment().startOf('month').format('YYYY-MM-DD')
+  return format(startOfMonth(new Date()), 'yyyy-MM-dd')
 }
 
 function get2faCode() {
@@ -33,28 +32,28 @@ const sortByDisplayType = (data: Details[]) =>
     },
   )
 
-const humanizeNumber = (value: number, unit: string) => {
-  if (value === 0) return ''
+const humanizeNumber = (value: number | undefined, unit: string) => {
+  if (!value) return '' // including zero
   return `${value} ${unit}${value > 1 ? 's' : ''}`
 }
 
-const getDuration = (duration?: string | number | null) => {
+const getDuration = (duration?: number | null) => {
   if (!duration) {
     return duration
   }
-  const raw = moment.duration(duration, 'seconds')
-  return `${humanizeNumber(raw.hours(), 'hour')} ${humanizeNumber(raw.minutes(), 'minute')}`
+  const raw = intervalToDuration({ start: 0, end: duration * 1000 })
+  return `${humanizeNumber(raw.hours, 'hour')} ${humanizeNumber(raw.minutes, 'minute')}`
 }
 
-const configureCalendar = (data: CalendarDay[], startDate = null) => {
+const configureCalendar = (data: CalendarDay[]) => {
   if (data.length === 0) return null
   const processedData: CalendarDay[] = data.map(processDay)
   sortByDate(processedData)
-  const startDateMoment = moment(startDate || processedData[0].date)
-  const pad = startDateMoment.day()
+  const startDate = new Date(processedData[0].date)
+  const pad = getDay(startDate) // day of week!, sunday 0
   const noDay = { fullDayType: 'no-day' }
   const prePad = new Array(pad).fill(noDay)
-  const monthPadTotal = startDateMoment.daysInMonth() + pad
+  const monthPadTotal = getDaysInMonth(startDate) + pad
   const totalCalendarSize = Math.ceil(monthPadTotal / 7) * 7
   const postPad = new Array(totalCalendarSize - monthPadTotal).fill(noDay)
 
@@ -128,9 +127,8 @@ const unionFilter = (activity?: string) =>
 
 const processDay = (day: CalendarDay): CalendarDay => {
   const { date, details, fullDayType, fullDayTypeDescription } = day
-  const dateMoment = moment(date)
-  const today = dateMoment.isSame(moment(), 'day')
-
+  const dateDate = new Date(date)
+  const today = isToday(dateDate)
   const isFullDay =
     fullDayType !== 'NONE' &&
     fullDayType !== 'SHIFT' &&
@@ -141,12 +139,16 @@ const processDay = (day: CalendarDay): CalendarDay => {
   const processedDetails = details
     .filter(
       ({ start, end }) =>
-        !(isFullDay && moment(start).format(format) === '00:00:00' && moment(end).format(format) === '00:00:00'),
+        !(
+          isFullDay &&
+          start &&
+          format(new Date(start as string), TIME_FORMAT) === '00:00:00' &&
+          end &&
+          format(new Date(end as string), TIME_FORMAT) === '00:00:00'
+        ),
     )
     .map((detail): Details => {
       const { displayType, displayTypeTime, start, end, activity } = detail
-      const startText = start ? moment(start).format('HH:mm') : ''
-      const endText = end ? moment(end).format('HH:mm') : ''
 
       if (displayType) {
         const specialActivityColour = (!isFullDay && displayType.endsWith('START') && fullDayMatch(activity)) || ''
@@ -159,17 +161,19 @@ const processDay = (day: CalendarDay): CalendarDay => {
           : (!isFullDay && displayType.endsWith('FINISH') && fullDayMatch(activity)) || ''
         return {
           ...detail,
-          lineLeftText: `${getTaskText(displayType)}: ${moment(displayTypeTime).format('HH:mm')}`,
+          lineLeftText: `${getTaskText(displayType)}: ${format(new Date(displayTypeTime as string), 'HH:mm')}`,
           lineRightText: specialActivityStartEndColour ? '' : unionFilter(activity),
           displayType: specialActivityStartEndColour || displayType.toLowerCase(),
           activityDescription: unionFilter(activity),
-          finishDuration: getDuration(detail.finishDuration),
+          finishDuration: getDuration(detail.finishDuration as number),
           specialActivityColour,
           durationColour,
           showNightHr,
         }
       }
 
+      const startText = start ? format(new Date(start), 'HH:mm') : ''
+      const endText = end ? format(new Date(end), 'HH:mm') : ''
       return {
         ...detail,
         lineLeftText: `${activity.startsWith('Break') ? 'Break' : activity}: ${startText} - ${endText}`,
@@ -183,8 +187,8 @@ const processDay = (day: CalendarDay): CalendarDay => {
   return {
     ...day,
     today,
-    dateText: dateMoment.format('D'),
-    dateDayText: dateMoment.format('dddd D'),
+    dateText: format(dateDate, 'd'),
+    dateDayText: format(dateDate, 'eeee d'),
     details: processedDetails,
     isFullDay,
     fullDayType: getTypeClass(fullDayType, isFullDay),
@@ -197,9 +201,9 @@ const hmppsAuthMFAUser = (token: string) => {
   return authorities.includes('ROLE_MFA') || authorities.includes('ROLE_CMD_MIGRATED_MFA')
 }
 
-const getSnoozeUntil = (rawSnoozeUntil?: Date) => {
-  const snoozeUntil = moment(rawSnoozeUntil)
-  return snoozeUntil.isAfter(moment()) ? snoozeUntil.add(1, 'day').format('D MMMM YYYY') : ''
+const getSnoozeUntil = (rawSnoozeUntil: string) => {
+  const snoozeUntil = new Date(rawSnoozeUntil)
+  return isFuture(snoozeUntil) ? format(add(snoozeUntil, { days: 1 }), 'd MMMM yyyy') : ''
 }
 
 export default {

@@ -1,5 +1,5 @@
-import moment from 'moment'
 import { Request, Response } from 'express'
+import { add, format, sub } from 'date-fns'
 import logger from '../../log'
 import utilities from '../helpers/utilities'
 import NotificationType from '../helpers/NotificationType'
@@ -65,16 +65,16 @@ export default class CalendarController {
       mfa: await computeBanner(),
     }
     const data = utilities.configureCalendar(month)
-    const currentMonthMoment = moment(date)
-    const previousMonthMoment = currentMonthMoment.clone().subtract('1', 'M')
-    const nextMonthMoment = currentMonthMoment.clone().add('1', 'M')
+    const currentMonth = new Date(date)
+    const previousMonth = sub(currentMonth, { months: 1 })
+    const nextMonth = add(currentMonth, { months: 1 })
     return res.render('pages/calendar', {
       ...res.locals,
       notificationCount,
       tab: 'Calendar',
-      currentMonth: currentMonthMoment.format('MMMM YYYY'),
-      previousMonth: { link: previousMonthMoment.format('YYYY-MM-DD'), text: previousMonthMoment.format('MMMM') },
-      nextMonth: { link: nextMonthMoment.format('YYYY-MM-DD'), text: nextMonthMoment.format('MMMM') },
+      currentMonth: format(currentMonth, 'MMMM yyyy'),
+      previousMonth: { link: format(previousMonth, 'yyyy-MM-dd'), text: format(previousMonth, 'MMMM') },
+      nextMonth: { link: format(nextMonth, 'yyyy-MM-dd'), text: format(nextMonth, 'MMMM') },
       data,
       employeeName,
       authUrl,

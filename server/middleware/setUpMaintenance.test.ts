@@ -23,7 +23,7 @@ describe('maintenance middleware', () => {
     res = { render: renderMock } as unknown as Response
     req = { user: { username: 'user' } } as unknown as Request
 
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers()
     jest.setSystemTime(new Date('1979-10-12T08:50:00.000Z'))
   })
   afterEach(() => {

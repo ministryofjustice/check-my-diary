@@ -18,7 +18,7 @@ export interface Details {
 
 export interface CalendarDay {
   activity?: string
-  date?: string
+  date: string
   isFullDay?: boolean
   fullDayType: string
   fullDayTypeDescription?: string
