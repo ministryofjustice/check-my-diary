@@ -1,23 +1,8 @@
-import jwt from 'jsonwebtoken'
 import { Response } from 'superagent'
 
 import { getMatchingRequests, stubFor } from './wiremock'
 import tokenVerification from './tokenVerification'
-
-const createToken = (username = 'ITAG_USER', employeeName = 'Sarah Itag', authorities: string[] = []) => {
-  const payload = {
-    sub: username,
-    user_name: username,
-    name: employeeName,
-    scope: ['read', 'write'],
-    auth_source: 'nomis',
-    authorities,
-    jti: '83b50a10-cca6-41db-985f-e87efb303ddb',
-    client_id: 'my-diary',
-  }
-
-  return jwt.sign(payload, 'secret', { expiresIn: '1h' })
-}
+import createToken from '../../server/routes/testutils/createToken'
 
 const getLoginUrl = () =>
   getMatchingRequests({

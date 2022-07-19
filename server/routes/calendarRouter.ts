@@ -1,6 +1,6 @@
 import { RequestHandler, Router } from 'express'
 
-import { getStartMonth } from '../helpers/utilities'
+import utilities from '../helpers/utilities'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import CalendarController from '../controllers/calendarController'
 import type { Services } from '../services'
@@ -20,7 +20,7 @@ export default function calendarRouter(router: Router, services: Services): Rout
 
   get('/calendar/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', (req, res) => calendarController.getDate(req, res))
 
-  get('/calendar', (req, res) => res.redirect(`/calendar/${getStartMonth()}`))
+  get('/calendar', (req, res) => res.redirect(`/calendar/${utilities.getStartMonth()}`))
 
   router.post('/calendar/dismiss', (req, res) => notificationDismissController.dismiss(req, res))
 

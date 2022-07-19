@@ -1,7 +1,7 @@
-import moment from 'moment'
 import { Request, Response } from 'express'
+import { add, format, sub } from 'date-fns'
 import logger from '../../log'
-import { configureCalendar, hmppsAuthMFAUser } from '../helpers/utilities'
+import utilities from '../helpers/utilities'
 import NotificationType from '../helpers/NotificationType'
 import mfaBannerType from '../helpers/mfaBannerType'
 import type { CalendarService, NotificationService, NotificationCookieService } from '../services'
@@ -28,7 +28,7 @@ export default class CalendarController {
 
     logger.info({ user: username, date }, 'GET calendar view')
 
-    const isMfa = hmppsAuthMFAUser(token)
+    const isMfa = utilities.hmppsAuthMFAUser(token)
 
     const [notificationCount, preferences, month, userAuthenticationDetails] = await Promise.all([
       this.notificationService.countUnprocessedNotifications(token),
@@ -64,17 +64,17 @@ export default class CalendarController {
       notifications,
       mfa: await computeBanner(),
     }
-    const data = configureCalendar(month)
-    const currentMonthMoment = moment(date)
-    const previousMonthMoment = currentMonthMoment.clone().subtract('1', 'M')
-    const nextMonthMoment = currentMonthMoment.clone().add('1', 'M')
+    const data = utilities.configureCalendar(month)
+    const currentMonth = new Date(date)
+    const previousMonth = sub(currentMonth, { months: 1 })
+    const nextMonth = add(currentMonth, { months: 1 })
     return res.render('pages/calendar', {
       ...res.locals,
       notificationCount,
       tab: 'Calendar',
-      currentMonth: currentMonthMoment.format('MMMM YYYY'),
-      previousMonth: { link: previousMonthMoment.format('YYYY-MM-DD'), text: previousMonthMoment.format('MMMM') },
-      nextMonth: { link: nextMonthMoment.format('YYYY-MM-DD'), text: nextMonthMoment.format('MMMM') },
+      currentMonth: format(currentMonth, 'MMMM yyyy'),
+      previousMonth: { link: format(previousMonth, 'yyyy-MM-dd'), text: format(previousMonth, 'MMMM') },
+      nextMonth: { link: format(nextMonth, 'yyyy-MM-dd'), text: format(nextMonth, 'MMMM') },
       data,
       employeeName,
       authUrl,

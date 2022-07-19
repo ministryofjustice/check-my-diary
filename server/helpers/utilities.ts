@@ -1,99 +1,66 @@
-const moment = require('moment')
-const crypto = require('crypto')
-const jwtDecode = require('jwt-decode')
+import { add, format, getDay, getDaysInMonth, intervalToDuration, isFuture, isToday, startOfMonth } from 'date-fns'
 
-const log = require('../../log')
+import crypto from 'crypto'
+import jwtDecode from 'jwt-decode'
+import { CalendarDay, Details } from './utilities.types'
 
-const format = 'HH:mm:ss'
+const TIME_FORMAT = 'HH:mm:ss'
 
 function getStartMonth() {
-  return moment().startOf('month').format('YYYY-MM-DD')
+  return format(startOfMonth(new Date()), 'yyyy-MM-dd')
 }
 
 function get2faCode() {
   return Math.floor(Math.random() * 899999 + 100000)
 }
 
-function createTwoFactorAuthenticationHash(input) {
+function createTwoFactorAuthenticationHash(input: string) {
   return crypto.createHash('sha256').update(input.toString()).digest('base64')
 }
 
-function getAuthErrorDescription(error) {
-  log.info(`login error description = ${error}`)
-  log.info(
-    `login response error description = ${
-      error.response && error.response.data && error.response.data.error_description
-    }`,
-  )
-  let type =
-    'Service temporarily unavailable. Please try again later. If this issue persists, please contact the Helpdesk on 0800 917 5148.'
-  if (error.message !== '') {
-    if (error.message.includes('No Sms or Email address returned for QuantumId')) {
-      type =
-        'You have not been setup on Check My Diary. Please contact us via: checkmydiary@digital.justice.gov.uk if you would like to be included.'
-    } else if (error.message.includes('Sms or Email address null or empty for QuantumId')) {
-      type =
-        'You have not been setup with a email address or mobile number. Please contact us via: checkmydiary@digital.justice.gov.uk.'
-    } else if (error.message.includes('Sms or Email address both set to false for QuantumId')) {
-      type =
-        'Your email address or mobile number has not been enabled. Please contact us via: checkmydiary@digital.justice.gov.uk.'
-    } else if (error.message.includes('email_address Not a valid email address')) {
-      type = '<p>We do not have a valid email address for you.</p><p>Please call the Service Desk on 0800 917 5148</p>'
-    } else if (
-      error.message.includes('phone_number Not enough digits') ||
-      error.message.includes('phone_number Must not contain letters or symbols') ||
-      error.message.includes('phone_number Too many digits')
-    ) {
-      type =
-        '<p>We do not have a valid mobile phone number for you.</p><p>Please call the Service Desk on 0800 917 5148</p>'
-    }
-  }
-  return type
-}
+const sortByDate = (data: CalendarDay[], dateField = 'date') =>
+  data.sort((first: CalendarDay, second: CalendarDay) => first[dateField].localeCompare(second[dateField]))
 
-const sortByDate = (data, dateField = 'date') =>
-  data.sort((first, second) => moment(first[dateField]) - moment(second[dateField]))
-
-const sortByDisplayType = (data) =>
+const sortByDisplayType = (data: Details[]) =>
   data.sort(
     ({ displayTypeTime, displayType, start }, { displayTypeTime: compareDisplayTypeTime, start: compareStart }) => {
-      const date = displayTypeTime || start
-      const compareDate = compareDisplayTypeTime || compareStart
-      const comparison = moment(date) - moment(compareDate)
+      const date = displayTypeTime || start || ''
+      const compareDate = compareDisplayTypeTime || compareStart || ''
+      const comparison = date.localeCompare(compareDate)
       if (comparison !== 0) return comparison
       return displayType && displayType.toLowerCase().includes('finish') ? -1 : 1
     },
   )
 
-const humanizeNumber = (value, unit) => {
-  if (value === 0) return ''
+const humanizeNumber = (value: number | undefined, unit: string) => {
+  if (!value) return '' // including zero
   return `${value} ${unit}${value > 1 ? 's' : ''}`
 }
 
-const getDuration = (duration) => {
+const getDuration = (duration: number) => {
   if (!duration) {
     return duration
   }
-  const raw = moment.duration(duration, 'seconds')
-  return `${humanizeNumber(raw.hours(), 'hour')} ${humanizeNumber(raw.minutes(), 'minute')}`
+  const raw = intervalToDuration({ start: 0, end: duration * 1000 })
+  return `${humanizeNumber(raw.hours, 'hour')} ${humanizeNumber(raw.minutes, 'minute')}`
 }
 
-const configureCalendar = (data, startDate = null) => {
+const configureCalendar = (data: CalendarDay[]) => {
   if (data.length === 0) return null
-  const processedData = data.map(processDay)
+  const processedData: CalendarDay[] = data.map(processDay)
   sortByDate(processedData)
-  const startDateMoment = moment(startDate || processedData[0].date)
-  const pad = startDateMoment.day()
+  const startDate = new Date(processedData[0].date)
+  const pad = getDay(startDate) // day of week!, sunday 0
   const noDay = { fullDayType: 'no-day' }
   const prePad = new Array(pad).fill(noDay)
-  const monthPadTotal = startDateMoment.daysInMonth() + pad
+  const monthPadTotal = getDaysInMonth(startDate) + pad
   const totalCalendarSize = Math.ceil(monthPadTotal / 7) * 7
   const postPad = new Array(totalCalendarSize - monthPadTotal).fill(noDay)
 
   return [...prePad, ...processedData, ...postPad]
 }
 
-const getTaskText = (displayType) =>
+const getTaskText = (displayType: string) =>
   displayType &&
   {
     DAY_START: 'Start',
@@ -121,7 +88,7 @@ const fullDayActivities = [
   { description: 'TOIL', class: 'otherType' },
 ]
 
-const getTypeClass = (type, isFullDay) => {
+const getTypeClass = (type: string, isFullDay: boolean) => {
   if (type === 'no-day') {
     return type
   }
@@ -148,21 +115,20 @@ const getTypeClass = (type, isFullDay) => {
   )
 }
 
-const fullDayMatch = (desc) => {
+const fullDayMatch = (desc: string) => {
   const foundValue = fullDayActivities.find((a) => desc.startsWith(a.description))
   return foundValue && foundValue.class
 }
 
-const unionFilter = (activity) =>
+const unionFilter = (activity: string | undefined) =>
   activity && (activity.startsWith('Union Duties') || activity.startsWith('Union Facility'))
     ? 'Trade Union Official Duties'
     : activity
 
-const processDay = (day) => {
+const processDay = (day: CalendarDay): CalendarDay => {
   const { date, details, fullDayType, fullDayTypeDescription } = day
-  const dateMoment = moment(date)
-  const today = dateMoment.isSame(moment(), 'day')
-
+  const dateDate = new Date(date)
+  const today = isToday(dateDate)
   const isFullDay =
     fullDayType !== 'NONE' &&
     fullDayType !== 'SHIFT' &&
@@ -173,12 +139,16 @@ const processDay = (day) => {
   const processedDetails = details
     .filter(
       ({ start, end }) =>
-        !(isFullDay && moment(start).format(format) === '00:00:00' && moment(end).format(format) === '00:00:00'),
+        !(
+          isFullDay &&
+          start &&
+          format(new Date(start), TIME_FORMAT) === '00:00:00' &&
+          end &&
+          format(new Date(end), TIME_FORMAT) === '00:00:00'
+        ),
     )
-    .map((detail) => {
+    .map((detail): Details => {
       const { displayType, displayTypeTime, start, end, activity } = detail
-      const startText = start ? moment(start).format('HH:mm') : ''
-      const endText = end ? moment(end).format('HH:mm') : ''
 
       if (displayType) {
         const specialActivityColour = (!isFullDay && displayType.endsWith('START') && fullDayMatch(activity)) || ''
@@ -191,17 +161,19 @@ const processDay = (day) => {
           : (!isFullDay && displayType.endsWith('FINISH') && fullDayMatch(activity)) || ''
         return {
           ...detail,
-          lineLeftText: `${getTaskText(displayType)}: ${moment(displayTypeTime).format('HH:mm')}`,
+          lineLeftText: `${getTaskText(displayType)}: ${displayTypeTime && format(new Date(displayTypeTime), 'HH:mm')}`,
           lineRightText: specialActivityStartEndColour ? '' : unionFilter(activity),
           displayType: specialActivityStartEndColour || displayType.toLowerCase(),
           activityDescription: unionFilter(activity),
-          finishDuration: getDuration(detail.finishDuration),
+          finishDuration: getDuration(detail.finishDuration as number),
           specialActivityColour,
           durationColour,
           showNightHr,
         }
       }
 
+      const startText = start ? format(new Date(start), 'HH:mm') : ''
+      const endText = end ? format(new Date(end), 'HH:mm') : ''
       return {
         ...detail,
         lineLeftText: `${activity.startsWith('Break') ? 'Break' : activity}: ${startText} - ${endText}`,
@@ -215,8 +187,8 @@ const processDay = (day) => {
   return {
     ...day,
     today,
-    dateText: dateMoment.format('D'),
-    dateDayText: dateMoment.format('dddd D'),
+    dateText: format(dateDate, 'd'),
+    dateDayText: format(dateDate, 'eeee d'),
     details: processedDetails,
     isFullDay,
     fullDayType: getTypeClass(fullDayType, isFullDay),
@@ -224,20 +196,19 @@ const processDay = (day) => {
   }
 }
 
-const hmppsAuthMFAUser = (token) => {
-  const { authorities } = jwtDecode(token)
+const hmppsAuthMFAUser = (token: string) => {
+  const { authorities } = jwtDecode<{ authorities: string[] }>(token)
   return authorities.includes('ROLE_MFA') || authorities.includes('ROLE_CMD_MIGRATED_MFA')
 }
 
-const getSnoozeUntil = (rawSnoozeUntil) => {
-  const snoozeUntil = moment(rawSnoozeUntil)
-  return snoozeUntil.isAfter(moment()) ? snoozeUntil.add(1, 'day').format('D MMMM YYYY') : ''
+const getSnoozeUntil = (rawSnoozeUntil: string) => {
+  const snoozeUntil = new Date(rawSnoozeUntil)
+  return isFuture(snoozeUntil) ? format(add(snoozeUntil, { days: 1 }), 'd MMMM yyyy') : ''
 }
 
-module.exports = {
+export default {
   getStartMonth,
   get2faCode,
-  getAuthErrorDescription,
   createTwoFactorAuthenticationHash,
   sortByDate,
   sortByDisplayType,

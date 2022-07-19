@@ -4,20 +4,22 @@ import appWithAllRoutes from './testutils/appSetup'
 
 let app: Express
 
-jest.mock('moment', () => () => jest.requireActual('moment')('2020-03-02T00:00:00.000Z'))
-
 beforeEach(() => {
   app = appWithAllRoutes({ hmppsAuthMFAUser: true })
+  jest.useFakeTimers({
+    doNotFake: ['setImmediate', 'clearImmediate', 'setInterval', 'clearInterval'],
+  })
+  jest.setSystemTime(new Date('2020-03-02'))
 })
 
 afterEach(() => {
   jest.resetAllMocks()
+  jest.useRealTimers()
 })
 
 describe('calendar router', () => {
   describe('GET /', () => {
-    it('should redirect to correct calendar month', () => {
-      return request(app).get('/calendar').expect(302).expect('Location', '/calendar/2020-03-01')
-    })
+    it('should redirect to correct calendar month', () =>
+      request(app).get('/calendar').expect(302).expect('Location', '/calendar/2020-03-01'))
   })
 })

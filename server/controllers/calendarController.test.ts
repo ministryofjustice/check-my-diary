@@ -18,7 +18,17 @@ jest.mock('jwt-decode', () => {
 })
 
 const calendarData = [
-  { date: new Date(), details: [{ activity: 'Duty Manager', displayType: 'DAY_START', start: new Date() }] },
+  {
+    date: '2022-07-29',
+    details: [
+      {
+        activity: 'Duty Manager',
+        displayType: 'DAY_START',
+        displayTypeTime: '2022-07-29T12:30:00',
+        start: '2022-07-29T12:30:00',
+      },
+    ],
+  },
 ]
 const notificationCount = 42
 const getCalendarMonthMock = jest.fn()
