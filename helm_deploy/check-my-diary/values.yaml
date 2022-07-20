@@ -2,9 +2,6 @@
 generic-service:
   nameOverride: check-my-diary
 
-  autoscaling:
-    enabled: true
-
   image:
     repository: quay.io/hmpps/check-my-diary
     tag: latest    # override at deployment time
