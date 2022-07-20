@@ -157,7 +157,7 @@ const processDay = (day: CalendarDay): CalendarDay => {
         const showNightHr = nightFinish && displayType === 'NIGHT_START' // dont show a <hr> for night overtime because the start/end colours are different
         nightFinish = displayType === 'NIGHT_FINISH' || displayType === 'OVERTIME_NIGHT_FINISH'
         const durationColour = nightFinish
-          ? getTypeClass(displayType, true)
+          ? specialActivityStartEndColour || getTypeClass(displayType, true)
           : (!isFullDay && displayType.endsWith('FINISH') && fullDayMatch(activity)) || ''
         return {
           ...detail,

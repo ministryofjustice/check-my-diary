@@ -30,9 +30,7 @@ const calendarData = [
     ],
   },
 ]
-const notificationCount = 42
 const getCalendarMonthMock = jest.fn()
-const countUnprocessedNotificationsMock = jest.fn()
 const renderMock = jest.fn()
 const nextMock = jest.fn()
 const token = { replace: 'sausages' }
@@ -50,7 +48,6 @@ const req = {
 } as unknown as Request
 const calendarService: CalendarService = { getCalendarMonth: getCalendarMonthMock } as unknown as CalendarService
 const notificationService = {
-  countUnprocessedNotifications: countUnprocessedNotificationsMock,
   getPreferences: notificationPreferencesMock,
 } as unknown as NotificationService
 const notificationCookieService = new NotificationCookieService()
@@ -70,7 +67,6 @@ const calendarController = () =>
 beforeEach(() => {
   rolesMock.mockReturnValue({ authorities: ['ROLE_MFA'] })
   getCalendarMonthMock.mockResolvedValue(calendarData)
-  countUnprocessedNotificationsMock.mockResolvedValue(notificationCount)
 })
 afterEach(() => {
   jest.resetAllMocks()
@@ -83,9 +79,6 @@ describe('CalendarController', () => {
       getUserAuthenticationDetailsMock.mockResolvedValue([{ EmailAddress: 's@a.b' }])
 
       await calendarController().getDate(req, res)
-    })
-    it('should get the notification count', () => {
-      expect(countUnprocessedNotificationsMock).toHaveBeenCalledTimes(1)
     })
     it('should get calendar data', () => {
       expect(getCalendarMonthMock).toHaveBeenCalledTimes(1)
@@ -110,7 +103,7 @@ describe('CalendarController', () => {
       getUserAuthenticationDetailsMock.mockResolvedValue([{ EmailAddress: 's@a.b' }])
 
       await calendarController().getDate(req, res)
-      expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
+      expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar.njk')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: true,
         mfa: '',
@@ -122,7 +115,7 @@ describe('CalendarController', () => {
       getUserAuthenticationDetailsMock.mockResolvedValue([])
 
       await calendarController().getDate(req, res)
-      expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
+      expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar.njk')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: true,
         mfa: '',
@@ -134,7 +127,7 @@ describe('CalendarController', () => {
       getUserAuthenticationDetailsMock.mockResolvedValue([{ EmailAddress: 's@a.b' }])
 
       await calendarController().getDate(req, res)
-      expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
+      expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar.njk')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: false,
         mfa: EXISTING_USER,
@@ -147,7 +140,7 @@ describe('CalendarController', () => {
 
       await calendarController().getDate(req, res)
       expect(getUserMfaMock).toHaveBeenCalledWith(token)
-      expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
+      expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar.njk')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: false,
         mfa: NEW_USER,
@@ -159,7 +152,7 @@ describe('CalendarController', () => {
       getUserAuthenticationDetailsMock.mockResolvedValue([])
 
       await calendarController().getDate(req, res)
-      expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
+      expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar.njk')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: false,
         mfa: FIRST_TIME_USER,
@@ -172,7 +165,7 @@ describe('CalendarController', () => {
       getUserAuthenticationDetailsMock.mockResolvedValue([])
 
       await calendarController().getDate(req, res)
-      expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
+      expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar.njk')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: false,
         mfa: FIRST_TIME_USER,
@@ -186,7 +179,7 @@ describe('CalendarController', () => {
       getUserAuthenticationDetailsMock.mockResolvedValue([{ EmailAddress: 's@a.b' }])
 
       await calendarController().getDate(req, res)
-      expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
+      expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar.njk')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: false,
         mfa: '',
@@ -200,7 +193,7 @@ describe('CalendarController', () => {
       getUserAuthenticationDetailsMock.mockResolvedValue([])
 
       await calendarController().getDate(req, res)
-      expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar')
+      expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar.njk')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: false,
         mfa: '',
