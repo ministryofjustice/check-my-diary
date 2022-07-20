@@ -16,9 +16,6 @@ generic-service:
     v0_47_enabled: true
     modsecurity_enabled: false
     path: /
-    annotations:
-      kubernetes.io/ingress.class: "nginx"
-      nginx.ingress.kubernetes.io/custom-http-errors: "418"
 
   livenessProbe:
     httpGet:
