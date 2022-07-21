@@ -78,58 +78,64 @@
         </div>
       </div>
     {% else %}
-      <ul class="calendar">
+      <ul class="calendar govuk-!-margin-bottom-1 govuk-!-margin-top-4">
         {% for day in ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] %}
           <li class="calendar-header">{{ day }}</li>
         {% endfor %}
-        {% for day in data %}
-          <li class="calendar-item {{ day.fullDayType }}{% if day.details === undefined %} no-day hide-0-to-1024{% endif %}" data-qa="{{ day.dateText }}">
-            {# Disable focussing on today only if banner shown AND on mobile device #}
-            {% if day.today %}
-              <span id="today"{% if showBanner.notifications or showBanner.mfa %} class="hide-mobile"{% endif %} ></span>
-            {% endif %}
-            {% if day.fullDayType !== 'no-day' %}
+      </ul>
+      <div class="hide-0-to-1024"> {# DESKTOP #}
+        <ul class="calendar">
+          {% for day in data %}
+              <li class="calendar-item{% if day.details === undefined %} no-day{% endif %}{% if day.isFullDay %} flex-parent{% endif %}"
+                  data-qa="d{{ day.dateText }}">
+                {% if day.fullDayType !== 'no-day' %}
 
-              <div class="hide-1024-up" tabindex="0">
-                <span class="day">
-                  <span class="line-left govuk-!-font-weight-bold">{{ day.dateDayText }}</span>
-                  {% if day.isFullDay %}
-                    <span class="line-right">{{ day.fullDayTypeDescription }}</span>
-                  {% endif %}
-                </span>
-              </div>
-              <div class="hide-0-to-1024" tabindex="0">
-                <span class="day">
-                  <span class="line-left govuk-!-font-weight-bold">{{ day.dateText }}</span>
-                  {% if day.isFullDay %}
-                    <span class="line-right">{{ day.fullDayTypeDescription }}</span>
-                  {% endif %}
-                </span>
-              </div>
+                  <div tabindex="0">
+                    <span class="day">
+                      <span class="line-left govuk-!-font-weight-bold">{{ day.dateText }}</span>
+                    </span>
+                  </div>
 
-              <div tabindex="0">
-                {% for detail in day.details %}
-                  {% if detail.specialActivityColour %}
-                    <span class="line {{ detail.specialActivityColour }}">{{ detail.activityDescription }}</span>
-                  {% endif %}
-                  <span class="line {{ detail.displayType }}">
-                    {% if detail.showNightHr %}
-                      <hr />
+                  <div class="{{ day.fullDayType }}{% if day.isFullDay %} flex-stretch{% endif %}" tabindex="0">
+                    {% if day.isFullDay %}
+                      <span class="line">{{ day.fullDayTypeDescription }}</span>
                     {% endif %}
-                    <span class="line-left">{{ detail.lineLeftText }}</span>
-                    {% if detail.lineRightText %}
-                      <span class="line-right {{ detail.displayType }}">{{ detail.lineRightText }}</span>
+                    {{ showDetails(day) }}
+                  </div>
+                {% endif %}
+              </li>
+              {% if loop.index % 7 == 0 %}
+                </ul>
+                <ul style="clear: both" class="calendar">
+              {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="hide-1024-up"> {# MOBILE #}
+        <ul class="calendar">
+        {% for day in data %}
+            <li class="calendar-item {{ day.fullDayType }}{% if day.details === undefined %} no-day hide-0-to-1024{% endif %}"
+                data-qa="m{{ day.dateText }}">
+              {# ^ Disable focussing on today only if banner shown AND on mobile device #}
+              {% if day.fullDayType !== 'no-day' %}
+
+                <div class="{{ day.fullDayType }}" tabindex="0">
+                  <span class="day">
+                    <span class="line-left govuk-!-font-weight-bold">{{ day.dateDayText }}</span>
+                    {% if day.isFullDay %}
+                      <span class="line-right">{{ day.fullDayTypeDescription }}</span>
                     {% endif %}
                   </span>
-                  {% if detail.finishDuration %}
-                    <span class="line {{ detail.durationColour }}">{{ detail.finishDuration }}</span>
-                  {% endif %}
-                {% endfor %}
-              </div>
-            {% endif %}
-          </li>
+                </div>
+
+                <div tabindex="0"{% if day.today and not (showBanner.notifications or showBanner.mfa) %} id="today"{% endif %}>
+                  {{ showDetails(day) }}
+                </div>
+              {% endif %}
+            </li>
         {% endfor %}
-      </ul>
+        </ul>
+      </div>
     {% endif %}
     <input type="hidden" id="_csrf" name="_csrf" value="{{ csrfToken }}" />
     <div class="govuk-clearfix"> </div>
@@ -162,3 +168,23 @@
     });
   </script>
 {% endblock %}
+
+{% macro showDetails(day) %}
+  {% for detail in day.details %}
+    {% if detail.specialActivityColour %}
+      <span class="line {{ detail.specialActivityColour }}">{{ detail.activityDescription }}</span>
+    {% endif %}
+    <span class="line {{ detail.displayType }}{% if loop.last %} full-height{% endif %}">
+      {% if detail.showNightHr %}
+        <hr />
+      {% endif %}
+      <span class="line-left">{{ detail.lineLeftText }}</span>
+      {% if detail.lineRightText %}
+        <span class="line-right {{ detail.displayType }}">{{ detail.lineRightText }}</span>
+      {% endif %}
+    </span>
+    {% if detail.finishDuration %}
+      <span class="line {{ detail.durationColour }}">{{ detail.finishDuration }}</span>
+    {% endif %}
+  {% endfor %}
+{% endmacro %}
