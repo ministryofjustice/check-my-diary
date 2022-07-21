@@ -5,6 +5,7 @@ import NotificationSettingsPage from '../pages/notificationSettings'
 context('A staff member can view their calendar', () => {
   before(() => {
     cy.task('createTablesInsertData')
+    cy.viewport(350, 750)
   })
   beforeEach(() => {
     cy.task('reset')
