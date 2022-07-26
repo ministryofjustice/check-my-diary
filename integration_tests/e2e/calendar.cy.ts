@@ -54,12 +54,7 @@ context('A staff member can view their calendar', () => {
       cy.get('span.line').eq(3).contains('10 hours 15 minutes')
     })
 
-    calendarPage
-      .day(10)
-      .should('have.attr', 'class')
-      .then((clazz) => {
-        expect(clazz).to.contains('holiday')
-      })
+    calendarPage.shouldHaveClass(calendarPage.day(10), 'holiday')
 
     calendarPage.day(10).within(() => {
       cy.get('span.day').contains('Annual Leave')

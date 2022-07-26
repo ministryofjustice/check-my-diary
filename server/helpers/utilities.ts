@@ -82,6 +82,7 @@ const fullDayActivities = [
   { description: 'Sick', class: 'illness' },
   { description: 'Absence', class: 'absence' },
   { description: 'Authorised Absence', class: 'absence' },
+  { description: 'Maternity Leave', class: 'absence' },
   { description: 'Union Duties', class: 'tu-official' },
   { description: 'Union Facility', class: 'tu-official' },
   { description: 'Detached Duty', class: 'detached-duty' },
@@ -105,8 +106,10 @@ const getTypeClass = (type: string, isFullDay: boolean) => {
       SHIFT: 'shift',
       DETACHED_DUTY: 'detached-duty',
       SECONDMENT: 'detached-duty',
-      TU_OFFICIALS_LEAVE_DAYS: 'tu-official',
-      TU_OFFICIALS_LEAVE_HOURS: 'tu-official',
+      TU_OFFICIALS_LEAVE_DAYS: 'tu-official', //  deprecated
+      TU_OFFICIALS_LEAVE_HOURS: 'tu-official', // deprecated
+      TU_OFFICIALS_LEAVE: 'tu-official',
+      TU_OFFICIALS_LEAVE_2: 'tu-official',
       TRAINING_EXTERNAL: 'training-external',
       TRAINING_INTERNAL: 'training-internal',
       NIGHT_FINISH: 'night_finish',
@@ -125,29 +128,24 @@ const unionFilter = (activity: string | undefined) =>
     ? 'Trade Union Official Duties'
     : activity
 
+const isMidnight = (start: string | undefined, end: string | undefined) =>
+  start &&
+  format(new Date(start), TIME_FORMAT) === '00:00:00' &&
+  end &&
+  format(new Date(end), TIME_FORMAT) === '00:00:00'
+
 const processDay = (day: CalendarDay): CalendarDay => {
   const { date, details, fullDayType, fullDayTypeDescription } = day
   const dateDate = new Date(date)
   const today = isToday(dateDate)
-  const isFullDay =
-    fullDayType !== 'NONE' &&
-    fullDayType !== 'SHIFT' &&
-    !details.some((detail) => detail.displayType === 'NIGHT_FINISH')
+  const isFullDay = fullDayType !== 'NONE' && fullDayType !== 'SHIFT'
 
   let nightFinish = false
+  let nightFinishDetected = false
 
   const processedDetails = details
-    .filter(
-      ({ start, end }) =>
-        !(
-          isFullDay &&
-          start &&
-          format(new Date(start), TIME_FORMAT) === '00:00:00' &&
-          end &&
-          format(new Date(end), TIME_FORMAT) === '00:00:00'
-        ),
-    )
-    .map((detail): Details => {
+    .filter(({ start, end }) => !(isFullDay && isMidnight(start, end)))
+    .map((detail, index): Details => {
       const { displayType, displayTypeTime, start, end, activity } = detail
 
       if (displayType) {
@@ -156,6 +154,9 @@ const processDay = (day: CalendarDay): CalendarDay => {
           ((displayType.endsWith('START') || displayType.endsWith('FINISH')) && fullDayMatch(activity)) || ''
         const showNightHr = nightFinish && displayType === 'NIGHT_START' // dont show a <hr> for night overtime because the start/end colours are different
         nightFinish = displayType === 'NIGHT_FINISH' || displayType === 'OVERTIME_NIGHT_FINISH'
+        if (nightFinish && index === 0) {
+          nightFinishDetected = true
+        }
         const durationColour = nightFinish
           ? specialActivityStartEndColour || getTypeClass(displayType, true)
           : (!isFullDay && displayType.endsWith('FINISH') && fullDayMatch(activity)) || ''
@@ -193,6 +194,7 @@ const processDay = (day: CalendarDay): CalendarDay => {
     isFullDay,
     fullDayType: getTypeClass(fullDayType, isFullDay),
     fullDayTypeDescription: unionFilter(fullDayTypeDescription),
+    nightFinishDetected,
   }
 }
 

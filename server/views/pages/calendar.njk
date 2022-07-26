@@ -97,10 +97,13 @@
                   </div>
 
                   <div class="{{ day.fullDayType }}{% if day.isFullDay %} flex-stretch{% endif %}" tabindex="0">
+                    {# If its a full day activity, and there is a night shift end at the top, split it out so its shown
+                       above the full day start #}
+                    {{ showDetails([day.details[0]], not (day.nightFinishDetected)) }}
                     {% if day.isFullDay %}
                       <span class="line">{{ day.fullDayTypeDescription }}</span>
                     {% endif %}
-                    {{ showDetails(day) }}
+                    {{ showDetails(day.details, day.nightFinishDetected) }}
                   </div>
                 {% endif %}
               </li>
@@ -118,18 +121,21 @@
                 data-qa="m{{ day.dateText }}">
               {# ^ Disable focussing on today only if banner shown AND on mobile device #}
               {% if day.fullDayType !== 'no-day' %}
-
-                <div class="{{ day.fullDayType }}" tabindex="0">
+                {# If its a full day activity, and there is a night shift end, cancel out the colour of the date line #}
+                <div class="{{ 'black-on-white' if day.nightFinishDetected else day.fullDayType }}" tabindex="0">
                   <span class="day">
                     <span class="line-left govuk-!-font-weight-bold">{{ day.dateDayText }}</span>
-                    {% if day.isFullDay %}
+                    {% if day.isFullDay and not day.nightFinishDetected %}
                       <span class="line-right">{{ day.fullDayTypeDescription }}</span>
                     {% endif %}
                   </span>
                 </div>
-
                 <div tabindex="0"{% if day.today and not (showBanner.notifications or showBanner.mfa) %} id="today"{% endif %}>
-                  {{ showDetails(day) }}
+                  {{ showDetails([day.details[0]], not (day.nightFinishDetected)) }}
+                  {% if day.isFullDay and day.nightFinishDetected %}
+                    <span class="line">{{ day.fullDayTypeDescription }}</span>
+                  {% endif %}
+                  {{ showDetails(day.details, day.nightFinishDetected) }}
                 </div>
               {% endif %}
             </li>
@@ -169,22 +175,24 @@
   </script>
 {% endblock %}
 
-{% macro showDetails(day) %}
-  {% for detail in day.details %}
-    {% if detail.specialActivityColour %}
-      <span class="line {{ detail.specialActivityColour }}">{{ detail.activityDescription }}</span>
-    {% endif %}
-    <span class="line {{ detail.displayType }}{% if loop.last %} full-height{% endif %}">
-      {% if detail.showNightHr %}
-        <hr />
+{% macro showDetails(details, skipFirst = false) %}
+  {% for detail in details %}
+    {% if not skipFirst or not loop.first %}
+      {% if detail.specialActivityColour %}
+        <span class="line {{ detail.specialActivityColour }}">{{ detail.activityDescription }}</span>
       {% endif %}
-      <span class="line-left">{{ detail.lineLeftText }}</span>
-      {% if detail.lineRightText %}
-        <span class="line-right {{ detail.displayType }}">{{ detail.lineRightText }}</span>
+      <span class="line {{ detail.displayType }}{% if loop.last %} full-height{% endif %}">
+        {% if detail.showNightHr %}
+          <hr />
+        {% endif %}
+        <span class="line-left">{{ detail.lineLeftText }}</span>
+        {% if detail.lineRightText %}
+          <span class="line-right {{ detail.displayType }}">{{ detail.lineRightText }}</span>
+        {% endif %}
+      </span>
+      {% if detail.finishDuration %}
+        <span class="line {{ detail.durationColour }}">{{ detail.finishDuration }}</span>
       {% endif %}
-    </span>
-    {% if detail.finishDuration %}
-      <span class="line {{ detail.durationColour }}">{{ detail.finishDuration }}</span>
     {% endif %}
   {% endfor %}
 {% endmacro %}

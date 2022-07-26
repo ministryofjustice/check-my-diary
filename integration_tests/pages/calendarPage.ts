@@ -30,4 +30,12 @@ export default class CalendarPage extends Page {
 
   detailStartNight = (date: number, mobileOrDesktop: mobileOrDesktopType = mobileOrDesktopType.mobile): PageElement =>
     cy.get(`li[data-qa="${mobileOrDesktop}${date}"]`).get('.night_start')
+
+  shouldHaveClassAtLine = (n: number, expectedClazz: string) =>
+    this.shouldHaveClass(cy.get('span.line').eq(n), expectedClazz)
+
+  shouldHaveClass = (element: PageElement, expectedClazz: string) =>
+    element.should('have.attr', 'class').then((clazz) => {
+      expect(clazz).to.contains(expectedClazz)
+    })
 }
