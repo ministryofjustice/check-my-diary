@@ -93,6 +93,11 @@ ul.calendar {
     }
   }
 
+  .black-on-white {
+    color: govuk-colour('black');
+    background-color: govuk-colour('white');
+  }
+
   .calendar-header {
     @include govuk-typography-weight-bold;
     float: left;

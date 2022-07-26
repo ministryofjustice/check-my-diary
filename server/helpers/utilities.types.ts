@@ -26,6 +26,7 @@ export interface CalendarDay {
   dateText?: string
   dateDayText?: string
   today?: boolean
+  nightFinishDetected?: boolean
 }
 
 export interface AppRequest {

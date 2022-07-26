@@ -70,11 +70,15 @@ context('A staff member can view their overtime calendar', () => {
       cy.get('span.line').eq(0).contains('Constant Watch')
     })
 
+    calendarPage.shouldHaveClass(calendarPage.day(23), 'rest-day')
     calendarPage.day(23).within(() => {
       cy.get('span.day').eq(0).contains('Monday 23')
-      cy.get('span.day').contains('Rest Day')
+      calendarPage.shouldHaveClass(cy.get('div').eq(0), 'black-on-white')
+      cy.get('span.day').should('not.contain', 'Rest Day')
       cy.get('span.line').eq(0).contains('Overtime night shift finish: 07:30')
       cy.get('span.line').eq(1).contains('9 hours')
+      calendarPage.shouldHaveClassAtLine(1, 'night_finish')
+      cy.get('span.line').eq(2).contains('Rest Day')
     })
 
     calendarPage.day(27).within(() => {
@@ -82,12 +86,7 @@ context('A staff member can view their overtime calendar', () => {
       cy.get('span.line').eq(0).contains('Night shift finish: 04:30')
       cy.get('span.line').eq(0).contains('Night Duties')
       cy.get('span.line').eq(1).contains('9 hours')
-      cy.get('span.line')
-        .eq(1)
-        .should('have.attr', 'class')
-        .then((clazz) => {
-          expect(clazz).to.contains('night_finish')
-        })
+      calendarPage.shouldHaveClassAtLine(1, 'night_finish')
       cy.get('span.line').eq(2).contains('Night shift start: 22:45')
       cy.get('span.line').eq(2).contains('Night Duties')
       cy.get('span.line').eq(2).get('hr').should('be.visible')
@@ -121,16 +120,22 @@ context('A staff member can view their overtime calendar', () => {
       cy.get('span.line').eq(3).contains('1 hour')
     })
 
+    calendarPage.shouldHaveClass(calendarPage.day(23), 'rest-day')
+    calendarPage.day(23).within(() => {
+      cy.get('span.day').eq(0).contains('Monday 23')
+      calendarPage.shouldHaveClass(cy.get('div').eq(0), 'black-on-white')
+      cy.get('span.day').should('not.contain', 'Rest Day')
+      cy.get('span.line').eq(0).contains('Overtime night shift finish: 07:30')
+      cy.get('span.line').eq(1).contains('9 hours')
+      calendarPage.shouldHaveClassAtLine(1, 'night_finish')
+      cy.get('span.line').eq(2).contains('Rest Day')
+    })
+
     calendarPage.day(27, mobileOrDesktopType.desktop).within(() => {
       cy.get('span.line').eq(0).contains('Night shift finish: 04:30')
       cy.get('span.line').eq(0).contains('Night Duties')
       cy.get('span.line').eq(1).contains('9 hours')
-      cy.get('span.line')
-        .eq(1)
-        .should('have.attr', 'class')
-        .then((clazz) => {
-          expect(clazz).to.contains('night_finish')
-        })
+      calendarPage.shouldHaveClassAtLine(1, 'night_finish')
       cy.get('span.line').eq(2).contains('Night shift start: 22:45')
       cy.get('span.line').eq(2).contains('Night Duties')
       cy.get('span.line').eq(2).get('hr').should('be.visible')
