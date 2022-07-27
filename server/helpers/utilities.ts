@@ -190,6 +190,7 @@ const processDay = (day: CalendarDay): CalendarDay => {
     today,
     dateText: format(dateDate, 'd'),
     dateDayText: format(dateDate, 'eeee d'),
+    dateScreenReaderText: format(dateDate, 'eeee do MMMM'),
     details: processedDetails,
     isFullDay,
     fullDayType: getTypeClass(fullDayType, isFullDay),
