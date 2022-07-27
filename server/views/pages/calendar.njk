@@ -93,7 +93,7 @@
                   <div tabindex="0">
                     <span class="day">
                       <span class="line-left govuk-!-font-weight-bold" aria-hidden="true">{{ day.dateText }}</span>
-                      <span class="screenreader-only">{{ day.dateScreenReaderText }}</span>
+                      <span class="govuk-visually-hidden">{{ day.dateScreenReaderText }}</span>
                     </span>
                   </div>
 
@@ -126,7 +126,7 @@
                 <div class="{{ 'black-on-white' if day.nightFinishDetected else day.fullDayType }}" tabindex="0">
                   <span class="day">
                     <span class="line-left govuk-!-font-weight-bold" aria-hidden="true">{{ day.dateDayText }}</span>
-                    <span class="screenreader-only">{{ day.dateScreenReaderText }}</span>
+                    <span class="govuk-visually-hidden">{{ day.dateScreenReaderText }}</span>
                     {% if day.isFullDay and not day.nightFinishDetected %}
                       <span class="line-right">{{ day.fullDayTypeDescription }}</span>
                     {% endif %}
@@ -193,7 +193,7 @@
         {% endif %}
       </span>
       {% if detail.finishDuration %}
-        <span class="screenreader-only">Shift length</span>
+        <span class="govuk-visually-hidden">Shift length</span>
         <span class="line {{ detail.durationColour }}">{{ detail.finishDuration }}</span>
       {% endif %}
     {% endif %}
