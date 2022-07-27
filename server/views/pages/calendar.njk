@@ -78,7 +78,7 @@
         </div>
       </div>
     {% else %}
-      <ul class="calendar govuk-!-margin-bottom-1 govuk-!-margin-top-4">
+      <ul class="calendar govuk-!-margin-bottom-1 govuk-!-margin-top-4" aria-hidden="true">
         {% for day in ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] %}
           <li class="calendar-header">{{ day }}</li>
         {% endfor %}
@@ -92,7 +92,8 @@
 
                   <div tabindex="0">
                     <span class="day">
-                      <span class="line-left govuk-!-font-weight-bold">{{ day.dateText }}</span>
+                      <span class="line-left govuk-!-font-weight-bold" aria-hidden="true">{{ day.dateText }}</span>
+                      <span class="screenreader-only">{{ day.dateScreenReaderText }}</span>
                     </span>
                   </div>
 
@@ -124,7 +125,8 @@
                 {# If its a full day activity, and there is a night shift end, cancel out the colour of the date line #}
                 <div class="{{ 'black-on-white' if day.nightFinishDetected else day.fullDayType }}" tabindex="0">
                   <span class="day">
-                    <span class="line-left govuk-!-font-weight-bold">{{ day.dateDayText }}</span>
+                    <span class="line-left govuk-!-font-weight-bold" aria-hidden="true">{{ day.dateDayText }}</span>
+                    <span class="screenreader-only">{{ day.dateScreenReaderText }}</span>
                     {% if day.isFullDay and not day.nightFinishDetected %}
                       <span class="line-right">{{ day.fullDayTypeDescription }}</span>
                     {% endif %}
@@ -191,6 +193,7 @@
         {% endif %}
       </span>
       {% if detail.finishDuration %}
+        <span class="screenreader-only">Shift length</span>
         <span class="line {{ detail.durationColour }}">{{ detail.finishDuration }}</span>
       {% endif %}
     {% endif %}
