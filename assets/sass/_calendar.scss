@@ -165,12 +165,12 @@ ul.calendar {
     }
 
     &.overtime_day_start, &.overtime_night_start {
-      background-color: govuk-colour('purple');
+      background-color: govuk-colour('light-purple');
       color: govuk-colour('white');
     }
 
     &.overtime_day_finish, &.overtime_night_finish {
-      background-color: govuk-colour('light-purple');
+      background-color: govuk-colour('purple');
       color: govuk-colour('white');
     }
 
