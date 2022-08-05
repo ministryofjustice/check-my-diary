@@ -14,6 +14,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
 
   app.locals.asset_path = '/assets/'
   app.locals.applicationName = 'Check my diary'
+  app.locals.googleAnalyticsId = process.env.GOOGLE_ANALYTICS_ID
 
   // Cachebusting version string
   if (production) {
