@@ -100,7 +100,7 @@ context('A staff member can view their calendar', () => {
     cy.task('stubNotificationPreferencesGet', { preference: 'SMS', sms: '01234567890' })
     cy.visit('/')
 
-    calendarPage.banner().contains('You will soon only be able to receive notifications by email')
+    calendarPage.banner().contains('You will now only be able to receive shift notifications by email')
     calendarPage.banner().contains('Dismiss').should('not.exist')
     calendarPage.notificationBannerLink().click()
     Page.verifyOnPage(NotificationSettingsPage)
@@ -154,7 +154,7 @@ context('A staff member can view their calendar', () => {
     cy.task('stubLogin', { username: 'AUTH_USER', authorities: ['ROLE_CMD_MIGRATED_MFA'] })
     cy.login()
     const calendarPage = Page.verifyOnPageTitle(CalendarPage)
-    calendarPage.banner().contains('You will soon only be able to receive notifications by email')
+    calendarPage.banner().contains('You will now only be able to receive shift notifications by email')
     calendarPage.banner().contains('You must add a backup personal email address or phone number')
   })
 })
