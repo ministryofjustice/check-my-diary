@@ -3,11 +3,10 @@ import csurf from 'csurf'
 import auth from '../authentication/auth'
 import populateCurrentUser from '../middleware/populateCurrentUser'
 import tokenVerifier from '../data/tokenVerification'
-import { UserAuthenticationService } from '../services'
 
 const testMode = process.env.NODE_ENV === 'test'
 
-export default function standardRouter(userAuthenticationService: UserAuthenticationService): Router {
+export default function standardRouter(): Router {
   const router = Router({ mergeParams: true })
 
   router.use(auth.authenticationMiddleware(tokenVerifier))

@@ -32,7 +32,7 @@ export default function createApp(services: Services) {
   nunjucksSetup(app, path)
   app.use(setUpAuth(services.userAuthenticationService))
 
-  app.use('/', indexRouter(standardRouter(services.userAuthenticationService), services))
+  app.use('/', indexRouter(standardRouter(), services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(createErrorHandler(process.env.NODE_ENV === 'production'))

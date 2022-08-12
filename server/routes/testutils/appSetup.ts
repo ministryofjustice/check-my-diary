@@ -50,5 +50,5 @@ export default function appWithAllRoutes({
 }): Express {
   auth.default.authenticationMiddleware = () => (req, res, next) => next()
   const svcs = services()
-  return appSetup(indexRouter(standardRouter(svcs.userAuthenticationService), svcs), production, hmppsAuthMFAUser)
+  return appSetup(indexRouter(standardRouter(), svcs), production, hmppsAuthMFAUser)
 }
