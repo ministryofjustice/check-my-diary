@@ -9,9 +9,6 @@ import { getRelativeModifiedDate, initialiseName } from './utils'
 const production = process.env.NODE_ENV === 'production'
 
 export default function nunjucksSetup(app: express.Express, path: pathModule.PlatformPath): void {
-  app.engine('njk', nunjucks.render)
-  app.set('view engine', 'njk')
-
   app.locals.asset_path = '/assets/'
   app.locals.applicationName = 'Check my diary'
   app.locals.googleAnalyticsId = process.env.GOOGLE_ANALYTICS_ID
@@ -37,7 +34,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
       'node_modules/@ministryofjustice/frontend/moj/components/',
     ],
     {
-      autoescape: true,
+      express: app,
     },
   )
 

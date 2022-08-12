@@ -10,13 +10,11 @@ import standardRouter from '../standardRouter'
 import { services } from '../../services'
 import * as auth from '../../authentication/auth'
 import nunjucksSetup from '../../utils/nunjucksSetup'
-import ejsSetup from '../../utils/ejsSetup'
 
 function appSetup(route: Router, production: boolean, hmppsAuthMFAUser: boolean): Express {
   const app = express()
 
   nunjucksSetup(app, path)
-  ejsSetup(app, path)
 
   const authUser = { name: 'first last', authorities: hmppsAuthMFAUser ? 'ROLE_CMD_MIGRATED_MFA' : 'ROLE_BOB' }
   const token = jsonwebtoken.sign(authUser, 'ssshhh', { expiresIn: '1h' })
@@ -52,5 +50,5 @@ export default function appWithAllRoutes({
 }): Express {
   auth.default.authenticationMiddleware = () => (req, res, next) => next()
   const svcs = services()
-  return appSetup(indexRouter(standardRouter(svcs.userAuthenticationService), svcs), production, hmppsAuthMFAUser)
+  return appSetup(indexRouter(standardRouter(), svcs), production, hmppsAuthMFAUser)
 }
