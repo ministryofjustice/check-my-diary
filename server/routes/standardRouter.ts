@@ -12,6 +12,9 @@ export default function standardRouter(): Router {
   router.use(auth.authenticationMiddleware(tokenVerifier))
   router.use(populateCurrentUser())
 
+  // help users whose browsers remember this previously removed context
+  router.use('/auth', (req, res) => res.redirect('/'))
+
   // CSRF protection
   if (!testMode) {
     router.use(csurf())

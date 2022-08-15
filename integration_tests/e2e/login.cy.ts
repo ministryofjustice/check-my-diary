@@ -32,6 +32,15 @@ context('Sign in functionality', () => {
     Page.verifyOnPage(AuthSignInPage)
   })
 
+  it('Going to old auth pages now redirects to sign in or calendar', () => {
+    cy.task('stubLogin')
+    cy.request('/auth/login').its('body').should('contain', 'Sign in')
+    cy.request('POST', '/auth/2fa').its('body').should('contain', 'Sign in')
+    cy.login()
+    cy.visit('/auth/login')
+    Page.verifyOnPageTitle(CalendarPage, format(new Date(), 'MMMM yyyy'))
+  })
+
   it('Sign out takes user to sign in page', () => {
     cy.task('stubLogin')
     cy.login()
