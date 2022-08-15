@@ -32,6 +32,21 @@ context('Sign in functionality', () => {
     Page.verifyOnPage(AuthSignInPage)
   })
 
+  it('Going to old auth pages now redirects to sign in or calendar', () => {
+    cy.task('stubLogin')
+    cy.login()
+    cy.visit('/auth/login')
+    Page.verifyOnPageTitle(CalendarPage, 'Your shift detail')
+    cy.request({
+      method: 'POST',
+      url: '/auth/2fa',
+      followRedirect: false,
+    }).then((resp) => {
+      expect(resp.status).to.eq(302)
+      expect(resp.redirectedToUrl).to.eq('http://localhost:3005/')
+    })
+  })
+
   it('Sign out takes user to sign in page', () => {
     cy.task('stubLogin')
     cy.login()
