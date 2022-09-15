@@ -5,6 +5,7 @@ import * as pathModule from 'path'
 import { Result, ValidationError } from 'express-validator'
 
 import { getRelativeModifiedDate, initialiseName } from './utils'
+import config from '../config'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -56,4 +57,6 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
       href: `#${error.param}`,
     })),
   )
+
+  njkEnv.addGlobal('dpsHomeUrl', config.dpsHomeUrl)
 }
