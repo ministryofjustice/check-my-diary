@@ -32,10 +32,19 @@ context('Sign in functionality', () => {
     Page.verifyOnPage(AuthSignInPage)
   })
 
-  it('Going to auth login page redirects to the auth sign in page if not signed in', () => {
-    cy.task('stubLoginPage')
+  it('Going to old auth pages now redirects to sign in or calendar', () => {
+    cy.task('stubLogin')
+    cy.login()
     cy.visit('/auth/login')
-    Page.verifyOnPage(AuthSignInPage)
+    Page.verifyOnPageTitle(CalendarPage, 'Your shift detail')
+    cy.request({
+      method: 'POST',
+      url: '/auth/2fa',
+      followRedirect: false,
+    }).then((resp) => {
+      expect(resp.status).to.eq(302)
+      expect(resp.redirectedToUrl).to.eq('http://localhost:3005/')
+    })
   })
 
   it('Sign out takes user to sign in page', () => {
@@ -97,11 +106,11 @@ context('Sign in functionality', () => {
     page.banner().contains('You need to set up two-factor authentication ')
   })
 
-  it('Auth 2fa user sign in direct access to /auth/login should redirect', () => {
+  it('Auth 2fa user sign in direct access to /login should redirect', () => {
     cy.task('stubLogin', { username: 'AUTH_USER', authorities: ['ROLE_CMD_MIGRATED_MFA'] })
     cy.task('stubNotificationPreferencesGet', {})
 
-    cy.request('/auth/login')
+    cy.request('/login')
     cy.task('getLoginUrl').then((url: string) => cy.visit(url))
 
     const calendarPage = Page.verifyOnPageTitle(CalendarPage, format(new Date(), 'MMMM yyyy'))

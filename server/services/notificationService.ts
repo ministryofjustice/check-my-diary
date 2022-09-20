@@ -39,7 +39,7 @@ export default class NotificationService {
       })
       .then((response) => response.data)
       .catch((error) => {
-        if (error.response.status === 404) {
+        if (error.response?.status === 404) {
           return {}
         }
         const sanitisedError = getSanitisedError(error)

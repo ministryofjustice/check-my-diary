@@ -5,15 +5,14 @@ import * as pathModule from 'path'
 import { Result, ValidationError } from 'express-validator'
 
 import { getRelativeModifiedDate, initialiseName } from './utils'
+import config from '../config'
 
 const production = process.env.NODE_ENV === 'production'
 
 export default function nunjucksSetup(app: express.Express, path: pathModule.PlatformPath): void {
-  app.engine('njk', nunjucks.render)
-  app.set('view engine', 'njk')
-
   app.locals.asset_path = '/assets/'
   app.locals.applicationName = 'Check my diary'
+  app.locals.googleAnalyticsId = process.env.GOOGLE_ANALYTICS_ID
 
   // Cachebusting version string
   if (production) {
@@ -36,7 +35,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
       'node_modules/@ministryofjustice/frontend/moj/components/',
     ],
     {
-      autoescape: true,
+      express: app,
     },
   )
 
@@ -58,4 +57,6 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
       href: `#${error.param}`,
     })),
   )
+
+  njkEnv.addGlobal('dpsHomeUrl', config.dpsHomeUrl)
 }

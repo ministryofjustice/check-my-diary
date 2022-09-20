@@ -8,7 +8,6 @@ ul.calendar .calendar-item {
   width: 14%;
   list-style: none;
   border: 1px solid govuk-colour('mid-grey');
-  min-height: 360px;
   overflow: auto;
 
   @include app-breakpoint {
@@ -16,7 +15,6 @@ ul.calendar .calendar-item {
     width: 100%;
     margin: auto auto 20px;
     border: none;
-    min-height: auto;
   }
 }
 
@@ -35,6 +33,13 @@ ul.calendar .calendar-item {
 
 ul.calendar {
 
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  @include app-breakpoint {
+    display: revert;
+  }
+  margin: 0;
   padding: 0;
   @include govuk-font(16);
 
@@ -88,13 +93,19 @@ ul.calendar {
     }
   }
 
+  .black-on-white {
+    color: govuk-colour('black');
+    background-color: govuk-colour('white');
+  }
+
   .calendar-header {
     @include govuk-typography-weight-bold;
     float: left;
-    width: 14%;
+    width: 14.28%;
     list-style: none;
     border: none;
     text-align: center;
+    @include govuk-font(14, $weight: "bold");
 
     @include app-breakpoint {
       display: none;
@@ -121,9 +132,10 @@ ul.calendar {
     }
 
     &.line {
-      padding: 3px 0 3px 5px;
+      padding: 3px 5px 3px 5px;
       min-height: 15px;
       overflow: auto;
+      @include govuk-font(14);
 
       @include app-breakpoint {
         padding: 15px 10px 15px 10px;
@@ -137,6 +149,9 @@ ul.calendar {
 
     &.line-right {
       float: right;
+      @include app-breakpoint {
+        @include govuk-font(24);
+      }
     }
 
     &.day_start {
@@ -150,12 +165,12 @@ ul.calendar {
     }
 
     &.overtime_day_start, &.overtime_night_start {
-      background-color: govuk-colour('purple');
+      background-color: govuk-colour('light-purple');
       color: govuk-colour('white');
     }
 
     &.overtime_day_finish, &.overtime_night_finish {
-      background-color: govuk-colour('light-purple');
+      background-color: govuk-colour('purple');
       color: govuk-colour('white');
     }
 
@@ -174,4 +189,14 @@ ul.calendar {
 .strict-grid-column-one-third {
   width: 33.33%;
   float: left;
+}
+
+.flex-parent {
+  display: flex;
+  flex-direction: column;
+  flex-align: stretch;
+}
+
+.flex-stretch {
+  flex-grow: 1;
 }

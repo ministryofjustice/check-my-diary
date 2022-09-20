@@ -25,7 +25,9 @@ export interface CalendarDay {
   details: Details[]
   dateText?: string
   dateDayText?: string
+  dateScreenReaderText?: string
   today?: boolean
+  nightFinishDetected?: boolean
 }
 
 export interface AppRequest {

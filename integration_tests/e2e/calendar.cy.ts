@@ -5,6 +5,7 @@ import NotificationSettingsPage from '../pages/notificationSettings'
 context('A staff member can view their calendar', () => {
   before(() => {
     cy.task('createTablesInsertData')
+    cy.viewport(350, 750)
   })
   beforeEach(() => {
     cy.task('reset')
@@ -53,12 +54,7 @@ context('A staff member can view their calendar', () => {
       cy.get('span.line').eq(3).contains('10 hours 15 minutes')
     })
 
-    calendarPage
-      .day(10)
-      .should('have.attr', 'class')
-      .then((clazz) => {
-        expect(clazz).to.contains('holiday')
-      })
+    calendarPage.shouldHaveClass(calendarPage.day(10), 'holiday')
 
     calendarPage.day(10).within(() => {
       cy.get('span.day').contains('Annual Leave')
@@ -72,6 +68,8 @@ context('A staff member can view their calendar', () => {
       cy.get('span.line').eq(2).contains('Finish: 17:30')
       cy.get('span.line').eq(3).contains('9 hours')
     })
+
+    calendarPage.dpsLink().should('not.exist')
   })
 
   it('A staff member can see a day shift', () => {
@@ -160,5 +158,18 @@ context('A staff member can view their calendar', () => {
     const calendarPage = Page.verifyOnPageTitle(CalendarPage)
     calendarPage.banner().contains('You will soon only be able to receive notifications by email')
     calendarPage.banner().contains('You must add a backup personal email address or phone number')
+  })
+
+  it('DPS link shown', () => {
+    cy.task('stubLogin')
+    cy.login()
+
+    cy.visit('/?fromDPS=true')
+    const calendarPage = Page.verifyOnPageTitle(CalendarPage, 'Your shift detail')
+    calendarPage.dpsLink().contains('Digital Prison Services')
+
+    cy.visit('/')
+    // still in session
+    calendarPage.dpsLink().contains('Digital Prison Services')
   })
 })

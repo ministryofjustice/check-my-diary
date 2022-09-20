@@ -75,6 +75,7 @@ export default class CalendarController {
       data,
       showBanner,
       mfaBannerType,
+      fromDPS: req.session.fromDPS,
     })
   }
 }
