@@ -87,7 +87,6 @@ export default {
     url: get('CMD_API_URL', 'http://localhost:9191'),
   },
   domain: process.env.HMPPS_COOKIE_DOMAIN,
-  quantumAddresses: get('QUANTUM_ADDRESS', '127.0.0.1', requiredInProduction),
   dpsHomeUrl: process.env.DPS_HOME_URL,
   https: production,
 }

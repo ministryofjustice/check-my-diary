@@ -164,11 +164,11 @@ context('A staff member can view their calendar', () => {
     cy.task('stubLogin')
     cy.login()
 
-    cy.visit('/calendar/2020-03-01?fromDPS=true')
-    const calendarPage = Page.verifyOnPageTitle(CalendarPage, 'March 2020')
+    cy.visit('/?fromDPS=true')
+    const calendarPage = Page.verifyOnPageTitle(CalendarPage, 'Your shift detail')
     calendarPage.dpsLink().contains('Digital Prison Services')
 
-    cy.visit('/calendar/2020-03-01')
+    cy.visit('/')
     // still in session
     calendarPage.dpsLink().contains('Digital Prison Services')
   })

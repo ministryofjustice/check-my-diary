@@ -11,7 +11,10 @@ export default function indexRouter(router: Router, services: Services): Router 
 
   router.use(setUpMaintenance())
 
-  get('/', (req, res) => res.redirect('/calendar#today'))
+  get('/', (req, res) => {
+    req.session.fromDPS ||= !!req.query.fromDPS
+    return res.redirect('/calendar#today')
+  })
   get('/contact-us', (req, res) => {
     res.render('pages/contact-us.njk')
   })

@@ -23,9 +23,8 @@ export default class CalendarController {
     const {
       user: { token, username },
       params: { date },
-      query: { fromDPS },
     } = req
-    req.session.fromDPS ||= !!fromDPS
+
     logger.info({ user: username, date }, 'GET calendar view')
 
     const isMfa = utilities.hmppsAuthMFAUser(token)
