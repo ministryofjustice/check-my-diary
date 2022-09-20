@@ -22,6 +22,8 @@ export default class CalendarPage extends Page {
 
   notificationBannerLink = (): PageElement => cy.get('.govuk-notification-banner__link')
 
+  dpsLink = (): PageElement => cy.get('.govuk-breadcrumbs')
+
   detailStart = (date: number, mobileOrDesktop: mobileOrDesktopType = mobileOrDesktopType.mobile): PageElement =>
     cy.get(`li[data-qa="${mobileOrDesktop}${date}"] .day_start`)
 

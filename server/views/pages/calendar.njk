@@ -1,4 +1,5 @@
 {% extends "../partials/layout.njk" %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
 
 {% set pageTitle = applicationName + " - Calendar" %}
 
@@ -53,6 +54,9 @@
       </div>
     {% endif %}
 
+    {% if fromDPS %}
+      {{ govukBreadcrumbs({ items: [{ text: 'Digital Prison Services', href: dpsHomeUrl }] }) }}
+    {% endif %}
     <h1 class="govuk-heading-m govuk-!-margin-top-3">Your shift detail</h1>
 
     <div class="govuk-grid-row govuk-!-margin-0">

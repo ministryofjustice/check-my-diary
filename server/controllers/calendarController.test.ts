@@ -45,6 +45,8 @@ const req = {
   authUrl,
   user: { token, employeeName },
   params: { date: '2001-01-01' },
+  session: {},
+  query: {},
 } as unknown as Request
 const calendarService: CalendarService = { getCalendarMonth: getCalendarMonthMock } as unknown as CalendarService
 const notificationService = {

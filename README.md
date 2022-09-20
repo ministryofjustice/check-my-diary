@@ -47,7 +47,6 @@ Ensure you build assets first
          [`template.env`](./template.env) contains all the enviroment variables need for running this app.
 
          Add env variables from *values-dev.yaml*, modify where necessary, for example:
-         - TWO_FACT_AUTH_ON: *false*
          - HMPPS_COOKIE_DOMAIN: *localhost:3000*
          - CHECK_MY_DIARY_URL: *http://localhost:3000*
          - CMD_API_URL: *http://localhost:3002*

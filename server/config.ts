@@ -83,20 +83,11 @@ export default {
     start: process.env.MAINTENANCE_START,
     end: process.env.MAINTENANCE_END,
   },
-  notify: {
-    url: process.env.NOTIFY_URL || (!production && 'http://localhost:9191'),
-    clientKey: get('NOTIFY_CLIENT_KEY', 'some_invalid_key', requiredInProduction),
-    smsTemplateId: get('NOTIFY_SMS_TEMPLATE', 'not_sms', requiredInProduction),
-    emailTemplateId: get('NOTIFY_EMAIL_TEMPLATE', 'not_email', requiredInProduction),
-    healthCheckUrl: process.env.NOTIFY_HEALTH_CHECK_URL || 'https://api.notifications.service.gov.uk/_status',
-  },
   cmdApi: {
     url: get('CMD_API_URL', 'http://localhost:9191'),
   },
   domain: process.env.HMPPS_COOKIE_DOMAIN,
-  sessionTimeout: process.env.WEB_SESSION_TIMEOUT_IN_MINUTES,
   quantumAddresses: get('QUANTUM_ADDRESS', '127.0.0.1', requiredInProduction),
-  rejectUnauthorized: process.env.REJECT_UNAUTHORIZED,
-  twoFactorAuthOn: process.env.TWO_FACT_AUTH_ON,
+  dpsHomeUrl: process.env.DPS_HOME_URL,
   https: production,
 }
