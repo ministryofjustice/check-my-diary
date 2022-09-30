@@ -5,7 +5,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
-{% set pageTitle = applicationName + " - Do you want to receive notifications?" %}
+{% set pageTitle = applicationName + " - Notification settings" %}
 
 {% block beforeContent %}
   {{ govukBackLink({ href: "/notifications/manage" }) }}
@@ -36,35 +36,53 @@
               text: "Email address"
             },
             errorMessage: errors | findError('inputEmail'),
-            attributes: {
-              maxlength: "256"
-            }
+            attributes: { maxlength: "256" }
+          }) }}
+        {% endset -%}
+
+        {% set smsHtml %}
+          {{ govukInput({
+            id: "inputSMS",
+            name: "inputSMS",
+            type: "text",
+            value: inputSMS,
+            spellcheck: false,
+            classes: "govuk-!-width-one-half",
+            label: {
+              text: "Mobile phone number"
+            },
+            errorMessage: errors | findError('inputSMS'),
+            attributes: { maxlength: "20" }
           }) }}
         {% endset -%}
 
         {{ govukRadios({
-          idPrefix: "notificationRequired",
-          name: "notificationRequired",
+          idPrefix: "contactMethod",
+          name: "contactMethod",
           fieldset: {
             legend: {
-              text: "Do you want to receive notifications?",
+              text: "Notification settings",
               isPageHeading: true,
               classes: "govuk-fieldset__legend--l"
             }
           },
-          errorMessage: errors | findError('notificationRequired'),
+          errorMessage: errors | findError('contactMethod'),
           items: [
             {
-              value: "Yes",
-              text: "Yes",
+              value: "EMAIL",
+              text: "Email address",
               checked: contactMethod == 'EMAIL',
-              conditional: {
-                html: emailHtml
-              }
+              conditional: { html: emailHtml }
             },
             {
-              value: "No",
-              text: "No",
+              value: "SMS",
+              text: "Text message",
+              checked: contactMethod == 'SMS',
+              conditional: { html: smsHtml }
+            },
+            {
+              value: "NONE",
+              text: "None",
               checked: contactMethod == 'NONE'
             }
           ]

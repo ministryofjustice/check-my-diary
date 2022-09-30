@@ -103,7 +103,7 @@ context('Sign in functionality', () => {
     cy.task('stubNotificationPreferencesGet', {})
     cy.login()
     const page = Page.verifyOnPageTitle(CalendarPage, format(new Date(), 'MMMM yyyy'))
-    page.banner().contains('You need to set up two-factor authentication ')
+    page.bannerMFA().contains('You need to set up two-factor authentication ')
   })
 
   it('Auth 2fa user sign in direct access to /login should redirect', () => {

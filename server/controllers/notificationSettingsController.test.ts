@@ -34,6 +34,7 @@ describe('notification settings middleware', () => {
       expect(renderMock).toHaveBeenCalledWith('pages/notification-settings.njk', {
         contactMethod: NotificationType.SMS,
         inputEmail: '',
+        inputSMS: '404040404',
         errors: validationResult(req),
       })
     })
@@ -55,6 +56,7 @@ describe('notification settings middleware', () => {
       expect(renderMock).toHaveBeenCalledWith('pages/notification-settings.njk', {
         contactMethod: '',
         inputEmail: '',
+        inputSMS: '',
         errors: validationResult(req),
       })
     })

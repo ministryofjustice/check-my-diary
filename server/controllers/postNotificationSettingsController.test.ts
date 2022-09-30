@@ -14,6 +14,7 @@ describe('post notification settings middleware', () => {
   const redirectMock = jest.fn()
   const token = 'aubergine'
   const emailText = 'checkmydiary@digital.justice.gov.uk'
+  const mobileNumber = '07819222333'
 
   const updatePreferencesMock = jest.fn()
   const notificationService = { updatePreferences: updatePreferencesMock } as unknown as NotificationService
@@ -29,7 +30,7 @@ describe('post notification settings middleware', () => {
   describe('with "email" selected', () => {
     describe('and no validation errors', () => {
       beforeEach(async () => {
-        req.body = { inputEmail: emailText, notificationRequired: 'Yes' }
+        req.body = { inputEmail: emailText, inputSMS: '', contactMethod: 'EMAIL' }
         validationResultMock.mockReturnValueOnce({ isEmpty: () => true })
         await new PostNotificationSettingsController(notificationService).setSettings(req, res)
       })
@@ -38,7 +39,7 @@ describe('post notification settings middleware', () => {
       })
       it('should update the preferences by calling the "updatePreferences" method on the "notificationService"', () => {
         expect(updatePreferencesMock).toHaveBeenCalledTimes(1)
-        expect(updatePreferencesMock).toHaveBeenCalledWith(token, NotificationType.EMAIL, emailText)
+        expect(updatePreferencesMock).toHaveBeenCalledWith(token, NotificationType.EMAIL, emailText, '')
       })
       it('should call the redirect function once', () => {
         expect(redirectMock).toHaveBeenCalledTimes(1)
@@ -51,7 +52,7 @@ describe('post notification settings middleware', () => {
     describe('and validation errors', () => {
       const errors = { isEmpty: () => false }
       beforeEach(async () => {
-        req.body = { inputEmail: emailText, notificationRequired: 'Yes' }
+        req.body = { inputEmail: emailText, contactMethod: 'EMAIL' }
         validationResultMock.mockReturnValueOnce(errors)
         await new PostNotificationSettingsController(notificationService).setSettings(req, res)
       })
@@ -70,30 +71,20 @@ describe('post notification settings middleware', () => {
           errors,
           contactMethod: NotificationType.EMAIL,
           inputEmail: emailText,
+          inputSMS: '',
         })
       })
     })
   })
   describe('with "none" selected', () => {
     beforeEach(async () => {
-      req.body = { inputEmail: emailText, notificationRequired: 'No' }
+      req.body = { inputEmail: emailText, contactMethod: 'NONE' }
       validationResultMock.mockReturnValueOnce({ isEmpty: () => true })
       await new PostNotificationSettingsController(notificationService).setSettings(req, res)
     })
     it('should update the preferences', () => {
       expect(updatePreferencesMock).toHaveBeenCalledTimes(1)
-      expect(updatePreferencesMock).toHaveBeenCalledWith(token, NotificationType.NONE, '')
-    })
-  })
-  describe('with "none" selected', () => {
-    beforeEach(async () => {
-      req.body = { inputEmail: emailText, notificationRequired: 'No' }
-      validationResultMock.mockReturnValueOnce({ isEmpty: () => true })
-      await new PostNotificationSettingsController(notificationService).setSettings(req, res)
-    })
-    it('should update the preferences', () => {
-      expect(updatePreferencesMock).toHaveBeenCalledTimes(1)
-      expect(updatePreferencesMock).toHaveBeenCalledWith(token, NotificationType.NONE, '')
+      expect(updatePreferencesMock).toHaveBeenCalledWith(token, NotificationType.NONE, '', '')
     })
   })
 })

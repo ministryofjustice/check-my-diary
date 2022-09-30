@@ -18,7 +18,9 @@ export default class CalendarPage extends Page {
 
   previousMonth = (): PageElement => cy.get(`a[data-qa="previous"]`)
 
-  banner = (): PageElement => cy.get('.govuk-notification-banner')
+  bannerSMS = (): PageElement => cy.get('#banner-sms')
+
+  bannerMFA = (): PageElement => cy.get('#banner-mfa')
 
   notificationBannerLink = (): PageElement => cy.get('.govuk-notification-banner__link')
 

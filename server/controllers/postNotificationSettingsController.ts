@@ -15,28 +15,23 @@ export default class PostNotificationSettingsController {
     const errors = validationResult(req)
     const {
       user: { token },
-      body: { notificationRequired = '', inputEmail = '' },
+      body: { contactMethod, inputEmail = '', inputSMS = '' },
     } = req
-    const contactMethod =
-      // eslint-disable-next-line no-nested-ternary
-      notificationRequired === 'Yes'
-        ? NotificationType.EMAIL
-        : notificationRequired === 'No'
-        ? NotificationType.NONE
-        : ''
 
     if (!errors.isEmpty()) {
       return res.render('pages/notification-settings.njk', {
         errors,
         contactMethod,
         inputEmail,
+        inputSMS,
       })
     }
 
     await this.notificationService.updatePreferences(
       token,
-      notificationRequired === 'Yes' ? NotificationType.EMAIL : NotificationType.NONE,
-      notificationRequired === 'Yes' ? inputEmail : '',
+      contactMethod,
+      contactMethod === NotificationType.EMAIL ? inputEmail : '',
+      contactMethod === NotificationType.SMS ? inputSMS : '',
     )
     return res.redirect('/notifications/manage')
   }
