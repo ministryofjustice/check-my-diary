@@ -28,14 +28,14 @@ context('A staff member can view their notification settings', () => {
     cy.contains('Change').click()
     const page = Page.verifyOnPage(NotificationSettingsPage)
 
-    page.radio('Yes').should('be.checked')
-    page.checkText('me@gmail.com')
+    page.radio('EMAIL').should('be.checked')
+    page.checkEmail('me@gmail.com')
 
     page.inputEmail().clear()
     page.submit()
 
     page.errorSummary().contains('Email address cannot be blank')
-    page.radio('Yes').should('be.checked')
+    page.radio('EMAIL').should('be.checked')
 
     cy.task('stubNotificationPreferencesGet404')
     cy.visit('/notifications/settings')
@@ -43,7 +43,7 @@ context('A staff member can view their notification settings', () => {
 
     page.errorSummary().contains('Select if you want to receive notifications')
 
-    page.radio('Yes').click()
+    page.radio('EMAIL').click()
     page.inputEmail().type('address-invalid')
     page.submit()
 
@@ -56,6 +56,49 @@ context('A staff member can view their notification settings', () => {
     cy.task('verifyDetails').then((requests) => {
       expect(requests).to.have.length(1)
       expect(requests[0].body).eq(`{"preference":"EMAIL","email":"address@domain.com","sms":""}`)
+    })
+  })
+
+  it('Notification setting validation with existing phone number', () => {
+    cy.task('stubNotificationPreferencesGet', {
+      preference: 'SMS',
+      sms: '07123456789',
+    })
+    cy.task('stubNotificationPreferencesSet')
+
+    cy.visit('/notifications/manage')
+    Page.verifyOnPage(NotificationManagePage)
+    cy.contains('Change').click()
+    const page = Page.verifyOnPage(NotificationSettingsPage)
+
+    page.radio('SMS').should('be.checked')
+    page.checkSMS('07123456789')
+
+    page.inputSMS().clear()
+    page.submit()
+
+    page.errorSummary().contains('Phone number cannot be blank')
+    page.radio('SMS').should('be.checked')
+
+    cy.task('stubNotificationPreferencesGet404')
+    cy.visit('/notifications/settings')
+    page.submit()
+
+    page.errorSummary().contains('Select if you want to receive notifications')
+
+    page.radio('SMS').click()
+    page.inputSMS().type('0123invalid')
+    page.submit()
+
+    page.errorSummary().contains('Enter a phone number in the correct format (digits only)')
+
+    page.inputSMS().clear().type('07987654321')
+    page.submit()
+
+    Page.verifyOnPage(NotificationManagePage)
+    cy.task('verifyDetails').then((requests) => {
+      expect(requests).to.have.length(1)
+      expect(requests[0].body).eq(`{"preference":"SMS","email":"","sms":"07987654321"}`)
     })
   })
 

@@ -21,14 +21,19 @@ export default function notificationRouter(router: Router, services: Services): 
   postWithValidator(
     '/notifications/settings',
     [
-      body('notificationRequired', 'Select if you want to receive notifications').isIn(['Yes', 'No']),
+      body('contactMethod', 'Select if you want to receive notifications').isIn(['EMAIL', 'SMS', 'NONE']),
 
-      body('inputEmail', 'Email address cannot be blank').if(body('notificationRequired').equals('Yes')).notEmpty(),
+      body('inputEmail', 'Email address cannot be blank').if(body('contactMethod').equals('EMAIL')).notEmpty(),
+      body('inputSMS', 'Phone number cannot be blank').if(body('contactMethod').equals('SMS')).notEmpty(),
 
       body('inputEmail', 'Enter an email address in the correct format, like name@example.com')
-        .if(body('notificationRequired').equals('Yes'))
+        .if(body('contactMethod').equals('EMAIL'))
         .if(body('inputEmail').notEmpty())
         .isEmail(),
+      body('inputSMS', 'Enter a phone number in the correct format (digits only)')
+        .if(body('contactMethod').equals('SMS'))
+        .if(body('inputSMS').notEmpty())
+        .isMobilePhone('en-GB'),
     ],
     (req, res) => postNotificationSettingsController.setSettings(req, res),
   )

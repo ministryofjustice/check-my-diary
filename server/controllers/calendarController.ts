@@ -2,18 +2,16 @@ import { Request, Response } from 'express'
 import { add, format, sub } from 'date-fns'
 import logger from '../../log'
 import utilities from '../helpers/utilities'
-import NotificationType from '../helpers/NotificationType'
 import mfaBannerType from '../helpers/mfaBannerType'
-import type { CalendarService, NotificationService, NotificationCookieService } from '../services'
+import type { CalendarService, NotificationCookieService } from '../services'
 import { UserAuthenticationService } from '../services'
 import UserService from '../services/userService'
 
-const { EXISTING_USER, NEW_USER, FIRST_TIME_USER } = mfaBannerType
+const { SMS_BANNER, EXISTING_USER, NEW_USER, FIRST_TIME_USER } = mfaBannerType
 
 export default class CalendarController {
   constructor(
     private readonly calendarService: CalendarService,
-    private readonly notificationService: NotificationService,
     private readonly notificationCookieService: NotificationCookieService,
     private readonly userAuthenticationService: UserAuthenticationService,
     private readonly userService: UserService,
@@ -29,26 +27,25 @@ export default class CalendarController {
 
     const isMfa = utilities.hmppsAuthMFAUser(token)
 
-    const [preferences, month, userAuthenticationDetails] = await Promise.all([
-      this.notificationService.getPreferences(token),
+    const [month, userAuthenticationDetails] = await Promise.all([
       this.calendarService.getCalendarMonth(date, token),
       this.userAuthenticationService.getUserAuthenticationDetails(username),
     ])
 
-    const notifications = preferences.preference === NotificationType.SMS
+    const notifications = !this.notificationCookieService.alreadyDismissed(req, SMS_BANNER)
 
     const computeBanner = async () => {
       const alreadyDismissedExisting = this.notificationCookieService.alreadyDismissed(req, EXISTING_USER)
       const alreadyDismissedNew = this.notificationCookieService.alreadyDismissed(req, NEW_USER)
 
       if (userAuthenticationDetails.length > 0) {
-        if (isMfa && !alreadyDismissedExisting && !notifications) {
+        if (isMfa && !alreadyDismissedExisting) {
           return EXISTING_USER
         }
       } else {
         const authMfa = await this.userService.getUserMfa(token)
         if (authMfa.backupVerified || authMfa.mobileVerified) {
-          if (!alreadyDismissedNew && !notifications) {
+          if (!alreadyDismissedNew) {
             return NEW_USER
           }
         } else {

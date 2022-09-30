@@ -2,16 +2,22 @@ import Page, { PageElement } from './page'
 
 export default class NotificationSettingsPage extends Page {
   constructor() {
-    super('Do you want to receive notifications')
+    super('Notification settings')
   }
 
-  checkText = (text: string) => {
+  checkEmail = (text: string) => {
     this.inputEmail().should('have.value', text)
   }
 
-  radio = (text: string) => cy.get(`input[name="notificationRequired"][value="${text}"]`)
+  checkSMS = (text: string) => {
+    this.inputSMS().should('have.value', text)
+  }
+
+  radio = (text: string) => cy.get(`input[name="contactMethod"][value="${text}"]`)
 
   inputEmail = (): PageElement => cy.get('input[name="inputEmail"]')
+
+  inputSMS = (): PageElement => cy.get('input[name="inputSMS"]')
 
   submit = (): PageElement => cy.contains('Confirm').click()
 }

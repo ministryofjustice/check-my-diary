@@ -52,12 +52,13 @@ export default class NotificationService {
     accessToken: string,
     preference: UpdateNotificationDetailsRequest['preference'],
     email: string,
+    sms: string,
   ): Promise<ShiftDto> {
-    logger.info(`updatePreferences to ${preference}, hasEmail: ${!!email}`)
+    logger.info(`updatePreferences to ${preference}, hasEmail: ${!!email}, hasSms: ${!!sms}`)
     return axios
       .put(
         `${baseUrl.cmdApi.url}/preferences/notifications/details`,
-        { preference, email, sms: '' },
+        { preference, email, sms },
         {
           headers: {
             authorization: `Bearer ${accessToken}`,

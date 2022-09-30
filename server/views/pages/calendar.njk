@@ -6,24 +6,31 @@
 {% block content %}
   <main id="main-content" role="main">
 
-    {% if showBanner.notifications or showBanner.mfa %}
-      <div class="govuk-notification-banner govuk-!-margin-top-4 govuk-!-width-full" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+    {% if showBanner.notifications %}
+      <div class="govuk-notification-banner govuk-!-margin-top-4 govuk-!-width-full" role="region"
+        aria-labelledby="govuk-notification-banner-title-sms" data-module="govuk-notification-banner">
         <div class="govuk-notification-banner__header">
-          <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+          <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title-sms">
             Important
           </h2>
         </div>
-        <div class="govuk-notification-banner__content">
-          {% if showBanner.notifications %}
-            You will soon only be able to receive notifications by email. We will remove the option to receive texts.
-            <br />
-            You must <a class="govuk-notification-banner__link" href="/notifications/settings">change your notification settings</a> to email now.
-            {% if showBanner.mfa === mfaBannerType.FIRST_TIME_USER %}
-              <br />
-              <br />
-            {% endif %}
-          {% endif %}
-
+        <div class="govuk-notification-banner__content" id="banner-sms">
+          You now have the option of receiving shift changes via text or email - use the
+          <a class="govuk-notification-banner__link" href="/notifications/settings">notification settings page</a>
+          to select your preferred option.
+          <p class="govuk-!-margin-top-2"><a class="govuk-link govuk-link--no-visited-state notification_dismiss_link" id="SMS_BANNER" href="#">Dismiss</a></p>
+        </div>
+      </div>
+    {% endif %}
+    {% if showBanner.mfa %}
+      <div class="govuk-notification-banner govuk-!-margin-top-4 govuk-!-width-full" role="region"
+        aria-labelledby="govuk-notification-banner-title-mfa" data-module="govuk-notification-banner">
+        <div class="govuk-notification-banner__header">
+          <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title-mfa">
+            Important
+          </h2>
+        </div>
+        <div class="govuk-notification-banner__content" id="banner-mfa">
           {% switch (showBanner.mfa) %}
           {% case mfaBannerType.EXISTING_USER %}
             {# Existing user (already uses CMD) #}
@@ -37,17 +44,18 @@
             You can manage your two-factor authentication (2FA) settings on the <a
                     class="govuk-notification-banner__link" href="/account-details">Manage your details</a> page.
             <p>Once signed in, you can change these settings from inside or outside an establishment.</p>
-            <p>You can also receive emails when your shifts change. Set this up by entering your personal email address on the <a
+            <p>You can also receive emails or texts when your shifts change. Set this up by entering your personal email address or mobile number on the <a
                       class="govuk-notification-banner__link" href="/notifications/settings">Notifications</a> page.</p>
             <p>You can change your 2FA and notifications settings by following the links in the top bar.</p>
             <p class="govuk-!-margin-top-2"><a class="govuk-link govuk-link--no-visited-state notification_dismiss_link" id="NEW_USER" href="#">Dismiss</a></p>
           {% case mfaBannerType.FIRST_TIME_USER %}
             {# (existing DPS user without 2FA, new to CMD) #}
             You need to set up two-factor authentication (2FA) to help secure access to your account.
-            <p>You must add a backup personal email address or phone number on the <a
-                      class="govuk-notification-banner__link" href="/account-details">Manage your details</a> page.</p>
-            <p>We will use this to confirm it’s you signing in to your account. You will have to be outside the establishment to verify the email address or phone number.</p>
-            <p>You can also receive emails when your shifts change. Set this up by entering your personal email address on the <a
+            <p>You must add a backup personal email address whilst in the establishment on the <a
+                      class="govuk-notification-banner__link" href="/account-details">Manage your details</a> page, which can be verified later at home.
+               A phone number can then be added too.</p>
+            <p>We will use these to confirm it's you signing in to your account. You will have to be outside the establishment to verify the email address or phone number.</p>
+            <p>You can also receive emails or texts when your shifts change. Set this up by entering your personal email address or mobile number on the <a
                       class="govuk-notification-banner__link" href="/notifications/settings">Notifications</a> page.</p>
           {% endswitch %}
         </div>
@@ -156,9 +164,8 @@
 {% block bodyEnd %}
 {{ super() }}
   <script type="text/javascript">
-    const links = document.getElementsByClassName("notification_dismiss_link")
-    if (links.length) links[0].addEventListener("click", function(event) {
-      const $notifications = document.getElementsByClassName("govuk-notification-banner");
+    function hideBanner(event) {
+      const mainBanner = event.target.parentNode.parentNode.parentNode // main div is 3 levels up
       const id = event.target.id;
       const csrf = document.getElementById("_csrf").getAttribute('value');
 
@@ -169,15 +176,19 @@
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.onreadystatechange = function() {
         if (this.status === 200) {
-          if (this.readyState === XMLHttpRequest.DONE && $notifications.length) {
-            $notifications[0].style.display="none";
+          if (this.readyState === XMLHttpRequest.DONE) {
+            mainBanner.style.display="none";
           }
         } else {
           window.location = "/";
         }
       }
       xhr.send(`{ "id": "${id}" }`);
-    });
+    }
+
+    const links = document.getElementsByClassName("notification_dismiss_link")
+    if (links[0]) links[0].addEventListener("click", hideBanner);
+    if (links[1]) links[1].addEventListener("click", hideBanner);
   </script>
 {% endblock %}
 
