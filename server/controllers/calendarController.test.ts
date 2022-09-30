@@ -1,16 +1,9 @@
 import { Request, Response } from 'express'
 import CalendarController from './calendarController'
-import NotificationType from '../helpers/NotificationType'
 import mfaBannerType from '../helpers/mfaBannerType'
-import {
-  CalendarService,
-  NotificationCookieService,
-  NotificationService,
-  UserAuthenticationService,
-  UserService,
-} from '../services'
+import { CalendarService, NotificationCookieService, UserAuthenticationService, UserService } from '../services'
 
-const { EXISTING_USER, NEW_USER, FIRST_TIME_USER } = mfaBannerType
+const { FIRST_TIME_USER } = mfaBannerType
 
 const rolesMock = jest.fn()
 jest.mock('jwt-decode', () => {

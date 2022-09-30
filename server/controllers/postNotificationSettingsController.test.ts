@@ -14,7 +14,6 @@ describe('post notification settings middleware', () => {
   const redirectMock = jest.fn()
   const token = 'aubergine'
   const emailText = 'checkmydiary@digital.justice.gov.uk'
-  const mobileNumber = '07819222333'
 
   const updatePreferencesMock = jest.fn()
   const notificationService = { updatePreferences: updatePreferencesMock } as unknown as NotificationService
