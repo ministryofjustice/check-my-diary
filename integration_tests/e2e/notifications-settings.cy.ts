@@ -90,9 +90,9 @@ context('A staff member can view their notification settings', () => {
     page.inputSMS().type('0123invalid')
     page.submit()
 
-    page.errorSummary().contains('Enter a phone number in the correct format (digits only)')
+    page.errorSummary().contains('Enter a phone number in the correct format')
 
-    page.inputSMS().clear().type('07987654321')
+    page.inputSMS().clear().type('07987 654321')
     page.submit()
 
     Page.verifyOnPage(NotificationManagePage)

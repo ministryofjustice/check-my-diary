@@ -30,10 +30,11 @@ export default function notificationRouter(router: Router, services: Services): 
         .if(body('contactMethod').equals('EMAIL'))
         .if(body('inputEmail').notEmpty())
         .isEmail(),
-      body('inputSMS', 'Enter a phone number in the correct format (digits only)')
+      body('inputSMS', 'Enter a phone number in the correct format')
         .if(body('contactMethod').equals('SMS'))
         .if(body('inputSMS').notEmpty())
-        .isMobilePhone('en-GB'),
+        .blacklist(' ')
+        .isMobilePhone('en-GB', { strictMode: false }),
     ],
     (req, res) => postNotificationSettingsController.setSettings(req, res),
   )

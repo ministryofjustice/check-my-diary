@@ -31,7 +31,7 @@ export default class PostNotificationSettingsController {
       token,
       contactMethod,
       contactMethod === NotificationType.EMAIL ? inputEmail : '',
-      contactMethod === NotificationType.SMS ? inputSMS : '',
+      contactMethod === NotificationType.SMS ? inputSMS.replace('+44', '0') : '',
     )
     return res.redirect('/notifications/manage')
   }
