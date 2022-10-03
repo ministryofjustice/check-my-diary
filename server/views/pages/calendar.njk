@@ -164,8 +164,17 @@
 {% block bodyEnd %}
 {{ super() }}
   <script type="text/javascript">
+    function getMainBanner(link) {
+      var banner = link
+      while (!banner.classList.contains('govuk-notification-banner')) {
+        banner = banner.parentNode
+      }
+      return banner
+    }
+
     function hideBanner(event) {
-      const mainBanner = event.target.parentNode.parentNode.parentNode // main div is 3 levels up
+      const mainBanner = getMainBanner(event.target)
+      // Could we give it an id or custom attribute instead?
       const id = event.target.id;
       const csrf = document.getElementById("_csrf").getAttribute('value');
 
