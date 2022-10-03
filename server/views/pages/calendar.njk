@@ -16,7 +16,7 @@
         </div>
         <div class="govuk-notification-banner__content" id="banner-sms">
           You now have the option of receiving shift changes via text or email - use the
-          <a class="govuk-notification-banner__link" href="/notifications/settings">notification settings page</a>
+          <a class="govuk-notification-banner__link" href="/notifications/settings">Notifications</a> page
           to select your preferred option.
           <p class="govuk-!-margin-top-2"><a class="govuk-link govuk-link--no-visited-state notification_dismiss_link" id="SMS_BANNER" href="#">Dismiss</a></p>
         </div>
@@ -53,8 +53,8 @@
             You need to set up two-factor authentication (2FA) to help secure access to your account.
             <p>You must add a backup personal email address whilst in the establishment on the <a
                       class="govuk-notification-banner__link" href="/account-details">Manage your details</a> page, which can be verified later at home.
-               A phone number can then be added too.</p>
-            <p>We will use these to confirm it's you signing in to your account. You will have to be outside the establishment to verify the email address or phone number.</p>
+               A mobile number can then be added too.</p>
+            <p>We will use these to confirm it's you signing in to your account.</p>
             <p>You can also receive emails or texts when your shifts change. Set this up by entering your personal email address or mobile number on the <a
                       class="govuk-notification-banner__link" href="/notifications/settings">Notifications</a> page.</p>
           {% endswitch %}
@@ -174,7 +174,6 @@
 
     function hideBanner(event) {
       const mainBanner = getMainBanner(event.target)
-      // Could we give it an id or custom attribute instead?
       const id = event.target.id;
       const csrf = document.getElementById("_csrf").getAttribute('value');
 
