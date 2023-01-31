@@ -127,7 +127,7 @@
     "pg": "^8.9.0",
     "prom-client": "^14.1.1",
     "querystring": "^0.2.1",
-    "redis": "^4.6.3",
+    "redis": "^4.6.4",
     "superagent": "^8.0.9",
     "url-value-parser": "^2.2.0",
     "uuid": "^9.0.0"
@@ -182,6 +182,6 @@
     "sass": "^1.57.1",
     "supertest": "^6.3.3",
     "ts-jest": "^29.0.5",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.5"
   }
 }
