@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import type { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import { add, formatISO } from 'date-fns'
 import NotificationType from '../helpers/NotificationType'
@@ -8,21 +8,26 @@ import type { NotificationService } from '../services'
 export default class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
 
-  async getNotifications({ user: { token } }: Request, res: Response) {
-    const data = await this.notificationService.getNotifications(token)
+  async getNotifications({ user }: Request, res: Response) {
+    if (!user) return false
+    const data = await this.notificationService.getNotifications(user.token)
 
     data.sort(({ shiftModified: first }, { shiftModified: second }) => second.localeCompare(first))
 
     return res.render('pages/notifications.njk', { data })
   }
 
-  async resume({ user: { token } }: Request, res: Response) {
-    await this.notificationService.resumeNotifications(token)
-    res.redirect('back')
+  async resume({ user }: Request, res: Response) {
+    if (user) {
+      await this.notificationService.resumeNotifications(user.token)
+      res.redirect('back')
+    }
   }
 
-  async getManage({ user: { token } }: Request, res: Response) {
-    const { snoozeUntil, notificationsEnabled } = await this.getSnoozeAndNotificationSettings(token)
+  async getManage({ user }: Request, res: Response) {
+    if (!user) return false
+
+    const { snoozeUntil, notificationsEnabled } = await this.getSnoozeAndNotificationSettings(user.token)
 
     return res.render('pages/manage-your-notifications.njk', {
       notificationsEnabled,
@@ -32,11 +37,12 @@ export default class NotificationController {
 
   async getPause(req: Request, res: Response) {
     const {
-      user: { token },
+      user,
       query: { pauseUnit, pauseValue },
     } = req
 
-    const { snoozeUntil, notificationsEnabled } = await this.getSnoozeAndNotificationSettings(token)
+    if (!user) return false
+    const { snoozeUntil, notificationsEnabled } = await this.getSnoozeAndNotificationSettings(user.token)
 
     const errors = validationResult(req)
 
@@ -52,12 +58,14 @@ export default class NotificationController {
   async setPause(req: Request, res: Response) {
     const errors = validationResult(req)
     const {
-      user: { token },
+      user,
       body: { pauseUnit, pauseValue },
     } = req
 
+    if (!user) return false
+
     if (!errors.isEmpty()) {
-      const { snoozeUntil, notificationsEnabled } = await this.getSnoozeAndNotificationSettings(token)
+      const { snoozeUntil, notificationsEnabled } = await this.getSnoozeAndNotificationSettings(user.token)
       return res.render('pages/pause-notifications.njk', {
         errors,
         notificationsEnabled,
@@ -67,7 +75,7 @@ export default class NotificationController {
       })
     }
     await this.notificationService.updateSnooze(
-      token,
+      user.token,
       NotificationController.getFormattedFutureDate(pauseUnit, pauseValue),
     )
     return res.redirect('/notifications/manage')
