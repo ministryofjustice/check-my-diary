@@ -1,5 +1,5 @@
 # Stage: base image
-FROM node:18.12-bullseye-slim as base
+FROM node:18.15-bullseye-slim as base
 
 ARG BUILD_NUMBER=1_0_0
 ARG GIT_REF=not-available
@@ -44,7 +44,7 @@ RUN export BUILD_NUMBER=${BUILD_NUMBER} && \
 # Install AWS RDS Root cert
 RUN curl https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem > /app/root.cert
 
-RUN npm prune --no-audit --production
+RUN npm prune --no-audit --omit-dev
 
 # Stage: copy production assets and dependencies
 FROM base

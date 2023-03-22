@@ -14,7 +14,7 @@ export default class PostNotificationSettingsController {
     // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req)
     const {
-      user: { token },
+      user,
       body: { contactMethod, inputEmail = '', inputSMS = '' },
     } = req
 
@@ -27,8 +27,9 @@ export default class PostNotificationSettingsController {
       })
     }
 
+    if (!user) return false
     await this.notificationService.updatePreferences(
-      token,
+      user.token,
       contactMethod,
       contactMethod === NotificationType.EMAIL ? inputEmail : '',
       contactMethod === NotificationType.SMS ? inputSMS.replace('+44', '0') : '',

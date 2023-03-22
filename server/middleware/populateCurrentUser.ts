@@ -8,7 +8,7 @@ import utilities from '../helpers/utilities'
 export default function populateCurrentUser(): RequestHandler {
   return async (req, res, next) => {
     try {
-      if (res.locals.user) {
+      if (res.locals.user && req.user) {
         const {
           user: { token },
         } = req

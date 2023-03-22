@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import type { Request, Response } from 'express'
 import { add, format, sub } from 'date-fns'
 import logger from '../../log'
 import utilities from '../helpers/utilities'
@@ -19,10 +19,12 @@ export default class CalendarController {
 
   async getDate(req: Request, res: Response) {
     const {
-      user: { token, username },
+      user,
       params: { date },
     } = req
 
+    if (!user) return false
+    const { username, token } = user
     logger.info({ user: username, date }, 'GET calendar view')
 
     const isMfa = utilities.hmppsAuthMFAUser(token)
