@@ -99,7 +99,7 @@ jobs:
       name: hmpps/node_redis_postgres
       node_tag: << pipeline.parameters.node-version >>
       redis_tag: "6.2"
-      postgres_tag: "14.2"
+      postgres_tag: "15"
       postgres_password: check-my-diary
       postgres_username: check-my-diary
       postgres_db: check-my-diary
