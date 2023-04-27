@@ -14,7 +14,7 @@ services:
       - POSTGRES_DB=check-my-diary
 
   check-my-diary-redis:
-    image: 'redis:6.2'
+    image: 'redis:7.0'
     networks:
       - hmpps
     container_name: redis
