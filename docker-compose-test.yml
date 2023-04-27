@@ -23,7 +23,7 @@ services:
       - "9191:8080"
 
   check-my-diary-redis:
-    image: 'redis:6.2'
+    image: 'redis:7.0'
     networks:
       - hmpps_int
     ports:
