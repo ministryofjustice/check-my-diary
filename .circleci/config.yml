@@ -15,7 +15,7 @@ parameters:
 
   node-version:
     type: string
-    default: 18.15-browsers
+    default: 18.16-browsers
 
 jobs:
   build:
@@ -151,31 +151,13 @@ workflows:
             - build
       - hmpps/helm_lint:
           name: helm_lint
+          env: preprod
       - hmpps/build_docker:
           name: build_docker
           filters:
             branches:
               only:
                 - main
-      - hmpps/deploy_env:
-          name: deploy_dev
-          env: "dev"
-          jira_update: true
-          context: hmpps-common-vars
-          filters:
-            branches:
-              only:
-                - main
-          requires:
-            - helm_lint
-            - unit_test
-            - integration_test
-            - build_docker
-
-      - request-preprod-approval:
-          type: approval
-          requires:
-            - deploy_dev
       - hmpps/deploy_env:
           name: deploy_preprod
           env: "preprod"
@@ -185,7 +167,14 @@ workflows:
             - check-my-diary-preprod
             - hmpps-common-vars
           requires:
-            - request-preprod-approval
+            - helm_lint
+            - unit_test
+            - integration_test
+            - build_docker
+          filters:
+            branches:
+              only:
+                - main
       - request-prod-approval:
           type: approval
           requires:

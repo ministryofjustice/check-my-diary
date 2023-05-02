@@ -15,6 +15,11 @@ generic-service:
     TOKEN_VERIFICATION_API_URL: https://token-verification-api-preprod.prison.service.justice.gov.uk
     DPS_HOME_URL: https://digital-preprod.prison.service.justice.gov.uk
 
+  scheduledDowntime:
+    enabled: true
+    startup: '25 6 0 * 1-5' # Start at 6.25am UTC Monday-Friday
+    shutdown: '45 21 * * 1-5' # Stop at 9.45pm UTC Monday-Friday
+
 generic-prometheus-alerts:
   rdsAlertsDatabases:
     cloud-platform-d07334102a08ef5d: "check my diary"
