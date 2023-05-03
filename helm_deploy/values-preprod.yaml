@@ -1,6 +1,6 @@
 ---
 generic-service:
-  replicaCount: 4
+  replicaCount: 2
 
   ingress:
     host: check-my-diary-preprod.prison.service.justice.gov.uk
