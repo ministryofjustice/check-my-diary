@@ -21,5 +21,6 @@ generic-service:
     shutdown: '45 21 * * 1-5' # Stop at 9.45pm UTC Monday-Friday
 
 generic-prometheus-alerts:
+  businessHoursOnly: true
   rdsAlertsDatabases:
     cloud-platform-d07334102a08ef5d: "check my diary"
