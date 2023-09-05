@@ -52,10 +52,16 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
     return null
   })
   njkEnv.addFilter('mapErrors', (errors: Result<ValidationError>) =>
-    errors.array().map((error) => ({
-      text: error.msg,
-      href: `#${error.param}`,
-    })),
+    errors.array().map((error) =>
+      error.type === 'field'
+        ? {
+            text: error.msg,
+            href: `#${error.path}`,
+          }
+        : {
+            text: error.msg,
+          },
+    ),
   )
 
   njkEnv.addGlobal('dpsHomeUrl', config.dpsHomeUrl)
