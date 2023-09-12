@@ -7,6 +7,7 @@ generic-service:
     tlsSecretName: tls-certificate
 
   env:
+    # Beware, these times are in GMT even in summer!
     MAINTENANCE_START: "2023-04-29T17:00:00"
     MAINTENANCE_END: "2023-04-29T20:00:00"
     API_AUTH_ENDPOINT_URL: "https://sign-in.hmpps.service.justice.gov.uk/auth"
