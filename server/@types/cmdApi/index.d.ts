@@ -16,9 +16,6 @@ export interface paths {
   '/preferences/notifications': {
     get: operations['getNotificationPreferences']
   }
-  '/preferences/notifications2': {
-    get: operations['getNotificationPreferences2']
-  }
   '/notifications': {
     get: operations['getNotifications']
   }

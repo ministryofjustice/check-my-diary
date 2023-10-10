@@ -32,7 +32,7 @@ export default class NotificationService {
 
   public async getPreferences(accessToken: string): Promise<NotificationDto> {
     return axios
-      .get(`${baseUrl.cmdApi.url}/preferences/notifications2`, {
+      .get(`${baseUrl.cmdApi.url}/preferences/notifications`, {
         headers: {
           authorization: `Bearer ${accessToken}`,
         },
