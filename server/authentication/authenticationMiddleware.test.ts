@@ -3,7 +3,7 @@ import type { Request, Response } from 'express'
 import config from '../config'
 import auth from './auth'
 
-jest.mock('jwt-decode', () => () => ({ name: 'Ned Nederlander' }))
+jest.mock('jwt-decode', () => ({ jwtDecode: () => ({ name: 'Ned Nederlander' }) }))
 jest.mock('../helpers/utilities')
 jest.mock('../config', () => ({ apis: { hmppsAuth: {} } }))
 

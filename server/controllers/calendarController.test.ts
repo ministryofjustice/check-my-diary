@@ -6,9 +6,7 @@ import { CalendarService, NotificationCookieService, UserAuthenticationService, 
 const { FIRST_TIME_USER } = mfaBannerType
 
 const rolesMock = jest.fn()
-jest.mock('jwt-decode', () => {
-  return () => rolesMock()
-})
+jest.mock('jwt-decode', () => ({ jwtDecode: () => rolesMock() }))
 
 const calendarData = [
   {
