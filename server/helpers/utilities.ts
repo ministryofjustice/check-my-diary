@@ -1,7 +1,7 @@
 import { add, format, getDay, getDaysInMonth, intervalToDuration, isFuture, isToday, startOfMonth } from 'date-fns'
 
 import crypto from 'crypto'
-import jwtDecode from 'jwt-decode'
+import { jwtDecode } from 'jwt-decode'
 import { CalendarDay, Details } from './utilities.types'
 
 const TIME_FORMAT = 'HH:mm:ss'
