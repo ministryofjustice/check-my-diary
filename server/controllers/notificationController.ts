@@ -76,7 +76,7 @@ export default class NotificationController {
     }
     await this.notificationService.updateSnooze(
       user.token,
-      NotificationController.getFormattedFutureDate(pauseUnit, pauseValue),
+      NotificationController.getFormattedFutureDate(pauseUnit, Number(pauseValue)),
     )
     return res.redirect('/notifications/manage')
   }
