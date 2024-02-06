@@ -43,7 +43,7 @@ context('A staff member can view their notification settings', () => {
 
     page.errorSummary().contains('Select if you want to receive notifications')
 
-    page.radio('EMAIL').click()
+    page.radioLabel('Email').click()
     page.inputEmail().type('address-invalid')
     page.submit()
 
@@ -86,7 +86,7 @@ context('A staff member can view their notification settings', () => {
 
     page.errorSummary().contains('Select if you want to receive notifications')
 
-    page.radio('SMS').click()
+    page.radioLabel('Text message').click()
     page.inputSMS().type('0123invalid')
     page.submit()
 
