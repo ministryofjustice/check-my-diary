@@ -15,6 +15,8 @@ export default class NotificationSettingsPage extends Page {
 
   radio = (text: string) => cy.get(`input[name="contactMethod"][value="${text}"]`)
 
+  radioLabel = (text: string) => cy.contains('label', text)
+
   inputEmail = (): PageElement => cy.get('input[name="inputEmail"]')
 
   inputSMS = (): PageElement => cy.get('input[name="inputSMS"]')

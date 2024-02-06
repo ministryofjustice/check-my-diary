@@ -22,7 +22,7 @@ export default class CalendarPage extends Page {
 
   bannerMFA = (): PageElement => cy.get('#banner-mfa')
 
-  notificationBannerLink = (): PageElement => cy.get('.govuk-notification-banner__link')
+  notificationBannerSmsLink = (): PageElement => cy.get('[data-test="banner-sms-notification-link"]')
 
   dpsLink = (): PageElement => cy.get('.govuk-breadcrumbs')
 

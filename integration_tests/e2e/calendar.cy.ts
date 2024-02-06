@@ -99,7 +99,7 @@ context('A staff member can view their calendar', () => {
     const calendarPage = Page.verifyOnPageTitle(CalendarPage)
 
     calendarPage.bannerSMS().contains('You now have the option of receiving shift changes via text or email')
-    calendarPage.notificationBannerLink().click()
+    calendarPage.notificationBannerSmsLink().click()
     Page.verifyOnPage(NotificationSettingsPage)
 
     cy.visit('/')
