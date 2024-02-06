@@ -98,35 +98,13 @@ context('A staff member can view their calendar', () => {
     cy.login()
     const calendarPage = Page.verifyOnPageTitle(CalendarPage)
 
-    calendarPage.bannerSMS().contains('You now have the option of receiving shift changes via text or email')
+    calendarPage.bannerSMS().contains('You have the option of receiving shift changes via text or email')
     calendarPage.notificationBannerSmsLink().click()
     Page.verifyOnPage(NotificationSettingsPage)
 
     cy.visit('/')
     calendarPage.bannerSMS().contains('Dismiss').click()
     calendarPage.bannerSMS().should('not.be.visible')
-  })
-
-  it('Existing user banner is shown and dismissed, then SMS banner dismissed', () => {
-    cy.task('stubGetMyMfaSettings', { backupVerified: true, mobileVerified: true, emailVerified: true })
-    cy.task('stubLogin', { username: 'ITAG_USER', authorities: ['ROLE_CMD_MIGRATED_MFA'] })
-    cy.login()
-    const calendarPage = Page.verifyOnPageTitle(CalendarPage)
-    calendarPage.bannerMFA().contains('You no longer need to contact the support team to change these settings')
-    calendarPage.bannerMFA().contains('Dismiss').click()
-    calendarPage.bannerMFA().should('not.be.visible')
-    calendarPage.bannerSMS().should('be.visible')
-
-    cy.visit('/calendar/2020-03-01')
-    Page.verifyOnPageTitle(CalendarPage, 'March 2020')
-    calendarPage.bannerMFA().should('not.exist')
-    calendarPage.bannerSMS().should('exist')
-
-    calendarPage.bannerSMS().contains('Dismiss').click()
-    calendarPage.bannerSMS().should('not.be.visible')
-    cy.visit('/')
-    calendarPage.bannerSMS().should('not.exist')
-    calendarPage.bannerMFA().should('not.exist')
   })
 
   it('New user banner is shown and dismissed', () => {
@@ -160,7 +138,7 @@ context('A staff member can view their calendar', () => {
     cy.task('stubLogin', { username: 'AUTH_USER', authorities: ['ROLE_CMD_MIGRATED_MFA'] })
     cy.login()
     const calendarPage = Page.verifyOnPageTitle(CalendarPage)
-    calendarPage.bannerSMS().contains('You now have the option of receiving shift changes via text or email')
+    calendarPage.bannerSMS().contains('You have the option of receiving shift changes via text or email')
     calendarPage.bannerMFA().contains('You must add a backup personal email address whilst in the establishment')
   })
 
