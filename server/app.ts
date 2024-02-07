@@ -30,7 +30,7 @@ export default function createApp(services: Services) {
   app.use(setUpStaticResources())
 
   nunjucksSetup(app, path)
-  app.use(setUpAuth(services.userAuthenticationService))
+  app.use(setUpAuth())
 
   app.use('/', indexRouter(standardRouter(), services))
 

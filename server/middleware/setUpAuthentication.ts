@@ -4,11 +4,10 @@ import passport from 'passport'
 import flash from 'connect-flash'
 import config from '../config'
 import { init } from '../authentication/auth'
-import UserAuthenticationService from '../services/userAuthenticationService'
 
 const router = express.Router()
 
-export default function setUpAuth(userAuthenticationService: UserAuthenticationService): Router {
+export default function setUpAuth(): Router {
   init()
 
   router.use(passport.initialize())
@@ -36,8 +35,6 @@ export default function setUpAuth(userAuthenticationService: UserAuthenticationS
 
   router.use('/logout', async (req, res, next) => {
     if (req.user) {
-      await userAuthenticationService.updateSessionExpiryDateTime(req.user.username)
-
       req.logout((err) => {
         if (err) return next(err)
         return req.session.destroy(() => res.redirect(authLogoutUrl))
