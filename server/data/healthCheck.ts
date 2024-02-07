@@ -2,10 +2,7 @@
 import superagent from 'superagent'
 import Agent, { HttpsAgent, CommonHttpOption } from 'agentkeepalive'
 
-import { query } from './dataAccess/db'
 import logger from '../../log'
-
-export const dbCheck = () => query('SELECT 1 AS ok')
 
 export type ServiceCheck = () => Promise<string>
 

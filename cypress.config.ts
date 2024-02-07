@@ -1,5 +1,4 @@
 import { defineConfig } from 'cypress'
-import db from './integration_tests/db/db'
 import { resetStubs } from './integration_tests/mockApis/wiremock'
 import auth from './integration_tests/mockApis/auth'
 import notificationService from './integration_tests/mockApis/notificationService'
@@ -21,9 +20,8 @@ export default defineConfig({
   e2e: {
     setupNodeEvents(on) {
       on('task', {
-        reset: () => Promise.all([db.clearDb(), resetStubs()]),
+        reset: () => Promise.all([resetStubs()]),
         ...auth,
-        ...db,
         ...notificationService,
         ...prisonOfficerApi,
         ...tokenVerification,

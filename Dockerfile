@@ -29,7 +29,7 @@ ARG BUILD_NUMBER=1_0_0
 ARG GIT_REF=not-available
 
 RUN apt-get update && \
-        apt-get install -y make python g++ curl
+        apt-get install -y make python g++
 
 COPY package*.json ./
 RUN CYPRESS_INSTALL_BINARY=0 npm ci --no-audit
@@ -40,9 +40,6 @@ RUN npm run build
 RUN export BUILD_NUMBER=${BUILD_NUMBER} && \
         export GIT_REF=${GIT_REF} && \
         npm run record-build-info
-
-# Install AWS RDS Root cert
-RUN curl https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem > /app/root.cert
 
 RUN npm prune --no-audit --omit-dev
 

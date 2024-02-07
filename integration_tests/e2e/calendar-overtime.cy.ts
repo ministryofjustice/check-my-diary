@@ -4,9 +4,6 @@ import CalendarPage, { mobileOrDesktopType } from '../pages/calendarPage'
 import Page from '../pages/page'
 
 context('A staff member can view their overtime calendar', () => {
-  before(() => {
-    cy.task('createTablesInsertData')
-  })
   beforeEach(() => {
     cy.task('reset')
 

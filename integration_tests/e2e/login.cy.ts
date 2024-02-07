@@ -85,7 +85,7 @@ context('Sign in functionality', () => {
     cy.request('/').its('body').should('contain', 'Sign in')
 
     cy.task('stubVerifyToken', true)
-    cy.task('token', { username: 'BBROWN', employeeName: 'Bobby Brown', authorities: ['ROLE_CMD_MIGRATED_MFA'] })
+    cy.task('token', { username: 'BBROWN', employeeName: 'Bobby Brown' })
     cy.login()
 
     calendarPage.headerUsername().contains('B. Brown')
@@ -107,7 +107,7 @@ context('Sign in functionality', () => {
   })
 
   it('Auth 2fa user sign in direct access to /login should redirect', () => {
-    cy.task('stubLogin', { username: 'AUTH_USER', authorities: ['ROLE_CMD_MIGRATED_MFA'] })
+    cy.task('stubLogin', { username: 'AUTH_USER' })
     cy.task('stubNotificationPreferencesGet', {})
 
     cy.request('/login')
