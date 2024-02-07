@@ -15,7 +15,7 @@
           </h2>
         </div>
         <div class="govuk-notification-banner__content" id="banner-sms">
-          You now have the option of receiving shift changes via text or email - use the
+          You have the option of receiving shift changes via text or email - use the
           <a class="govuk-notification-banner__link" data-test="banner-sms-notification-link" href="/notifications/settings">Notifications</a> page
           to select your preferred option.
           <p class="govuk-!-margin-top-2"><a class="govuk-link govuk-link--no-visited-state notification_dismiss_link" id="SMS_BANNER" href="#">Dismiss</a></p>
@@ -32,13 +32,6 @@
         </div>
         <div class="govuk-notification-banner__content" id="banner-mfa">
           {% switch (showBanner.mfa) %}
-          {% case mfaBannerType.EXISTING_USER %}
-            {# Existing user (already uses CMD) #}
-            You can manage your two-factor authentication (2FA) settings on the <a
-                    class="govuk-notification-banner__link" data-test="banner-existing-notification-link" href="/account-details">Manage your details</a> page.
-            You can also access this via the top bar.
-            <p>You no longer need to contact the support team to change these settings.</p>
-            <p class="govuk-!-margin-top-2"><a class="govuk-link govuk-link--no-visited-state notification_dismiss_link" id="EXISTING_USER" href="#">Dismiss</a></p>
           {% case mfaBannerType.NEW_USER %}
             {# (existing DPS user with 2FA, new to CMD) #}
             You can manage your two-factor authentication (2FA) settings on the <a

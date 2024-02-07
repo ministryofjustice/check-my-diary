@@ -12,7 +12,6 @@ export default function calendarRouter(router: Router, services: Services): Rout
   const calendarController = new CalendarController(
     services.calendarService,
     services.notificationCookieService,
-    services.userAuthenticationService,
     services.userService,
   )
   const notificationDismissController = new NotificationDismissController(services.notificationCookieService)

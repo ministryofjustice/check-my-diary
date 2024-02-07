@@ -5,7 +5,7 @@ import appWithAllRoutes from './testutils/appSetup'
 let app: Express
 
 beforeEach(() => {
-  app = appWithAllRoutes({ hmppsAuthMFAUser: true })
+  app = appWithAllRoutes({})
 })
 
 afterEach(() => {

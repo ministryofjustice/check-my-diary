@@ -22,7 +22,6 @@ export declare global {
       verified?: boolean
       id: string
       authUrl?: string
-      hmppsAuthMFAUser?: boolean
     }
   }
 }

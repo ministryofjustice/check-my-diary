@@ -7,7 +7,7 @@ afterEach(() => {
 
 describe('GET 404', () => {
   it('should render content with stack in dev mode', () => {
-    return request(appWithAllRoutes({ hmppsAuthMFAUser: true }))
+    return request(appWithAllRoutes({}))
       .get('/unknown')
       .expect(404)
       .expect('Content-Type', /html/)
@@ -18,7 +18,7 @@ describe('GET 404', () => {
   })
 
   it('should render content without stack in production mode', () => {
-    return request(appWithAllRoutes({ production: true, hmppsAuthMFAUser: true }))
+    return request(appWithAllRoutes({ production: true }))
       .get('/unknown')
       .expect(404)
       .expect('Content-Type', /html/)

@@ -11,12 +11,12 @@ import { services } from '../../services'
 import * as auth from '../../authentication/auth'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 
-function appSetup(route: Router, production: boolean, hmppsAuthMFAUser: boolean): Express {
+function appSetup(route: Router, production: boolean): Express {
   const app = express()
 
   nunjucksSetup(app, path)
 
-  const authUser = { name: 'first last', authorities: hmppsAuthMFAUser ? 'ROLE_CMD_MIGRATED_MFA' : 'ROLE_BOB' }
+  const authUser = { name: 'first last', authorities: 'ROLE_BOB' }
   const token = jsonwebtoken.sign(authUser, 'ssshhh', { expiresIn: '1h' })
 
   app.use((req, res, next) => {
@@ -27,7 +27,6 @@ function appSetup(route: Router, production: boolean, hmppsAuthMFAUser: boolean)
       username: 'user1',
     }
     res.locals.user = req.user
-    req.hmppsAuthMFAUser = hmppsAuthMFAUser
     next()
   })
 
@@ -41,14 +40,8 @@ function appSetup(route: Router, production: boolean, hmppsAuthMFAUser: boolean)
   return app
 }
 
-export default function appWithAllRoutes({
-  production = false,
-  hmppsAuthMFAUser = false,
-}: {
-  production?: boolean
-  hmppsAuthMFAUser?: boolean
-}): Express {
+export default function appWithAllRoutes({ production = false }: { production?: boolean }): Express {
   auth.default.authenticationMiddleware = () => (req, res, next) => next()
   const svcs = services()
-  return appSetup(indexRouter(standardRouter(), svcs), production, hmppsAuthMFAUser)
+  return appSetup(indexRouter(standardRouter(), svcs), production)
 }

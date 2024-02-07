@@ -1,7 +1,6 @@
 import { add, format, getDay, getDaysInMonth, intervalToDuration, isFuture, isToday, startOfMonth } from 'date-fns'
 
 import crypto from 'crypto'
-import { jwtDecode } from 'jwt-decode'
 import { CalendarDay, Details } from './utilities.types'
 
 const TIME_FORMAT = 'HH:mm:ss'
@@ -199,11 +198,6 @@ const processDay = (day: CalendarDay): CalendarDay => {
   }
 }
 
-const hmppsAuthMFAUser = (token: string) => {
-  const { authorities } = jwtDecode<{ authorities: string[] }>(token)
-  return authorities.includes('ROLE_MFA') || authorities.includes('ROLE_CMD_MIGRATED_MFA')
-}
-
 const getSnoozeUntil = (rawSnoozeUntil: string) => {
   const snoozeUntil = new Date(rawSnoozeUntil)
   return isFuture(snoozeUntil) ? format(add(snoozeUntil, { days: 1 }), 'd MMMM yyyy') : ''
@@ -217,6 +211,5 @@ export default {
   sortByDisplayType,
   configureCalendar,
   processDay,
-  hmppsAuthMFAUser,
   getSnoozeUntil,
 }

@@ -35,5 +35,4 @@ export interface AppRequest {
   authUrl: string
   params: { date: string }
   user: { token: string; employeeName: string; username: string }
-  hmppsAuthMFAUser: boolean
 }

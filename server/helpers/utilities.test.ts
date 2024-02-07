@@ -1,5 +1,4 @@
 import utilities from './utilities'
-import createToken from '../routes/testutils/createToken'
 
 import type { CalendarDay, Details } from './utilities.types'
 
@@ -121,24 +120,6 @@ describe('processDay', () => {
         specialActivityColour: '',
       },
     ])
-  })
-})
-
-describe('hmppsAuthMFAUser', () => {
-  afterEach(() => {
-    jest.resetAllMocks()
-  })
-  it('should return true if the user has the ROLE_MFA role', () => {
-    const token = createToken('username', 'employeeName', ['ROLE_MFA'])
-    expect(utilities.hmppsAuthMFAUser(token)).toEqual(true)
-  })
-  it('should return true if the user has the ROLE_CMD_MIGRATED_MFA role', () => {
-    const token = createToken('username', 'employeeName', ['ROLE_CMD_MIGRATED_MFA'])
-    expect(utilities.hmppsAuthMFAUser(token)).toEqual(true)
-  })
-  it('should return false if the user does not have the ROLE_MFA or ROLE_CMD_MIGRATED_MFA roles', () => {
-    const token = createToken('username', 'employeeName', [])
-    expect(utilities.hmppsAuthMFAUser(token)).toEqual(false)
   })
 })
 
