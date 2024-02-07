@@ -12,13 +12,4 @@ export default class UserAuthenticationService {
         throw err
       })
   }
-
-  public async updateSessionExpiryDateTime(quantumId: string) {
-    this.db('UserAuthentication')
-      .where({ QuantumId: quantumId.toLowerCase() })
-      .update({ SessionExpiryDateTime: null })
-      .catch((err) => {
-        throw err
-      })
-  }
 }
