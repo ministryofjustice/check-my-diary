@@ -4,7 +4,6 @@ import NotificationSettingsPage from '../pages/notificationSettings'
 
 context('A staff member can view their calendar', () => {
   before(() => {
-    cy.task('createTablesInsertData')
     cy.viewport(350, 750)
   })
   beforeEach(() => {
@@ -109,7 +108,7 @@ context('A staff member can view their calendar', () => {
 
   it('New user banner is shown and dismissed', () => {
     cy.task('stubGetMyMfaSettings', { backupVerified: true, mobileVerified: false, emailVerified: true })
-    cy.task('stubLogin', { username: 'AUTH_USER', authorities: ['ROLE_CMD_MIGRATED_MFA'] })
+    cy.task('stubLogin', { username: 'AUTH_USER' })
     cy.login()
     const calendarPage = Page.verifyOnPageTitle(CalendarPage)
     calendarPage.bannerMFA().contains('Once signed in, you can change these settings')
@@ -135,7 +134,7 @@ context('A staff member can view their calendar', () => {
 
   it('Both SMS and MFA banner messages shown', () => {
     cy.task('stubGetMyMfaSettings', { backupVerified: false, mobileVerified: false, emailVerified: true })
-    cy.task('stubLogin', { username: 'AUTH_USER', authorities: ['ROLE_CMD_MIGRATED_MFA'] })
+    cy.task('stubLogin', { username: 'AUTH_USER' })
     cy.login()
     const calendarPage = Page.verifyOnPageTitle(CalendarPage)
     calendarPage.bannerSMS().contains('You have the option of receiving shift changes via text or email')

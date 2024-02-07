@@ -1,18 +1,5 @@
 version: '3.1'
 services:
-  check-my-diary-db:
-    image: postgres:16
-    networks:
-      - hmpps
-    container_name: check-my-diary-db
-    restart: unless-stopped
-    ports:
-      - '5432:5432'
-    environment:
-      - POSTGRES_PASSWORD=check-my-diary
-      - POSTGRES_USER=check-my-diary
-      - POSTGRES_DB=check-my-diary
-
   check-my-diary-redis:
     image: 'redis:7.0'
     networks:
@@ -41,7 +28,6 @@ services:
     networks:
       - hmpps
     depends_on:
-      - check-my-diary-db
       - check-my-diary-redis
     container_name: cmd-api
     restart: unless-stopped
@@ -51,10 +37,6 @@ services:
       test: ['CMD', 'curl', '-f', 'http://localhost:8080/health']
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - DATABASE_ENDPOINT=check-my-diary-db:5432
-      - DATABASE_USERNAME=check-my-diary
-      - DATABASE_PASSWORD=check-my-diary
-      - DATABASE_NAME=check-my-diary
 
 networks:
   hmpps:

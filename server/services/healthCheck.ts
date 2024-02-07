@@ -1,13 +1,8 @@
 import promClient from 'prom-client'
 import { CommonHttpOption } from 'agentkeepalive'
 
-import { dbCheck, serviceCheckFactory } from '../data/healthCheck'
+import { serviceCheckFactory } from '../data/healthCheck'
 import config from '../config'
-
-const db = () =>
-  dbCheck()
-    .then(() => ({ name: 'db', status: 'ok', message: 'OK' }))
-    .catch((err) => ({ name: 'db', status: 'ERROR', message: err.message }))
 
 const healthCheckGauge = new promClient.Gauge({
   name: 'upstream_healthcheck',
@@ -63,7 +58,6 @@ function gatherCheckInfo(aggregateStatus: Record<string, unknown>, currentStatus
 
 const apiChecks = [
   service('hmppsAuth', `${config.apis.hmppsAuth.url}/health/ping`, config.apis.hmppsAuth.agent),
-  db,
   ...(config.apis.tokenVerification.enabled
     ? [
         service(

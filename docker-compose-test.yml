@@ -1,18 +1,5 @@
 version: '3.1'
 services:
-  check-my-diary-db:
-    image: postgres:16
-    networks:
-      - hmpps_int
-    container_name: check-my-diary-db
-    restart: unless-stopped
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_PASSWORD=check-my-diary
-      - POSTGRES_USER=check-my-diary
-      - POSTGRES_DB=check-my-diary
-
   cmd-api-wiremock:
     image: wiremock/wiremock
     networks:
