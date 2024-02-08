@@ -123,6 +123,15 @@ context('A staff member can view their calendar', () => {
     calendarPage.bannerMFA().should('not.exist')
   })
 
+  it('New user banner not shown if existing user banner already dismissed', () => {
+    cy.task('stubGetMyMfaSettings', { backupVerified: true, mobileVerified: false, emailVerified: true })
+    cy.task('stubLogin', { username: 'AUTH_USER' })
+    cy.setCookie('ui-notification-banner-EXISTING_USER', 'dismissed')
+    cy.login()
+    const calendarPage = Page.verifyOnPageTitle(CalendarPage)
+    calendarPage.bannerMFA().should('not.exist')
+  })
+
   it('First time user banner is shown, no role', () => {
     cy.task('stubGetMyMfaSettings', { backupVerified: false, mobileVerified: false, emailVerified: true })
     cy.task('stubLogin', { username: 'AUTH_USER', authorities: [] })

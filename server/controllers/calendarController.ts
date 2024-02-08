@@ -6,7 +6,7 @@ import mfaBannerType from '../helpers/mfaBannerType'
 import type { CalendarService, NotificationCookieService } from '../services'
 import UserService from '../services/userService'
 
-const { SMS_BANNER, NEW_USER, FIRST_TIME_USER } = mfaBannerType
+const { SMS_BANNER, EXISTING_USER, NEW_USER, FIRST_TIME_USER } = mfaBannerType
 
 export default class CalendarController {
   constructor(
@@ -30,11 +30,12 @@ export default class CalendarController {
     const notifications = !this.notificationCookieService.alreadyDismissed(req, SMS_BANNER)
 
     const computeBanner = async () => {
+      const alreadyDismissedExisting = this.notificationCookieService.alreadyDismissed(req, EXISTING_USER)
       const alreadyDismissedNew = this.notificationCookieService.alreadyDismissed(req, NEW_USER)
 
       const authMfa = await this.userService.getUserMfa(token)
       if (authMfa.backupVerified || authMfa.mobileVerified) {
-        return alreadyDismissedNew ? '' : NEW_USER
+        return alreadyDismissedNew || alreadyDismissedExisting ? '' : NEW_USER
       }
       return FIRST_TIME_USER
     }

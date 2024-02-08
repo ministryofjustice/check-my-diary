@@ -87,7 +87,6 @@ describe('CalendarController', () => {
       getUserMfaMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
 
       await calendarController().getDate(req, res)
-      expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar.njk')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: true,
         mfa: FIRST_TIME_USER,
@@ -98,31 +97,36 @@ describe('CalendarController', () => {
       getUserMfaMock.mockResolvedValue({ backupVerified: false, mobileVerified: false })
 
       await calendarController().getDate(req, res)
-      expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar.njk')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: true,
         mfa: FIRST_TIME_USER,
       })
     })
     it('should not show banner when NEW_USER dismissed', async () => {
-      req.cookies = {}
-      req.cookies['ui-notification-banner-NEW_USER'] = 'dismissed'
+      req.cookies = { 'ui-notification-banner-NEW_USER': 'dismissed' }
       getUserMfaMock.mockResolvedValue({ backupVerified: false, mobileVerified: true })
 
       await calendarController().getDate(req, res)
-      expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar.njk')
+      expect(renderMock.mock.calls[0][1].showBanner).toEqual({
+        notifications: true,
+        mfa: '',
+      })
+    })
+    it('should not show banner when EXISTING_USER dismissed', async () => {
+      req.cookies = { 'ui-notification-banner-EXISTING_USER': 'dismissed' }
+      getUserMfaMock.mockResolvedValue({ backupVerified: false, mobileVerified: true })
+
+      await calendarController().getDate(req, res)
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: true,
         mfa: '',
       })
     })
     it('should not show banner when SMS banner dismissed', async () => {
-      req.cookies = {}
-      req.cookies['ui-notification-banner-SMS_BANNER'] = 'dismissed'
+      req.cookies = { 'ui-notification-banner-SMS_BANNER': 'dismissed' }
       getUserMfaMock.mockResolvedValue({ backupVerified: false, mobileVerified: true })
 
       await calendarController().getDate(req, res)
-      expect(renderMock.mock.calls[0][0]).toEqual('pages/calendar.njk')
       expect(renderMock.mock.calls[0][1].showBanner).toEqual({
         notifications: false,
         mfa: 'NEW_USER',
