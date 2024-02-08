@@ -64,32 +64,12 @@ generic-service:
     TOKEN_VERIFICATION_ENABLED: "true"
     APPLICATIONINSIGHTS_CONNECTION_STRING: "InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY);IngestionEndpoint=https://northeurope-0.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/"
 
-# 194.33.192.0/25        ark-nps-hmcts-ttp1 to 5
-# 194.33.193.0/25
-# 194.33.196.0/25
-# 194.33.197.0/25
-# 195.59.75.0/24
-# 195.92.38.16/28       dxc_webproxies
-# 20.49.214.199        mojo-1
-# 20.49.214.228"       mojo_2
-# 212.137.36.230/32         quantum_alt
-# 35.176.93.186/32         global-protect
-# 35.177.125.252      j5-phones-1
-# 35.177.137.160       j5-phones-2
-# 62.25.109.197/32        quantum
-
-  # Pre-existing kubernetes secrets to load as environment variables in the deployment.
-  # namespace_secrets:
-  #   [name of kubernetes secret]:
-  #     [name of environment variable as seen by app]: [key of kubernetes secret to load]
-
   namespace_secrets:
     check-my-diary:
       APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
       API_CLIENT_ID: "API_CLIENT_ID"
       API_CLIENT_SECRET: "API_CLIENT_SECRET"
       SESSION_SECRET: "SESSION_SECRET"
-      NOTIFY_CLIENT_KEY: "NOTIFY_CLIENT_KEY"
       CMD_API_URL: "CMD_API_URL"
       GOOGLE_ANALYTICS_ID: "GOOGLE_ANALYTICS_ID"
 
