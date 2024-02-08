@@ -15,7 +15,7 @@ describe('Notification cookie', () => {
     notificationCookieService.markAsDismissed(res, 'ID1')
     expect(res.cookie).toHaveBeenCalledWith('ui-notification-banner-ID1', 'dismissed', {
       httpOnly: true,
-      maxAge: 4492800000,
+      maxAge: 31536000000,
     })
   })
 
