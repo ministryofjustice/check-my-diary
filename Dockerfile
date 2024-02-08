@@ -63,9 +63,6 @@ COPY --from=build --chown=appuser:appgroup \
 COPY --from=build --chown=appuser:appgroup \
         /app/node_modules ./node_modules
 
-COPY --from=build --chown=appuser:appgroup \
-        /app/root.cert .
-
 EXPOSE 3000 3001
 ENV NODE_ENV='production'
 USER 2000
