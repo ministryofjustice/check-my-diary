@@ -2,6 +2,12 @@ import CalendarPage from '../pages/calendarPage'
 import Page from '../pages/page'
 import NotificationSettingsPage from '../pages/notificationSettings'
 
+const justUnderAYear = new Date()
+// we allow 4 days either side to account for leap years etc
+justUnderAYear.setFullYear(justUnderAYear.getFullYear() + 1, justUnderAYear.getMonth(), justUnderAYear.getDate() - 4)
+const justOverAYear = new Date()
+justOverAYear.setFullYear(justOverAYear.getFullYear() + 1, justOverAYear.getMonth(), justOverAYear.getDate() + 4)
+
 context('A staff member can view their calendar', () => {
   before(() => {
     cy.viewport(350, 750)
@@ -106,6 +112,25 @@ context('A staff member can view their calendar', () => {
     calendarPage.bannerSMS().should('not.be.visible')
   })
 
+  it('SMS banner dismissal should last for about a year', () => {
+    cy.task('stubLogin')
+    cy.login()
+    const calendarPage = Page.verifyOnPageTitle(CalendarPage)
+
+    calendarPage.bannerSMS().contains('You have the option of receiving shift changes via text or email')
+    calendarPage.notificationBannerSmsLink().click()
+    Page.verifyOnPage(NotificationSettingsPage)
+
+    cy.visit('/')
+    calendarPage.bannerSMS().contains('Dismiss').click()
+    calendarPage.bannerSMS().should('not.be.visible')
+
+    cy.getCookie('ui-notification-banner-SMS_BANNER').then((cookie) => {
+      expect(cookie.expiry).to.be.gt(justUnderAYear.getTime() / 1000)
+      expect(cookie.expiry).to.be.lt(justOverAYear.getTime() / 1000)
+    })
+  })
+
   it('New user banner is shown and dismissed', () => {
     cy.task('stubGetMyMfaSettings', { backupVerified: true, mobileVerified: false, emailVerified: true })
     cy.task('stubLogin', { username: 'AUTH_USER' })
@@ -121,6 +146,21 @@ context('A staff member can view their calendar', () => {
     Page.verifyOnPageTitle(CalendarPage, 'March 2020')
     calendarPage.bannerSMS().should('exist')
     calendarPage.bannerMFA().should('not.exist')
+  })
+
+  it('New user banner dismissal should last for about a year', () => {
+    cy.task('stubGetMyMfaSettings', { backupVerified: true, mobileVerified: false, emailVerified: true })
+    cy.task('stubLogin', { username: 'AUTH_USER' })
+    cy.login()
+    const calendarPage = Page.verifyOnPageTitle(CalendarPage)
+    calendarPage.bannerMFA().contains('Once signed in, you can change these settings')
+
+    calendarPage.bannerMFA().contains('Dismiss').click()
+    calendarPage.bannerMFA().should('not.be.visible')
+    cy.getCookie('ui-notification-banner-NEW_USER').then((cookie) => {
+      expect(cookie.expiry).to.be.gt(justUnderAYear.getTime() / 1000)
+      expect(cookie.expiry).to.be.lt(justOverAYear.getTime() / 1000)
+    })
   })
 
   it('New user banner not shown if existing user banner already dismissed', () => {

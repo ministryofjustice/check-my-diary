@@ -6,7 +6,7 @@ export default class NotificationCookieService {
   key = (id: string) => `${this.COOKIE_NAME}-${id}`
 
   public markAsDismissed = (res: Response, id: string) => {
-    const oneYear = 52 * 24 * 3600000
+    const oneYear = 365 * 24 * 3600000
     return res.cookie(this.key(id), 'dismissed', { maxAge: oneYear, httpOnly: true })
   }
 
