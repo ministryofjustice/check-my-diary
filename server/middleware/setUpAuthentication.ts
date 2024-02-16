@@ -15,7 +15,8 @@ export default function setUpAuth(): Router {
   router.use(flash())
 
   const authUrl = config.apis.hmppsAuth.externalUrl
-  const authLogoutUrl = `${authUrl}/logout?client_id=${config.apis.hmppsAuth.apiClientId}&redirect_uri=${config.app.url}`
+  const authParameters = `client_id=${config.apis.hmppsAuth.apiClientId}&redirect_uri=${config.app.url}`
+  const authLogoutUrl = `${authUrl}/logout?${authParameters}`
 
   router.get('/autherror', (req, res) => {
     res.status(401)
@@ -43,7 +44,7 @@ export default function setUpAuth(): Router {
   })
 
   router.use('/account-details', (req, res) => {
-    res.redirect(`${authUrl}/account-details`)
+    res.redirect(`${authUrl}/account-details?${authParameters}`)
   })
 
   router.use((req, res, next) => {
