@@ -5,6 +5,7 @@ import createError from 'http-errors'
 import setUpHealthChecks from './middleware/setUpHealthChecks'
 import setUpStaticResources from './middleware/setUpStaticResources'
 import createErrorHandler from './errorHandler'
+import { appInsightsMiddleware } from './utils/azureAppInsights'
 import nunjucksSetup from './utils/nunjucksSetup'
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpWebSession from './middleware/setUpWebSession'
@@ -23,6 +24,7 @@ export default function createApp(services: Services) {
   app.set('port', process.env.PORT || 3000)
 
   app.use(metricsMiddleware)
+  app.use(appInsightsMiddleware())
   app.use(setUpHealthChecks())
   app.use(setUpWebSecurity())
   app.use(setUpWebSession())
