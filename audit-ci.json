@@ -2,5 +2,5 @@
   "low": true,
   "package-manager": "auto",
   "registry": "https://registry.npmjs.org",
-  "allowlist": []
+  "allowlist": ["GHSA-8cp3-66vr-3r4c|supertest>superagent>formidable"]
 }
