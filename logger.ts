@@ -3,6 +3,6 @@ import bunyanFormat from 'bunyan-format'
 
 const formatOut = bunyanFormat({ outputMode: 'json', color: true })
 
-const log = bunyan.createLogger({ name: 'Check My Diary', stream: formatOut, level: 'debug' })
+const logger = bunyan.createLogger({ name: 'Check My Diary', stream: formatOut, level: 'debug' })
 
-export default log
+export default logger

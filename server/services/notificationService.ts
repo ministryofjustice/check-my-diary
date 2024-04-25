@@ -7,7 +7,7 @@ import type {
 import axios from 'axios'
 import { format } from 'date-fns'
 import getSanitisedError from '../sanitisedError'
-import logger from '../../log'
+import logger from '../../logger'
 import baseUrl from '../config'
 
 export default class NotificationService {

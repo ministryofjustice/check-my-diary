@@ -1,7 +1,7 @@
 import axios from 'axios'
 import type { ShiftDto } from 'cmdApiClient'
 import { endOfMonth, format } from 'date-fns'
-import logger from '../../log'
+import logger from '../../logger'
 import baseUrl from '../config'
 import getSanitisedError from '../sanitisedError'
 

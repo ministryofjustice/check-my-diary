@@ -1,5 +1,5 @@
 import { Response } from 'express'
-import log from '../log'
+import logger from '../logger'
 
 const logError = (
   url: string,
@@ -8,9 +8,9 @@ const logError = (
 ) => {
   if (response) {
     const { status } = response
-    log.error({ url, status, stack, message }, msg)
+    logger.error({ url, status, stack, message }, msg)
   } else {
-    log.error({ url, stack, message }, msg)
+    logger.error({ url, stack, message }, msg)
   }
   return new Error(msg)
 }
