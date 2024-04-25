@@ -2,7 +2,7 @@
 import superagent from 'superagent'
 import Agent, { HttpsAgent, CommonHttpOption } from 'agentkeepalive'
 
-import logger from '../../log'
+import logger from '../../logger'
 
 export type ServiceCheck = () => Promise<string>
 

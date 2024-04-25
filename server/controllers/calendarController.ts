@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express'
 import { add, format, sub } from 'date-fns'
-import logger from '../../log'
+import logger from '../../logger'
 import utilities from '../helpers/utilities'
 import mfaBannerType from '../helpers/mfaBannerType'
 import type { CalendarService, NotificationCookieService } from '../services'

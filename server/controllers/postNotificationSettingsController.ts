@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 
 import NotificationType from '../helpers/NotificationType'
-import logger from '../../log'
+import logger from '../../logger'
 import type { NotificationService } from '../services'
 
 export default class PostNotificationSettingsController {
