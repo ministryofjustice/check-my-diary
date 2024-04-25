@@ -39,7 +39,7 @@ export default class CalendarPage extends Page {
     this.shouldHaveClass(cy.get('span.line').eq(n), expectedClazz)
 
   shouldHaveClass = (element: PageElement, expectedClazz: string) =>
-    element.should('have.attr', 'class').then((clazz) => {
+    element.should('have.attr', 'class').then(clazz => {
       expect(clazz).to.contains(expectedClazz)
     })
 }

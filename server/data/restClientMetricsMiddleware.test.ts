@@ -44,7 +44,7 @@ describe('restClientMetricsMiddleware', () => {
         .get('https://httpbin.org/')
         .use(restClientMetricsMiddleware)
         .set('accept', 'json')
-        .then((res) => {
+        .then(res => {
           code = res.statusCode
         })
 

@@ -118,7 +118,7 @@ const getTypeClass = (type: string, isFullDay: boolean) => {
 }
 
 const fullDayMatch = (desc: string) => {
-  const foundValue = fullDayActivities.find((a) => desc.startsWith(a.description))
+  const foundValue = fullDayActivities.find(a => desc.startsWith(a.description))
   return foundValue && foundValue.class
 }
 

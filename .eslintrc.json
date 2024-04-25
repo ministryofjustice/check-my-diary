@@ -55,9 +55,7 @@
             "printWidth": 120,
             "semi": false
           }
-        ],
-        "no-shadow": "off",
-        "@typescript-eslint/no-shadow": "error"
+        ]
       }
     }
   ],

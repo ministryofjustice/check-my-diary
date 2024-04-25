@@ -8,7 +8,7 @@ const getLoginUrl = () =>
   getMatchingRequests({
     method: 'GET',
     urlPath: '/auth/oauth/authorize',
-  }).then((data) => {
+  }).then(data => {
     const { requests } = data.body
     const stateValue = requests[requests.length - 1].queryParams.state.values[0]
     return `/login/callback?code=codexxxx&state=${stateValue}`
