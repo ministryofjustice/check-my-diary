@@ -99,7 +99,7 @@ To start the docker images for the tests:
 docker-compose -f docker-compose-test.yml pull && docker-compose -f docker-compose-test.yml up
 ```
 
-This will start an database instance on port 5432 and a wiremock instance on port 9191 to mock out the prison officer and notify
+This will start an database instance on port 5432 and a wiremock instance on port 9091 to mock out the prison officer and notify
 APIs.  This allows us to simulate both services without firing them up.
 
 The tests are written using [cypress](https://www.cypress.io/) and will test against a running application instance.
@@ -127,8 +127,8 @@ This will open up cypress and show all the specs.  Clicking on one of the specs 
 that specification.
 
 If the mocking is not working properly after the test has been completed then the docker terminal will show what stubs
-aren't matched by requests. http://localhost:9191/__admin/requests will provide more information on the requests that
-are made and http://localhost:9191/__admin/mappings will show what stubs have been created for the requests.
+aren't matched by requests. http://localhost:9091/__admin/requests will provide more information on the requests that
+are made and http://localhost:9091/__admin/mappings will show what stubs have been created for the requests.
 
 ## Create shift data in Corporate Staff Rostering (CSR)
 

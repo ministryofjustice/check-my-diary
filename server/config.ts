@@ -52,8 +52,8 @@ export default {
   },
   apis: {
     hmppsAuth: {
-      url: get('API_AUTH_ENDPOINT_URL', get('NOMIS_AUTH_URL', 'http://localhost:9191/auth')),
-      externalUrl: get('API_AUTH_EXTERNAL_ENDPOINT_URL', get('API_AUTH_ENDPOINT_URL', 'http://localhost:9191/auth')),
+      url: get('API_AUTH_ENDPOINT_URL', get('NOMIS_AUTH_URL', 'http://localhost:9091/auth')),
+      externalUrl: get('API_AUTH_EXTERNAL_ENDPOINT_URL', get('API_AUTH_ENDPOINT_URL', 'http://localhost:9091/auth')),
       timeout: {
         response: Number(get('HMPPS_AUTH_TIMEOUT_RESPONSE', 30000)),
         deadline: Number(get('HMPPS_AUTH_TIMEOUT_DEADLINE', 35000)),
@@ -82,7 +82,7 @@ export default {
     end: process.env.MAINTENANCE_END,
   },
   cmdApi: {
-    url: get('CMD_API_URL', 'http://localhost:9191'),
+    url: get('CMD_API_URL', 'http://localhost:9091'),
   },
   domain: process.env.HMPPS_COOKIE_DOMAIN,
   dpsHomeUrl: process.env.DPS_HOME_URL,
