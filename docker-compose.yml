@@ -17,7 +17,7 @@ services:
     container_name: oauth-server
     restart: unless-stopped
     ports:
-      - '9191:8080'
+      - '9091:8080'
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8080/auth/health']
     environment:

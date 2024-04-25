@@ -43,7 +43,7 @@ context('Sign in functionality', () => {
       followRedirect: false,
     }).then((resp) => {
       expect(resp.status).to.eq(302)
-      expect(resp.redirectedToUrl).to.eq('http://localhost:3005/')
+      expect(resp.redirectedToUrl).to.eq('http://localhost:3007/')
     })
   })
 

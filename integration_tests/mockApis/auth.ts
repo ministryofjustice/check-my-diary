@@ -46,7 +46,7 @@ const redirect = () =>
       status: 200,
       headers: {
         'Content-Type': 'text/html',
-        Location: 'http://localhost:3005/login/callback?code=codexxxx&state=stateyyyy',
+        Location: 'http://localhost:3007/login/callback?code=codexxxx&state=stateyyyy',
       },
       body: '<html><body>Login page<h1>Sign in</h1></body></html>',
     },
