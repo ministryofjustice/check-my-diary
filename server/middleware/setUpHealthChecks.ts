@@ -6,7 +6,7 @@ export default function setUpHealthChecks(): Router {
   const router = express.Router()
 
   router.get('/health', (req, res, next) => {
-    healthCheck((result) => {
+    healthCheck(result => {
       if (!result.healthy) res.status(503)
       res.json(result)
     })

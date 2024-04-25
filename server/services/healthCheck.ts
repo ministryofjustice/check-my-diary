@@ -28,8 +28,8 @@ function service(name: string, url: string, agentConfig: CommonHttpOption): Heal
   const check = serviceCheckFactory(name, url, agentConfig)
   return () =>
     check()
-      .then((result) => ({ name, status: 'ok', message: result }))
-      .catch((err) => ({ name, status: 'ERROR', message: err }))
+      .then(result => ({ name, status: 'ok', message: result }))
+      .catch(err => ({ name, status: 'ERROR', message: err }))
 }
 
 function addAppInfo(result: HealthCheckResult): HealthCheckResult {
@@ -70,15 +70,15 @@ const apiChecks = [
 ]
 
 export default function healthCheck(callback: HealthCheckCallback, checks = apiChecks): void {
-  Promise.all(checks.map((fn) => fn())).then((checkResults) => {
-    const allOk = checkResults.every((item) => item.status === 'ok')
+  Promise.all(checks.map(fn => fn())).then(checkResults => {
+    const allOk = checkResults.every(item => item.status === 'ok')
 
     const result = {
       healthy: allOk,
       checks: checkResults.reduce(gatherCheckInfo, {}),
     }
 
-    checkResults.forEach((item) => {
+    checkResults.forEach(item => {
       const val = item.status === 'ok' ? 1 : 0
       healthCheckGauge.labels(item.name).set(val)
     })

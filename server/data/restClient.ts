@@ -56,7 +56,7 @@ export default class RestClient {
         .get(`${this.apiUrl()}${path}`)
         .agent(this.agent)
         .use(restClientMetricsMiddleware)
-        .retry(2, (err) => {
+        .retry(2, err => {
           if (err) logger.info(`Retry handler found API error with ${err.code} ${err.message}`)
           return undefined // retry handler only for logging retries, not to influence retry logic
         })
@@ -88,7 +88,7 @@ export default class RestClient {
         .send(data)
         .agent(this.agent)
         .use(restClientMetricsMiddleware)
-        .retry(2, (err) => {
+        .retry(2, err => {
           if (err) logger.info(`Retry handler found API error with ${err.code} ${err.message}`)
           return undefined // retry handler only for logging retries, not to influence retry logic
         })
@@ -113,7 +113,7 @@ export default class RestClient {
         .agent(this.agent)
         .auth(this.token, { type: 'bearer' })
         .use(restClientMetricsMiddleware)
-        .retry(2, (err) => {
+        .retry(2, err => {
           if (err) logger.info(`Retry handler found API error with ${err.code} ${err.message}`)
           return undefined // retry handler only for logging retries, not to influence retry logic
         })

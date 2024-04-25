@@ -22,7 +22,7 @@ export default class CalendarService {
         },
       })
       .then(({ data }) => data)
-      .catch((error) => {
+      .catch(error => {
         const sanitisedError = getSanitisedError(error)
         logger.error(sanitisedError, `CalendarService Error: getCalendarData(${startDate}, ${endDate})`)
         throw sanitisedError

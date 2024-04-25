@@ -125,7 +125,7 @@ context('A staff member can view their calendar', () => {
     calendarPage.bannerSMS().contains('Dismiss').click()
     calendarPage.bannerSMS().should('not.be.visible')
 
-    cy.getCookie('ui-notification-banner-SMS_BANNER').then((cookie) => {
+    cy.getCookie('ui-notification-banner-SMS_BANNER').then(cookie => {
       expect(cookie.expiry).to.be.gt(justUnderAYear.getTime() / 1000)
       expect(cookie.expiry).to.be.lt(justOverAYear.getTime() / 1000)
     })
@@ -157,7 +157,7 @@ context('A staff member can view their calendar', () => {
 
     calendarPage.bannerMFA().contains('Dismiss').click()
     calendarPage.bannerMFA().should('not.be.visible')
-    cy.getCookie('ui-notification-banner-NEW_USER').then((cookie) => {
+    cy.getCookie('ui-notification-banner-NEW_USER').then(cookie => {
       expect(cookie.expiry).to.be.gt(justUnderAYear.getTime() / 1000)
       expect(cookie.expiry).to.be.lt(justOverAYear.getTime() / 1000)
     })

@@ -9,15 +9,15 @@ function getApiClientToken(token: string) {
     .post(`${config.apis.tokenVerification.url}/token/verify`)
     .auth(token, { type: 'bearer' })
     .timeout(config.apis.tokenVerification.timeout)
-    .then((response) => Boolean(response.body && response.body.active))
-    .catch((error) => {
+    .then(response => Boolean(response.body && response.body.active))
+    .catch(error => {
       logger.error(getSanitisedError(error), 'Error calling tokenVerificationApi')
     })
 }
 
 export type TokenVerifier = (request: Request) => Promise<boolean | void>
 
-const tokenVerifier: TokenVerifier = async (request) => {
+const tokenVerifier: TokenVerifier = async request => {
   const { user, verified } = request
 
   if (!config.apis.tokenVerification.enabled) {

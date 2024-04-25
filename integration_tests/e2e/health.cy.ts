@@ -22,7 +22,7 @@ context('Some unhealthy', () => {
     cy.task('stubAuthPing')
     cy.task('stubTokenVerificationPing', 500)
 
-    cy.request({ url: '/health', method: 'GET', failOnStatusCode: false }).then((response) => {
+    cy.request({ url: '/health', method: 'GET', failOnStatusCode: false }).then(response => {
       expect(response.body.checks.hmppsAuth).to.equal('OK')
       expect(response.body.checks.tokenVerification).to.contain({ status: 500, retries: 2 })
     })

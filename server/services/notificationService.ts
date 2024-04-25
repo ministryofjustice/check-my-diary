@@ -22,8 +22,8 @@ export default class NotificationService {
           authorization: `Bearer ${accessToken}`,
         },
       })
-      .then((response) => response.data)
-      .catch((error) => {
+      .then(response => response.data)
+      .catch(error => {
         const sanitisedError = getSanitisedError(error)
         logger.error(sanitisedError, 'notificationService getNotifications')
         throw sanitisedError
@@ -37,8 +37,8 @@ export default class NotificationService {
           authorization: `Bearer ${accessToken}`,
         },
       })
-      .then((response) => response.data)
-      .catch((error) => {
+      .then(response => response.data)
+      .catch(error => {
         if (error.response?.status === 404) {
           return {}
         }
@@ -65,7 +65,7 @@ export default class NotificationService {
           },
         },
       )
-      .catch((error) => {
+      .catch(error => {
         const sanitisedError = getSanitisedError(error)
         logger.error(sanitisedError, 'notificationService updatePreferences')
         throw sanitisedError
@@ -87,7 +87,7 @@ export default class NotificationService {
           },
         },
       )
-      .catch((error) => {
+      .catch(error => {
         const sanitisedError = getSanitisedError(error)
         logger.error(sanitisedError, 'notificationService updateSnooze')
         throw sanitisedError

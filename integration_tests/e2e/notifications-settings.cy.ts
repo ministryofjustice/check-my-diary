@@ -53,7 +53,7 @@ context('A staff member can view their notification settings', () => {
     page.submit()
 
     Page.verifyOnPage(NotificationManagePage)
-    cy.task('verifyDetails').then((requests) => {
+    cy.task('verifyDetails').then(requests => {
       expect(requests).to.have.length(1)
       expect(requests[0].body).eq(`{"preference":"EMAIL","email":"address@domain.com","sms":""}`)
     })
@@ -96,7 +96,7 @@ context('A staff member can view their notification settings', () => {
     page.submit()
 
     Page.verifyOnPage(NotificationManagePage)
-    cy.task('verifyDetails').then((requests) => {
+    cy.task('verifyDetails').then(requests => {
       expect(requests).to.have.length(1)
       expect(requests[0].body).eq(`{"preference":"SMS","email":"","sms":"07987654321"}`)
     })
@@ -142,7 +142,7 @@ context('A staff member can view their notification settings', () => {
     pausePage.submit()
 
     Page.verifyOnPage(NotificationManagePage)
-    cy.task('verifySnooze').then((requests) => {
+    cy.task('verifySnooze').then(requests => {
       expect(requests).to.have.length(1)
       expect(requests[0].body).eq(`{"snoozeUntil":"${addDays(new Date(), 12).toISOString().split('T')[0]}"}`)
     })
