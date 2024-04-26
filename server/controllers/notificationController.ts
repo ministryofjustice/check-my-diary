@@ -3,7 +3,7 @@ import { validationResult } from 'express-validator'
 import { add, formatISO } from 'date-fns'
 import NotificationType from '../helpers/NotificationType'
 import utilities from '../helpers/utilities'
-import type { NotificationService } from '../services'
+import NotificationService from '../services/notificationService'
 
 export default class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}

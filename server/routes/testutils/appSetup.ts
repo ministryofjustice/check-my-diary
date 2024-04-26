@@ -1,20 +1,28 @@
 import express, { Express } from 'express'
 import cookieSession from 'cookie-session'
 import createError from 'http-errors'
-import path from 'path'
 import jsonwebtoken from 'jsonwebtoken'
 
 import routes from '../index'
 import errorHandler from '../../errorHandler'
-import type { Services } from '../../services'
-import * as auth from '../../authentication/auth'
 import nunjucksSetup from '../../utils/nunjucksSetup'
+import * as auth from '../../authentication/auth'
+import type { Services } from '../../services'
+import type { ApplicationInfo } from '../../applicationInfo'
 import setUpCurrentUser from '../../middleware/setUpCurrentUser'
+
+const testAppInfo: ApplicationInfo = {
+  applicationName: 'test',
+  buildNumber: '1',
+  gitRef: 'long ref',
+  gitShortHash: 'short ref',
+  branchName: 'main',
+}
 
 function appSetup(services: Services, production: boolean): Express {
   const app = express()
 
-  nunjucksSetup(app, path)
+  nunjucksSetup(app, testAppInfo)
 
   const authUser = { name: 'first last', authorities: 'ROLE_BOB' }
   const token = jsonwebtoken.sign(authUser, 'ssshhh', { expiresIn: '1h' })

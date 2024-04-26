@@ -1,7 +1,9 @@
 import { Request, Response } from 'express'
 import CalendarController from './calendarController'
 import mfaBannerType from '../helpers/mfaBannerType'
-import { CalendarService, NotificationCookieService, UserService } from '../services'
+import UserService from '../services/userService'
+import CalendarService from '../services/calendarService'
+import NotificationCookieService from '../services/notificationCookieService'
 
 const { FIRST_TIME_USER } = mfaBannerType
 

@@ -3,8 +3,9 @@ import { add, format, sub } from 'date-fns'
 import logger from '../../logger'
 import utilities from '../helpers/utilities'
 import mfaBannerType from '../helpers/mfaBannerType'
-import type { CalendarService, NotificationCookieService } from '../services'
 import UserService from '../services/userService'
+import CalendarService from '../services/calendarService'
+import NotificationCookieService from '../services/notificationCookieService'
 
 const { SMS_BANNER, EXISTING_USER, NEW_USER, FIRST_TIME_USER } = mfaBannerType
 

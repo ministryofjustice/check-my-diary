@@ -2,7 +2,7 @@ import type { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import NotificationSettingsController from './notificationSettingsController'
 import NotificationType from '../helpers/NotificationType'
-import { NotificationService } from '../services'
+import NotificationService from '../services/notificationService'
 
 describe('notification settings middleware', () => {
   const renderMock = jest.fn()

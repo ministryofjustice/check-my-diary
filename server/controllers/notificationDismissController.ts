@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
-import { NotificationCookieService } from '../services'
+
+import NotificationCookieService from '../services/notificationCookieService'
 
 export default class NotificationDismissController {
   constructor(private readonly notificationCookieService: NotificationCookieService) {}

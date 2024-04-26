@@ -3,18 +3,19 @@ import { RequestHandler, Router } from 'express'
 import utilities from '../helpers/utilities'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import CalendarController from '../controllers/calendarController'
-import type { Services } from '../services'
 import NotificationDismissController from '../controllers/notificationDismissController'
+import type { CalendarService, NotificationCookieService, UserService } from '../services'
 
-export default function calendarRouter(router: Router, services: Services): Router {
+export default function calendarRouter(
+  router: Router,
+  calendarService: CalendarService,
+  notificationCookieService: NotificationCookieService,
+  userService: UserService,
+): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
-  const calendarController = new CalendarController(
-    services.calendarService,
-    services.notificationCookieService,
-    services.userService,
-  )
-  const notificationDismissController = new NotificationDismissController(services.notificationCookieService)
+  const calendarController = new CalendarController(calendarService, notificationCookieService, userService)
+  const notificationDismissController = new NotificationDismissController(notificationCookieService)
 
   get('/calendar/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', (req, res) => calendarController.getDate(req, res))
 

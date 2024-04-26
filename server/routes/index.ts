@@ -6,7 +6,13 @@ import notificationRouter from './notificationRouter'
 import type { Services } from '../services'
 import setUpMaintenance from '../middleware/setUpMaintenance'
 
-export default function routes(services: Services): Router {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default function routes({
+  calendarService,
+  notificationCookieService,
+  notificationService,
+  userService,
+}: Services): Router {
   const router = Router()
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
@@ -20,8 +26,8 @@ export default function routes(services: Services): Router {
     res.render('pages/contact-us.njk')
   })
 
-  calendarRouter(router, services)
-  notificationRouter(router, services)
+  calendarRouter(router, calendarService, notificationCookieService, userService)
+  notificationRouter(router, notificationService)
 
   return router
 }
