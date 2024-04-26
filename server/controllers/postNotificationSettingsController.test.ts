@@ -4,7 +4,7 @@ import { validationResult } from 'express-validator'
 import PostNotificationSettingsController from './postNotificationSettingsController'
 
 import NotificationType from '../helpers/NotificationType'
-import { NotificationService } from '../services'
+import NotificationService from '../services/notificationService'
 
 jest.mock('express-validator')
 const validationResultMock = validationResult as unknown as jest.Mock

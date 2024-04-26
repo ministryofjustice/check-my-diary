@@ -3,7 +3,7 @@ import { validationResult } from 'express-validator'
 
 import NotificationType from '../helpers/NotificationType'
 import logger from '../../logger'
-import type { NotificationService } from '../services'
+import NotificationService from '../services/notificationService'
 
 export default class PostNotificationSettingsController {
   constructor(private readonly notificationService: NotificationService) {}

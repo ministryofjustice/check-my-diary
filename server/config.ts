@@ -32,6 +32,12 @@ export interface ApiConfig {
 }
 
 export default {
+  buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),
+  productId: get('PRODUCT_ID', 'UNASSIGNED', requiredInProduction),
+  gitRef: get('GIT_REF', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
+  branchName: get('GIT_BRANCH', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
+  production,
+  https: production,
   staticResourceCacheDuration: 20,
   session: {
     secret: get('SESSION_SECRET', 'app-insecure-default-session', requiredInProduction),
@@ -86,5 +92,5 @@ export default {
   },
   domain: process.env.HMPPS_COOKIE_DOMAIN,
   dpsHomeUrl: process.env.DPS_HOME_URL,
-  https: production,
+  environmentName: get('ENVIRONMENT_NAME', ''),
 }

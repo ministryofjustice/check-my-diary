@@ -26,7 +26,7 @@ jobs:
       - checkout
       - run:
           name: Update npm
-          command: 'sudo npm install -g npm@9'
+          command: 'sudo npm install -g npm@latest'
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
@@ -40,10 +40,6 @@ jobs:
       - run:
           command: |
             npm run build
-            DATE=$(date '+%Y-%m-%d')
-            export BUILD_NUMBER=${DATE}.${CIRCLE_BUILD_NUM}
-            export GIT_REF="$CIRCLE_SHA1"
-            npm run record-build-info
       - run: # Run linter after build because the integration test code depend on compiled typescript...
           name: Linter check
           command: npm run lint
@@ -51,10 +47,9 @@ jobs:
           root: .
           paths:
             - node_modules
-            - build-info.json
             - build
             - dist
-            - .cache/Cypress
+            - assets/stylesheets
 
   unit_test:
     executor:
@@ -84,6 +79,8 @@ jobs:
       - run:
           name: Install missing OS dependency
           command: sudo apt-get install libxss1
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: Get wiremock
           command: curl -o wiremock.jar https://repo1.maven.org/maven2/org/wiremock/wiremock-standalone/3.3.1/wiremock-standalone-3.3.1.jar
@@ -97,8 +94,6 @@ jobs:
           background: true
       - hmpps/wait_till_ready: # Wait for node app to start
           port: 3007
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: integration tests
           command: npm run int-test

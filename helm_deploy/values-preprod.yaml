@@ -14,6 +14,7 @@ generic-service:
     CHECK_MY_DIARY_URL: https://check-my-diary-preprod.prison.service.justice.gov.uk
     TOKEN_VERIFICATION_API_URL: https://token-verification-api-preprod.prison.service.justice.gov.uk
     DPS_HOME_URL: https://digital-preprod.prison.service.justice.gov.uk
+    ENVIRONMENT_NAME: PRE-PRODUCTION
 
   scheduledDowntime:
     enabled: true

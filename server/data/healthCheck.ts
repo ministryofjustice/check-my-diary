@@ -35,7 +35,7 @@ export function serviceCheckFactory(
             logger.error(error.stack, `Error calling ${name}`)
             reject(error)
           } else if (result.status === 200) {
-            resolve('OK')
+            resolve('UP')
           } else {
             reject(result.status)
           }

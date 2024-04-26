@@ -4,17 +4,17 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import NotificationSettingsController from '../controllers/notificationSettingsController'
 import PostNotificationSettingsController from '../controllers/postNotificationSettingsController'
 import NotificationController from '../controllers/notificationController'
-import type { Services } from '../services'
+import type { NotificationService } from '../services'
 
-export default function notificationRouter(router: Router, services: Services): Router {
+export default function notificationRouter(router: Router, notificationService: NotificationService): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
   const postWithValidator = (path: string, handlers: Array<RequestHandler>, handler: RequestHandler) =>
     router.post(path, handlers, asyncMiddleware(handler))
 
-  const notificationController = new NotificationController(services.notificationService)
-  const notificationSettingsController = new NotificationSettingsController(services.notificationService)
-  const postNotificationSettingsController = new PostNotificationSettingsController(services.notificationService)
+  const notificationController = new NotificationController(notificationService)
+  const notificationSettingsController = new NotificationSettingsController(notificationService)
+  const postNotificationSettingsController = new PostNotificationSettingsController(notificationService)
 
   get('/notifications/settings', (req, res) => notificationSettingsController.getSettings(req, res))
 

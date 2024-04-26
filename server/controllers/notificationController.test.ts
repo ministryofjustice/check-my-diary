@@ -3,7 +3,7 @@ import { validationResult } from 'express-validator'
 import type { Notification } from '../services/notifications.types'
 
 import NotificationController from './notificationController'
-import { NotificationService } from '../services'
+import NotificationService from '../services/notificationService'
 
 jest.mock('express-validator')
 const validationResultMock = validationResult as unknown as jest.Mock

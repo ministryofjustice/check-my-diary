@@ -6,19 +6,7 @@ import {
   TelemetryClient,
 } from 'applicationinsights'
 import { RequestHandler } from 'express'
-import applicationVersion from '../applicationVersion'
-
-function defaultName(): string {
-  const {
-    packageData: { name },
-  } = applicationVersion
-  return name
-}
-
-function version(): string {
-  const { buildNumber } = applicationVersion
-  return buildNumber
-}
+import type { ApplicationInfo } from '../applicationInfo'
 
 export function initialiseAppInsights(): void {
   if (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING) {
@@ -29,10 +17,13 @@ export function initialiseAppInsights(): void {
   }
 }
 
-export function buildAppInsightsClient(name = defaultName()): TelemetryClient | null {
+export function buildAppInsightsClient(
+  { applicationName, buildNumber }: ApplicationInfo,
+  overrideName?: string,
+): TelemetryClient | null {
   if (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING) {
-    defaultClient.context.tags['ai.cloud.role'] = name
-    defaultClient.context.tags['ai.application.ver'] = version()
+    defaultClient.context.tags['ai.cloud.role'] = overrideName || applicationName
+    defaultClient.context.tags['ai.application.ver'] = buildNumber
 
     defaultClient.addTelemetryProcessor(({ tags, data }, contextObjects) => {
       const operationNameOverride = contextObjects?.correlationContext?.customProperties?.getProperty('operationName')

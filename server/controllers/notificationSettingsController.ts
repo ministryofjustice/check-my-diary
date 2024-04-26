@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 
-import type { NotificationService } from '../services'
+import NotificationService from '../services/notificationService'
 
 export default class NotificationSettingsController {
   constructor(private readonly notificationService: NotificationService) {}

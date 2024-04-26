@@ -1,5 +1,4 @@
 import express from 'express'
-import path from 'path'
 import createError from 'http-errors'
 
 import nunjucksSetup from './utils/nunjucksSetup'
@@ -29,12 +28,12 @@ export default function createApp(services: Services) {
 
   app.use(appInsightsMiddleware())
   app.use(metricsMiddleware)
-  app.use(setUpHealthChecks())
+  app.use(setUpHealthChecks(services.applicationInfo))
   app.use(setUpWebSecurity())
   app.use(setUpWebSession())
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
-  nunjucksSetup(app, path)
+  nunjucksSetup(app, services.applicationInfo)
 
   // help users whose browsers remember this previously removed context
   app.use('/auth', (req, res) => res.redirect('/'))
