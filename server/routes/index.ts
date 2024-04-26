@@ -1,4 +1,4 @@
-import type { RequestHandler, Router } from 'express'
+import { type RequestHandler, Router } from 'express'
 
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import calendarRouter from './calendarRouter'
@@ -6,7 +6,8 @@ import notificationRouter from './notificationRouter'
 import type { Services } from '../services'
 import setUpMaintenance from '../middleware/setUpMaintenance'
 
-export default function indexRouter(router: Router, services: Services): Router {
+export default function routes(services: Services): Router {
+  const router = Router()
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   router.use(setUpMaintenance())
