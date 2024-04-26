@@ -1,6 +1,6 @@
----
 generic-service:
   nameOverride: check-my-diary
+  productId: DPS052
 
   image:
     repository: quay.io/hmpps/check-my-diary
