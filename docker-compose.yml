@@ -1,15 +1,5 @@
 version: '3.1'
 services:
-  check-my-diary-redis:
-    image: 'redis:7.0'
-    networks:
-      - hmpps
-    container_name: redis
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-    ports:
-      - '6379:6379'
-
   oauth-server:
     image: quay.io/hmpps/hmpps-auth:latest
     networks:
@@ -27,8 +17,6 @@ services:
     image: quay.io/hmpps/cmd-api:latest
     networks:
       - hmpps
-    depends_on:
-      - check-my-diary-redis
     container_name: cmd-api
     restart: unless-stopped
     ports:
