@@ -9,12 +9,5 @@ services:
     ports:
       - "9091:8080"
 
-  check-my-diary-redis:
-    image: 'redis:7.0'
-    networks:
-      - hmpps_int
-    ports:
-      - '6379:6379'
-
 networks:
   hmpps_int:

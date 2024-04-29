@@ -60,6 +60,7 @@ generic-service:
     NODE_ENV: "production"
     WEB_SESSION_TIMEOUT_IN_MINUTES: "20"
     DB_SSL_ENABLED: "true"
+    REDIS_ENABLED: "true"
     REDIS_TLS_ENABLED: "true"
     TOKEN_VERIFICATION_ENABLED: "true"
     APPLICATIONINSIGHTS_CONNECTION_STRING: "InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY);IngestionEndpoint=https://northeurope-0.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/"
