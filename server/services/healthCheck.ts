@@ -1,7 +1,7 @@
 import promClient from 'prom-client'
-import { CommonHttpOption } from 'agentkeepalive'
 import { serviceCheckFactory } from '../data/healthCheck'
 import config from '../config'
+import type { AgentConfig } from '../config'
 import type { ApplicationInfo } from '../applicationInfo'
 
 const healthCheckGauge = new promClient.Gauge({
@@ -24,7 +24,7 @@ interface HealthCheckResult extends Record<string, unknown> {
 export type HealthCheckService = () => Promise<HealthCheckStatus>
 export type HealthCheckCallback = (result: HealthCheckResult) => void
 
-function service(name: string, url: string, agentConfig: CommonHttpOption): HealthCheckService {
+function service(name: string, url: string, agentConfig: AgentConfig): HealthCheckService {
   const check = serviceCheckFactory(name, url, agentConfig)
   return () =>
     check()

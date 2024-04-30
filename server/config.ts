@@ -25,7 +25,11 @@ export class AgentConfig {
 export interface ApiConfig {
   url: string
   timeout: {
+    // sets maximum time to wait for the first byte to arrive from the server, but it does not limit how long the
+    // entire download can take.
     response: number
+    // sets a deadline for the entire request (including all uploads, redirects, server processing time) to complete.
+    // If the response isn't fully downloaded within that time, the request will be aborted.
     deadline: number
   }
   agent: AgentConfig
@@ -59,13 +63,13 @@ export default {
   },
   apis: {
     hmppsAuth: {
-      url: get('API_AUTH_ENDPOINT_URL', get('NOMIS_AUTH_URL', 'http://localhost:9091/auth')),
-      externalUrl: get('API_AUTH_EXTERNAL_ENDPOINT_URL', get('API_AUTH_ENDPOINT_URL', 'http://localhost:9091/auth')),
+      url: get('HMPPS_AUTH_URL', 'http://localhost:9090/auth', requiredInProduction),
+      externalUrl: get('HMPPS_AUTH_EXTERNAL_URL', get('HMPPS_AUTH_URL', 'http://localhost:9090/auth')),
       timeout: {
         response: Number(get('HMPPS_AUTH_TIMEOUT_RESPONSE', 30000)),
         deadline: Number(get('HMPPS_AUTH_TIMEOUT_DEADLINE', 35000)),
       },
-      agent: new AgentConfig(),
+      agent: new AgentConfig(Number(get('HMPPS_AUTH_TIMEOUT_RESPONSE', 10000))),
       apiClientId: get('API_CLIENT_ID', 'my-diary', requiredInProduction),
       apiClientSecret: get('API_CLIENT_SECRET', 'clientsecret', requiredInProduction),
     },
