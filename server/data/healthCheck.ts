@@ -1,8 +1,7 @@
-/* eslint-disable prefer-promise-reject-errors */
 import superagent from 'superagent'
-import Agent, { HttpsAgent, CommonHttpOption } from 'agentkeepalive'
-
+import Agent, { HttpsAgent } from 'agentkeepalive'
 import logger from '../../logger'
+import { AgentConfig } from '../config'
 
 export type ServiceCheck = () => Promise<string>
 
@@ -15,7 +14,7 @@ export class ServiceTimeout {
 export function serviceCheckFactory(
   name: string,
   url: string,
-  agentOptions: CommonHttpOption,
+  agentOptions: AgentConfig,
   serviceTimeout: ServiceTimeout = new ServiceTimeout(),
 ): ServiceCheck {
   const keepaliveAgent = url.startsWith('https') ? new HttpsAgent(agentOptions) : new Agent(agentOptions)
