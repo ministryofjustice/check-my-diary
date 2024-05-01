@@ -2,11 +2,12 @@ import nock from 'nock'
 import { serviceCheckFactory } from './healthCheck'
 import { AgentConfig } from '../config'
 
-describe('service healthCheck', () => {
+describe('Service healthcheck', () => {
   const healthcheck = serviceCheckFactory('externalService', 'http://test-service.com/ping', new AgentConfig(), {
     response: 100,
     deadline: 150,
   })
+
   let fakeServiceApi: nock.Scope
 
   beforeEach(() => {
@@ -18,8 +19,8 @@ describe('service healthCheck', () => {
     nock.cleanAll()
   })
 
-  describe('check healthy', () => {
-    it('should return data from api', async () => {
+  describe('Check healthy', () => {
+    it('Should return data from api', async () => {
       fakeServiceApi.get('/ping').reply(200, 'pong')
 
       const output = await healthcheck()
@@ -27,15 +28,15 @@ describe('service healthCheck', () => {
     })
   })
 
-  describe('check unhealthy', () => {
-    it('should throw error from api', async () => {
+  describe('Check unhealthy', () => {
+    it('Should throw error from api', async () => {
       fakeServiceApi.get('/ping').thrice().reply(500)
 
       await expect(healthcheck()).rejects.toThrow('Internal Server Error')
     })
   })
 
-  describe('check healthy retry test', () => {
+  describe('Check healthy retry test', () => {
     it('Should retry twice if request fails', async () => {
       fakeServiceApi
         .get('/ping')

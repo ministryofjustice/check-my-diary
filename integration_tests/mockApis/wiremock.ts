@@ -10,4 +10,4 @@ const getMatchingRequests = body => superagent.post(`${url}/requests/find`).send
 const resetStubs = (): Promise<Array<Response>> =>
   Promise.all([superagent.delete(`${url}/mappings`), superagent.delete(`${url}/requests`)])
 
-export { stubFor, resetStubs, getMatchingRequests }
+export { stubFor, getMatchingRequests, resetStubs }
