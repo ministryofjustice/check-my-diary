@@ -36,6 +36,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
       'node_modules/@ministryofjustice/frontend/',
     ],
     {
+      autoescape: true,
       express: app,
     },
   )

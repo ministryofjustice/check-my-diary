@@ -4,6 +4,7 @@ import createApp from './app'
 import { services } from './services'
 
 promClient.collectDefaultMetrics()
+
 const app = createApp(services())
 const metricsApp = createMetricsApp()
 

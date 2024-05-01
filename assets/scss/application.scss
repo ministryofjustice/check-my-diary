@@ -1,0 +1,14 @@
+$govuk-global-styles: true;
+$path: "/assets/images/";
+
+$moj-page-width: 1170px;
+$govuk-page-width: 1170px;
+
+@import 'govuk/all';
+@import 'moj/all';
+
+@import 'assets/scss/local';
+@import 'assets/scss/mixins';
+@import 'assets/scss/header';
+@import 'assets/scss/calendar';
+@import 'assets/scss/tabs';

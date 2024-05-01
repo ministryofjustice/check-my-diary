@@ -1,4 +1,5 @@
 import express from 'express'
+
 import createError from 'http-errors'
 
 import nunjucksSetup from './utils/nunjucksSetup'
@@ -19,7 +20,7 @@ import setUpWebSession from './middleware/setUpWebSession'
 import routes from './routes'
 import type { Services } from './services'
 
-export default function createApp(services: Services) {
+export default function createApp(services: Services): express.Application {
   const app = express()
 
   app.set('json spaces', 2)

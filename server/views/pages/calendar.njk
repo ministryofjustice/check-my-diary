@@ -115,7 +115,7 @@
               </li>
               {% if loop.index % 7 == 0 %}
                 </ul>
-                <ul style="clear: both" class="calendar">
+                <ul class="calendar-clear">
               {% endif %}
           {% endfor %}
         </ul>
@@ -156,7 +156,7 @@
 {% endblock %}
 {% block bodyEnd %}
 {{ super() }}
-  <script type="text/javascript">
+  <script type="text/javascript" nonce="{{ cspNonce }}">
     function getMainBanner(link) {
       var banner = link
       while (!banner.classList.contains('govuk-notification-banner')) {

@@ -34,5 +34,6 @@ export default function setUpHealthChecks(applicationInfo: ApplicationInfo): Rou
       productId: applicationInfo.productId,
     })
   })
+
   return router
 }
