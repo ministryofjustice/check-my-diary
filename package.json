@@ -95,7 +95,7 @@
   "dependencies": {
     "@ministryofjustice/frontend": "^2.1.2",
     "agentkeepalive": "^4.5.0",
-    "applicationinsights": "^3.0.1",
+    "applicationinsights": "^2.9.5",
     "axios": "^1.6.8",
     "body-parser": "^1.20.2",
     "bunyan": "^1.8.15",
