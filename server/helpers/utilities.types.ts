@@ -4,7 +4,7 @@ export interface Details {
   displayTypeTime?: string
   displayType?: string
   finishDuration?: string | number | null
-  activity: string
+  activity?: string
   activityDescription?: string
   start?: string
   end?: string
