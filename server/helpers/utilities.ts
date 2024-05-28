@@ -1,20 +1,11 @@
 import { add, format, getDay, getDaysInMonth, intervalToDuration, isFuture, isToday, startOfMonth } from 'date-fns'
 
-import crypto from 'crypto'
 import { CalendarDay, Details } from './utilities.types'
 
 const TIME_FORMAT = 'HH:mm:ss'
 
 function getStartMonth() {
   return format(startOfMonth(new Date()), 'yyyy-MM-dd')
-}
-
-function get2faCode() {
-  return Math.floor(Math.random() * 899999 + 100000)
-}
-
-function createTwoFactorAuthenticationHash(input: string) {
-  return crypto.createHash('sha256').update(input.toString()).digest('base64')
 }
 
 const sortByDate = (data: CalendarDay[], dateField = 'date') =>
@@ -117,8 +108,8 @@ const getTypeClass = (type: string, isFullDay: boolean) => {
   )
 }
 
-const fullDayMatch = (desc: string) => {
-  const foundValue = fullDayActivities.find(a => desc.startsWith(a.description))
+const fullDayMatch = (activityDescription?: string) => {
+  const foundValue = fullDayActivities.find(a => activityDescription?.startsWith(a.description))
   return foundValue && foundValue.class
 }
 
@@ -176,7 +167,7 @@ const processDay = (day: CalendarDay): CalendarDay => {
       const endText = end ? format(new Date(end), 'HH:mm') : ''
       return {
         ...detail,
-        lineLeftText: `${activity.startsWith('Break') ? 'Break' : activity}: ${startText} - ${endText}`,
+        lineLeftText: `${activity?.startsWith('Break') ? 'Break' : activity}: ${startText} - ${endText}`,
         displayType: '',
         displayTypeTime: start,
       }
@@ -205,8 +196,6 @@ const getSnoozeUntil = (rawSnoozeUntil: string) => {
 
 export default {
   getStartMonth,
-  get2faCode,
-  createTwoFactorAuthenticationHash,
   sortByDate,
   sortByDisplayType,
   configureCalendar,

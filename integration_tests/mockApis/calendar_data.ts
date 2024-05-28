@@ -458,7 +458,7 @@ export default [
     fullDayTypeDescription: 'Shift',
     details: [
       {
-        activity: 'Duty Manager',
+        activity: null, // Simulate a deleted Day Model
         start: '2020-03-18T12:30:00',
         end: '2020-03-18T17:00:00',
         parentType: 'SHIFT',
@@ -466,7 +466,7 @@ export default [
         displayTypeTime: '2020-03-18T12:30:00',
       },
       {
-        activity: 'Duty Manager',
+        activity: null,
         start: '2020-03-18T17:30:00',
         end: '2020-03-18T21:00:00',
         parentType: 'SHIFT',
@@ -741,7 +741,7 @@ export default [
     fullDayTypeDescription: 'Shift',
     details: [
       {
-        activity: 'Night Duties',
+        activity: null, // Simulate a deleted Day Model
         start: '2020-03-27T22:45:00',
         end: '2020-03-28T05:30:00',
         parentType: 'SHIFT',
