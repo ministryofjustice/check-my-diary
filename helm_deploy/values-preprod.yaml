@@ -15,6 +15,7 @@ generic-service:
     TOKEN_VERIFICATION_API_URL: https://token-verification-api-preprod.prison.service.justice.gov.uk
     DPS_HOME_URL: https://digital-preprod.prison.service.justice.gov.uk
     ENVIRONMENT_NAME: PRE-PRODUCTION
+    CMD_API_URL: https://cmd-api-preprod.prison.service.justice.gov.uk
 
   scheduledDowntime:
     enabled: true
