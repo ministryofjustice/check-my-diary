@@ -15,4 +15,4 @@ generic-service:
     CHECK_MY_DIARY_URL: https://checkmydiary.service.justice.gov.uk
     TOKEN_VERIFICATION_API_URL: https://token-verification-api.prison.service.justice.gov.uk
     DPS_HOME_URL: https://digital.prison.service.justice.gov.uk
-
+    CMD_API_URL: https://cmd-api.prison.service.justice.gov.uk
