@@ -1,6 +1,6 @@
-export default {}
+import { HmppsUser } from '../../interfaces/hmppsUser'
 
-declare module 'express-session' {
+export declare module 'express-session' {
   // Declare that the session will potentially contain these additional fields
   interface SessionData {
     returnTo: string
@@ -15,13 +15,17 @@ export declare global {
       username: string
       token: string
       authSource: string
-      employeeName: string | undefined
     }
 
     interface Request {
       verified?: boolean
       id: string
       authUrl?: string
+      logout(done: (err: unknown) => void): void
+    }
+
+    interface Locals {
+      user: HmppsUser
     }
   }
 }

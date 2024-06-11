@@ -1,5 +1,5 @@
 # Stage: base image
-FROM node:20.12-bookworm-slim as base
+FROM node:20.13-bookworm-slim as base
 
 ARG BUILD_NUMBER
 ARG GIT_REF
@@ -62,7 +62,7 @@ COPY --from=build --chown=appuser:appgroup \
 COPY --from=build --chown=appuser:appgroup \
         /app/node_modules ./node_modules
 
-EXPOSE 3000 3001
+EXPOSE 3000
 ENV NODE_ENV='production'
 USER 2000
 
