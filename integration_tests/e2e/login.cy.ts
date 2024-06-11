@@ -85,7 +85,7 @@ context('Sign in functionality', () => {
     cy.request('/').its('body').should('contain', 'Sign in')
 
     cy.task('stubVerifyToken', true)
-    cy.task('token', { username: 'BBROWN', employeeName: 'Bobby Brown' })
+    cy.task('token', { username: 'BBROWN', name: 'Bobby Brown' })
     cy.login()
 
     calendarPage.headerUsername().contains('B. Brown')

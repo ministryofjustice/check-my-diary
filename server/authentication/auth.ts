@@ -40,7 +40,7 @@ export function init(): void {
       customHeaders: { Authorization: generateOauthClientToken() },
     },
     (token, refreshToken, params, profile, done) => {
-      return done(null, { token, username: params.user_name, authSource: params.auth_source, employeeName: undefined })
+      return done(null, { token, username: params.user_name, authSource: params.auth_source })
     },
   )
 

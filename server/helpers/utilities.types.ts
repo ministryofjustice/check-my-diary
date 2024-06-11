@@ -1,5 +1,3 @@
-import type { Application } from 'express'
-
 export interface Details {
   displayTypeTime?: string
   displayType?: string
@@ -28,11 +26,4 @@ export interface CalendarDay {
   dateScreenReaderText?: string
   today?: boolean
   nightFinishDetected?: boolean
-}
-
-export interface AppRequest {
-  app: Application
-  authUrl: string
-  params: { date: string }
-  user: { token: string; employeeName: string; username: string }
 }

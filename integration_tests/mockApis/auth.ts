@@ -1,8 +1,29 @@
+import jwt from 'jsonwebtoken'
 import { Response } from 'superagent'
 
-import { getMatchingRequests, stubFor } from './wiremock'
+import { stubFor, getMatchingRequests } from './wiremock'
 import tokenVerification from './tokenVerification'
-import createToken from '../../server/routes/testutils/createToken'
+
+interface UserToken {
+  name?: string
+  roles?: string[]
+}
+
+const createToken = (userToken: UserToken) => {
+  // authorities in the session are always prefixed by ROLE.
+  const authorities = userToken.roles?.map(role => (role.startsWith('ROLE_') ? role : `ROLE_${role}`)) || []
+  const payload = {
+    name: userToken.name || 'sarah itag',
+    user_name: 'USER1',
+    scope: ['read'],
+    auth_source: 'nomis',
+    authorities,
+    jti: '83b50a10-cca6-41db-985f-e87efb303ddb',
+    client_id: 'clientid',
+  }
+
+  return jwt.sign(payload, 'secret', { expiresIn: '1h' })
+}
 
 const getLoginUrl = () =>
   getMatchingRequests({
@@ -67,15 +88,7 @@ const logout = () =>
     },
   })
 
-const token = ({
-  username = 'ITAG_USER',
-  employeeName = 'Sarah Itag',
-  authorities = [],
-}: {
-  username: string
-  employeeName: string
-  authorities: string[]
-}) =>
+const token = (userToken: UserToken) =>
   stubFor({
     request: {
       method: 'POST',
@@ -88,13 +101,11 @@ const token = ({
         Location: 'http://localhost:3007/login/callback?code=codexxxx&state=stateyyyy',
       },
       jsonBody: {
-        access_token: createToken(username, employeeName, authorities),
+        access_token: createToken(userToken),
         token_type: 'bearer',
-        refresh_token: 'refresh',
-        sub: username,
-        user_name: username,
-        expires_in: 600,
-        scope: 'read write',
+        user_name: 'USER1',
+        expires_in: 599,
+        scope: 'read',
         internalUser: true,
       },
     },
@@ -113,24 +124,12 @@ const stubGetMyMfaSettings = ({ backupVerified, mobileVerified, emailVerified })
     },
   })
 
-const stubLogin = (
-  arg: { username?: string; employeeName?: string; authorities?: string[] } = {},
-): Promise<[Response, Response, Response, Response, Response]> => {
-  const { username = 'ITAG_USER', employeeName = 'Sarah Itag', authorities = [] } = arg
-  return Promise.all([
-    favicon(),
-    redirect(),
-    logout(),
-    token({ username, employeeName, authorities }),
-    tokenVerification.stubVerifyToken(),
-  ])
-}
-
 export default {
   getLoginUrl,
-  stubLogin,
   stubAuthPing: ping,
   redirect,
   token,
   stubGetMyMfaSettings,
+  stubLogin: (userToken: UserToken = {}): Promise<[Response, Response, Response, Response, Response]> =>
+    Promise.all([favicon(), redirect(), logout(), token(userToken), tokenVerification.stubVerifyToken()]),
 }
