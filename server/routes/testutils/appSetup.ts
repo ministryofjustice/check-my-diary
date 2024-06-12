@@ -1,5 +1,4 @@
 import express, { Express } from 'express'
-import cookieSession from 'cookie-session'
 import { NotFound } from 'http-errors'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -10,6 +9,7 @@ import * as auth from '../../authentication/auth'
 import type { Services } from '../../services'
 import type { ApplicationInfo } from '../../applicationInfo'
 import { HmppsUser } from '../../interfaces/hmppsUser'
+import setUpWebSession from '../../middleware/setUpWebSession'
 
 const testAppInfo: ApplicationInfo = {
   applicationName: 'test',
@@ -38,6 +38,7 @@ function appSetup(services: Services, production: boolean, userSupplier: () => H
   app.set('view engine', 'njk')
 
   nunjucksSetup(app, testAppInfo)
+  app.use(setUpWebSession())
   app.use((req, res, next) => {
     req.user = userSupplier() as Express.User
     req.flash = flashProvider
@@ -51,7 +52,6 @@ function appSetup(services: Services, production: boolean, userSupplier: () => H
     next()
   })
 
-  app.use(cookieSession({ keys: [''] }))
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
   app.use(routes(services))
