@@ -8,8 +8,8 @@ function getStartMonth() {
   return format(startOfMonth(new Date()), 'yyyy-MM-dd')
 }
 
-const sortByDate = (data: CalendarDay[], dateField = 'date') =>
-  data.sort((first: CalendarDay, second: CalendarDay) => first[dateField].localeCompare(second[dateField]))
+const sortByDate = (data: CalendarDay[]) =>
+  data.sort((first: CalendarDay, second: CalendarDay) => first.date.localeCompare(second.date))
 
 const sortByDisplayType = (data: Details[]) =>
   data.sort(
