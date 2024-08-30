@@ -7,7 +7,6 @@ describe('Notification dismiss', () => {
   const notificationCookieService = { markAsDismissed: markAsDismissedMock } as unknown as NotificationCookieService
   const notificationDismissController = new NotificationDismissController(notificationCookieService)
 
-  const req: Request = {} as unknown as Request
   const res: Response = {
     status: jest.fn(),
     end: jest.fn(),
@@ -19,14 +18,14 @@ describe('Notification dismiss', () => {
   })
 
   it('should redirect when the request is not an ajax type request', async () => {
+    const req: Request = { xhr: false } as unknown as Request
     await notificationDismissController.dismiss(req, res)
 
     expect(res.redirect).toHaveBeenCalledWith('/')
   })
 
   it('should respond with a bad request when there is missing post data', async () => {
-    req.xhr = true
-
+    const req: Request = { xhr: true } as unknown as Request
     await notificationDismissController.dismiss(req, res)
 
     expect(res.status).toHaveBeenCalledWith(400)
@@ -34,8 +33,7 @@ describe('Notification dismiss', () => {
   })
 
   it('should call notification cookie with the correct parameters', async () => {
-    req.xhr = true
-    req.body = { id: 'data' }
+    const req: Request = { xhr: true, body: { id: 'data' } } as unknown as Request
 
     await notificationDismissController.dismiss(req, res)
 
