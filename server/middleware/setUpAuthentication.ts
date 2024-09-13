@@ -1,28 +1,54 @@
-import type { Router } from 'express'
-import express from 'express'
 import passport from 'passport'
 import flash from 'connect-flash'
+import { Router } from 'express'
+import { Strategy } from 'passport-oauth2'
 import config from '../config'
-import { init } from '../authentication/auth'
+import tokenVerifier from '../data/tokenVerification'
 import { HmppsUser } from '../interfaces/hmppsUser'
+import generateOauthClientToken from '../authentication/clientCredentials'
 
-const router = express.Router()
+passport.serializeUser((user, done) => {
+  // Not used but required for Passport
+  done(null, user)
+})
 
-export default function setUpAuth(): Router {
-  init()
+passport.deserializeUser((user, done) => {
+  // Not used but required for Passport
+  done(null, user as Express.User)
+})
+
+passport.use(
+  new Strategy(
+    {
+      authorizationURL: `${config.apis.hmppsAuth.externalUrl}/oauth/authorize`,
+      tokenURL: `${config.apis.hmppsAuth.url}/oauth/token`,
+      clientID: config.apis.hmppsAuth.authClientId,
+      clientSecret: config.apis.hmppsAuth.authClientSecret,
+      callbackURL: `${config.domain}/sign-in/callback`,
+      state: true,
+      customHeaders: { Authorization: generateOauthClientToken() },
+    },
+    (token, refreshToken, params, profile, done) => {
+      return done(null, { token, username: params.user_name, authSource: params.auth_source })
+    },
+  ),
+)
+
+export default function setupAuthentication() {
+  const router = Router()
 
   router.use(passport.initialize())
   router.use(passport.session())
   router.use(flash())
 
   const authUrl = config.apis.hmppsAuth.externalUrl
-  const authParameters = `client_id=${config.apis.hmppsAuth.apiClientId}&redirect_uri=${config.app.url}`
-  const authLogoutUrl = `${authUrl}/logout?${authParameters}`
+  const authParameters = `client_id=${config.apis.hmppsAuth.authClientId}&redirect_uri=${config.domain}`
+  const authSignOutUrl = `${authUrl}/sign-out?${authParameters}`
 
   router.get('/autherror', (req, res) => {
     res.status(401)
     return res.render('autherror.njk', {
-      authURL: authLogoutUrl,
+      authURL: authSignOutUrl,
     })
   })
 
@@ -35,17 +61,25 @@ export default function setUpAuth(): Router {
     })(req, res, next),
   )
 
-  router.use('/logout', async (req, res, next) => {
+  router.use('/sign-out', (req, res, next) => {
     if (req.user) {
       req.logout(err => {
         if (err) return next(err)
-        return req.session.destroy(() => res.redirect(authLogoutUrl))
+        return req.session.destroy(() => res.redirect(authSignOutUrl))
       })
-    } else res.redirect(authLogoutUrl)
+    } else res.redirect(authSignOutUrl)
   })
 
   router.use('/account-details', (req, res) => {
     res.redirect(`${authUrl}/account-details?${authParameters}`)
+  })
+
+  router.use(async (req, res, next) => {
+    if (req.isAuthenticated() && (await tokenVerifier(req))) {
+      return next()
+    }
+    req.session.returnTo = req.originalUrl
+    return res.redirect('/sign-in')
   })
 
   router.use((req, res, next) => {
