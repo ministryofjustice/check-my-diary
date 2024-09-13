@@ -61,7 +61,7 @@ export default function setupAuthentication() {
     })(req, res, next),
   )
 
-  router.use('/sign-out', (req, res, next) => {
+  router.use('/logout', (req, res, next) => {
     if (req.user) {
       req.logout(err => {
         if (err) return next(err)
@@ -79,7 +79,7 @@ export default function setupAuthentication() {
       return next()
     }
     req.session.returnTo = req.originalUrl
-    return res.redirect('/sign-in')
+    return res.redirect('/login')
   })
 
   router.use((req, res, next) => {
