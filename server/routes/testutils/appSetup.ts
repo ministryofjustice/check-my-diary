@@ -5,19 +5,9 @@ import { v4 as uuidv4 } from 'uuid'
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
-import * as auth from '../../authentication/auth'
 import type { Services } from '../../services'
-import type { ApplicationInfo } from '../../applicationInfo'
 import { HmppsUser } from '../../interfaces/hmppsUser'
 import setUpWebSession from '../../middleware/setUpWebSession'
-
-const testAppInfo: ApplicationInfo = {
-  applicationName: 'test',
-  buildNumber: '1',
-  gitRef: 'long ref',
-  gitShortHash: 'short ref',
-  branchName: 'main',
-}
 
 export const user: HmppsUser = {
   name: 'FIRST LAST',
@@ -37,7 +27,7 @@ function appSetup(services: Services, production: boolean, userSupplier: () => H
 
   app.set('view engine', 'njk')
 
-  nunjucksSetup(app, testAppInfo)
+  nunjucksSetup(app)
   app.use(setUpWebSession())
   app.use((req, res, next) => {
     req.user = userSupplier() as Express.User
@@ -51,7 +41,6 @@ function appSetup(services: Services, production: boolean, userSupplier: () => H
     req.id = uuidv4()
     next()
   })
-
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
   app.use(routes(services))
@@ -70,6 +59,5 @@ export default function appWithAllRoutes({
   services?: Partial<Services>
   userSupplier?: () => HmppsUser
 }): Express {
-  auth.default.authenticationMiddleware = () => (req, res, next) => next()
   return appSetup(services as Services, production, userSupplier)
 }

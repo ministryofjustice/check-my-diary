@@ -15,7 +15,7 @@ parameters:
 
   node-version:
     type: string
-    default: 20.16-browsers
+    default: 20.17-browsers
 
 jobs:
   build:
@@ -49,7 +49,6 @@ jobs:
             - node_modules
             - build
             - dist
-            - assets/stylesheets
 
   unit_test:
     executor:

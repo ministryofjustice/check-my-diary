@@ -73,11 +73,11 @@ const redirect = () =>
     },
   })
 
-const logout = () =>
+const signOut = () =>
   stubFor({
     request: {
       method: 'GET',
-      urlPattern: '/auth/logout.*',
+      urlPattern: '/auth/sign-out.*',
     },
     response: {
       status: 200,
@@ -131,5 +131,5 @@ export default {
   token,
   stubGetMyMfaSettings,
   stubLogin: (userToken: UserToken = {}): Promise<[Response, Response, Response, Response, Response]> =>
-    Promise.all([favicon(), redirect(), logout(), token(userToken), tokenVerification.stubVerifyToken()]),
+    Promise.all([favicon(), redirect(), signOut(), token(userToken), tokenVerification.stubVerifyToken()]),
 }
