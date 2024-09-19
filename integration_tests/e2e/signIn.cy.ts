@@ -21,13 +21,19 @@ context('Sign in functionality', () => {
   })
 
   it('Root (/) redirects to the auth sign in page if not signed in', () => {
-    cy.task('stubLoginPage')
+    cy.task('stubLogin')
     cy.visit('/')
     Page.verifyOnPage(AuthSignInPage)
   })
 
   it('Sign in page redirects to the auth sign in page if not signed in', () => {
-    cy.task('stubLoginPage')
+    cy.task('stubLogin')
+    cy.visit('/sign-in')
+    Page.verifyOnPage(AuthSignInPage)
+  })
+
+  it('Login page redirects to the auth sign in page if not signed in', () => {
+    cy.task('stubLogin')
     cy.visit('/login')
     Page.verifyOnPage(AuthSignInPage)
   })
@@ -53,12 +59,28 @@ context('Sign in functionality', () => {
     Page.verifyOnPageTitle(CalendarPage, format(new Date(), 'MMMM yyyy'))
 
     // can't do a visit here as cypress requires only one domain
-    cy.request('/logout').its('body').should('contain', 'Sign in')
+    cy.request('/sign-out').its('body').should('contain', 'Sign in')
+  })
+
+  it('User can sign out', () => {
+    cy.task('stubLogin')
+    cy.login()
+    const indexPage = Page.verifyOnPage(CalendarPage)
+    indexPage.signOut().click()
+    Page.verifyOnPage(AuthSignInPage)
+  })
+
+  it('User access to old /logout signs the user out', () => {
+    cy.task('stubLogin')
+    cy.login()
+    Page.verifyOnPage(CalendarPage)
+    cy.visit('/logout')
+    Page.verifyOnPage(AuthSignInPage)
   })
 
   it('Direct access to login callback takes user to sign in page', () => {
     cy.task('stubLogin')
-    cy.visit('/login/callback')
+    cy.visit('/sign-in/callback')
     Page.verifyOnPage(AuthSignInPage)
 
     // can't do a visit here as cypress requires only one domain

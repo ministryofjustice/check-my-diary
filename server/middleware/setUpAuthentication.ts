@@ -52,16 +52,16 @@ export default function setupAuthentication() {
     })
   })
 
-  router.get('/login', passport.authenticate('oauth2'))
+  router.get('/sign-in', passport.authenticate('oauth2'))
 
-  router.get('/login/callback', (req, res, next) =>
+  router.get('/sign-in/callback', (req, res, next) =>
     passport.authenticate('oauth2', {
       successReturnToOrRedirect: req.session.returnTo || '/',
       failureRedirect: '/autherror',
     })(req, res, next),
   )
 
-  router.use('/logout', (req, res, next) => {
+  router.use('/sign-out', (req, res, next) => {
     if (req.user) {
       req.logout(err => {
         if (err) return next(err)
@@ -79,7 +79,7 @@ export default function setupAuthentication() {
       return next()
     }
     req.session.returnTo = req.originalUrl
-    return res.redirect('/login')
+    return res.redirect('/sign-in')
   })
 
   router.use((req, res, next) => {
