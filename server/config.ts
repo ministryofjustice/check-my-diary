@@ -86,7 +86,6 @@ export default {
   app: {
     production,
     mailTo: process.env.MAIL_TO || 'feedback@digital.justice.gov.uk',
-    url: process.env.CHECK_MY_DIARY_URL || `http://localhost:${process.env.PORT || 3000}`,
   },
   maintenance: {
     start: process.env.MAINTENANCE_START,
@@ -95,7 +94,7 @@ export default {
   cmdApi: {
     url: get('CMD_API_URL', 'http://localhost:9091'),
   },
-  domain: process.env.HMPPS_COOKIE_DOMAIN,
+  ingressUrl: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   dpsHomeUrl: process.env.DPS_HOME_URL,
   environmentName: get('ENVIRONMENT_NAME', ''),
 }
