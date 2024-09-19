@@ -36,6 +36,10 @@ export default function createApp(services: Services): express.Application {
 
   // help users whose browsers remember this previously removed context
   app.use('/auth', (req, res) => res.redirect('/'))
+  // and also moved to the new sign-in / sign-out urls
+  app.use('/login', (req, res) => res.redirect('/sign-in'))
+  app.use('/logout', (req, res) => res.redirect('/sign-out'))
+
   app.use(setUpAuthentication())
   app.use(authorisationMiddleware())
   app.use(setUpCsrf())
