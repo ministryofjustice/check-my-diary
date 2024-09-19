@@ -10,8 +10,7 @@ generic-service:
     MAINTENANCE_START: "2023-04-26T15:00:00"
     MAINTENANCE_END: "2023-04-26T16:00:00"
     HMPPS_AUTH_URL: "https://sign-in-preprod.hmpps.service.justice.gov.uk/auth"
-    HMPPS_COOKIE_DOMAIN: check-my-diary-preprod.prison.service.justice.gov.uk
-    CHECK_MY_DIARY_URL: https://check-my-diary-preprod.prison.service.justice.gov.uk
+    INGRESS_URL: https://check-my-diary-preprod.prison.service.justice.gov.uk
     TOKEN_VERIFICATION_API_URL: https://token-verification-api-preprod.prison.service.justice.gov.uk
     DPS_HOME_URL: https://digital-preprod.prison.service.justice.gov.uk
     ENVIRONMENT_NAME: PRE-PRODUCTION
