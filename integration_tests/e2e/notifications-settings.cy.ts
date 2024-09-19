@@ -8,12 +8,12 @@ import NotificationPausePage from '../pages/notificationPause'
 context('A staff member can view their notification settings', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubLogin')
+    cy.task('stubSignIn')
     cy.task('stubGetMyMfaSettings', { backupVerified: true, mobileVerified: true, emailVerified: true })
     cy.task('stubNotifications')
     cy.task('stubNotificationCount')
     cy.task('stubShifts')
-    cy.login()
+    cy.signIn()
   })
 
   it('Notification setting validation with existing email', () => {

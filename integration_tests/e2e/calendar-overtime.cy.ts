@@ -7,7 +7,7 @@ context('A staff member can view their overtime calendar', () => {
   beforeEach(() => {
     cy.task('reset')
 
-    cy.task('stubLogin')
+    cy.task('stubSignIn')
     cy.task('stubShifts')
     cy.task('stubNotificationCount')
     cy.task('stubNotificationPreferencesGet', {
@@ -15,7 +15,7 @@ context('A staff member can view their overtime calendar', () => {
       email: 'me@gmail.com',
     })
     cy.task('stubGetMyMfaSettings', { backupVerified: false, mobileVerified: false, emailVerified: false })
-    cy.login()
+    cy.signIn()
 
     Page.verifyOnPageTitle(CalendarPage, format(new Date(), 'MMMM yyyy'))
     cy.visit('/calendar/2020-04-01')
