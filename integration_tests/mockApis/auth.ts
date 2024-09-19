@@ -25,7 +25,7 @@ const createToken = (userToken: UserToken) => {
   return jwt.sign(payload, 'secret', { expiresIn: '1h' })
 }
 
-const getLoginUrl = () =>
+const getSignInUrl = () =>
   getMatchingRequests({
     method: 'GET',
     urlPath: '/auth/oauth/authorize',
@@ -125,11 +125,11 @@ const stubGetMyMfaSettings = ({ backupVerified, mobileVerified, emailVerified })
   })
 
 export default {
-  getLoginUrl,
+  getSignInUrl,
   stubAuthPing: ping,
   redirect,
   token,
   stubGetMyMfaSettings,
-  stubLogin: (userToken: UserToken = {}): Promise<[Response, Response, Response, Response, Response]> =>
+  stubSignIn: (userToken: UserToken = {}): Promise<[Response, Response, Response, Response, Response]> =>
     Promise.all([favicon(), redirect(), signOut(), token(userToken), tokenVerification.stubVerifyToken()]),
 }

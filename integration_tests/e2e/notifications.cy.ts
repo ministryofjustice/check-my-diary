@@ -2,12 +2,12 @@ context('A staff member can view their notifications', () => {
   beforeEach(() => {
     cy.task('reset')
 
-    cy.task('stubLogin')
+    cy.task('stubSignIn')
     cy.task('stubShifts')
     cy.task('stubNotificationCount')
     cy.task('stubNotifications')
     cy.task('stubGetMyMfaSettings', { backupVerified: true, mobileVerified: true, emailVerified: true })
-    cy.login()
+    cy.signIn()
   })
 
   it('Notification page is visible', () => {

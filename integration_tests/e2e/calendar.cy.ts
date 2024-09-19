@@ -21,8 +21,8 @@ context('A staff member can view their calendar', () => {
   })
 
   it('A staff member can view their calendar', () => {
-    cy.task('stubLogin')
-    cy.login()
+    cy.task('stubSignIn')
+    cy.signIn()
 
     const calendarPage = Page.verifyOnPageTitle(CalendarPage)
     cy.visit('/calendar/2020-05-01')
@@ -77,8 +77,8 @@ context('A staff member can view their calendar', () => {
   })
 
   it('A staff member can see a day shift', () => {
-    cy.task('stubLogin')
-    cy.login()
+    cy.task('stubSignIn')
+    cy.signIn()
 
     cy.visit('/calendar/2020-03-01')
     const calendarPage = Page.verifyOnPageTitle(CalendarPage, 'March 2020')
@@ -88,8 +88,8 @@ context('A staff member can view their calendar', () => {
   })
 
   it('A staff member can see a night shift', () => {
-    cy.task('stubLogin')
-    cy.login()
+    cy.task('stubSignIn')
+    cy.signIn()
 
     cy.visit('/calendar/2020-03-01')
     const calendarPage = Page.verifyOnPageTitle(CalendarPage, 'March 2020')
@@ -99,8 +99,8 @@ context('A staff member can view their calendar', () => {
   })
 
   it('SMS banner is shown and dismissed', () => {
-    cy.task('stubLogin')
-    cy.login()
+    cy.task('stubSignIn')
+    cy.signIn()
     const calendarPage = Page.verifyOnPageTitle(CalendarPage)
 
     calendarPage.bannerSMS().contains('You have the option of receiving shift changes via text or email')
@@ -113,8 +113,8 @@ context('A staff member can view their calendar', () => {
   })
 
   it('SMS banner dismissal should last for about a year', () => {
-    cy.task('stubLogin')
-    cy.login()
+    cy.task('stubSignIn')
+    cy.signIn()
     const calendarPage = Page.verifyOnPageTitle(CalendarPage)
 
     calendarPage.bannerSMS().contains('You have the option of receiving shift changes via text or email')
@@ -133,8 +133,8 @@ context('A staff member can view their calendar', () => {
 
   it('New user banner is shown and dismissed', () => {
     cy.task('stubGetMyMfaSettings', { backupVerified: true, mobileVerified: false, emailVerified: true })
-    cy.task('stubLogin', { username: 'AUTH_USER' })
-    cy.login()
+    cy.task('stubSignIn', { username: 'AUTH_USER' })
+    cy.signIn()
     const calendarPage = Page.verifyOnPageTitle(CalendarPage)
     calendarPage.bannerMFA().contains('Once signed in, you can change these settings')
 
@@ -150,8 +150,8 @@ context('A staff member can view their calendar', () => {
 
   it('New user banner dismissal should last for about a year', () => {
     cy.task('stubGetMyMfaSettings', { backupVerified: true, mobileVerified: false, emailVerified: true })
-    cy.task('stubLogin', { username: 'AUTH_USER' })
-    cy.login()
+    cy.task('stubSignIn', { username: 'AUTH_USER' })
+    cy.signIn()
     const calendarPage = Page.verifyOnPageTitle(CalendarPage)
     calendarPage.bannerMFA().contains('Once signed in, you can change these settings')
 
@@ -165,17 +165,17 @@ context('A staff member can view their calendar', () => {
 
   it('New user banner not shown if existing user banner already dismissed', () => {
     cy.task('stubGetMyMfaSettings', { backupVerified: true, mobileVerified: false, emailVerified: true })
-    cy.task('stubLogin', { username: 'AUTH_USER' })
+    cy.task('stubSignIn', { username: 'AUTH_USER' })
     cy.setCookie('ui-notification-banner-EXISTING_USER', 'dismissed')
-    cy.login()
+    cy.signIn()
     const calendarPage = Page.verifyOnPageTitle(CalendarPage)
     calendarPage.bannerMFA().should('not.exist')
   })
 
   it('First time user banner is shown, no role', () => {
     cy.task('stubGetMyMfaSettings', { backupVerified: false, mobileVerified: false, emailVerified: true })
-    cy.task('stubLogin', { username: 'AUTH_USER', authorities: [] })
-    cy.login()
+    cy.task('stubSignIn', { username: 'AUTH_USER', authorities: [] })
+    cy.signIn()
     const calendarPage = Page.verifyOnPageTitle(CalendarPage)
     calendarPage.bannerMFA().contains('You must add a backup personal email address whilst in the establishment')
     calendarPage.bannerMFA().contains('Dismiss').should('not.exist')
@@ -183,16 +183,16 @@ context('A staff member can view their calendar', () => {
 
   it('Both SMS and MFA banner messages shown', () => {
     cy.task('stubGetMyMfaSettings', { backupVerified: false, mobileVerified: false, emailVerified: true })
-    cy.task('stubLogin', { username: 'AUTH_USER' })
-    cy.login()
+    cy.task('stubSignIn', { username: 'AUTH_USER' })
+    cy.signIn()
     const calendarPage = Page.verifyOnPageTitle(CalendarPage)
     calendarPage.bannerSMS().contains('You have the option of receiving shift changes via text or email')
     calendarPage.bannerMFA().contains('You must add a backup personal email address whilst in the establishment')
   })
 
   it('DPS link shown', () => {
-    cy.task('stubLogin')
-    cy.login()
+    cy.task('stubSignIn')
+    cy.signIn()
 
     cy.visit('/?fromDPS=true')
     const calendarPage = Page.verifyOnPageTitle(CalendarPage, 'Your shift detail')
