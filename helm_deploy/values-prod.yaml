@@ -15,3 +15,7 @@ generic-service:
     TOKEN_VERIFICATION_API_URL: https://token-verification-api.prison.service.justice.gov.uk
     DPS_HOME_URL: https://digital.prison.service.justice.gov.uk
     CMD_API_URL: https://cmd-api.prison.service.justice.gov.uk
+
+generic-prometheus-alerts:
+  ingress2xxEnabled: true
+  ingress2xxThreshold: 300
