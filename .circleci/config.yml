@@ -41,6 +41,7 @@ jobs:
             - node_modules
             - build
             - dist
+            - assets
   unit_test:
     executor:
       name: hmpps/node

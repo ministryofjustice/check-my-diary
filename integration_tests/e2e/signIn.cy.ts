@@ -93,7 +93,6 @@ context('Sign in functionality', () => {
     Page.verifyOnPageTitle(CalendarPage, format(new Date(), 'MMMM yyyy'))
     cy.task('stubVerifyToken', false)
 
-    // can't do a visit here as cypress requires only one domain
     cy.visit('/')
     Page.verifyOnPage(AuthSignInPage)
   })
@@ -104,8 +103,8 @@ context('Sign in functionality', () => {
     const calendarPage = Page.verifyOnPageTitle(CalendarPage, format(new Date(), 'MMMM yyyy'))
     cy.task('stubVerifyToken', false)
 
-    // can't do a visit here as cypress requires only one domain
-    cy.request('/').its('body').should('contain', 'Sign in')
+    cy.visit('/')
+    Page.verifyOnPage(AuthSignInPage)
 
     cy.task('stubVerifyToken', true)
     cy.task('token', { username: 'BBROWN', name: 'Bobby Brown' })
