@@ -5,7 +5,7 @@ export default abstract class Page {
 
   static verifyOnPageTitle = <T>(constructor: new (string) => T, title?: string): T => new constructor(title)
 
-  constructor(private readonly title: string) {
+  protected constructor(private readonly title: string) {
     this.checkOnPage()
   }
 
