@@ -2,12 +2,11 @@ name: Security npm dependency check
 on:
   workflow_dispatch:
   schedule:
-    - cron: "26 8 * * MON-FRI" # Every weekday at 08:26 UTC
+    - cron: "31 5 * * MON-FRI" # Every weekday at 05:31 UTC
 jobs:
   security-npm-dependency-check:
     name: Project security npm dependency check
-    uses: ministryofjustice/hmpps-github-actions/.github/workflows/security_npm_dependency.yml@0.2 # WORKFLOW_VERSION 
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/security_npm_dependency.yml@v0.6 # WORKFLOW_VERSION
     with:
       channel_id: ${{ vars.SECURITY_ALERTS_SLACK_CHANNEL_ID || 'NO_SLACK' }}
-    secrets:
-      SLACK_BOT_TOKEN: ${{ secrets.HMPPS_SRE_SLACK_BOT_TOKEN }}
+    secrets: inherit
