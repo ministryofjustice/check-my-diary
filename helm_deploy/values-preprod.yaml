@@ -24,3 +24,7 @@ generic-service:
 generic-prometheus-alerts:
   businessHoursOnly: true
   alertSeverity: syscon-nonprod
+
+  elastiCacheAlertsClusterIds:
+    cp-8b1a161abe55dd23-001: "HMPPS Check my Diary ElastiCache Cluster Node 1"
+    cp-8b1a161abe55dd23-002: "HMPPS Check my Diary ElastiCache Cluster Node 2"
