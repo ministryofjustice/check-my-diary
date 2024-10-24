@@ -19,3 +19,7 @@ generic-service:
 generic-prometheus-alerts:
   ingress2xxEnabled: true
   ingress2xxThreshold: 300
+
+  elastiCacheAlertsClusterIds:
+    cp-b603dacd90f94dd7-001: "HMPPS Check my Diary ElastiCache Cluster Node 1"
+    cp-b603dacd90f94dd7-002: "HMPPS Check my Diary ElastiCache Cluster Node 2"
