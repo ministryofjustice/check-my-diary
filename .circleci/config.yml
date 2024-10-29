@@ -3,12 +3,9 @@ orbs:
   hmpps: ministryofjustice/hmpps@10
   slack: circleci/slack@4.12
 parameters:
-  alerts-slack-channel:
-    type: string
-    default: syscon-alerts-security
   node-version:
     type: string
-    default: 20.17-browsers
+    default: 22.10-browsers
 jobs:
   build:
     executor:
