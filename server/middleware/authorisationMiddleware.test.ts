@@ -17,7 +17,7 @@ function createToken(authorities: string[]) {
 }
 
 describe('authorisationMiddleware', () => {
-  let req: Request
+  const req = {} as unknown as Request
   const next = jest.fn()
 
   function createResWithToken({ authorities }: { authorities: string[] }): Response {
