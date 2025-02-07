@@ -6,7 +6,6 @@ import notificationRouter from './notificationRouter'
 import type { Services } from '../services'
 import setUpMaintenance from '../middleware/setUpMaintenance'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function routes({
   calendarService,
   notificationCookieService,
