@@ -28,10 +28,14 @@ export function buildAppInsightsClient(
     defaultClient.addTelemetryProcessor(({ tags, data }, contextObjects) => {
       const operationNameOverride = contextObjects?.correlationContext?.customProperties?.getProperty('operationName')
       if (operationNameOverride && data?.baseData && tags) {
-        tags['ai.operation.name'] = data.baseData.name = operationNameOverride // eslint-disable-line no-param-reassign,no-multi-assign
+        /*  eslint-disable no-param-reassign */
+        tags['ai.operation.name'] = operationNameOverride
+        data.baseData.name = operationNameOverride
+        /*  eslint-enable no-param-reassign */
       }
       return true
     })
+
     return defaultClient
   }
   return null
@@ -42,7 +46,9 @@ export function appInsightsMiddleware(): RequestHandler {
     res.prependOnceListener('finish', () => {
       const context = getCorrelationContext()
       if (context && req.route) {
-        context.customProperties.setProperty('operationName', `${req.method} ${req.route?.path}`)
+        const path = req.route?.path
+        const pathToReport = Array.isArray(path) ? `"${path.join('" | "')}"` : path
+        context.customProperties.setProperty('operationName', `${req.method} ${pathToReport}`)
       }
     })
     next()
