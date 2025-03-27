@@ -1,4 +1,6 @@
 {% extends "govuk/template.njk" %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
 {% block head %}
   {% include "./head.njk" %}
@@ -8,6 +10,23 @@
 
 {% block header %}
   {% include "./header.njk" %}
+{% endblock %}
+
+{% block beforeContent %}
+   {% if fromDPS %}
+      {{ govukBreadcrumbs({ items: [{ text: 'Digital Prison Services', href: dpsHomeUrl }] }) }}
+   {% endif %}
+
+  <div role="navigation">
+     {% if backLinkHref %}
+       {{ govukBackLink({
+         text: "Back",
+         href: backLinkHref,
+         attributes: { "id": "back" }
+       }) }}
+     {% endif %}
+  </div>
+  
 {% endblock %}
 
 {% block bodyStart %}

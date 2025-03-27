@@ -1,11 +1,7 @@
 {% extends "../partials/layout.njk" %}
-{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
 {% set pageTitle = applicationName + " - Contact us" %}
-
-{% block beforeContent %}
-  {{ govukBackLink({ href: "/" }) }}
-{% endblock %}
+{% set backLinkHref = "/" %}
 
 {% block content %}
   <main id="main-content" role="main">
@@ -13,11 +9,10 @@
       <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-l">Contact us</h1>
         <p class="govuk-body">
-          For queries about Check My Diary please call the Service Desk on
-          <span class="govuk-body" style="white-space: nowrap;" nonce="{{ cspNonce }}">0800 917 5148</span>.
+          For queries about Check my diary, call the Service Desk on 0800 917 5148 or #6598 from inside an establishment.
         </p>
         <p class="govuk-body">
-          Alternatively, you can <a href="mailto:checkmydiary@digital.justice.gov.uk" class="govuk-link">email us at
+          Alternatively, you can email us at <a href="mailto:checkmydiary@digital.justice.gov.uk" class="govuk-link">
             checkmydiary@digital.justice.gov.uk</a>.
         </p>
       </div>
