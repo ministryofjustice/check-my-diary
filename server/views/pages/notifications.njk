@@ -3,6 +3,7 @@
 {% from "../macros/summary.njk" import summary %}
 
 {% set pageTitle = applicationName + " - Your notifications" %}
+{% set activePrimaryNav = "notifications" %}
 
 {% block beforeContent %}
   {{ govukBackLink({ href: "/", text: "Back to your shift detail" }) }}
@@ -12,7 +13,7 @@
   <main id="main-content" role="main">
     <h1 class="govuk-heading-l">Your notifications</h1>
     <p class="govuk-body">
-      <a href="/notifications/manage" class="govuk-!-padding-left-1">Manage your notifications</a>
+      <a href="/notifications/manage">Manage your notifications</a>
     </p>
 
     <div id="notifications" class="govuk-grid-row">
@@ -33,6 +34,5 @@
         {% endif %}
       </div>
     </div>
-
   </main>
 {% endblock %}
