@@ -25,7 +25,7 @@ describe('index router', () => {
         .get('/contact-us')
         .expect('Content-Type', /html/)
         .expect(res => {
-          expect(res.text).toContain('For queries about Check My Diary please call the Service Desk on')
+          expect(res.text).toContain('For queries about Check my diary, please call the Service Desk on')
           expect(res.text).toContain('F. Last')
         })
     })
