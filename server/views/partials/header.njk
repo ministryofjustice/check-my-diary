@@ -1,3 +1,5 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
 <header class="moj-header" role="banner">
 
   <div class="moj-header__container">
@@ -36,10 +38,17 @@
 
       </svg>
 
-      <a class="moj-header__link moj-header__link--organisation-name" href="#">HMPPS</a>
+      <a class="moj-header__link moj-header__link--organisation-name" href="/">HMPPS</a>
 
-      <a class="moj-header__link moj-header__link--service-name" href="#">{{ applicationName }}</a>
+      <a class="moj-header__link moj-header__link--service-name" href="/">{{ applicationName }}</a>
     </div>
+
+      {% if environmentName %}
+          {{ govukTag({
+            text: environmentName,
+            classes: environmentNameColour
+          }) }}
+      {% endif %}
 
     <div class="moj-header__content">
 
