@@ -6,6 +6,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
 {% set pageTitle = applicationName + " - Notification settings" %}
+{% set activePrimaryNav = "notifications" %}
 
 {% block beforeContent %}
   {{ govukBackLink({ href: "/notifications/manage" }) }}
