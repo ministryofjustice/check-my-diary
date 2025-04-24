@@ -41,7 +41,6 @@
       <a class="moj-header__link moj-header__link--organisation-name" href="/">HMPPS</a>
 
       <a class="moj-header__link moj-header__link--service-name" href="/">{{ applicationName }}</a>
-    </div>
 
       {% if environmentName %}
           {{ govukTag({
@@ -49,6 +48,8 @@
             classes: environmentNameColour
           }) }}
       {% endif %}
+      
+    </div>
 
     <div class="moj-header__content">
 

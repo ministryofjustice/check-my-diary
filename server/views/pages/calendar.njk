@@ -49,28 +49,26 @@
           {% switch (showBanner.mfa) %}
           {% case mfaBannerType.NEW_USER %}
             {# (existing DPS user with 2FA, new to CMD) #}
-            You can manage your two-factor authentication (2FA) settings on the <a
-                    class="govuk-notification-banner__link" data-test="banner-new-account-details-link" href="/account-details">Manage your details</a> page.
+            <p>You can manage your two-factor authentication (2FA) settings on the <a class="govuk-notification-banner__link" data-test="banner-new-account-details-link" href="/account-details">Manage your details</a> page.</p>
             <p>Once signed in, you can change these settings from inside or outside an establishment.</p>
-            <p>You can also receive emails or texts when your shifts change. Set this up by entering your personal email address or mobile number on the <a
-                      class="govuk-notification-banner__link" data-test="banner-new-notification-link" href="/notifications/settings">Notifications</a> page.</p>
+            <p>You can also receive emails or texts when your shifts change. Set this up by entering your personal email address or mobile number on the <a class="govuk-notification-banner__link" data-test="banner-new-notification-link" href="/notifications/settings">Notifications</a> page.</p>
             <p>You can change your 2FA and notifications settings by following the links in the top bar.</p>
             <p class="govuk-!-margin-top-2"><a class="govuk-link govuk-link--no-visited-state notification_dismiss_link" id="NEW_USER" href="#">Dismiss</a></p>
+
           {% case mfaBannerType.FIRST_TIME_USER %}
             {# (existing DPS user without 2FA, new to CMD) #}
-            You need to set up two-factor authentication (2FA) to help secure access to your account.
-            <p>You must add a backup personal email address whilst in the establishment on the <a
-                      class="govuk-notification-banner__link" data-test="banner-first-account-details-link" href="/account-details">Manage your details</a> page, which can be verified later at home.
-               A mobile number can then be added too.</p>
+            <p>You need to set up two-factor authentication (2FA) to help secure access to your account.</p>
+            <p>You must add a backup personal email address whilst in the establishment in your <a class="govuk-notification-banner__link" data-test="banner-first-account-details-link" href="/account-details">account</a>, which can be verified later at home. A mobile number can then be added too.</p>
             <p>We will use these to confirm it's you signing in to your account.</p>
-            <p>You can also receive emails or texts when your shifts change. Set this up by entering your personal email address or mobile number on the <a
-                      class="govuk-notification-banner__link" data-test="banner-first-notification-link" href="/notifications/settings">Notifications</a> page.</p>
+            <p>You can also receive emails or texts when your shifts change. Set this up by entering your personal email address or mobile number on the <a  class="govuk-notification-banner__link" data-test="banner-first-notification-link" href="/notifications/settings">Notifications</a> page.</p>
           {% endswitch %}
         </div>
       </div>
     {% endif %}
 
-    <h1 class="govuk-heading-l govuk-!-margin-top-3">Your shift detail</h1>
+    <h1 class="govuk-heading-l">Your shift detail</h1>
+
+    <br>
 
     <div class="govuk-grid-row govuk-!-margin-0">
       <div class="strict-grid-column-one-third">

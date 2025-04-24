@@ -18,7 +18,7 @@
     {% if notificationsEnabled and snoozeUntil %}
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-          <p class="govuk-body govuk-!-margin-bottom-2">You have paused your notifications</p>
+          <p class="govuk-body govuk-!-margin-bottom-2">You have paused your notifications.</p>
           <p class="govuk-body">Notifications will start again on {{ snoozeUntil }}.</p>
 
           <form method="post" action="/notifications/resume" novalidate>
@@ -30,7 +30,7 @@
       {% elif notificationsEnabled %}
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-          <p class="govuk-body">You receive notifications
+          <p class="govuk-body">You receive notifications.
             <a href="/notifications/settings" class="govuk-!-padding-left-1 govuk-link">Change</a>
           </p>
         </div>
@@ -45,7 +45,7 @@
     {% else %}
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-          <p class="govuk-body">You do not receive notifications
+          <p class="govuk-body">You do not receive notifications.
             <a href="/notifications/settings" class="govuk-link">Change</a>
           </p>
         </div>
