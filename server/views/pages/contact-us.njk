@@ -1,12 +1,7 @@
 {% extends "../partials/layout.njk" %}
-{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
 {% set pageTitle = applicationName + " - Contact us" %}
 {% set activePrimaryNav = "calendar" %}
-
-{% block beforeContent %}
-  {{ govukBackLink({ href: "/" }) }}
-{% endblock %}
 
 {% block content %}
   <main id="main-content" role="main">

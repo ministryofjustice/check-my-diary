@@ -3,14 +3,9 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
-{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
 {% set pageTitle = applicationName + " - Notification settings" %}
 {% set activePrimaryNav = "notifications" %}
-
-{% block beforeContent %}
-  {{ govukBackLink({ href: "/notifications/manage" }) }}
-{% endblock %}
 
 {% block content %}
   <main id="main-content" role="main">
