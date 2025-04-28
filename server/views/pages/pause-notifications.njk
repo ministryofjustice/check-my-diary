@@ -3,17 +3,10 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
-{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 
 {% set pageTitle = applicationName + " - How long do you want to pause notifications for?" %}
 {% set activePrimaryNav = "notifications" %}
-
-{% block beforeContent %}
-    {% if fromDPS %}
-      {{ breadcrumbs() }}
-    {% endif %}
-{% endblock %}
 
 {% block content %}
   <main id="main-content" role="main">
