@@ -5,6 +5,12 @@
 {% set pageTitle = applicationName + " - Manage your notifications" %}
 {% set activePrimaryNav = "notifications" %}
 
+{% block beforeContent %}
+    {% if fromDPS %}
+      {{ breadcrumbs() }}
+    {% endif %}
+{% endblock %}
+
 {% block content %}
   <main id="main-content" role="main">
     <h1 class="govuk-heading-l">Manage your notifications</h1>

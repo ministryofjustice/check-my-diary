@@ -8,6 +8,12 @@
 {% set pageTitle = applicationName + " - How long do you want to pause notifications for?" %}
 {% set activePrimaryNav = "notifications" %}
 
+{% block beforeContent %}
+    {% if fromDPS %}
+      {{ breadcrumbs() }}
+    {% endif %}
+{% endblock %}
+
 {% block content %}
   <main id="main-content" role="main">
     <h1 class="govuk-heading-l">How long do you want to pause notifications for?</h1>

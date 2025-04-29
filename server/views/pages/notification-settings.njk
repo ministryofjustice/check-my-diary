@@ -8,6 +8,12 @@
 {% set pageTitle = applicationName + " - Notification settings" %}
 {% set activePrimaryNav = "notifications" %}
 
+{% block beforeContent %}
+    {% if fromDPS %}
+      {{ breadcrumbs() }}
+    {% endif %}
+{% endblock %}
+
 {% block content %}
   <main id="main-content" role="main">
     <form action="/notifications/settings" method="POST" novalidate>
