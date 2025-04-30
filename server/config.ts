@@ -84,6 +84,15 @@ export default {
       agent: new AgentConfig(Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000))),
       enabled: get('TOKEN_VERIFICATION_ENABLED', 'false') === 'true',
     },
+    cmdApi: {
+      url: get('CMD_API_URL', 'http://localhost:9091'),
+      healthPath: '/health/ping',
+      timeout: {
+        response: Number(get('CMD_API_TIMEOUT_RESPONSE', 10000)),
+        deadline: Number(get('CMD_API_TIMEOUT_DEADLINE', 10000)),
+      },
+      agent: new AgentConfig(Number(get('CMD_API_TIMEOUT_RESPONSE', 10000))),
+    },
   },
   app: {
     production,
@@ -92,9 +101,6 @@ export default {
   maintenance: {
     start: process.env.MAINTENANCE_START,
     end: process.env.MAINTENANCE_END,
-  },
-  cmdApi: {
-    url: get('CMD_API_URL', 'http://localhost:9091'),
   },
   ingressUrl: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   dpsHomeUrl: process.env.DPS_HOME_URL,

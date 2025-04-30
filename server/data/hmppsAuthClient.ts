@@ -1,5 +1,6 @@
+import { asUser, RestClient } from '@ministryofjustice/hmpps-rest-client'
 import config from '../config'
-import RestClient from './restClient'
+import logger from '../../logger'
 
 export interface UserMfa {
   backupVerified: boolean
@@ -7,12 +8,12 @@ export interface UserMfa {
   emailVerified: boolean
 }
 
-export default class HmppsAuthClient {
-  private static restClient(token: string): RestClient {
-    return new RestClient('HMPPS Auth Client', config.apis.hmppsAuth, token)
+export default class HmppsAuthClient extends RestClient {
+  constructor() {
+    super('HMPPS Auth Client', config.apis.hmppsAuth, logger)
   }
 
   getMfa(token: string): Promise<UserMfa> {
-    return HmppsAuthClient.restClient(token).get({ path: '/api/user/me/mfa' }) as Promise<UserMfa>
+    return this.get({ path: '/api/user/me/mfa' }, asUser(token)) as Promise<UserMfa>
   }
 }

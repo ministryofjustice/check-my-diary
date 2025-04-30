@@ -6,10 +6,10 @@ import NotificationCookieService from './notificationCookieService'
 import UserService from './userService'
 
 export const services = () => {
-  const { applicationInfo, hmppsAuthClient } = dataAccess()
+  const { applicationInfo, hmppsAuthClient, calendarClient, notificationClient } = dataAccess()
 
-  const calendarService = new CalendarService()
-  const notificationService = new NotificationService()
+  const calendarService = new CalendarService(calendarClient)
+  const notificationService = new NotificationService(notificationClient)
   const notificationCookieService = new NotificationCookieService()
   const userService = new UserService(hmppsAuthClient)
 
