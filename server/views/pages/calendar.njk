@@ -1,26 +1,17 @@
 {% extends "../partials/layout.njk" %}
-{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "../partials/breadcrumbs.njk" import breadcrumbs with context %}
 
 {% set pageTitle = applicationName + " - Calendar" %}
 {% set activePrimaryNav = "calendar" %}
 
 {% block beforeContent %}
     {% if fromDPS %}
-      {{ govukBreadcrumbs({
-        collapseOnMobile: true,
-        items: [
-          { 
-            text: 'Digital Prison Services',
-            href: dpsHomeUrl 
-          }
-        ] 
-      }) }}
+      {{ breadcrumbs(false) }}
     {% endif %}
 {% endblock %}
 
 {% block content %}
   <main id="main-content" role="main">
-
     {% if showBanner.notifications %}
       <div class="govuk-notification-banner govuk-!-margin-top-4 govuk-!-width-full" role="region"
         aria-labelledby="govuk-notification-banner-title-sms" data-module="govuk-notification-banner">
@@ -54,7 +45,6 @@
             <p>You can also receive emails or texts when your shifts change. Set this up by entering your personal email address or mobile number on the <a class="govuk-notification-banner__link" data-test="banner-new-notification-link" href="/notifications/settings">Notifications</a> page.</p>
             <p>You can change your 2FA and notifications settings by following the links in the top bar.</p>
             <p class="govuk-!-margin-top-2"><a class="govuk-link govuk-link--no-visited-state notification_dismiss_link" id="NEW_USER" href="#">Dismiss</a></p>
-
           {% case mfaBannerType.FIRST_TIME_USER %}
             {# (existing DPS user without 2FA, new to CMD) #}
             <p>You need to set up two-factor authentication (2FA) to help secure access to your account.</p>

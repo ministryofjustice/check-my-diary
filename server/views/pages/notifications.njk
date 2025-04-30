@@ -1,8 +1,15 @@
 {% extends "../partials/layout.njk" %}
+{% from "../partials/breadcrumbs.njk" import breadcrumbs with context %}
 {% from "../macros/summary.njk" import summary %}
 
 {% set pageTitle = applicationName + " - Your notifications" %}
 {% set activePrimaryNav = "notifications" %}
+
+{% block beforeContent %}
+    {% if fromDPS %}
+      {{ breadcrumbs() }}
+    {% endif %}
+{% endblock %}
 
 {% block content %}
   <main id="main-content" role="main">
