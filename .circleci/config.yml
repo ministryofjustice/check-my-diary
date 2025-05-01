@@ -1,11 +1,11 @@
 version: 2.1
 orbs:
-  hmpps: ministryofjustice/hmpps@10
+  hmpps: ministryofjustice/hmpps@11
   slack: circleci/slack@4.12
 parameters:
   node-version:
     type: string
-    default: 22.14-browsers
+    default: 22.15-browsers
 jobs:
   build:
     executor:
@@ -69,7 +69,7 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: Get wiremock
-          command: curl -o wiremock.jar https://repo1.maven.org/maven2/org/wiremock/wiremock-standalone/3.12.1/wiremock-standalone-3.12.1.jar
+          command: curl -o wiremock.jar https://repo1.maven.org/maven2/org/wiremock/wiremock-standalone/3.13.0/wiremock-standalone-3.13.0.jar
       - run:
           name: Run wiremock
           command: java -jar wiremock.jar --port 9091

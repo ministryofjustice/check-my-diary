@@ -1,3 +1,5 @@
+import { AgentConfig } from '@ministryofjustice/hmpps-rest-client'
+
 const production = process.env.NODE_ENV === 'production'
 
 function get<T>(name: string, fallback: T, options = { requireInProduction: false }): T | string {
@@ -10,30 +12,6 @@ function get<T>(name: string, fallback: T, options = { requireInProduction: fals
 }
 
 const requiredInProduction = { requireInProduction: true, noFallbackInProduction: false }
-
-export class AgentConfig {
-  timeout: number
-
-  freeSocketTimeout: number
-
-  constructor(timeout = 10000, freeSocketTimeout = 30000) {
-    this.timeout = timeout
-    this.freeSocketTimeout = freeSocketTimeout
-  }
-}
-
-export interface ApiConfig {
-  url: string
-  timeout: {
-    // sets maximum time to wait for the first byte to arrive from the server, but it does not limit how long the
-    // entire download can take.
-    response: number
-    // sets a deadline for the entire request (including all uploads, redirects, server processing time) to complete.
-    // If the response isn't fully downloaded within that time, the request will be aborted.
-    deadline: number
-  }
-  agent: AgentConfig
-}
 
 export default {
   buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),

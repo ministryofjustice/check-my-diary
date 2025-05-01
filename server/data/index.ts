@@ -14,8 +14,6 @@ import HmppsAuthClient from './hmppsAuthClient'
 import CalendarClient from './calendarClient'
 import NotificationClient from './notificationClient'
 
-type RestClientBuilder<T> = (token: string) => T
-
 export const dataAccess = () => ({
   applicationInfo,
   hmppsAuthClient: new HmppsAuthClient(),
@@ -25,4 +23,4 @@ export const dataAccess = () => ({
 
 export type DataAccess = ReturnType<typeof dataAccess>
 
-export { HmppsAuthClient, RestClientBuilder }
+export { HmppsAuthClient }

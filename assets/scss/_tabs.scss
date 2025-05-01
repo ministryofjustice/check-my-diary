@@ -1,3 +1,6 @@
+@import "govuk-frontend/dist/govuk/index";
+@import "./_mixins";
+
 .app-tabs {
   height: 50px;
   border-bottom: 2px solid govuk-colour('blue');
