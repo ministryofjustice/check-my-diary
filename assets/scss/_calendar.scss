@@ -1,3 +1,6 @@
+@import "govuk-frontend/dist/govuk/index";
+@import "./_mixins";
+
 .app-link-\!-border {
   border-left: 1px solid govuk-colour('mid-grey');
   padding-left: 5px;
