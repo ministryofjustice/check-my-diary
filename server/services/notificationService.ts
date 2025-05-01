@@ -4,48 +4,22 @@ import type {
   UpdateNotificationDetailsRequest,
   UpdateSnoozeUntilRequest,
 } from 'cmdApiClient'
-import axios from 'axios'
 import { format } from 'date-fns'
-import getSanitisedError from '../sanitisedError'
-import logger from '../../logger'
-import baseUrl from '../config'
+import NotificationClient from '../data/notificationClient'
 
 export default class NotificationService {
+  constructor(private readonly notificationClient: NotificationClient) {}
+
   public async getNotifications(
     accessToken: string,
     processOnRead = true,
     unprocessedOnly = false,
   ): Promise<Array<NotificationDto>> {
-    return axios
-      .get(`${baseUrl.cmdApi.url}/notifications?processOnRead=${processOnRead}&unprocessedOnly=${unprocessedOnly}`, {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then(response => response.data)
-      .catch(error => {
-        const sanitisedError = getSanitisedError(error)
-        logger.error(sanitisedError, 'notificationService getNotifications')
-        throw sanitisedError
-      })
+    return this.notificationClient.getNotifications(accessToken, processOnRead, unprocessedOnly)
   }
 
   public async getPreferences(accessToken: string): Promise<NotificationDto> {
-    return axios
-      .get(`${baseUrl.cmdApi.url}/preferences/notifications`, {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then(response => response.data)
-      .catch(error => {
-        if (error.response?.status === 404) {
-          return {}
-        }
-        const sanitisedError = getSanitisedError(error)
-        logger.error(sanitisedError, 'notificationService getPreference')
-        throw sanitisedError
-      })
+    return this.notificationClient.getPreferences(accessToken)
   }
 
   public async updatePreferences(
@@ -54,48 +28,17 @@ export default class NotificationService {
     email: string,
     sms: string,
   ): Promise<ShiftDto> {
-    logger.info(`updatePreferences to ${preference}, hasEmail: ${!!email}, hasSms: ${!!sms}`)
-    return axios
-      .put(
-        `${baseUrl.cmdApi.url}/preferences/notifications/details`,
-        { preference, email, sms },
-        {
-          headers: {
-            authorization: `Bearer ${accessToken}`,
-          },
-        },
-      )
-      .catch(error => {
-        const sanitisedError = getSanitisedError(error)
-        logger.error(sanitisedError, 'notificationService updatePreferences')
-        throw sanitisedError
-      })
+    return this.notificationClient.updatePreferences(accessToken, preference, email, sms)
   }
 
   public async updateSnooze(
     accessToken: string,
     snoozeUntil: UpdateSnoozeUntilRequest,
   ): Promise<UpdateNotificationDetailsRequest> {
-    logger.info(`updateSnooze until ${snoozeUntil}`)
-    return axios
-      .put(
-        `${baseUrl.cmdApi.url}/preferences/notifications/snooze`,
-        { snoozeUntil },
-        {
-          headers: {
-            authorization: `Bearer ${accessToken}`,
-          },
-        },
-      )
-      .catch(error => {
-        const sanitisedError = getSanitisedError(error)
-        logger.error(sanitisedError, 'notificationService updateSnooze')
-        throw sanitisedError
-      })
+    return this.notificationClient.updateSnooze(accessToken, snoozeUntil)
   }
 
   public async resumeNotifications(accessToken: string): Promise<UpdateNotificationDetailsRequest> {
-    logger.info('resume notification')
     return this.updateSnooze(accessToken, format(new Date(), 'yyyy-MM-dd'))
   }
 }

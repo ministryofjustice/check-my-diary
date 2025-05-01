@@ -11,12 +11,16 @@ initialiseAppInsights()
 buildAppInsightsClient(applicationInfo)
 
 import HmppsAuthClient from './hmppsAuthClient'
+import CalendarClient from './calendarClient'
+import NotificationClient from './notificationClient'
 
 type RestClientBuilder<T> = (token: string) => T
 
 export const dataAccess = () => ({
   applicationInfo,
   hmppsAuthClient: new HmppsAuthClient(),
+  calendarClient: new CalendarClient(),
+  notificationClient: new NotificationClient(),
 })
 
 export type DataAccess = ReturnType<typeof dataAccess>
