@@ -3,7 +3,7 @@ generic-service:
   productId: DPS052
 
   image:
-    repository: quay.io/hmpps/check-my-diary
+    repository: ghcr.io/ministryofjustice/check-my-diary
     tag: latest    # override at deployment time
     port: 3000
 
@@ -63,12 +63,14 @@ generic-service:
     TOKEN_VERIFICATION_ENABLED: "true"
 
   namespace_secrets:
-    application-insights:
+    check-my-diary-application-insights:
       APPLICATIONINSIGHTS_CONNECTION_STRING: "APPLICATIONINSIGHTS_CONNECTION_STRING"
-    check-my-diary:
-      AUTH_CODE_CLIENT_ID: "API_CLIENT_ID"
-      AUTH_CODE_CLIENT_SECRET: "API_CLIENT_SECRET"
+    check-my-diary-auth-code:
+      AUTH_CODE_CLIENT_ID: "AUTH_CODE_CLIENT_ID"
+      AUTH_CODE_CLIENT_SECRET: "AUTH_CODE_CLIENT_SECRET"
+    check-my-diary-session-secret:
       SESSION_SECRET: "SESSION_SECRET"
+    check-my-diary:
       GOOGLE_ANALYTICS_ID: "GOOGLE_ANALYTICS_ID"
 
     elasticache-redis:

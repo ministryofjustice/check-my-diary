@@ -1,7 +1,6 @@
-[![CircleCI](https://circleci.com/gh/ministryofjustice/check-my-diary/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/check-my-diary)
-[![Known Vulnerabilities](https://snyk.io/test/github/ministryofjustice/check-my-diary/badge.svg)](https://snyk.io/test/github/ministryofjustice/check-my-diary)
-
 # Check My Diary
+[![repo standards badge](https://img.shields.io/badge/endpoint.svg?&style=flat&logo=github&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fcheck-my-diary)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-report/check-my-diary "Link to report")
+[![Docker Repository on ghcr](https://img.shields.io/badge/ghcr.io-repository-2496ED.svg?logo=docker)](https://ghcr.io/ministryofjustice/check-my-diary)
 
 A progressive web application for viewing shift pattern and detail. It consists of a Node.JS application
 with a postgres database and calls out to Prison Officer Diary API to get shift and task information, as well as notify
