@@ -1,6 +1,6 @@
-import { type RequestHandler, Router } from 'express'
+import express from 'express'
+import type { Router } from 'express'
 
-import asyncMiddleware from '../middleware/asyncMiddleware'
 import calendarRouter from './calendarRouter'
 import notificationRouter from './notificationRouter'
 import type { Services } from '../services'
@@ -12,21 +12,20 @@ export default function routes({
   notificationService,
   userService,
 }: Services): Router {
-  const router = Router()
-  const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
+  const router = express.Router({ mergeParams: true })
 
   router.use(setUpMaintenance())
 
-  get('/', (req, res) => {
+  router.get('/', (req, res) => {
     req.session.fromDPS ||= !!req.query.fromDPS
     return res.redirect('/calendar#today')
   })
-  get('/contact-us', (req, res) => {
+  router.get('/contact-us', (req, res) => {
     res.render('pages/contact-us.njk')
   })
 
-  calendarRouter(router, calendarService, notificationCookieService, userService)
-  notificationRouter(router, notificationService)
+  router.use('/calendar', calendarRouter(calendarService, notificationCookieService, userService))
+  router.use('/notifications', notificationRouter(notificationService))
 
   return router
 }

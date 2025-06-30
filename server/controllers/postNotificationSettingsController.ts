@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import type { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 
 import NotificationType from '../helpers/NotificationType'
@@ -8,7 +8,7 @@ import NotificationService from '../services/notificationService'
 export default class PostNotificationSettingsController {
   constructor(private readonly notificationService: NotificationService) {}
 
-  async setSettings(req: Request, res: Response) {
+  async setSettings(req: Request, res: Response): Promise<void> {
     logger.info('POST notifications settings')
 
     // Finds the validation errors in this request and wraps them in an object with handy functions
@@ -19,21 +19,22 @@ export default class PostNotificationSettingsController {
     } = req
 
     if (!errors.isEmpty()) {
-      return res.render('pages/notification-settings.njk', {
+      res.render('pages/notification-settings.njk', {
         errors,
         contactMethod,
         inputEmail,
         inputSMS,
       })
+      return
     }
 
-    if (!user) return false
+    if (!user) return
     await this.notificationService.updatePreferences(
       user.token,
       contactMethod,
       contactMethod === NotificationType.EMAIL ? inputEmail : '',
       contactMethod === NotificationType.SMS ? inputSMS.replace('+44', '0') : '',
     )
-    return res.redirect('/notifications/manage')
+    res.redirect('/notifications/manage')
   }
 }

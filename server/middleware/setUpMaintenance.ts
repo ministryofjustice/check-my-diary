@@ -6,7 +6,7 @@ import config from '../config'
 export default function setUpMaintenance(): Router {
   const router = express.Router()
 
-  router.get('*', (req, res, next) => {
+  router.get('*any', (req, res, next) => {
     try {
       const {
         maintenance: { start, end },

@@ -16,13 +16,13 @@ export default class CalendarController {
     private readonly userService: UserService,
   ) {}
 
-  async getDate(req: Request, res: Response) {
+  async getDate(req: Request, res: Response): Promise<void> {
     const {
       user,
       params: { date },
     } = req
 
-    if (!user) return false
+    if (!user) return
     const { username, token } = user
     logger.info({ user: username, date }, 'GET calendar view')
 
@@ -49,7 +49,7 @@ export default class CalendarController {
     const currentMonth = new Date(date)
     const previousMonth = sub(currentMonth, { months: 1 })
     const nextMonth = add(currentMonth, { months: 1 })
-    return res.render('pages/calendar.njk', {
+    res.render('pages/calendar.njk', {
       ...res.locals,
       tab: 'Calendar',
       currentMonth: format(currentMonth, 'MMMM yyyy'),
