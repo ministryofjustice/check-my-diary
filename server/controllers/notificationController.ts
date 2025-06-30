@@ -8,45 +8,45 @@ import NotificationService from '../services/notificationService'
 export default class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
 
-  async getNotifications({ user }: Request, res: Response) {
-    if (!user) return false
+  async getNotifications({ user }: Request, res: Response): Promise<void> {
+    if (!user) return
     const data = await this.notificationService.getNotifications(user.token)
 
     data.sort(({ shiftModified: first }, { shiftModified: second }) => second.localeCompare(first))
 
-    return res.render('pages/notifications.njk', { data })
+    res.render('pages/notifications.njk', { data })
   }
 
-  async resume({ user }: Request, res: Response) {
+  async resume({ user }: Request, res: Response): Promise<void> {
     if (user) {
       await this.notificationService.resumeNotifications(user.token)
       res.redirect('back')
     }
   }
 
-  async getManage({ user }: Request, res: Response) {
-    if (!user) return false
+  async getManage({ user }: Request, res: Response): Promise<void> {
+    if (!user) return
 
     const { snoozeUntil, notificationsEnabled } = await this.getSnoozeAndNotificationSettings(user.token)
 
-    return res.render('pages/manage-your-notifications.njk', {
+    res.render('pages/manage-your-notifications.njk', {
       notificationsEnabled,
       snoozeUntil,
     })
   }
 
-  async getPause(req: Request, res: Response) {
+  async getPause(req: Request, res: Response): Promise<void> {
     const {
       user,
       query: { pauseUnit, pauseValue },
     } = req
 
-    if (!user) return false
+    if (!user) return
     const { snoozeUntil, notificationsEnabled } = await this.getSnoozeAndNotificationSettings(user.token)
 
     const errors = validationResult(req)
 
-    return res.render('pages/pause-notifications.njk', {
+    res.render('pages/pause-notifications.njk', {
       errors,
       notificationsEnabled,
       snoozeUntil,
@@ -55,30 +55,31 @@ export default class NotificationController {
     })
   }
 
-  async setPause(req: Request, res: Response) {
+  async setPause(req: Request, res: Response): Promise<void> {
     const errors = validationResult(req)
     const {
       user,
       body: { pauseUnit, pauseValue },
     } = req
 
-    if (!user) return false
+    if (!user) return
 
     if (!errors.isEmpty()) {
       const { snoozeUntil, notificationsEnabled } = await this.getSnoozeAndNotificationSettings(user.token)
-      return res.render('pages/pause-notifications.njk', {
+      res.render('pages/pause-notifications.njk', {
         errors,
         notificationsEnabled,
         snoozeUntil,
         pauseUnit,
         pauseValue,
       })
+    } else {
+      await this.notificationService.updateSnooze(
+        user.token,
+        NotificationController.getFormattedFutureDate(pauseUnit, Number(pauseValue)),
+      )
+      res.redirect('/notifications/manage')
     }
-    await this.notificationService.updateSnooze(
-      user.token,
-      NotificationController.getFormattedFutureDate(pauseUnit, Number(pauseValue)),
-    )
-    return res.redirect('/notifications/manage')
   }
 
   private static getFormattedFutureDate(pauseUnit: string, pauseValue: number) {

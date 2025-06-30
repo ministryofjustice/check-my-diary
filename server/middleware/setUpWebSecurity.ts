@@ -50,6 +50,7 @@ export default function setUpWebSecurity(): Router {
           styleSrc,
           imgSrc,
           fontSrc,
+          ...(config.production ? {} : { upgradeInsecureRequests: null }),
         },
       },
       crossOriginEmbedderPolicy: true,
