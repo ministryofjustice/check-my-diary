@@ -8,8 +8,8 @@ generic-service:
 
   env:
     # Beware, these times are in GMT even in summer!
-    MAINTENANCE_START: "2025-03-16T18:00:00"
-    MAINTENANCE_END: "2025-03-16T21:00:00"
+    MAINTENANCE_START: "2025-08-10T17:00:00"
+    MAINTENANCE_END: "2025-08-10T20:00:00"
     HMPPS_AUTH_URL: "https://sign-in.hmpps.service.justice.gov.uk/auth"
     INGRESS_URL: https://checkmydiary.service.justice.gov.uk
     TOKEN_VERIFICATION_API_URL: https://token-verification-api.prison.service.justice.gov.uk
