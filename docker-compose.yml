@@ -15,7 +15,7 @@ services:
       - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
 
   cmd-api:
-    image: quay.io/hmpps/cmd-api:latest
+    image: ghcr.io/ministryofjustice/cmd-api:latest
     networks:
       - hmpps
     container_name: cmd-api
