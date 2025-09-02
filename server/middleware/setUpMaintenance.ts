@@ -1,4 +1,5 @@
 import express, { Router } from 'express'
+import { TZDate } from '@date-fns/tz'
 import { differenceInSeconds, format } from 'date-fns'
 
 import config from '../config'
@@ -13,9 +14,10 @@ export default function setUpMaintenance(): Router {
       } = config
 
       if (start && end) {
-        const maintenanceStartDateTime = new Date(start)
-        const maintenanceEndDateTime = new Date(end)
-        const currentDateTime = new Date()
+        const maintenanceStartDateTime = new TZDate(start, 'Europe/London')
+        const maintenanceEndDateTime = new TZDate(end, 'Europe/London')
+        const currentDateTime = TZDate.tz('Europe/London')
+
         if (
           differenceInSeconds(currentDateTime, maintenanceStartDateTime) > 0 &&
           differenceInSeconds(currentDateTime, maintenanceEndDateTime) < 0

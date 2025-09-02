@@ -7,8 +7,9 @@ generic-service:
     tlsSecretName: check-my-diary-cert
 
   env:
-    MAINTENANCE_START: "2023-04-26T15:00:00"
-    MAINTENANCE_END: "2023-04-26T16:00:00"
+    # Note that these times are now in local time, so BST in summer and GMT in winter
+    MAINTENANCE_START: "2025-09-02T10:00:00"
+    MAINTENANCE_END: "2025-09-02T10:30:00"
     HMPPS_AUTH_URL: "https://sign-in-preprod.hmpps.service.justice.gov.uk/auth"
     INGRESS_URL: https://check-my-diary-preprod.prison.service.justice.gov.uk
     TOKEN_VERIFICATION_API_URL: https://token-verification-api-preprod.prison.service.justice.gov.uk
