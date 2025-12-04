@@ -100,28 +100,26 @@ docker-compose -f docker-compose-test.yml pull && docker-compose -f docker-compo
 This will start an database instance on port 5432 and a wiremock instance on port 9091 to mock out the prison officer and notify
 APIs.  This allows us to simulate both services without firing them up.
 
-The tests are written using [cypress](https://www.cypress.io/) and will test against a running application instance.
+The tests are written using [playwright](https://playwright.dev/) and will test against a running application instance.
 To start up the application for running the feature tests:
 
 ```bash
 npm run start-feature
 ```
 
-To run the tests from the command line:
+After first install ensure playwright is initialised: 
 
-```bash
-npm run int-test
-```
+`npm run int-test-init:ci`
 
-This will run all the specifications in the `integration_tests` package.
+And then either, run tests in headless mode with:
 
-To run the tests using the cypress runner:
+`npm run int-test`
 
-```bash
-npm run int-test-ui
-```
+Or run tests with the UI:
 
-This will open up cypress and show all the specs.  Clicking on one of the specs will fire up chrome and run the tests in
+`npm run int-test-ui`
+
+This will open up playwright and show all the specs.  Clicking on one of the specs will fire up chrome and run the tests in
 that specification.
 
 If the mocking is not working properly after the test has been completed then the docker terminal will show what stubs
