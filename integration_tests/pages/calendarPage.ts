@@ -1,45 +1,45 @@
+import { expect, type Locator, type Page } from '@playwright/test'
 import { format } from 'date-fns'
-import Page, { PageElement } from './page'
+
+import AbstractPage from './abstractPage'
 
 export enum mobileOrDesktopType {
   mobile = 'm',
   desktop = 'd',
 }
 
-export default class CalendarPage extends Page {
-  constructor(date?: string) {
-    super(date || format(new Date(), 'MMMM yyyy'))
+export default class CalendarPage extends AbstractPage {
+  readonly header: Locator
+
+  readonly bannerSMS: Locator
+
+  readonly bannerMFA: Locator
+
+  readonly previousMonth: Locator
+
+  readonly dpsLink: Locator
+
+  private constructor(page: Page, date: string) {
+    super(page)
+    this.header = page.locator('h1', { hasText: date })
+    this.bannerSMS = page.locator('#banner-sms')
+    this.bannerMFA = page.locator('#banner-mfa')
+    this.previousMonth = page.getByTestId('previous')
+    this.dpsLink = page.getByRole('link', { name: 'Digital Prison Services' })
   }
 
-  day = (date: number, mobileOrDesktop: mobileOrDesktopType = mobileOrDesktopType.mobile): PageElement =>
-    cy.get(`li[data-qa="${mobileOrDesktop}${date}"]`)
+  static async verifyOnPage(page: Page, date?: string): Promise<CalendarPage> {
+    const calendarPage = new CalendarPage(page, date || format(new Date(), 'MMMM yyyy'))
+    await expect(calendarPage.header).toBeVisible()
+    return calendarPage
+  }
 
-  dayDesktop = (date: number): PageElement => cy.get(`li[data-qa="d${date}"]`)
+  day = (date: number, mobileOrDesktop: mobileOrDesktopType = mobileOrDesktopType.mobile): Locator =>
+    this.page.getByTestId(`${mobileOrDesktop}${date}`)
 
-  previousMonth = (): PageElement => cy.get(`a[data-qa="previous"]`)
+  daySpanLine = (date: number, mobileOrDesktop: mobileOrDesktopType = mobileOrDesktopType.mobile): Locator =>
+    this.page.getByTestId(`${mobileOrDesktop}${date}`).locator('span.line')
 
-  bannerSMS = (): PageElement => cy.get('#banner-sms')
-
-  bannerMFA = (): PageElement => cy.get('#banner-mfa')
-
-  notificationBannerSmsLink = (): PageElement => cy.get('[data-test="banner-sms-notification-link"]')
-
-  dpsLink = (): PageElement => cy.get('.govuk-breadcrumbs')
-
-  detailStart = (date: number, mobileOrDesktop: mobileOrDesktopType = mobileOrDesktopType.mobile): PageElement =>
-    cy.get(`li[data-qa="${mobileOrDesktop}${date}"] .day_start`)
-
-  detailFinish = (date: number, mobileOrDesktop: mobileOrDesktopType = mobileOrDesktopType.mobile): PageElement =>
-    cy.get(`li[data-qa="${mobileOrDesktop}${date}"]`).get('.day_finish')
-
-  detailStartNight = (date: number, mobileOrDesktop: mobileOrDesktopType = mobileOrDesktopType.mobile): PageElement =>
-    cy.get(`li[data-qa="${mobileOrDesktop}${date}"]`).get('.night_start')
-
-  shouldHaveClassAtLine = (n: number, expectedClazz: string) =>
-    this.shouldHaveClass(cy.get('span.line').eq(n), expectedClazz)
-
-  shouldHaveClass = (element: PageElement, expectedClazz: string) =>
-    element.should('have.attr', 'class').then(clazz => {
-      expect(clazz).to.contains(expectedClazz)
-    })
+  daySpanDay = (date: number, mobileOrDesktop: mobileOrDesktopType = mobileOrDesktopType.mobile): Locator =>
+    this.page.getByTestId(`${mobileOrDesktop}${date}`).locator('span.day')
 }

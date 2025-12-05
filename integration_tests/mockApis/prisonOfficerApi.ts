@@ -17,7 +17,7 @@ export default {
         jsonBody: data,
       },
     }),
-  stubCmdPing: (httpStatus = 200): SuperAgentRequest =>
+  stubPing: (httpStatus = 200): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',

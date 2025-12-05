@@ -25,7 +25,7 @@
             {% for notification in data %}
               <li>
                 <span
-                  class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0" data-test="shift-modified">{{ notification.shiftModified | getRelativeModifiedDate }}</span>
+                  class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0" data-qa="shift-modified">{{ notification.shiftModified | getRelativeModifiedDate }}</span>
                 <p class="govuk-body govuk-!-font-size-16">{{ notification.description }}</p>
               </li>
             {% endfor %}
