@@ -26,7 +26,7 @@ export default class CalendarController {
     const { username, token } = user
     logger.info({ user: username, date }, 'GET calendar view')
 
-    const month = await this.calendarService.getCalendarMonth(date, token)
+    const month = await this.calendarService.getCalendarMonth(date.toString(), token)
 
     const notifications = !this.notificationCookieService.alreadyDismissed(req, SMS_BANNER)
 
@@ -46,7 +46,7 @@ export default class CalendarController {
       mfa: await computeBanner(),
     }
     const data = utilities.configureCalendar(month)
-    const currentMonth = new Date(date)
+    const currentMonth = new Date(date.toString())
     const previousMonth = sub(currentMonth, { months: 1 })
     const nextMonth = add(currentMonth, { months: 1 })
     res.render('pages/calendar.njk', {
