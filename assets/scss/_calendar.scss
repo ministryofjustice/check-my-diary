@@ -2,7 +2,7 @@
 @import "./_mixins";
 
 .app-link-\!-border {
-  border-left: 1px solid govuk-colour('mid-grey');
+  border-left: 1px solid govuk-colour('black', $variant: 'tint-80');
   padding-left: 5px;
 }
 
@@ -10,7 +10,7 @@ ul.calendar .calendar-item {
   float: left;
   width: 14%;
   list-style: none;
-  border: 1px solid govuk-colour('mid-grey');
+  border: 1px solid govuk-colour('black', $variant: 'tint-80');
   overflow: auto;
 
   @include app-breakpoint {
@@ -74,7 +74,7 @@ ul.calendar {
 
   .illness {
     color: govuk-colour('white');
-    background-color: govuk-colour('light-green');
+    background-color: govuk-colour('green', $variant: 'tint-25');
   }
 
   .detached-duty {
@@ -84,12 +84,12 @@ ul.calendar {
 
   .tu-official {
     color: govuk-colour('white');
-    background-color: govuk-colour('pink');
+    background-color: govuk-colour('magenta');
   }
 
   .no-day {
     color: govuk-colour('black');
-    background-color: govuk-colour('light-grey');
+    background-color: govuk-colour('black', $variant: 'tint-95');
 
     @include app-breakpoint {
       display: none;
@@ -108,7 +108,7 @@ ul.calendar {
     list-style: none;
     border: none;
     text-align: center;
-    @include govuk-font(14, $weight: "bold");
+    @include govuk-font(16, $weight: "bold");
 
     @include app-breakpoint {
       display: none;
@@ -116,7 +116,7 @@ ul.calendar {
   }
 
   .calendar-item {
-    border: 1px solid govuk-colour('mid-grey');
+    border: 1px solid govuk-colour('black', $variant: 'tint-80');
   }
 
   .calendar-item span {
@@ -138,7 +138,7 @@ ul.calendar {
       padding: 3px 5px 3px 5px;
       min-height: 15px;
       overflow: auto;
-      @include govuk-font(14);
+      @include govuk-font(16);
 
       @include app-breakpoint {
         padding: 15px 10px 15px 10px;
@@ -168,7 +168,7 @@ ul.calendar {
     }
 
     &.overtime_day_start, &.overtime_night_start {
-      background-color: govuk-colour('light-purple');
+      background-color: govuk-colour('purple', $variant: 'tint-25');
       color: govuk-colour('white');
     }
 
