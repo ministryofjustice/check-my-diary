@@ -4,7 +4,7 @@ Running `docker compose up` from the `/wiremock` directory will run the wiremock
 
 #### Configured Stubs
 
-The active stubs can be view at http://localhost:8080/__admin/.
+The active stubs can be view at http://localhost:8080/__admin/mappings and requests made to the server can be seen at http://localhost:8080/__admin/requests
 
 1. Health Ping - GET http://localhost:8080/health/ping
 2. Notification Preferences - GET http://localhost:8080/preferences/notifications

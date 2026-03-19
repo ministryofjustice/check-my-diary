@@ -1,0 +1,16 @@
+
+{
+  "request": {
+    "method": "PUT",
+    "urlPath": "/preferences/notifications/snooze"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "message": "Snooze date updated successfully"
+    }
+  }
+}
