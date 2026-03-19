@@ -5,11 +5,9 @@ import createError from 'http-errors'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
 import { appInsightsMiddleware } from './utils/azureAppInsights'
-import authorisationMiddleware from './middleware/authorisationMiddleware'
 
 import setUpAuthentication from './middleware/setUpAuthentication'
 import setUpCsrf from './middleware/setUpCsrf'
-import setUpCurrentUser from './middleware/setUpCurrentUser'
 import setUpHealthChecks from './middleware/setUpHealthChecks'
 import setUpStaticResources from './middleware/setUpStaticResources'
 import setUpWebRequestParsing from './middleware/setupRequestParsing'
@@ -18,6 +16,7 @@ import setUpWebSession from './middleware/setUpWebSession'
 
 import routes from './routes'
 import type { Services } from './services'
+import authorisationMiddleware from './middleware/authorisationMiddleware'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -40,10 +39,9 @@ export default function createApp(services: Services): express.Application {
   app.use('/login', (req, res) => res.redirect('/sign-in'))
   app.use('/logout', (req, res) => res.redirect('/sign-out'))
 
-  app.use(setUpAuthentication())
-  app.use(authorisationMiddleware())
+  app.use(setUpAuthentication(services.userService))
+  app.use(authorisationMiddleware(['ROLE_PRISON']))
   app.use(setUpCsrf())
-  app.use(setUpCurrentUser())
 
   app.use(routes(services))
 

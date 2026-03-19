@@ -14,7 +14,7 @@ export default class NotificationSettingsController {
       preference: contactMethod = '',
       email: inputEmail = '',
       sms: inputSMS = '',
-    } = await this.notificationService.getPreferences(user.token)
+    } = await this.notificationService.getPreferences(user.username)
 
     res.render('pages/notification-settings.njk', {
       errors: validationResult(req),

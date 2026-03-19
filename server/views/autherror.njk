@@ -6,8 +6,9 @@
       Authorisation Error
     </h1>
     <p class="govuk-body">
-      You are not authorised to use this application.
+      {% if errorDetails %}
+        {{ errorDetails }}
+      {% endif %}
     </p>
   </main>
 {% endblock %}
-

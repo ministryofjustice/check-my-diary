@@ -1,34 +1,70 @@
+import type { UserDetail } from 'nomisUserRolesApiClient'
+import { Profile } from 'passport'
 import UserService from './userService'
-import HmppsAuthClient, { UserMfa } from '../data/hmppsAuthClient'
+import NomisUserRolesApiClient from '../data/nomisUserRolesApiClient'
 
-jest.mock('../data/hmppsAuthClient')
+jest.mock('../data/nomisUserRolesApiClient')
 
-const token = 'some token'
+const testEmail = 'random@justice.gov.uk'
+const testProfile = { emails: [{ value: testEmail }] } as Profile
 
 describe('User service', () => {
-  let hmppsAuthClient: jest.Mocked<HmppsAuthClient>
+  let nomisUserRolesApiClient: jest.Mocked<NomisUserRolesApiClient>
   let userService: UserService
 
-  describe('getUser', () => {
+  describe('getActiveGeneralUsersMatchingMicrosoftProfile', () => {
     beforeEach(() => {
-      hmppsAuthClient = new HmppsAuthClient() as jest.Mocked<HmppsAuthClient>
-      userService = new UserService(hmppsAuthClient)
+      nomisUserRolesApiClient = new NomisUserRolesApiClient() as jest.Mocked<NomisUserRolesApiClient>
+      userService = new UserService(nomisUserRolesApiClient)
     })
-    it('Retrieves and formats user name', async () => {
-      hmppsAuthClient.getMfa.mockResolvedValue({
-        backupVerified: true,
-        mobileVerified: false,
-        emailVerified: true,
-      } as UserMfa)
 
-      const result = await userService.getUserMfa(token)
+    it('Retrieves active, unlocked general user matching Entra email address', async () => {
+      nomisUserRolesApiClient.findUsersByEmailAddress.mockResolvedValue([
+        {
+          username: 'test-general',
+          primaryEmail: testEmail,
+          active: true,
+          accountNonLocked: true,
+          credentialsNonExpired: true,
+          admin: false,
+          accountType: 'GENERAL',
+          firstName: 'test-general',
+          lastName: 'user',
+          dpsRoleCodes: ['SOME_ROLE'],
+        },
+        {
+          username: 'test-admin',
+          primaryEmail: testEmail,
+          active: true,
+          accountNonLocked: true,
+          credentialsNonExpired: true,
+          admin: true,
+          accountType: 'ADMIN',
+          firstName: 'test-admin',
+          lastName: 'user',
+          dpsRoleCodes: ['SOME_OTHER_ROLE'],
+        },
+        {
+          username: 'test-general-locked',
+          primaryEmail: testEmail,
+          active: true,
+          accountNonLocked: false,
+          credentialsNonExpired: true,
+          admin: false,
+          accountType: 'GENERAL',
+          firstName: 'test-general-locked',
+          lastName: 'user',
+          dpsRoleCodes: ['SOME_OTHER_ROLE'],
+        },
+      ] as UserDetail[])
 
-      expect(result.backupVerified).toEqual(true)
-    })
-    it('Propagates error', async () => {
-      hmppsAuthClient.getMfa.mockRejectedValue(new Error('some error'))
+      const result = await userService.getActiveGeneralUsersMatchingMicrosoftProfile(testProfile)
 
-      await expect(userService.getUserMfa(token)).rejects.toEqual(new Error('some error'))
+      expect(nomisUserRolesApiClient.findUsersByEmailAddress).toHaveBeenCalledWith(testEmail)
+      expect(result.length).toEqual(1)
+      expect(result[0].username).toEqual('test-general')
+      expect(result[0].displayName).toEqual('Test-General User')
+      expect(result[0].userRoles).toEqual(['ROLE_SOME_ROLE', 'ROLE_PRISON'])
     })
   })
 })

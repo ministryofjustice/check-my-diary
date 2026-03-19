@@ -12,7 +12,7 @@ const validationResultMock = validationResult as unknown as jest.Mock
 describe('post notification settings middleware', () => {
   const renderMock = jest.fn()
   const redirectMock = jest.fn()
-  const token = 'aubergine'
+  const username = 'aubergine'
   const emailText = 'checkmydiary@digital.justice.gov.uk'
 
   const updatePreferencesMock = jest.fn()
@@ -20,7 +20,7 @@ describe('post notification settings middleware', () => {
   let req: Request
   let res: Response
   beforeEach(() => {
-    req = { user: { token }, body: {} } as unknown as Request
+    req = { user: { username }, body: {} } as unknown as Request
     res = { render: renderMock, redirect: redirectMock } as unknown as Response
   })
   afterEach(() => {
@@ -38,7 +38,7 @@ describe('post notification settings middleware', () => {
       })
       it('should update the preferences by calling the "updatePreferences" method on the "notificationService"', () => {
         expect(updatePreferencesMock).toHaveBeenCalledTimes(1)
-        expect(updatePreferencesMock).toHaveBeenCalledWith(token, NotificationType.EMAIL, emailText, '')
+        expect(updatePreferencesMock).toHaveBeenCalledWith(username, NotificationType.EMAIL, emailText, '')
       })
       it('should call the redirect function once', () => {
         expect(redirectMock).toHaveBeenCalledTimes(1)
@@ -83,7 +83,7 @@ describe('post notification settings middleware', () => {
     })
     it('should update the preferences', () => {
       expect(updatePreferencesMock).toHaveBeenCalledTimes(1)
-      expect(updatePreferencesMock).toHaveBeenCalledWith(token, NotificationType.NONE, '', '')
+      expect(updatePreferencesMock).toHaveBeenCalledWith(username, NotificationType.NONE, '', '')
     })
   })
 })

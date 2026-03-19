@@ -10,7 +10,7 @@ export default class NotificationController {
 
   async getNotifications({ user }: Request, res: Response): Promise<void> {
     if (!user) return
-    const data = await this.notificationService.getNotifications(user.token)
+    const data = await this.notificationService.getNotifications(user.username)
 
     data.sort(({ shiftModified: first }, { shiftModified: second }) => second.localeCompare(first))
 
@@ -19,7 +19,7 @@ export default class NotificationController {
 
   async resume({ user }: Request, res: Response): Promise<void> {
     if (user) {
-      await this.notificationService.resumeNotifications(user.token)
+      await this.notificationService.resumeNotifications(user.username)
       res.redirect('back')
     }
   }
@@ -27,7 +27,7 @@ export default class NotificationController {
   async getManage({ user }: Request, res: Response): Promise<void> {
     if (!user) return
 
-    const { snoozeUntil, notificationsEnabled } = await this.getSnoozeAndNotificationSettings(user.token)
+    const { snoozeUntil, notificationsEnabled } = await this.getSnoozeAndNotificationSettings(user.username)
 
     res.render('pages/manage-your-notifications.njk', {
       notificationsEnabled,
@@ -42,7 +42,7 @@ export default class NotificationController {
     } = req
 
     if (!user) return
-    const { snoozeUntil, notificationsEnabled } = await this.getSnoozeAndNotificationSettings(user.token)
+    const { snoozeUntil, notificationsEnabled } = await this.getSnoozeAndNotificationSettings(user.username)
 
     const errors = validationResult(req)
 
@@ -65,7 +65,7 @@ export default class NotificationController {
     if (!user) return
 
     if (!errors.isEmpty()) {
-      const { snoozeUntil, notificationsEnabled } = await this.getSnoozeAndNotificationSettings(user.token)
+      const { snoozeUntil, notificationsEnabled } = await this.getSnoozeAndNotificationSettings(user.username)
       res.render('pages/pause-notifications.njk', {
         errors,
         notificationsEnabled,
@@ -75,7 +75,7 @@ export default class NotificationController {
       })
     } else {
       await this.notificationService.updateSnooze(
-        user.token,
+        user.username,
         NotificationController.getFormattedFutureDate(pauseUnit, Number(pauseValue)),
       )
       res.redirect('/notifications/manage')
@@ -87,9 +87,9 @@ export default class NotificationController {
     return formatISO(add(new Date(), duration), { representation: 'date' })
   }
 
-  private async getSnoozeAndNotificationSettings(token: string) {
+  private async getSnoozeAndNotificationSettings(username: string) {
     const { snoozeUntil: rawSnoozeUntil, preference = NotificationType.NONE } =
-      await this.notificationService.getPreferences(token)
+      await this.notificationService.getPreferences(username)
     const notificationsEnabled = preference !== NotificationType.NONE
     const snoozeUntil = notificationsEnabled && rawSnoozeUntil ? utilities.getSnoozeUntil(rawSnoozeUntil) : ''
     return { snoozeUntil, notificationsEnabled }

@@ -1,31 +1,25 @@
-import jwt from 'jsonwebtoken'
 import type { Request, Response } from 'express'
 
 import authorisationMiddleware from './authorisationMiddleware'
 
-function createToken(authorities: string[]) {
-  const payload = {
-    user_name: 'USER1',
-    scope: ['read', 'write'],
-    auth_source: 'nomis',
-    authorities,
-    jti: 'a610a10-cca6-41db-985f-e87efb303aaf',
-    client_id: 'clientid',
+function createUser(roles: string[]) {
+  return {
+    authSource: 'nomis',
+    username: 'test-username',
+    name: 'Test User',
+    displayName: 'Test User',
+    userRoles: roles,
   }
-
-  return jwt.sign(payload, 'secret', { expiresIn: '1h' })
 }
 
 describe('authorisationMiddleware', () => {
   const req = {} as unknown as Request
   const next = jest.fn()
 
-  function createResWithToken({ authorities }: { authorities: string[] }): Response {
+  function createResWithUser(roles: string[]): Response {
     return {
       locals: {
-        user: {
-          token: createToken(authorities),
-        },
+        user: createUser(roles),
       },
       redirect: jest.fn(),
     } as unknown as Response
@@ -36,7 +30,7 @@ describe('authorisationMiddleware', () => {
   })
 
   it('should return next when no required roles', () => {
-    const res = createResWithToken({ authorities: [] })
+    const res = createResWithUser([])
 
     authorisationMiddleware()(req, res, next)
 
@@ -45,7 +39,7 @@ describe('authorisationMiddleware', () => {
   })
 
   it('should redirect when user has no authorised roles', () => {
-    const res = createResWithToken({ authorities: [] })
+    const res = createResWithUser([])
 
     authorisationMiddleware(['SOME_REQUIRED_ROLE'])(req, res, next)
 
@@ -54,7 +48,7 @@ describe('authorisationMiddleware', () => {
   })
 
   it('should return next when user has authorised role', () => {
-    const res = createResWithToken({ authorities: ['ROLE_SOME_REQUIRED_ROLE'] })
+    const res = createResWithUser(['ROLE_SOME_REQUIRED_ROLE'])
 
     authorisationMiddleware(['SOME_REQUIRED_ROLE'])(req, res, next)
 
@@ -63,7 +57,7 @@ describe('authorisationMiddleware', () => {
   })
 
   it('should return next when user has authorised role and middleware created with ROLE_ prefix', () => {
-    const res = createResWithToken({ authorities: ['ROLE_SOME_REQUIRED_ROLE'] })
+    const res = createResWithUser(['ROLE_SOME_REQUIRED_ROLE'])
 
     authorisationMiddleware(['ROLE_SOME_REQUIRED_ROLE'])(req, res, next)
 

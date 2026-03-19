@@ -30,7 +30,7 @@ export default class PostNotificationSettingsController {
 
     if (!user) return
     await this.notificationService.updatePreferences(
-      user.token,
+      user.username,
       contactMethod,
       contactMethod === NotificationType.EMAIL ? inputEmail : '',
       contactMethod === NotificationType.SMS ? inputSMS.replace('+44', '0') : '',

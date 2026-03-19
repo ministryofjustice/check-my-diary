@@ -4,17 +4,17 @@ import type {
   UpdateNotificationDetailsRequest,
   UpdateSnoozeUntilRequest,
 } from 'cmdApiClient'
-import { asUser, RestClient, SanitisedError } from '@ministryofjustice/hmpps-rest-client'
+import { asSystem, AuthenticationClient, RestClient, SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import logger from '../../logger'
 import config from '../config'
 
 export default class NotificationClient extends RestClient {
-  constructor() {
-    super('CMD Calendar API Client', config.apis.cmdApi, logger)
+  constructor(authenticationClient?: AuthenticationClient) {
+    super('CMD Calendar API Client', config.apis.cmdApi, logger, authenticationClient)
   }
 
   public async getNotifications(
-    accessToken: string,
+    username: string,
     processOnRead = true,
     unprocessedOnly = false,
   ): Promise<Array<NotificationDto>> {
@@ -23,7 +23,7 @@ export default class NotificationClient extends RestClient {
         path: '/notifications',
         query: { processOnRead, unprocessedOnly },
       },
-      asUser(accessToken),
+      asSystem(username),
     )
   }
 
@@ -39,12 +39,12 @@ export default class NotificationClient extends RestClient {
     return this.handleError<NotificationDto, ErrorData>(path, method, error)
   }
 
-  public async getPreferences(accessToken: string): Promise<NotificationDto> {
-    return this.get({ path: '/preferences/notifications', errorHandler: this.handleNotFoundError }, asUser(accessToken))
+  public async getPreferences(username: string): Promise<NotificationDto> {
+    return this.get({ path: '/preferences/notifications', errorHandler: this.handleNotFoundError }, asSystem(username))
   }
 
   public async updatePreferences(
-    accessToken: string,
+    username: string,
     preference: UpdateNotificationDetailsRequest['preference'],
     email: string,
     sms: string,
@@ -54,14 +54,14 @@ export default class NotificationClient extends RestClient {
         path: '/preferences/notifications/details',
         data: { preference, email, sms },
       },
-      asUser(accessToken),
+      asSystem(username),
     )
   }
 
   public async updateSnooze(
-    accessToken: string,
+    username: string,
     snoozeUntil: UpdateSnoozeUntilRequest,
   ): Promise<UpdateNotificationDetailsRequest> {
-    return this.put({ path: '/preferences/notifications/snooze', data: { snoozeUntil } }, asUser(accessToken))
+    return this.put({ path: '/preferences/notifications/snooze', data: { snoozeUntil } }, asSystem(username))
   }
 }

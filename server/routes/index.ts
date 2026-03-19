@@ -6,12 +6,7 @@ import notificationRouter from './notificationRouter'
 import type { Services } from '../services'
 import setUpMaintenance from '../middleware/setUpMaintenance'
 
-export default function routes({
-  calendarService,
-  notificationCookieService,
-  notificationService,
-  userService,
-}: Services): Router {
+export default function routes({ calendarService, notificationCookieService, notificationService }: Services): Router {
   const router = express.Router({ mergeParams: true })
 
   router.use(setUpMaintenance())
@@ -24,7 +19,7 @@ export default function routes({
     res.render('pages/contact-us.njk')
   })
 
-  router.use('/calendar', calendarRouter(calendarService, notificationCookieService, userService))
+  router.use('/calendar', calendarRouter(calendarService, notificationCookieService))
   router.use('/notifications', notificationRouter(notificationService))
 
   return router

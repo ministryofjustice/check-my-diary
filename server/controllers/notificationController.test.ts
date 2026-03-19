@@ -12,9 +12,9 @@ describe('notification controller', () => {
   const renderMock = jest.fn()
   const redirectMock = jest.fn()
   const nextMock = jest.fn()
-  const token = 'aubergine'
+  const username = 'aubergine'
 
-  const req: Request = { user: { token }, body: {} } as unknown as Request
+  const req: Request = { user: { username }, body: {} } as unknown as Request
   const res: Response = { render: renderMock, redirect: redirectMock } as unknown as Response
 
   const getNotificationsMock = jest.fn()
@@ -41,7 +41,7 @@ describe('notification controller', () => {
 
     it('should get the users notifications', () => {
       expect(getNotificationsMock).toHaveBeenCalledTimes(1)
-      expect(getNotificationsMock).toHaveBeenCalledWith(token)
+      expect(getNotificationsMock).toHaveBeenCalledWith(username)
     })
     it('should sort the users notifications', () => {
       expect(notificationData).toEqual([notification2, notification1])
@@ -79,13 +79,16 @@ describe('notification controller', () => {
       expect(updateSnoozeMock).not.toHaveBeenCalled()
     })
     it('should update the snooze notification', async () => {
-      const pauseReq: Request = { user: { token }, body: { pauseUnit: 'days', pauseValue: '10' } } as unknown as Request
+      const pauseReq: Request = {
+        user: { username },
+        body: { pauseUnit: 'days', pauseValue: '10' },
+      } as unknown as Request
 
       await new NotificationController(notificationService).setPause(pauseReq, res)
 
       const expected = new Date()
       expected.setDate(expected.getDate() + 10)
-      expect(updateSnoozeMock).toHaveBeenCalledWith(token, expected.toISOString().split('T')[0])
+      expect(updateSnoozeMock).toHaveBeenCalledWith(username, expected.toISOString().split('T')[0])
       expect(redirectMock).toHaveBeenCalledWith('/notifications/manage')
     })
   })

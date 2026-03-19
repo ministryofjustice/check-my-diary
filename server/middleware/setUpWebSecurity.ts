@@ -21,7 +21,8 @@ export default function setUpWebSecurity(): Router {
     '*.googletagmanager.com',
     (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`,
   ]
-  const formAction = [`'self' ${config.apis.hmppsAuth.externalUrl}`]
+  const formAction = [`'self' 'https://login.microsoftonline.com' 'https://login.microsoft.com'`]
+
   const styleSrc = [
     "'self'",
     '*.google-analytics.com',

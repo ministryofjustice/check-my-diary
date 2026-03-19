@@ -1,65 +1,94 @@
-import passport from 'passport'
+import passport, { Profile } from 'passport'
 import flash from 'connect-flash'
 import { Router } from 'express'
-import { Strategy } from 'passport-oauth2'
-import { VerificationClient, AuthenticatedRequest } from '@ministryofjustice/hmpps-auth-clients'
+import { Strategy as MicrosoftStrategy } from 'passport-microsoft'
 import config from '../config'
-import { HmppsUser } from '../interfaces/hmppsUser'
-import generateOauthClientToken from '../utils/clientCredentials'
-import logger from '../../logger'
+import { PrisonUser } from '../interfaces/hmppsUser'
 
-passport.serializeUser((user, done) => {
-  // Not used but required for Passport
-  done(null, user)
-})
+import { UserService } from '../services'
+import AuthErrorType from '../interfaces/authErrorType'
 
-passport.deserializeUser((user, done) => {
-  // Not used but required for Passport
-  done(null, user as Express.User)
-})
+function getAuthErrorDetail(type: AuthErrorType): string {
+  switch (type) {
+    case AuthErrorType.NO_MATCHING_USER:
+      return 'No matching NOMIS user account is linked to your justice.gov.uk email. Please ensure your NOMIS account is active and linked to your justice.gov.uk email. For support please contact your LSA or the IT Helpdesk.'
 
-passport.use(
-  new Strategy(
-    {
-      authorizationURL: `${config.apis.hmppsAuth.externalUrl}/oauth/authorize`,
-      tokenURL: `${config.apis.hmppsAuth.url}/oauth/token`,
-      clientID: config.apis.hmppsAuth.authClientId,
-      clientSecret: config.apis.hmppsAuth.authClientSecret,
-      callbackURL: `${config.ingressUrl}/sign-in/callback`,
-      state: true,
-      customHeaders: { Authorization: generateOauthClientToken() },
-    },
-    (token, refreshToken, params, profile, done) => {
-      return done(null, { token, username: params.user_name, authSource: params.auth_source })
-    },
-  ),
-)
+    case AuthErrorType.MULTIPLE_MATCHING_USERS:
+      return 'Multiple NOMIS user accounts match your justice.gov.uk email. Please contact your LSA or the IT Helpdesk.'
 
-export default function setupAuthentication() {
+    case AuthErrorType.DEFAULT:
+    default:
+      return 'You are not authorised to use this application. Please contact the IT Helpdesk for support.'
+  }
+}
+
+export default function setupAuthentication(userService: UserService) {
+  passport.serializeUser((user, done) => {
+    // Not used but required for Passport
+    done(null, user)
+  })
+
+  passport.deserializeUser((user, done) => {
+    // Not used but required for Passport
+    done(null, user as Express.User)
+  })
+
+  passport.use(
+    new MicrosoftStrategy(
+      {
+        clientID: config.entraId.clientId,
+        clientSecret: config.entraId.clientSecret,
+        callbackURL: config.entraId.callbackUrl,
+        tenant: config.entraId.tenantId,
+        scope: ['openid', 'profile', 'email', 'User.Read'],
+      },
+      (
+        _accessToken: unknown,
+        _refreshToken: unknown,
+        profile: Profile,
+        done: (error: unknown, user: unknown, info: object | undefined) => PrisonUser,
+      ) => {
+        userService.getActiveGeneralUsersMatchingMicrosoftProfile(profile).then(matchingUsers => {
+          if (matchingUsers.length === 0) {
+            return done(null, false, { message: AuthErrorType.NO_MATCHING_USER })
+          }
+
+          if (matchingUsers.length === 1) {
+            return done(null, matchingUsers[0], {})
+          }
+
+          return done(null, false, { message: AuthErrorType.MULTIPLE_MATCHING_USERS })
+        })
+      },
+    ),
+  )
+
   const router = Router()
-  const tokenVerificationClient = new VerificationClient(config.apis.tokenVerification, logger)
 
   router.use(passport.initialize())
   router.use(passport.session())
   router.use(flash())
 
-  const authUrl = config.apis.hmppsAuth.externalUrl
-  const authParameters = `client_id=${config.apis.hmppsAuth.authClientId}&redirect_uri=${config.ingressUrl}`
-  const authSignOutUrl = `${authUrl}/sign-out?${authParameters}`
-
   router.get('/autherror', (req, res) => {
-    res.status(401)
-    return res.render('autherror.njk', {
-      authURL: authSignOutUrl,
-    })
+    const errorType = req.flash('error')[0] as AuthErrorType | undefined
+    const mappedErrorDetail = errorType ? getAuthErrorDetail(errorType) : getAuthErrorDetail(AuthErrorType.DEFAULT)
+
+    if (errorType === AuthErrorType.MULTIPLE_MATCHING_USERS) {
+      res.status(409)
+    } else {
+      res.status(401)
+    }
+
+    return res.render('autherror.njk', { errorDetails: mappedErrorDetail })
   })
 
-  router.get('/sign-in', passport.authenticate('oauth2'))
+  router.get('/sign-in', passport.authenticate('microsoft'))
 
   router.get('/sign-in/callback', (req, res, next) =>
-    passport.authenticate('oauth2', {
+    passport.authenticate('microsoft', {
       successReturnToOrRedirect: req.session.returnTo || '/',
       failureRedirect: '/autherror',
+      failureFlash: true,
     })(req, res, next),
   )
 
@@ -67,17 +96,13 @@ export default function setupAuthentication() {
     if (req.user) {
       req.logout(err => {
         if (err) return next(err)
-        return req.session.destroy(() => res.redirect(authSignOutUrl))
+        return req.session.destroy(() => res.redirect('/sign-in'))
       })
-    } else res.redirect(authSignOutUrl)
-  })
-
-  router.use('/account-details', (req, res) => {
-    res.redirect(`${authUrl}/account-details?${authParameters}`)
+    } else res.redirect('/sign-in')
   })
 
   router.use(async (req, res, next) => {
-    if (req.isAuthenticated() && (await tokenVerificationClient.verifyToken(req as unknown as AuthenticatedRequest))) {
+    if (req.isAuthenticated()) {
       return next()
     }
     req.session.returnTo = req.originalUrl
@@ -85,7 +110,7 @@ export default function setupAuthentication() {
   })
 
   router.use((req, res, next) => {
-    res.locals.user = req.user as HmppsUser
+    res.locals.user = req.user as PrisonUser
     next()
   })
 

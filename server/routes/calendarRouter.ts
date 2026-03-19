@@ -4,16 +4,15 @@ import type { Router } from 'express'
 import utilities from '../helpers/utilities'
 import CalendarController from '../controllers/calendarController'
 import NotificationDismissController from '../controllers/notificationDismissController'
-import type { CalendarService, NotificationCookieService, UserService } from '../services'
+import type { CalendarService, NotificationCookieService } from '../services'
 
 export default function calendarRouter(
   calendarService: CalendarService,
   notificationCookieService: NotificationCookieService,
-  userService: UserService,
 ): Router {
   const router = express.Router({ mergeParams: true })
 
-  const calendarController = new CalendarController(calendarService, notificationCookieService, userService)
+  const calendarController = new CalendarController(calendarService, notificationCookieService)
   const notificationDismissController = new NotificationDismissController(notificationCookieService)
 
   router.get('/', (_: Request, res: Response) => res.redirect(`/calendar/${utilities.getStartMonth()}`))

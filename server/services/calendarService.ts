@@ -5,11 +5,11 @@ import CalendarClient from '../data/calendarClient'
 export default class CalendarService {
   constructor(private readonly calendarClient: CalendarClient) {}
 
-  public async getCalendarMonth(startDate: string, accessToken: string): Promise<Array<ShiftDto>> {
+  public async getCalendarMonth(startDate: string, username: string): Promise<Array<ShiftDto>> {
     return this.calendarClient.getCalendarData(
       format(new Date(startDate), 'yyyy-MM-01'),
       CalendarService.getEndDate(startDate),
-      accessToken,
+      username,
     )
   }
 

@@ -3,17 +3,15 @@ import { add, format, sub } from 'date-fns'
 import logger from '../../logger'
 import utilities from '../helpers/utilities'
 import mfaBannerType from '../helpers/mfaBannerType'
-import UserService from '../services/userService'
 import CalendarService from '../services/calendarService'
 import NotificationCookieService from '../services/notificationCookieService'
 
-const { SMS_BANNER, EXISTING_USER, NEW_USER, FIRST_TIME_USER } = mfaBannerType
+const { SMS_BANNER, EXISTING_USER, NEW_USER } = mfaBannerType
 
 export default class CalendarController {
   constructor(
     private readonly calendarService: CalendarService,
     private readonly notificationCookieService: NotificationCookieService,
-    private readonly userService: UserService,
   ) {}
 
   async getDate(req: Request, res: Response): Promise<void> {
@@ -23,10 +21,10 @@ export default class CalendarController {
     } = req
 
     if (!user) return
-    const { username, token } = user
+    const { username } = user
     logger.info({ user: username, date }, 'GET calendar view')
 
-    const month = await this.calendarService.getCalendarMonth(date.toString(), token)
+    const month = await this.calendarService.getCalendarMonth(date.toString(), username)
 
     const notifications = !this.notificationCookieService.alreadyDismissed(req, SMS_BANNER)
 
@@ -34,11 +32,7 @@ export default class CalendarController {
       const alreadyDismissedExisting = this.notificationCookieService.alreadyDismissed(req, EXISTING_USER)
       const alreadyDismissedNew = this.notificationCookieService.alreadyDismissed(req, NEW_USER)
 
-      const authMfa = await this.userService.getUserMfa(token)
-      if (authMfa.backupVerified || authMfa.mobileVerified) {
-        return alreadyDismissedNew || alreadyDismissedExisting ? '' : NEW_USER
-      }
-      return FIRST_TIME_USER
+      return alreadyDismissedNew || alreadyDismissedExisting ? '' : NEW_USER
     }
 
     const showBanner = {
