@@ -35,6 +35,7 @@
     "@ministryofjustice/hmpps-auth-clients": "^1.0.2",
     "@ministryofjustice/hmpps-monitoring": "^1.0.2",
     "@ministryofjustice/hmpps-rest-client": "^1.1.0",
+    "@types/passport-microsoft": "2.1.1",
     "applicationinsights": "^2.9.8",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",
@@ -55,7 +56,7 @@
     "nocache": "^4.0.0",
     "nunjucks": "^3.2.4",
     "passport": "^0.7.0",
-    "passport-oauth2": "^1.8.0",
+    "passport-microsoft": "2.1.0",
     "redis": "^5.11.0",
     "superagent": "^10.3.0"
   },
