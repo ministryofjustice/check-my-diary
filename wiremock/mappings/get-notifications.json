@@ -1,0 +1,20 @@
+
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/notifications"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": [
+      {
+        "description": "Your shift on {{ now format='yyyy-MM-dd' }} has changed.",
+        "shiftModified": "{{ now format='yyyy-MM-dd' }}T12:00:00Z",
+        "processed": false
+      }
+    ]
+  }
+}

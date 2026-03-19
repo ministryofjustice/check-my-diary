@@ -1,0 +1,16 @@
+
+{
+  "request": {
+    "method": "PUT",
+    "urlPath": "/preferences/notifications/details"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "message": "Notification details updated successfully"
+    }
+  }
+}

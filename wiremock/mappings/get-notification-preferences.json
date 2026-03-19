@@ -1,0 +1,18 @@
+
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/preferences/notifications"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "snoozeUntil": "{{ now format='yyyy-MM-dd' }}",
+      "email": "me@example.com",
+      "preference": "EMAIL"
+    }
+  }
+}

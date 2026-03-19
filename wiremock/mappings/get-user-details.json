@@ -1,0 +1,49 @@
+
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/user/details",
+    "queryParameters": {
+      "from": { "matches": "^\\d{4}-\\d{2}-\\d{2}$" },
+      "to": { "matches": "^\\d{4}-\\d{2}-\\d{2}$" }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": [
+      {
+        "date": "{{ request.query.from }}",
+        "fullDayType": "SHIFT",
+        "fullDayTypeDescription": "Shift",
+        "details": [
+          {
+            "activity": "Prison Shift",
+            "start": "{{ request.query.from }}T21:00:00Z",
+            "end": "{{ request.query.from }}T23:30:00Z",
+            "parentType": "SHIFT",
+            "displayType": "NIGHT_START",
+            "displayTypeTime": "{{ request.query.from }}T21:00:00Z"
+          }
+        ]
+      },
+      {
+        "date": "{{ request.query.to }}",
+        "fullDayType": "SHIFT",
+        "fullDayTypeDescription": "Shift",
+        "details": [
+          {
+            "activity": "Prison Shift",
+            "start": "{{ request.query.to }}T09:00:00Z",
+            "end": "{{ request.query.to }}T17:00:00Z",
+            "parentType": "SHIFT",
+            "displayType": "DAY_START",
+            "displayTypeTime": "{{ request.query.to }}T09:00:00Z"
+          }
+        ]
+      }
+    ]
+  }
+}
