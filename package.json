@@ -79,7 +79,7 @@
     "@types/nunjucks": "^3.2.6",
     "@types/passport": "^1.0.17",
     "@types/passport-oauth2": "^1.8.0",
-    "@types/pg": "^8.18.0",
+    "@types/pg": "^8.20.0",
     "@types/superagent": "^8.1.9",
     "@types/supertest": "^7.2.0",
     "audit-ci": "^7.1.0",
