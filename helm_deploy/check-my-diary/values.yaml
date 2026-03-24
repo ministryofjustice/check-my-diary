@@ -62,20 +62,20 @@ generic-service:
     REDIS_TLS_ENABLED: "true"
     TOKEN_VERIFICATION_ENABLED: "true"
 
-  namespace_secrets:
-    check-my-diary-application-insights:
-      APPLICATIONINSIGHTS_CONNECTION_STRING: "APPLICATIONINSIGHTS_CONNECTION_STRING"
-    check-my-diary-auth-code:
-      AUTH_CODE_CLIENT_ID: "AUTH_CODE_CLIENT_ID"
-      AUTH_CODE_CLIENT_SECRET: "AUTH_CODE_CLIENT_SECRET"
-    check-my-diary-session-secret:
-      SESSION_SECRET: "SESSION_SECRET"
-    check-my-diary:
-      GOOGLE_ANALYTICS_ID: "GOOGLE_ANALYTICS_ID"
+  # namespace_secrets:
+  #   check-my-diary-application-insights:
+  #     APPLICATIONINSIGHTS_CONNECTION_STRING: "APPLICATIONINSIGHTS_CONNECTION_STRING"
+  #   check-my-diary-auth-code:
+  #     AUTH_CODE_CLIENT_ID: "AUTH_CODE_CLIENT_ID"
+  #     AUTH_CODE_CLIENT_SECRET: "AUTH_CODE_CLIENT_SECRET"
+  #   check-my-diary-session-secret:
+  #     SESSION_SECRET: "SESSION_SECRET"
+  #   check-my-diary:
+  #     GOOGLE_ANALYTICS_ID: "GOOGLE_ANALYTICS_ID"
 
-    elasticache-redis:
-      REDIS_HOST: "primary_endpoint_address"
-      REDIS_AUTH_TOKEN: "auth_token"
+  #   elasticache-redis:
+  #     REDIS_HOST: "primary_endpoint_address"
+  #     REDIS_AUTH_TOKEN: "auth_token"
 
 generic-prometheus-alerts:
   targetApplication: check-my-diary

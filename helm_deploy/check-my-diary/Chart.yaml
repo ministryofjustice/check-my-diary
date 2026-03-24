@@ -1,7 +1,7 @@
 apiVersion: v2
 appVersion: '1.0'
 description: A Helm chart for Kubernetes
-name: check-my-diary
+name: check-my-diary-sso-prototype
 version: 0.2.1
 dependencies:
   - name: generic-service

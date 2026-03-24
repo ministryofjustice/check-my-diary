@@ -1,0 +1,256 @@
+generic-service:
+  nameOverride: check-my-diary-sso-prototype
+  replicaCount: 2
+  productId: null
+
+  image:
+    repository: ghcr.io/ministryofjustice/check-my-diary-sso-prototype
+    tag: latest    # override at deployment time
+    port: 3000
+
+  ingress:
+    enabled: true
+    className: default-non-prod
+    host: check-my-diary-sso-prototype-stage.apps.live.cloud-platform.service.justice.gov.uk
+    tlsSecretName: null
+    modsecurity_enabled: false
+    path: /
+
+  livenessProbe:
+    httpGet:
+      path: /ping
+      port: http
+    periodSeconds: 30
+    initialDelaySeconds: 90
+    timeoutSeconds: 20
+    failureThreshold: 10
+
+  readinessProbe:
+    httpGet:
+      path: /ping
+      port: http
+    periodSeconds: 20
+    initialDelaySeconds: 60
+    timeoutSeconds: 30
+    failureThreshold: 15
+
+  custommetrics:
+    enabled: true
+    scrapeInterval: 15s
+    metricsPath: /metrics
+    metricsPort: 3001
+
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                    - "check-my-diary-sso-prototype"
+            topologyKey: kubernetes.io/hostname
+
+  resources:
+    requests:
+      cpu: 50m
+
+  # Environment variables to load into the deployment
+  env:
+    NODE_ENV: "production"
+    WEB_SESSION_TIMEOUT_IN_MINUTES: "20"
+    DB_SSL_ENABLED: "false"
+    REDIS_ENABLED: "false"
+    REDIS_TLS_ENABLED: "false"
+    TOKEN_VERIFICATION_ENABLED: "true"
+    MAINTENANCE_START: "2025-09-02T10:00:00"
+    MAINTENANCE_END: "2025-09-02T10:30:00"
+    HMPPS_AUTH_URL: "https://sign-in-stage.hmpps.service.justice.gov.uk/auth"
+    INGRESS_URL: https://check-my-diary-sso-prototype-stage.apps.live.cloud-platform.service.justice.gov.uk
+    TOKEN_VERIFICATION_API_URL: https://token-verification-api-stage.prison.service.justice.gov.uk
+    DPS_HOME_URL: https://digital-dev.prison.service.justice.gov.uk
+    ENVIRONMENT_NAME: STAGE
+    CMD_API_URL: http://cmd-api-wiremock.hmpps-auth-stage.svc.cluster.local
+    NOMIS_USER_ROLES_API_URL: https://nomis-user-roles-api-stage.prison.service.justice.gov.uk
+
+  namespace_secrets:
+    check-my-diary-sso-prototype:
+      SESSION_SECRET: "SESSION_SECRET"
+      GOOGLE_ANALYTICS_ID: "GOOGLE_ANALYTICS_ID"
+      AUTH_CODE_CLIENT_ID: "CHECK_MY_DIARY_POC_AUTH_CODE_CLIENT_ID"
+      AUTH_CODE_CLIENT_SECRET: "CHECK_MY_DIARY_POC_AUTH_CODE_CLIENT_SECRET"
+      CHECK_MY_DIARY_POC_CLIENT_ID: "CHECK_MY_DIARY_POC_CLIENT_ID"
+      CHECK_MY_DIARY_POC_CLIENT_SECRET: "CHECK_MY_DIARY_POC_CLIENT_SECRET"
+      APPLICATIONINSIGHTS_CONNECTION_STRING: "APPLICATIONINSIGHTS_CONNECTION_STRING"
+
+  allowlist:
+    groups:
+      - global_protect
+
+generic-prometheus-alerts:
+  businessHoursOnly: true
+  targetApplication: check-my-diary-sso-prototype
+  alertSeverity: hmpps_tech_non_prod
+
+wiremock:
+  name: cmd-api-wiremock
+  image:
+    repository: wiremock/wiremock
+    tag: "3.13.2"
+    pullPolicy: IfNotPresent
+    extraArgs:
+      - --global-response-templating
+
+  replicaCount: 1
+
+  service:
+    type: ClusterIP
+    port: 8080
+
+  resources: {}
+
+  stubs:
+    update-snooze.json: |
+      {
+        "request": {
+          "method": "PUT",
+          "urlPath": "/preferences/notifications/snooze"
+        },
+        "response": {
+          "status": 200,
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "jsonBody": {
+            "message": "Snooze date updated successfully"
+          }
+        }
+      }
+
+
+    update-notification-details.json: |
+      {
+        "request": {
+          "method": "PUT",
+          "urlPath": "/preferences/notifications/details"
+        },
+        "response": {
+          "status": 200,
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "jsonBody": {
+            "message": "Notification details updated successfully"
+          }
+        }
+      }
+
+
+    get-user-details.json: |
+      {
+        "request": {
+          "method": "GET",
+          "urlPath": "/user/details",
+          "queryParameters": {
+            "from": { "matches": "^\\d{4}-\\d{2}-\\d{2}$" },
+            "to": { "matches": "^\\d{4}-\\d{2}-\\d{2}$" }
+          }
+        },
+        "response": {
+          "status": 200,
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "jsonBody": [
+            {
+              "date": "{{ request.query.from }}",
+              "fullDayType": "SHIFT",
+              "fullDayTypeDescription": "Shift",
+              "details": [
+                {
+                  "activity": "Prison Shift",
+                  "start": "{{ request.query.from }}T21:00:00Z",
+                  "end": "{{ request.query.from }}T23:30:00Z",
+                  "parentType": "SHIFT",
+                  "displayType": "NIGHT_START",
+                  "displayTypeTime": "{{ request.query.from }}T21:00:00Z"
+                }
+              ]
+            },
+            {
+              "date": "{{ request.query.to }}",
+              "fullDayType": "SHIFT",
+              "fullDayTypeDescription": "Shift",
+              "details": [
+                {
+                  "activity": "Prison Shift",
+                  "start": "{{ request.query.to }}T09:00:00Z",
+                  "end": "{{ request.query.to }}T17:00:00Z",
+                  "parentType": "SHIFT",
+                  "displayType": "DAY_START",
+                  "displayTypeTime": "{{ request.query.to }}T09:00:00Z"
+                }
+              ]
+            }
+          ]
+        }
+      }
+
+    get-notification-preferences.json: |
+      {
+        "request": {
+          "method": "GET",
+          "urlPath": "/preferences/notifications"
+        },
+        "response": {
+          "status": 200,
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "jsonBody": {
+            "snoozeUntil": "{{ now format='yyyy-MM-dd' }}",
+            "email": "me@example.com",
+            "preference": "EMAIL"
+          }
+        }
+      }
+
+    get-notifications.json: |
+      {
+        "request": {
+          "method": "GET",
+          "urlPath": "/notifications"
+        },
+        "response": {
+          "status": 200,
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "jsonBody": [
+            {
+              "description": "Your shift on {{ now format='yyyy-MM-dd' }} has changed.",
+              "shiftModified": "{{ now format='yyyy-MM-dd' }}T12:00:00Z",
+              "processed": false
+            }
+          ]
+        }
+      }
+
+    get-health-ping.json: |
+      {
+        "request": {
+          "method": "GET",
+          "url": "/health/ping"
+        },
+        "response": {
+          "status": 200,
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "jsonBody": {
+            "status": "UP"
+          }
+        }
+      }

@@ -19,7 +19,7 @@
     float: left;
     margin: 0;
     padding: 0;
-    background-color: govuk-colour('light-grey');
+    background-color: govuk-colour('black', $variant: 'tint-95');
     list-style: none;
 
     a {
@@ -35,7 +35,7 @@
     }
 
     .app-tabs-item__notification {
-      @include govuk-font(14, bold);
+      @include govuk-font(16, bold);
       color: govuk-colour('white');
       background: govuk-colour('orange');
       padding: 5px 10px;
