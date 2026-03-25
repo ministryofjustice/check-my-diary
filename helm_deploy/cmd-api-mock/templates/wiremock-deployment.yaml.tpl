@@ -27,7 +27,19 @@ spec:
             {{- end }}
 
           ports:
-            - containerPort: {{ .Values.wiremock.service.port }}
+            - name: http
+              containerPort: {{ .Values.wiremock.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /__admin/health
+              port: {{ .Values.wiremock.service.port }}
+              scheme: HTTP
+          readinessProbe:
+            httpGet:
+              path: /__admin/health
+              port: {{ .Values.wiremock.service.port }}
+              scheme: HTTP
 
           volumeMounts:
             - name: {{ .Values.wiremock.name }}-stubs

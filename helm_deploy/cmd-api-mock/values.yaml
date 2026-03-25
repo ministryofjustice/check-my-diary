@@ -6,6 +6,8 @@ wiremock:
     pullPolicy: IfNotPresent
     extraArgs:
       - --global-response-templating
+      - --verbose
+      - --disable-banner
     securityContext:
       runAsNonRoot: true
       runAsUser: 1000
@@ -20,6 +22,7 @@ wiremock:
 
   service:
     type: ClusterIP
+    externalPort: 80
     port: 8080
 
   resources: {}

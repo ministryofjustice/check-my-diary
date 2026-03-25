@@ -1,11 +1,14 @@
 generic-service:
   nameOverride: check-my-diary-sso-prototype
-  replicaCount: 2
+  replicaCount: 1
   productId: null
+
+  poddisruptionbudget:
+    enabled: false
 
   image:
     repository: ghcr.io/ministryofjustice/check-my-diary-sso-prototype
-    tag: latest    # override at deployment time
+    tag: v1    # override at deployment time
     port: 3000
 
   ingress:
@@ -59,20 +62,25 @@ generic-service:
 
   # Environment variables to load into the deployment
   env:
+    PRODUCT_ID: "cmd-sso-prototype"
+    BUILD_NUMBER: "v1"
+    GIT_REF: "HAAR-4898-prototype-entra-sso"
+    GIT_BRANCH: "HAAR-4898-prototype-entra-sso"
     NODE_ENV: "production"
     WEB_SESSION_TIMEOUT_IN_MINUTES: "20"
     DB_SSL_ENABLED: "false"
     REDIS_ENABLED: "false"
+    REDIS_HOST: "not-in-use"
     REDIS_TLS_ENABLED: "false"
     TOKEN_VERIFICATION_ENABLED: "true"
     MAINTENANCE_START: "2025-09-02T10:00:00"
     MAINTENANCE_END: "2025-09-02T10:30:00"
     HMPPS_AUTH_URL: "https://sign-in-stage.hmpps.service.justice.gov.uk/auth"
-    INGRESS_URL: https://check-my-diary-sso-prototype-stage.apps.live.cloud-platform.service.justice.gov.uk
+    INGRESS_URL: https://check-my-diary-sso-prototype-stage.apps.live.cloud-platform.service.justice.gov.uk/
     TOKEN_VERIFICATION_API_URL: https://token-verification-api-stage.prison.service.justice.gov.uk
     DPS_HOME_URL: https://digital-dev.prison.service.justice.gov.uk
     ENVIRONMENT_NAME: STAGE
-    CMD_API_URL: http://cmd-api-wiremock.hmpps-auth-stage.svc.cluster.local
+    CMD_API_URL: http://cmd-api-mock.hmpps-auth-stage.svc.cluster.local
     NOMIS_USER_ROLES_API_URL: https://nomis-user-roles-api-stage.prison.service.justice.gov.uk
 
   namespace_secrets:
