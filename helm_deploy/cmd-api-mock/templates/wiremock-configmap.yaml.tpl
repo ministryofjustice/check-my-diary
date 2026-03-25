@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Values.wiremock.name }}-stubs-configmap
+  name: {{ .Values.wiremock.name }}-stubs
 data:
 {{- range $name, $content := .Values.wiremock.stubs }}
   {{ $name }}: |

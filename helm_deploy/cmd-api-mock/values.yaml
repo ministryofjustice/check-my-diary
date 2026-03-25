@@ -6,7 +6,16 @@ wiremock:
     pullPolicy: IfNotPresent
     extraArgs:
       - --global-response-templating
-
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      capabilities:
+        drop:
+        - ALL
+      allowPrivilegeEscalation: false
+      seccompProfile:
+        type: RuntimeDefault
   replicaCount: 1
 
   service:

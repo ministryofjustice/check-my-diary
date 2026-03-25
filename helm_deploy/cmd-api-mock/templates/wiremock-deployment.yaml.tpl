@@ -19,8 +19,10 @@ spec:
         - name: wiremock
           image: "{{ .Values.wiremock.image.repository }}:{{ .Values.wiremock.image.tag }}"
           imagePullPolicy: {{ .Values.wiremock.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.wiremock.image.securityContext | nindent 12 }}
           args:
-            {{- range .Values.wiremock.extraArgs }}
+            {{- range .Values.wiremock.image.extraArgs }}
             - {{ . | quote }}
             {{- end }}
 
