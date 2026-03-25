@@ -12,9 +12,9 @@ generic-service:
     enabled: true
     className: default-non-prod
     host: check-my-diary-sso-prototype-stage.apps.live.cloud-platform.service.justice.gov.uk
-    tlsSecretName: null
     modsecurity_enabled: false
     path: /
+    tlsSecretName: ""
 
   livenessProbe:
     httpGet:
