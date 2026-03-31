@@ -4,6 +4,7 @@ generic-service:
 
   ingress:
     host: check-my-diary-preprod.prison.service.justice.gov.uk
+    className: "default-non-prod"
     tlsSecretName: check-my-diary-cert
 
   env:
