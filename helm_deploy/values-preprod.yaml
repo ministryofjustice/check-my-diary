@@ -4,8 +4,8 @@ generic-service:
 
   ingress:
     host: check-my-diary-preprod.prison.service.justice.gov.uk
-    className: "default-non-prod"
     tlsSecretName: check-my-diary-cert
+    className: modsec-non-prod
 
   env:
     # Note that these times are now in local time, so BST in summer and GMT in winter
