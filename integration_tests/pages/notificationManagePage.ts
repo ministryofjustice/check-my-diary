@@ -9,11 +9,14 @@ export default class NotificationManagePage extends AbstractPage {
 
   readonly pause: Locator
 
+  readonly resume: Locator
+
   private constructor(page: Page) {
     super(page)
     this.header = page.locator('h1', { hasText: 'Manage your notifications' })
     this.change = page.getByRole('link', { name: 'Change' })
     this.pause = page.getByRole('link', { name: 'Pause notifications' })
+    this.resume = page.getByRole('button', { name: 'Resume notifications now' })
   }
 
   static async verifyOnPage(page: Page): Promise<NotificationManagePage> {
