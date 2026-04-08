@@ -20,7 +20,7 @@ export default class NotificationController {
   async resume({ user }: Request, res: Response): Promise<void> {
     if (user) {
       await this.notificationService.resumeNotifications(user.token)
-      res.redirect('back')
+      res.redirect('/notifications/manage')
     }
   }
 

@@ -175,10 +175,23 @@ test.describe('A staff member can view their notification settings', () => {
     })
 
     await page.goto('/notifications/manage')
-    await NotificationManagePage.verifyOnPage(page)
+    const notificationPage = await NotificationManagePage.verifyOnPage(page)
 
     await expect(page.getByText('Notifications will start')).toContainText(
       `Notifications will start again on ${format(addDays(new Date(), 4), 'd MMMM yyyy')}`,
     )
+
+    await notificationService.stubNotificationUpdate()
+    await notificationService.stubNotificationPreferencesGet({
+      preference: 'EMAIL',
+      email: 'me@gmail.com',
+    })
+    await notificationPage.resume.click()
+
+    await NotificationManagePage.verifyOnPage(page)
+
+    const requests = await notificationService.verifySnooze()
+    expect(requests[0]?.body).toEqual(`{"snoozeUntil":"${new Date().toISOString().split('T')[0]}"}`)
+    expect(requests.length).toEqual(1)
   })
 })
