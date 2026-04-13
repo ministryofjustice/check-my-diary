@@ -6,7 +6,6 @@ wiremock:
     pullPolicy: IfNotPresent
     extraArgs:
       - --global-response-templating
-      - --verbose
       - --disable-banner
     securityContext:
       runAsNonRoot: true
