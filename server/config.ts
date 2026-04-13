@@ -55,23 +55,11 @@ export default {
         deadline: Number(get('HMPPS_AUTH_TIMEOUT_DEADLINE', 35000)),
       },
       agent: new AgentConfig(Number(get('HMPPS_AUTH_TIMEOUT_RESPONSE', 10000))),
-      authClientId: get('AUTH_CODE_CLIENT_ID', 'check-my-diary-sso-prototype', requiredInProduction),
-      authClientSecret: get('AUTH_CODE_CLIENT_SECRET', 'clientsecret', requiredInProduction),
       systemClientId: get('CHECK_MY_DIARY_POC_CLIENT_ID', 'check-my-diary-sso-prototype', requiredInProduction),
       systemClientSecret: get('CHECK_MY_DIARY_POC_CLIENT_SECRET', 'clientsecret', requiredInProduction),
     },
-    tokenVerification: {
-      url: get('TOKEN_VERIFICATION_API_URL', 'http://localhost:8100', requiredInProduction),
-      healthPath: '/health/ping',
-      timeout: {
-        response: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000)),
-        deadline: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_DEADLINE', 5000)),
-      },
-      agent: new AgentConfig(Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000))),
-      enabled: get('TOKEN_VERIFICATION_ENABLED', 'false') === 'true',
-    },
     cmdApi: {
-      url: get('CMD_API_URL', 'http://localhost:8080'),
+      url: get('CMD_API_URL', 'http://localhost:8080', requiredInProduction),
       healthPath: '/health/ping',
       timeout: {
         response: Number(get('CMD_API_TIMEOUT_RESPONSE', 10000)),
