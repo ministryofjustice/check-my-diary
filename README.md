@@ -77,12 +77,9 @@ OR
 
 ## Running tests
 
-[Jest](https://jestjs.io/) is used to run the tests:
+[Jest](https://jestjs.io/) is used to run the tests.
 
-```bash
-npm install
-npm test
-```
+Install dependencies using `npm run setup`, ensuring you are using `node v24`
 
 ## Running integration tests
 

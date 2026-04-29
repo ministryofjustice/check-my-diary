@@ -24,7 +24,7 @@ describe('convert to title case', () => {
     ['Leading spaces', '  RobeRT', '  Robert'],
     ['Trailing spaces', 'RobeRT  ', 'Robert  '],
     ['Hyphenated', 'Robert-John SmiTH-jONes-WILSON', 'Robert-John Smith-Jones-Wilson'],
-  ])('%s convertToTitleCase(%s, %s)', (_: string, a: string, expected: string) => {
+  ])('%s convertToTitleCase(%s, %s)', (_: string | null, a: string | null, expected: string) => {
     expect(convertToTitleCase(a)).toEqual(expected)
   })
 })

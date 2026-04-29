@@ -6,7 +6,7 @@ import logger from '../../logger'
 export default function setUpCurrentUser() {
   const router = express.Router()
 
-  router.use((req, res, next) => {
+  router.use((_req, res, next) => {
     try {
       const {
         name,

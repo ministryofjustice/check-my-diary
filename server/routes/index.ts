@@ -20,7 +20,7 @@ export default function routes({
     req.session.fromDPS ||= !!req.query.fromDPS
     return res.redirect('/calendar#today')
   })
-  router.get('/contact-us', (req, res) => {
+  router.get('/contact-us', (_req, res) => {
     res.render('pages/contact-us.njk')
   })
 
