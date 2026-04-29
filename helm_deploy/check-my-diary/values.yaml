@@ -15,11 +15,11 @@ generic-service:
       # team here grants access to the OpenSearch logs to delve into the cause of the blockage
       SecDefaultAction "phase:2,pass,log,tag:github_team=syscon-devs,tag:namespace={{ .Release.Namespace }}"
       SecAction "id:900200,phase:1,nolog,pass,t:none,setvar:tx.allowed_methods=GET HEAD POST OPTIONS,setvar:tx.paranoia_level=3"
-      SecRuleUpdateTargetById 930120 "!REQUEST_COOKIES:/check-my-diary.session/"
-      SecRuleUpdateTargetById 933150 "!REQUEST_COOKIES:/check-my-diary.session/"
-      SecRuleUpdateTargetById 942210 "!REQUEST_COOKIES:/check-my-diary.session/"
-      SecRuleUpdateTargetById 942440 "!REQUEST_COOKIES:/check-my-diary.session/"
-      SecRuleUpdateTargetById 942450 "!REQUEST_COOKIES:/check-my-diary.session/"
+      SecRuleUpdateTargetById 930120 "!REQUEST_COOKIES:/.*session/"
+      SecRuleUpdateTargetById 933150 "!REQUEST_COOKIES:/.*session/"
+      SecRuleUpdateTargetById 942210 "!REQUEST_COOKIES:/.*session/"
+      SecRuleUpdateTargetById 942440 "!REQUEST_COOKIES:/.*session/"
+      SecRuleUpdateTargetById 942450 "!REQUEST_COOKIES:/.*session/"
       # attack-sqli is 942 range
       SecRuleUpdateTargetByTag "attack-sqli" "!ARGS:/code/"
       # Block Detectify scanner with 418
