@@ -34,17 +34,23 @@ function appSetup(services: Services, production: boolean, userSupplier: () => H
     req.flash = flashProvider
     res.locals = {
       user: { ...req.user } as HmppsUser,
+      cspNonce: '',
+      csrfToken: '',
+      asset_path: '',
+      applicationName: '',
+      environmentName: '',
+      environmentNameColour: '',
     }
     next()
   })
-  app.use((req, res, next) => {
+  app.use((req, _res, next) => {
     req.id = randomUUID()
     next()
   })
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
   app.use(routes(services))
-  app.use((req, res, next) => next(new NotFound()))
+  app.use((_req, _res, next) => next(new NotFound()))
   app.use(errorHandler(production))
 
   return app

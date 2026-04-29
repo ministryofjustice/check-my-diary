@@ -43,13 +43,14 @@ export function buildAppInsightsClient(
   return null
 }
 
-function parameterisePaths(envelope: EnvelopeTelemetry, contextObjects: ContextObject) {
-  const operationNameOverride = contextObjects.correlationContext?.customProperties?.getProperty('operationName')
+function parameterisePaths(envelope: EnvelopeTelemetry, contextObjects: Record<string, unknown> | undefined) {
+  const operationNameOverride = (
+    contextObjects?.correlationContext as CorrelationContext
+  )?.customProperties?.getProperty('operationName')
   if (operationNameOverride) {
     /*  eslint-disable no-param-reassign */
     envelope.tags['ai.operation.name'] = operationNameOverride
-    // @ts-expect-error envelope.data.baseData.name is not defined in the type definition
-    envelope.data.baseData.name = operationNameOverride
+    if (envelope.data.baseData) envelope.data.baseData.name = operationNameOverride
     /*  eslint-enable no-param-reassign */
   }
   return true
