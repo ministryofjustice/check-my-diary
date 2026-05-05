@@ -20,7 +20,7 @@ export default function setUpWebSecurity(): Router {
     '*.google-analytics.com',
     '*.analytics.google.com',
     '*.googletagmanager.com',
-    (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`,
+    (_req: IncomingMessage, res: ServerResponse) => `'nonce-${(res as Response).locals.cspNonce}'`,
   ]
   const formAction = [`'self' ${config.apis.hmppsAuth.externalUrl}`]
   const styleSrc = [
@@ -29,7 +29,7 @@ export default function setUpWebSecurity(): Router {
     '*.analytics.google.com',
     '*.googletagmanager.com',
     'fonts.googleapis.com',
-    (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`,
+    (_req: IncomingMessage, res: ServerResponse) => `'nonce-${(res as Response).locals.cspNonce}'`,
   ]
   const imgSrc = ["'self'", 'data:', '*.google-analytics.com', '*.analytics.google.com', '*.googletagmanager.com']
   const fontSrc = ["'self'"]
