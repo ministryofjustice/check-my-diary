@@ -1,4 +1,5 @@
 name: Security Snyk dependency check
+
 on:
   workflow_dispatch:
   schedule:
