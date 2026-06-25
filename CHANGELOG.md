@@ -1,5 +1,15 @@
 # Change log
 
+**June 25th 2026** - Fancier wiremock interface
+
+Should make it easier to write stubs correctly, especially when you want to match query parameters
+(using `urlPattern` is sensitive to parameter order so is not very effective).
+
+Since most apis will want a /health/ping stub, it’s convenient to have something to reuse and
+for the health check integration tests to be simpler to update.
+
+See PR [#774](https://github.com/ministryofjustice/hmpps-template-typescript/pull/774)
+
 **June 25th 2026** - Fix appinsights logging
 
 Logger was inadvertently being loaded before the azure-telemetry model, causing instrumentation to be incorrectly configured. Removing this logging fixes AppTraces reporting in Azure
