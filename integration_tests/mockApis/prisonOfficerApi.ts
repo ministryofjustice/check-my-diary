@@ -1,8 +1,10 @@
 import { SuperAgentRequest } from 'superagent'
 import data from './calendar_data'
-import { stubFor } from './wiremock'
+import { stubFor, stubPing } from './wiremock'
 
 export default {
+  stubPing: (httpStatus = 200): SuperAgentRequest => stubPing('', httpStatus),
+
   stubShifts: (): SuperAgentRequest =>
     stubFor({
       request: {
@@ -15,18 +17,6 @@ export default {
           'Content-Type': 'application/json',
         },
         jsonBody: data,
-      },
-    }),
-  stubPing: (httpStatus = 200): SuperAgentRequest =>
-    stubFor({
-      request: {
-        method: 'GET',
-        urlPattern: '/health/ping',
-      },
-      response: {
-        status: httpStatus,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: { status: httpStatus === 200 ? 'UP' : 'DOWN' },
       },
     }),
 }

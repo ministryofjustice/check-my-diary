@@ -116,18 +116,14 @@ export default {
     }),
 
   verifySnooze: async () =>
-    (
-      await getMatchingRequests({
-        method: 'PUT',
-        url: '/preferences/notifications/snooze',
-      })
-    ).body.requests,
+    getMatchingRequests({
+      method: 'PUT',
+      url: '/preferences/notifications/snooze',
+    }),
 
   verifyDetails: async () =>
-    (
-      await getMatchingRequests({
-        method: 'PUT',
-        url: '/preferences/notifications/details',
-      })
-    ).body.requests,
+    getMatchingRequests({
+      method: 'PUT',
+      url: '/preferences/notifications/details',
+    }),
 }
