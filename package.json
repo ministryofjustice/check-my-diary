@@ -23,11 +23,11 @@
     "int-test-init:ci": "npx playwright install",
     "clean": "rm -rf dist test_results",
     "rebuild": "npm run clean && npm run setup && npm run build",
-    "setup": "npm ci && hmpps-npm-script-run-allowlist"
+    "setup": "npm ci"
   },
   "engines": {
     "node": "^24",
-    "npm": "^11"
+    "npm": "^12"
   },
   "dependencies": {
     "@date-fns/tz": "^1.5.0",
@@ -40,7 +40,7 @@
     "bunyan-format": "^0.2.1",
     "compression": "^1.8.1",
     "connect-flash": "^0.1.1",
-    "connect-redis": "^9.0.0",
+    "connect-redis": "^10.0.0",
     "cookie-parser": "^1.4.7",
     "csrf-sync": "^4.2.1",
     "date-fns": "^4.4.0",
@@ -56,17 +56,16 @@
     "nunjucks": "^3.2.4",
     "passport": "^0.7.0",
     "passport-oauth2": "^1.8.0",
-    "redis": "6.1.0",
+    "redis": "6.2.1",
     "superagent": "^10.3.0"
   },
   "devDependencies": {
     "@jgoz/esbuild-plugin-typecheck": "^4.0.4",
     "@ministryofjustice/eslint-config-hmpps": "^1.0.3",
-    "@ministryofjustice/frontend-types": "2.0.0",
-    "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.6",
-    "@ministryofjustice/hmpps-precommit-hooks": "3.0.1",
-    "@playwright/test": "^1.61.1",
-    "@tsconfig/node24": "^24.0.4",
+    "@ministryofjustice/frontend-types": "2.0.1",
+    "@ministryofjustice/hmpps-precommit-hooks": "3.0.2",
+    "@playwright/test": "^1.62.1",
+    "@tsconfig/node24": "^24.0.5",
     "@types/bunyan": "^1.8.11",
     "@types/bunyan-format": "^0.2.9",
     "@types/compression": "^1.8.1",
@@ -85,7 +84,7 @@
     "@types/supertest": "^7.2.1",
     "audit-ci": "^7.1.0",
     "del": "8.0.1",
-    "esbuild": "0.28.1",
+    "esbuild": "0.28.2",
     "esbuild-plugin-copy": "^2.1.1",
     "esbuild-plugin-manifest": "^1.0.5",
     "esbuild-sass-plugin": "^3.7.0",
@@ -93,14 +92,23 @@
     "jest-html-reporter": "^4.4.0",
     "jest-junit": "^17.0.0",
     "jsonwebtoken": "^9.0.3",
-    "lint-staged": "^17.2.0",
-    "nock": "^14.0.16",
+    "lint-staged": "^17.3.0",
+    "nock": "^14.0.17",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.12",
     "typescript": "^6.0.3"
   },
   "overrides": {
     "@opentelemetry/core": "2.10.0",
-    "brace-expansion": "5.0.9"
+    "brace-expansion": "5.0.9",
+    "js-yaml": "3.15.1"
+  },
+  "allowScripts": {
+    "@parcel/watcher@2.6.0": true,
+    "dtrace-provider@0.8.8": false,
+    "fsevents@2.3.3": true,
+    "fsevents@2.3.2": true,
+    "unrs-resolver@1.12.2": true,
+    "esbuild@0.28.2": true
   }
 }

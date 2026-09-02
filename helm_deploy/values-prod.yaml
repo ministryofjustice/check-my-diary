@@ -1,7 +1,5 @@
 ---
 generic-service:
-  replicaCount: 4
-
   ingress:
     host: checkmydiary.service.justice.gov.uk
     tlsSecretName: tls-certificate

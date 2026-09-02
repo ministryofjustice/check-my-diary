@@ -72,6 +72,7 @@ generic-service:
   # Environment variables to load into the deployment
   env:
     NODE_ENV: "production"
+    LOG_LEVEL: 'info'
     WEB_SESSION_TIMEOUT_IN_MINUTES: "20"
     DB_SSL_ENABLED: "true"
     REDIS_ENABLED: "true"

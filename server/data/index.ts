@@ -12,6 +12,4 @@ export const dataAccess = () => ({
   notificationClient: new NotificationClient(),
 })
 
-export type DataAccess = ReturnType<typeof dataAccess>
-
 export { HmppsAuthClient }
