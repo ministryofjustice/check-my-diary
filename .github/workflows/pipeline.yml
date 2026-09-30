@@ -17,9 +17,7 @@ on:
         type: boolean
 permissions:
   contents: read
-  packages: write
-  id-token: write
-  attestations: write
+
 concurrency:
   # only cancel in progress when on a branch - use SHA on main to ensure uniqueness
   group: ${{ github.workflow }}-${{ github.ref == 'refs/heads/main' && github.sha || github.ref }}
@@ -30,6 +28,7 @@ jobs:
   check_publish:
     name: Check publish flag
     runs-on: ubuntu-latest
+    permissions: {}
     outputs:
       enabled: ${{ github.ref == 'refs/heads/main' && (inputs.push || inputs.push == null) }}
     steps:
@@ -39,28 +38,25 @@ jobs:
   node_build:
     name: node build
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/node_build.yml@v2 # WORKFLOW_VERSION
-    secrets: inherit
     with:
       install_command: 'npm run setup'
-      npm_version: '12.0.2'
+      npm_version: '12'
   # generic node unit tests - feel free to override with local tests if required
   node_unit_tests:
     name: node unit tests
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/node_unit_tests.yml@v2 # WORKFLOW_VERSION
     needs: [node_build]
-    secrets: inherit
+  # generic node integration tests using wiremock - feel free to override with local tests if required
   node_integration_tests:
     name: node integration tests
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/node_integration_tests.yml@v2 # WORKFLOW_VERSION
     needs: [node_build]
-    secrets: inherit
   helm_lint:
     strategy:
       matrix:
         environments: ['preprod', 'prod']
     name: helm lint
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/test_helm_lint.yml@v2 # WORKFLOW_VERSION
-    secrets: inherit
     with:
       environment: ${{ matrix.environments }}
   build:
@@ -71,6 +67,11 @@ jobs:
       - node_integration_tests
       - node_unit_tests
       - check_publish
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
     with:
       docker_registry: 'ghcr.io'
       registry_org: 'ministryofjustice'
