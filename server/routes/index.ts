@@ -11,6 +11,7 @@ export default function routes({
   notificationCookieService,
   notificationService,
   userService,
+  auditService,
 }: Services): Router {
   const router = express.Router({ mergeParams: true })
 
@@ -24,7 +25,7 @@ export default function routes({
     res.render('pages/contact-us.njk')
   })
 
-  router.use('/calendar', calendarRouter(calendarService, notificationCookieService, userService))
+  router.use('/calendar', calendarRouter(calendarService, notificationCookieService, userService, auditService))
   router.use('/notifications', notificationRouter(notificationService))
 
   return router
