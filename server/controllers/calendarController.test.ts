@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { AuditService } from '@ministryofjustice/hmpps-audit-client'
 import CalendarController from './calendarController'
 import mfaBannerType from '../helpers/mfaBannerType'
 import UserService from '../services/userService'
@@ -9,6 +10,7 @@ const { FIRST_TIME_USER } = mfaBannerType
 
 const rolesMock = jest.fn()
 jest.mock('jwt-decode', () => ({ jwtDecode: () => rolesMock() }))
+jest.mock('@ministryofjustice/hmpps-audit-client')
 
 const calendarData = [
   {
@@ -27,22 +29,25 @@ const getCalendarMonthMock = jest.fn()
 const renderMock = jest.fn()
 const nextMock = jest.fn()
 const token = { replace: 'sausages' }
-const employeeName = 'Ray Parker Jr.'
+const username = 'Ray Parker Jr.'
 const authUrl = ''
 const csrfToken = 'tomato'
 const getUserMfaMock = jest.fn()
 const res = { render: renderMock, locals: { csrfToken } } as unknown as Response
 const req = {
   authUrl,
-  user: { token, employeeName },
+  user: { token, username },
   params: { date: '2001-01-01' },
   session: {},
   query: {},
+  id: 'COR_ID',
 } as unknown as Request
 const calendarService: CalendarService = { getCalendarMonth: getCalendarMonthMock } as unknown as CalendarService
 const notificationCookieService = new NotificationCookieService()
 const userService: UserService = { getUserMfa: getUserMfaMock } as unknown as UserService
-const calendarController = () => new CalendarController(calendarService, notificationCookieService, userService)
+const auditService = new AuditService({} as never) as jest.Mocked<AuditService>
+const calendarController = () =>
+  new CalendarController(calendarService, notificationCookieService, userService, auditService)
 
 beforeEach(() => {
   rolesMock.mockReturnValue({ authorities: ['ROLE_MFA'] })
@@ -69,6 +74,15 @@ describe('CalendarController', () => {
     })
     it('should call the render function', () => {
       expect(renderMock).toHaveBeenCalledTimes(1)
+    })
+    it('should audit the calendar view', () => {
+      expect(auditService.logAuditEvent).toHaveBeenCalledWith({
+        what: 'VIEW_CALENDAR',
+        who: username,
+        subjectType: 'NOT_APPLICABLE',
+        correlationId: 'COR_ID',
+        details: { date: '2001-01-01' },
+      })
     })
   })
 

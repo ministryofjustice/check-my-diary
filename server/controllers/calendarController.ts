@@ -1,5 +1,7 @@
 import type { Request, Response } from 'express'
 import { add, format, sub } from 'date-fns'
+import { AuditService } from '@ministryofjustice/hmpps-audit-client'
+
 import logger from '../../logger'
 import utilities from '../helpers/utilities'
 import mfaBannerType from '../helpers/mfaBannerType'
@@ -14,6 +16,7 @@ export default class CalendarController {
     private readonly calendarService: CalendarService,
     private readonly notificationCookieService: NotificationCookieService,
     private readonly userService: UserService,
+    private readonly auditService: AuditService,
   ) {}
 
   async getDate(req: Request, res: Response): Promise<void> {
@@ -25,6 +28,14 @@ export default class CalendarController {
     if (!user) return
     const { username, token } = user
     logger.info({ user: username, date }, 'GET calendar view')
+
+    await this.auditService.logAuditEvent({
+      what: 'VIEW_CALENDAR',
+      who: username,
+      subjectType: 'NOT_APPLICABLE',
+      correlationId: req.id,
+      details: { date },
+    })
 
     const month = await this.calendarService.getCalendarMonth(date.toString(), token)
 
