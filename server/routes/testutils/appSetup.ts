@@ -1,5 +1,6 @@
 import express, { Express } from 'express'
 import { NotFound } from 'http-errors'
+import { AuditService } from '@ministryofjustice/hmpps-audit-client'
 
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
@@ -58,7 +59,9 @@ function appSetup(services: Services, production: boolean, userSupplier: () => H
 
 export default function appWithAllRoutes({
   production = false,
-  services = {},
+  services = {
+    auditService: new AuditService({} as never) as jest.Mocked<AuditService>,
+  },
   userSupplier = () => user,
 }: {
   production?: boolean

@@ -1,3 +1,4 @@
+import { AuditClientConfig } from '@ministryofjustice/hmpps-audit-client'
 import { AgentConfig } from '@ministryofjustice/hmpps-rest-client'
 
 const production = process.env.NODE_ENV === 'production'
@@ -12,6 +13,20 @@ function get<T>(name: string, fallback: T, options = { requireInProduction: fals
 }
 
 const requiredInProduction = { requireInProduction: true, noFallbackInProduction: false }
+
+const auditConfig = (): AuditClientConfig => {
+  const auditEnabled = get('AUDIT_ENABLED', 'false') === 'true'
+  return {
+    enabled: auditEnabled,
+    queueUrl: get(
+      'AUDIT_SQS_QUEUE_URL',
+      'http://localhost:4566/000000000000/mainQueue',
+      auditEnabled ? requiredInProduction : undefined,
+    ),
+    serviceName: get('AUDIT_SERVICE_NAME', 'UNASSIGNED', auditEnabled ? requiredInProduction : undefined),
+    region: get('AUDIT_SQS_REGION', 'eu-west-2'),
+  }
+}
 
 export default {
   buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),
@@ -79,6 +94,9 @@ export default {
   maintenance: {
     start: process.env.MAINTENANCE_START,
     end: process.env.MAINTENANCE_END,
+  },
+  sqs: {
+    audit: auditConfig(),
   },
   ingressUrl: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   dpsHomeUrl: process.env.DPS_HOME_URL,

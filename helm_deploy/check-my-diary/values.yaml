@@ -1,6 +1,7 @@
 generic-service:
   nameOverride: check-my-diary
   productId: DPS052
+  serviceAccountName: 'check-my-diary'
 
   image:
     repository: ghcr.io/ministryofjustice/check-my-diary
@@ -78,6 +79,8 @@ generic-service:
     REDIS_ENABLED: "true"
     REDIS_TLS_ENABLED: "true"
     TOKEN_VERIFICATION_ENABLED: "true"
+    AUDIT_ENABLED: 'true'
+    AUDIT_SERVICE_NAME: 'check-my-diary'
 
   namespace_secrets:
     check-my-diary-application-insights:
@@ -89,10 +92,11 @@ generic-service:
       SESSION_SECRET: "SESSION_SECRET"
     check-my-diary:
       GOOGLE_ANALYTICS_ID: "GOOGLE_ANALYTICS_ID"
-
     elasticache-redis:
       REDIS_HOST: "primary_endpoint_address"
       REDIS_AUTH_TOKEN: "auth_token"
+    sqs-hmpps-audit-secret:
+      AUDIT_SQS_QUEUE_URL: "sqs_queue_url"
 
 generic-prometheus-alerts:
   targetApplication: check-my-diary
