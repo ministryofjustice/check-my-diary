@@ -82,24 +82,29 @@ jobs:
       attach_sbom_to_registry: ${{ needs.check_publish.outputs.enabled == 'true' }}
       sign_image: ${{ needs.check_publish.outputs.enabled == 'true' }}
   deploy_preprod:
-    name: Deploy to the preprod environment
+    name: Deploy to the pre-production environment
+    permissions:
+      contents: read
+      id-token: write
     if: needs.check_publish.outputs.enabled == 'true'
     needs:
       - build
       - helm_lint
       - check_publish
-    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_to_env.yml@v2 # WORKFLOW_VERSION
     secrets: inherit
     with:
       environment: 'preprod'
       app_version: '${{ needs.build.outputs.app_version }}'
   deploy_prod:
-    name: Deploy to the prod environment
+    name: Deploy to the production environment
+    permissions:
+      contents: read
+      id-token: write
     needs:
       - build
-      - helm_lint
       - deploy_preprod
-    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_to_env.yml@v2 # WORKFLOW_VERSION
     secrets: inherit
     with:
       environment: 'prod'
