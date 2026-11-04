@@ -1,7 +1,10 @@
 {% extends "govuk/template.njk" %}
 {%- from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation -%}
 
+{% set themeColor = "#000000" %}
+
 {% block head %}
+  <link href="{{ '/assets/css/index.css' | assetMap }}" rel="stylesheet"/>
   {% include "./head.njk" %}
 {% endblock %}
 
