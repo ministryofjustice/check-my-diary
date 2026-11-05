@@ -19,7 +19,7 @@ export default function nunjucksSetup(app: express.Express): void {
   app.locals.googleAnalyticsId = process.env.GOOGLE_ANALYTICS_ID
 
   try {
-    const assetMetadataPath = path.resolve(__dirname, '../../assets/manifest.json')
+    const assetMetadataPath = path.resolve(__dirname, '../../assets/asset-manifest.json')
     assetManifest = JSON.parse(fs.readFileSync(assetMetadataPath, 'utf8'))
   } catch (e) {
     if (process.env.NODE_ENV !== 'test') {
