@@ -45,11 +45,15 @@ jobs:
   node_unit_tests:
     name: node unit tests
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/node_unit_tests.yml@v2 # WORKFLOW_VERSION
+    with:
+      test-report-continue-on-error: true
     needs: [node_build]
   # generic node integration tests using wiremock - feel free to override with local tests if required
   node_integration_tests:
     name: node integration tests
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/node_integration_tests.yml@v2 # WORKFLOW_VERSION
+    with:
+      test-report-continue-on-error: true
     needs: [node_build]
   helm_lint:
     strategy:
